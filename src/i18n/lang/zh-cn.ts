@@ -16,6 +16,7 @@ export default {
         fieldcollection: '字段集合管理',
         flowmanage: '流程编排管理',
         flowdesign: '流程编排设计',
+        flowdesigndetail:'流程详细设计',
         globalvar: '全局变量管理',
         specialnode: '流程特殊节点',
         pluginmanage: '插件管理',

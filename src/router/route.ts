@@ -294,6 +294,23 @@ export const dynamicRoutes: {
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon-putong',
                         },
+                         children: [
+                            {
+                                path: '/flowmanage/flowdesign/flowdesigndetail',
+                                name: 'flowdesigndetail',
+                                component: () => import('/@/views/flowmanage/flowdesign/flowdesigndetail/index.vue'),
+                                meta: {
+                                    title: 'message.router.flowdesigndetail',
+                                    isLink: '',
+                                    isHide: true,
+                                    isKeepAlive: false,
+                                    isAffix: false,
+                                    isIframe: false,
+                                    roles: ['admin', 'common'],
+                                    icon: 'ele-Sunny',
+                                },
+                            },
+                        ],
                     },
                     {
                         path: '/flowmanage/globalvar',

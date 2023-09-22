@@ -144,7 +144,7 @@ const userDialogRef = ref();
     // 当前列表项点击
     const onTableItemClick = (v: FilterListType) => {
             router.push({
-                path: '/pages/workflow',
+                path: '/flowmanage/flowdesign/flowdesigndetail',
                 query: {id: v.id},
             });
 
