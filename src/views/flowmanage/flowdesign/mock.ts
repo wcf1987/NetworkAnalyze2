@@ -109,30 +109,30 @@ export const filtering = [
 // 列表数据
 export const filterList = [
 	{
-		img: 'https://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=https%3A%2F%2Fd00.paixin.com%2Fthumbs%2F1561359%2F40842211%2Fstaff_1024.jpg&thumburl=https%3A%2F%2Fimg2.baidu.com%2Fit%2Fu%3D2936915106%2C3439149730%26fm%3D253%26fmt%3Dauto%3Fw%3D800%26h%3D800',
+		img: '/src/assets/flowdesign.jpg',
 		title: '流程编排设计方案1',
 		evaluate: '通用流程设计方案测试',
 		collection: (Math.random() * 100).toFixed(2),
 		author: 'admin',
-
+		type:'混合编排',
 		id: 1,
 	},
 	{
-		img: 'https://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=https%3A%2F%2Fd00.paixin.com%2Fthumbs%2F1561359%2F40842211%2Fstaff_1024.jpg&thumburl=https%3A%2F%2Fimg2.baidu.com%2Fit%2Fu%3D2936915106%2C3439149730%26fm%3D253%26fmt%3Dauto%3Fw%3D800%26h%3D800',
+		img: '/src/assets/flowdesign.jpg',
 		title: '全空域网络通信流程',
 		evaluate: '专家测试2023',
 		collection: (Math.random() * 100).toFixed(2),
 		author: 'admin',
-
+		type:'透明传输',
 		id: 2,
 	},
 	{
-		img: 'https://image.baidu.com/search/down?tn=download&word=download&ie=utf8&fr=detail&url=https%3A%2F%2Fd00.paixin.com%2Fthumbs%2F1561359%2F40842211%2Fstaff_1024.jpg&thumburl=https%3A%2F%2Fimg2.baidu.com%2Fit%2Fu%3D2936915106%2C3439149730%26fm%3D253%26fmt%3Dauto%3Fw%3D800%26h%3D800',
+		img: '/src/assets/flowdesign.jpg',
 		title: '超高速导弹通讯设计方案1',
 		evaluate: '最终定型方案A',
 		collection: (Math.random() * 100).toFixed(2),
 		author: 'admin',
-
+		type:'透明传输',
 		id: 3,
 	}
 ];

@@ -99,38 +99,38 @@ export const dynamicRoutes: {
                             icon: 'iconfont icon-diqiu',
                         },
 
-                                children: [
-                                    {
-                                        path: '/sysmanage/address/networkinterface',
-                                        name: 'networkinterface',
-                                        component: () => import('/@/views/sysmanage/address/networkinterface/index.vue'),
-                                        meta: {
-                                            title: 'message.router.networkinterface',
-                                            isLink: '',
-                                            isHide: false,
-                                            isKeepAlive: true,
-                                            isAffix: false,
-                                            isIframe: false,
-                                            roles: ['admin', 'common'],
-                                            icon: 'iconfont icon-caidan',
-                                        },
-                                    },
-                                    {
-                                        path: '/sysmanage/address/serial',
-                                        name: 'serial',
-                                        component: () => import('/@/views/sysmanage/address/serial/index.vue'),
-                                        meta: {
-                                            title: 'message.router.serial',
-                                            isLink: '',
-                                            isHide: false,
-                                            isKeepAlive: true,
-                                            isAffix: false,
-                                            isIframe: false,
-                                            roles: ['admin', 'common'],
-                                            icon: 'iconfont icon-zhongyingwenqiehuan',
-                                        },
-                                    },
-                                ],
+                        children: [
+                            {
+                                path: '/sysmanage/address/networkinterface',
+                                name: 'networkinterface',
+                                component: () => import('/@/views/sysmanage/address/networkinterface/index.vue'),
+                                meta: {
+                                    title: 'message.router.networkinterface',
+                                    isLink: '',
+                                    isHide: false,
+                                    isKeepAlive: true,
+                                    isAffix: false,
+                                    isIframe: false,
+                                    roles: ['admin', 'common'],
+                                    icon: 'iconfont icon-caidan',
+                                },
+                            },
+                            {
+                                path: '/sysmanage/address/serial',
+                                name: 'serial',
+                                component: () => import('/@/views/sysmanage/address/serial/index.vue'),
+                                meta: {
+                                    title: 'message.router.serial',
+                                    isLink: '',
+                                    isHide: false,
+                                    isKeepAlive: true,
+                                    isAffix: false,
+                                    isIframe: false,
+                                    roles: ['admin', 'common'],
+                                    icon: 'iconfont icon-zhongyingwenqiehuan',
+                                },
+                            },
+                        ],
                     },
                     {
                         path: '/sysmanage/package',
@@ -145,8 +145,8 @@ export const dynamicRoutes: {
                             isIframe: false,
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon--chaifenhang',
-                            },
-                             children: [
+                        },
+                        children: [
                             {
                                 path: '/sysmanage/package/packagedetail',
                                 name: 'packagedetail',
@@ -180,7 +180,7 @@ export const dynamicRoutes: {
                             icon: 'iconfont icon-bolangnengshiyanchang',
                         },
                     },*/
-                     {
+                    {
 
                         path: '/sysmanage/messheader',
                         name: 'messheader',
@@ -195,7 +195,7 @@ export const dynamicRoutes: {
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon-shuxingtu',
                         },
-                            children: [
+                        children: [
                             {
                                 path: '/sysmanage/messheader/messheaderdetail',
                                 name: 'messheaderdetail',
@@ -226,7 +226,7 @@ export const dynamicRoutes: {
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon-ziti',
                         },
-                         children: [
+                        children: [
                             {
                                 path: '/sysmanage/messbody/messbodydetail',
                                 name: 'messbodydetail',
@@ -244,9 +244,41 @@ export const dynamicRoutes: {
                             },
                         ],
                     }, {
+                        path: '/sysmanage/messtraslate',
+                        name: 'messtraslate',
+                        component: () => import('/@/views/sysmanage/messtraslate/index.vue'),
+                        meta: {
+                            title: 'message.router.messtraslate',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'iconfont icon-neiqianshujuchucun',
+                        },
+                        children: [
+                            {
+                                path: '/sysmanage/messtraslate/messtraslatedetail',
+                                name: 'messtraslatedetail',
+                                component: () => import('/@/views/sysmanage/messtraslate/messtraslatedetail.vue'),
+                                meta: {
+                                    title: 'message.router.messtraslatedetail',
+                                    isLink: '',
+                                    isHide: true,
+                                    isKeepAlive: false,
+                                    isAffix: false,
+                                    isIframe: false,
+                                    roles: ['admin', 'common'],
+                                    icon: 'iconfont icon-zujian',
+                                },
+                            },
+                        ],
+                    }
+                    , {
                         path: '/sysmanage/fieldcollection',
                         name: 'fieldcollection',
-                        component: () => import('/@/views/sysmanage/fieldcollection/fieldcollection.vue'),
+                        component: () => import('/@/views/sysmanage/fieldcollection/index.vue'),
                         meta: {
                             title: 'message.router.fieldcollection',
                             isLink: '',
@@ -294,13 +326,14 @@ export const dynamicRoutes: {
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon-putong',
                         },
-                         children: [
+                        children: [
+
                             {
-                                path: '/flowmanage/flowdesign/flowdesigndetail',
-                                name: 'flowdesigndetail',
-                                component: () => import('/@/views/flowmanage/flowdesign/flowdesigndetail/index.vue'),
+                                path: '/flowmanage/flowdesign/flowdesigndetail2',
+                                name: 'flowdesigndetail2',
+                                component: () => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/index.vue'),
                                 meta: {
-                                    title: 'message.router.flowdesigndetail',
+                                    title: 'message.router.flowdesigndetail2',
                                     isLink: '',
                                     isHide: true,
                                     isKeepAlive: false,

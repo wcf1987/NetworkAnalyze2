@@ -106,11 +106,8 @@ declare interface SysUserState {
 }
 
 declare type DeptTreeType = {
-	deptName: string;
-	createTime: string;
-	status: boolean;
-	sort: number;
-	describe: string;
+	classifyName: string;
+
 	id: number | string;
 	children?: DeptTreeType[];
 };
@@ -264,6 +261,8 @@ declare type WorkflowDrawerNodeState<T = any> = {
 	nodeRules: T;
 	form: T;
 	tabsActive: string;
+	showFlag:T;
+	properForm:T;
 	loading: {
 		extend: boolean;
 	};

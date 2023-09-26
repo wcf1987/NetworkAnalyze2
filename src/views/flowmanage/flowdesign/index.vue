@@ -36,6 +36,10 @@
                                     <div class="item-txt-title">{{ v.title }}</div>
                                     <div class="item-txt-other">
                                         <div style="width: 100%">
+                                             <div class="item-txt-msg mb10">
+                                                <span>类型： {{ v.type }}</span>
+
+                                            </div>
                                             <div class="item-txt-msg mb10">
                                                 <span>描述 {{ v.evaluate }}</span>
 
@@ -144,7 +148,7 @@ const userDialogRef = ref();
     // 当前列表项点击
     const onTableItemClick = (v: FilterListType) => {
             router.push({
-                path: '/flowmanage/flowdesign/flowdesigndetail',
+                path: '/flowmanage/flowdesign/flowdesigndetail2',
                 query: {id: v.id},
             });
 
