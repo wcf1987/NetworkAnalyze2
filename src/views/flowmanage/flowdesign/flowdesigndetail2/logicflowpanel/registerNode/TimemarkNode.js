@@ -1,9 +1,10 @@
 import IconNode from './IconNode'
 
+import timemarkicon from '/@/assets/svgicon/timemark.svg';
 // 左上角ICON为消息的节点
 class TimemarkNode extends IconNode.view {
   getImageHref () {
-    return '/src/assets/svgicon/timemark.svg';
+    return timemarkicon;
   }
 }
 

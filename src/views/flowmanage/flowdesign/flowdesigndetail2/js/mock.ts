@@ -1,4 +1,16 @@
 // 左侧菜单导航数据
+import starticon from '/@/assets/svgicon/start.svg';
+import targeticon from '/@/assets/svgicon/target.svg';
+import pacparseicon from '/@/assets/svgicon/pacparse.svg';
+import pacencapicon from '/@/assets/svgicon/pacencap.svg';
+import messparseicon from '/@/assets/svgicon/messparse.svg';
+import messtraslateicon from '/@/assets/svgicon/messtraslate.svg';
+import swichicon from '/@/assets/svgicon/swich.svg';
+import spemarkicon from '/@/assets/svgicon/spemark.svg';
+import timemarkicon from '/@/assets/svgicon/timemark.svg';
+import timericon from '/@/assets/svgicon/timer.svg';
+import statisticsicon from '/@/assets/svgicon/statistics.svg';
+import calcicon from '/@/assets/svgicon/calc.svg';
 export const leftNavList = [
 	{
 		title: '基础节点',
@@ -7,7 +19,7 @@ export const leftNavList = [
 		id: '1',
 		children: [
 			{
-				icon: '/src/assets/svgicon/start.svg',
+				icon: starticon,
 				name: '开始节点',
 				id: '11',
 				type:'start',
@@ -70,110 +82,46 @@ export const leftNavList = [
 				],
 			},
 			{
-				icon: '/src/assets/svgicon/target.svg',
+				icon: targeticon,
 				name: '目的节点',
 				id: '12',
 				type:'end',
-				form: [
-					{
-						type: 'input',
-						label: '目的地址',
-						prop: 'grade',
-						placeholder: '请输入目的地址',
-						required: false,
-						disabled: false,
-					},
-					{
-						type: 'input',
-						label: '目的端口',
-						prop: 'password',
-						placeholder: '请输入目的端口',
-						required: true,
-						disabled: false,
-					},
-				],
+
 			},
 			{
-				icon: '/src/assets/svgicon/pacparse.svg',
+				icon: pacparseicon,
 				name: '头部解析',
 				type: 'pacparse',
 				id: '13',
-				form: [
-					{
-						type: 'input',
-						label: '数据表',
-						prop: 'dataSheet',
-						placeholder: '请输入数据表',
-						required: true,
-						disabled: false,
-					},
-					{
-						type: 'input',
-						label: '字段配置',
-						prop: 'field',
-						placeholder: '请输入字段配置',
-						required: true,
-						disabled: false,
-					},
-				],
+
 			},
 			{
-				icon: '/src/assets/svgicon/pacencap.svg',
+				icon: pacencapicon,
 				name: '头部添加',
 				type: 'pacencap',
 				id: '14',
-				form: [
-					{
-						type: 'input',
-						label: '发布模板',
-						prop: 'publish',
-						placeholder: '请输入发布模板',
-						required: true,
-						disabled: false,
-					},
-				],
+
 			},
 			{
-				icon: '/src/assets/svgicon/messparse.svg',
+				icon: messparseicon,
 				name: '消息解析',
 				 type: 'messparse',
 				id: '15',
-				form: [
-					{
-						type: 'input',
-						label: '内容模板',
-						prop: 'content',
-						placeholder: '请输入内容模板',
-						required: true,
-						disabled: false,
-					},
-				],
+
 			},
 			{
-				icon: '/src/assets/svgicon/messtraslate.svg',
+				icon: messtraslateicon,
 				name: '消息转化',
 				type: 'messtraslate',
 				id: '16',
-				form: [
-					{
-						type: 'input',
-						label: '活动名称6',
-						prop: 'name16',
-					},
-				],
+
 			},
 			{
-				icon: '/src/assets/svgicon/swich.svg',
+				icon: swichicon,
 				name: '条件分支',
 				type: 'swich',
 				id: '17',
-				form: [
-					{
-						type: 'input',
-						label: '活动名称6',
-						prop: 'name16',
-					},
-				],
+
 			},
 		],
 	},
@@ -185,30 +133,18 @@ export const leftNavList = [
 		id: '2',
 		children: [
 			{
-				icon: '/src/assets/svgicon/spemark.svg',
+				icon: spemarkicon,
 				name: '特殊标记',
 				id: '21',
 				 type: 'spemark',
-				form: [
-					{
-						type: 'input',
-						label: '活动名称7',
-						prop: 'name21',
-					},
-				],
+
 			},
 			{
-				icon: '/src/assets/svgicon/timemark.svg',
+				icon: timemarkicon,
 				name: '时间标记',
 				 type: 'timemark',
 				id: '22',
-				form: [
-					{
-						type: 'input',
-						label: '活动名称8',
-						prop: 'name22',
-					},
-				],
+
 			},
 
 		],
@@ -221,33 +157,21 @@ export const leftNavList = [
 		id: '3',
 		children: [
 			{
-				icon: '/src/assets/svgicon/timer.svg',
+				icon: timericon,
 				name: '定时器',
 				 type: 'timer',
 				id: '31',
-				form: [
-					{
-						type: 'input',
-						label: '活动名称1',
-						prop: 'name31',
-					},
-				],
+
 			},
 			{
-				icon: '/src/assets/svgicon/statistics.svg',
+				icon: statisticsicon,
 				name: '数据统计',
 				 type: 'statistics',
 				id: '32',
-				form: [
-					{
-						type: 'input',
-						label: '活动名称2',
-						prop: 'name32',
-					},
-				],
+
 			},
 			{
-				icon: '/src/assets/svgicon/calc.svg',
+				icon: calcicon,
 				name: '计算节点',
 				 type: 'calc',
 				id: '33',

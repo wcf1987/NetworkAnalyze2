@@ -1,9 +1,10 @@
 import IconNode from './IconNode'
 
+import calcicon from '/@/assets/svgicon/calc.svg';
 // 左上角ICON为消息的节点
 class CalcNode extends IconNode.view {
   getImageHref () {
-    return '/src/assets/svgicon/calc.svg';
+    return calcicon;
   }
 }
 

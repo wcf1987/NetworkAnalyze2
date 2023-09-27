@@ -32,7 +32,7 @@ const CropperDialog = defineAsyncComponent(() => import('/@/components/cropper/i
 // 定义变量内容
 const cropperDialogRef = ref();
 const state = reactive({
-	cropperImg: 'https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500',
+	cropperImg: 'face.png',
 });
 
 // 打开裁剪弹窗

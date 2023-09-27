@@ -105,11 +105,11 @@ export const filtering = [
 		],
 	},
 ];
-
+import flowdesign from '/@/assets/flowdesign.jpg';
 // 列表数据
 export const filterList = [
 	{
-		img: '/src/assets/flowdesign.jpg',
+		img: flowdesign,
 		title: '流程编排设计方案1',
 		evaluate: '通用流程设计方案测试',
 		collection: (Math.random() * 100).toFixed(2),
@@ -118,7 +118,7 @@ export const filterList = [
 		id: 1,
 	},
 	{
-		img: '/src/assets/flowdesign.jpg',
+		img: flowdesign,
 		title: '全空域网络通信流程',
 		evaluate: '专家测试2023',
 		collection: (Math.random() * 100).toFixed(2),
@@ -127,7 +127,7 @@ export const filterList = [
 		id: 2,
 	},
 	{
-		img: '/src/assets/flowdesign.jpg',
+		img: flowdesign,
 		title: '超高速导弹通讯设计方案1',
 		evaluate: '最终定型方案A',
 		collection: (Math.random() * 100).toFixed(2),

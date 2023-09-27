@@ -7,7 +7,7 @@
 					<div class="personal-user">
 						<div class="personal-user-left">
 							<el-upload class="h100 personal-user-left-upload" action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1">
-								<img src="https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500" />
+								<img :src=facepng />
 							</el-upload>
 						</div>
 						<div class="personal-user-right">
@@ -169,7 +169,7 @@
 import { reactive, computed } from 'vue';
 import { formatAxis } from '/@/utils/formatTime';
 import { newsInfoList, recommendList } from './mock';
-
+import facepng from '/@/assets/face.png';
 // 定义变量内容
 const state = reactive<PersonalState>({
 	newsInfoList,
