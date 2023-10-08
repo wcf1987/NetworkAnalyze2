@@ -14,12 +14,13 @@
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
-                <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Optional" label="转换模式" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="transrule" label="转换规则" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Name" label="转换名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="TargetName" label="目的字段名" show-overflow-tooltip></el-table-column>
 
-                <el-table-column prop="DefaultValue" label="默认值" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Optional" label="转换模式" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Transrule" label="转换规则" show-overflow-tooltip></el-table-column>
+
+                <el-table-column prop="DefaultValue" label="源字段" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="100">
@@ -81,39 +82,39 @@
         state.tableData.loading = true;
         const data = [{
             id: 1,
-            Name: '版本号',
-            Type: 'unsigned short',
+            Name: '版本号转换',
+            TargetName: 'version',
             Optional:'默认值',
-            transrule:'0x01',
+            Transrule:'0x01',
             DefaultValue: '0xf',
             describe: 'IP数据包A头结构',
             createTime: new Date().toLocaleString(),
         }, {
             id: 2,
-            Name: '服务类型',
-            Type: 'unsigned int',
-            Optional:'简单赋值',
-            transrule:'B.type',
+            Name: '服务类型转换',
+            TargetName: 'type',
+            Optional:'直接转换',
+            Transrule:'A.type',
             DefaultValue: '0xeb',
             describe: 'IP数据包A头结构',
 
             createTime: new Date().toLocaleString(),
         }, {
             id: 3,
-            Name: '电量',
-            Type: 'int',
-            Optional:'函数',
-            transrule:'CalcPower()',
+            Name: '电量计算',
+            TargetName: 'power',
+            Optional:'系统函数',
+            Transrule:'CalcPower(A.power)',
             DefaultValue: '0xeb',
             describe: 'IP数据包A头结构',
 
             createTime: new Date().toLocaleString(),
         }, {
             id: 4,
-            Name: '进度',
-            Type: 'unsigned int',
-            Optional:'自定义运算',
-            transrule:'10+32',
+            Name: '进度汇总',
+            TargetName: 'schedule',
+            Optional:'自定义转换计算',
+            Transrule:'(A.score+A.aditional)/100',
             DefaultValue: '0xeb',
             describe: 'IP数据包A头结构',
 

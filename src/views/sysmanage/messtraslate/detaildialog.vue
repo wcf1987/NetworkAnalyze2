@@ -4,43 +4,120 @@
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="名称" prop="name">
+                        <el-form-item label="转换名称" prop="name">
                             <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
-
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型">
-                            <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
-                                <el-option label="char" value="char"></el-option>
-                                <el-option label="unsigned char" value="unsigned char"></el-option>
-                                <el-option label="short" value="char"></el-option>
-                                <el-option label="unsigned short" value="unsigned char"></el-option>
-                                <el-option label="int" value="char"></el-option>
-                                <el-option label="unsigned int" value="unsigned char"></el-option>
-
-                            </el-select>
+                        <el-form-item label="目的字段">
+                            <el-input v-model="state.ruleForm.TargetName" placeholder="" clearable
+                                      readonly='true'></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+
+
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
                         <el-form-item label="转换模式">
                             <el-select v-model="state.ruleForm.Optional" placeholder="请选择" clearable class="w100">
                                 <el-option label="默认值" value="默认值"></el-option>
-                                <el-option label="简单赋值" value="简单赋值"></el-option>
-                                <el-option label="函数" value="函数"></el-option>
-                                <el-option label="自定义运算" value="自定义运算"></el-option>
+                                <el-option label="直接转换" value="直接转换"></el-option>
+                                <el-option label="系统函数" value="系统函数"></el-option>
+                                <el-option label="自定义转换计算" value="自定义转换计算"></el-option>
 
                             </el-select>
                         </el-form-item>
                     </el-col>
 
-
-
-
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                            v-if="state.ruleForm.Optional=='默认值'">
                         <el-form-item label="默认值">
-                            <el-input v-model="state.ruleForm.DefaultValue" placeholder="" clearable></el-input>
+                            <el-input v-model="state.ruleForm.Transrule" placeholder="" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+
+
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                            v-if="state.ruleForm.Optional=='直接转换'">
+
+                        <el-form-item label="源字段" :label-width="formLabelWidth" prop="source">
+
+                            <el-cascader v-model="state.ruleForm.Transrule" :options="sourceoptions" :props="props1"
+                                         clearable
+                                         style="width: 300px; " collapse-tags/>
+                        </el-form-item>
+                    </el-col>
+
+
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                            v-if="state.ruleForm.Optional=='系统函数'">
+                        <el-form-item label="转换函数" prop="funcrule">
+
+                            <el-cascader v-model="state.ruleForm.funcrule" :options="funcoptions" :props="props22"
+                                         clearable @change="changeSourceInput22"
+                                         collapse-tags/>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                            v-if="state.ruleForm.Optional=='系统函数'">
+
+                        <el-form-item label="源字段" prop="source">
+
+                            <el-cascader v-model="state.ruleForm.sourceData" :options="sourceoptions" :props="props21"
+                                         @change="changeSourceInput21"
+                                         clearable
+                                         style="width: 300px; " collapse-tags/>
+                        </el-form-item>
+                    </el-col>
+
+
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
+                            v-if="state.ruleForm.Optional=='系统函数'">
+
+                        <el-form-item label="转换公式" prop="rulestr" clearable>
+                            <el-input
+                                    :autosize="{ minRows: 2, maxRows: 10 }"
+                                    type="textarea"
+                                    placeholder="请输入转换公式"
+                                    v-model="state.ruleForm.Transrule" autocomplete="off"/>
+                        </el-form-item>
+                    </el-col>
+
+
+
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                            v-if="state.ruleForm.Optional=='自定义转换计算'">
+                        <el-form-item label="转换函数" prop="funcrule">
+
+                            <el-cascader v-model="state.ruleForm.funcrule" :options="funcoptions" :props="props32"
+                                         clearable @change="changeSourceInput32"
+                                         collapse-tags/>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                            v-if="state.ruleForm.Optional=='自定义转换计算'">
+
+                        <el-form-item label="源字段" prop="source">
+
+                            <el-cascader v-model="state.ruleForm.sourceData" :options="sourceoptions" :props="props21"
+                                         @change="changeSourceInput21"
+                                         clearable
+                                         style="width: 300px; " collapse-tags/>
+                        </el-form-item>
+                    </el-col>
+
+
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
+                            v-if="state.ruleForm.Optional=='自定义转换计算'">
+
+                        <el-form-item label="转换公式" prop="rulestr" clearable>
+                            <el-input
+                                    :autosize="{ minRows: 2, maxRows: 10 }"
+                                    type="textarea"
+                                    placeholder="请输入转换公式"
+                                    v-model="state.ruleForm.Transrule" autocomplete="off"/>
                         </el-form-item>
                     </el-col>
 
@@ -77,16 +154,55 @@
             {min: 1, max: 10, message: '名称长度为1 - 10位'},
         ],
     });
+    const sourceoptions = [
+        {ename: "A.name", name: 'A.name'},
+        {ename: "A.type", name: 'A.type'},
+        {ename: "A.power", name: 'A.power'},
+        {ename: 'A.score', name: 'A.score'},
+        {ename: 'A.aditional', name: 'A.aditional'},
+    ]
+    const props1 = {
+        multiple: false,
+        expandTrigger: 'hover',
+        value: 'ename',
+        label: 'name'
+    }
+    const props21 = {
+        multiple: true,
+        expandTrigger: 'hover',
+        value: 'ename',
+        label: 'name'
+    }
+    const props22 = {
+        expandTrigger: 'hover',
+        emitPath: 'false',
+        value: 'name',
+        label: 'name'
+    }
+        const props32= {
+        multiple: true,
+        expandTrigger: 'hover',
+
+        value: 'name',
+        label: 'name'
+    }
+    const funcoptions = ref([
+        {name: 'Calc()'},
+        {name: 'Substr()'},
+        {name: 'Splice()'},
+        {name: 'Push()'},
+        {name: 'Add()'},
+        {name: 'Encode()'},
+    ])
     const state = reactive({
         ruleForm: {
             Name: '', // 账户名称
+            TargetName: '',
             Type: '', // 用户昵称
             Optional: '',
-            Encode: '',
-            Nest: '',
-            Length: '',
-            ArrayOr: '',
-            DefaultValue: '',
+            Transrule: '',
+            sourceData: '',
+            funcrule: '',
             describe: '', // 用户描述
         },
         dialog: {
@@ -96,7 +212,43 @@
             submitTxt: '',
         },
     });
+    const changeSourceInput = (fo) => {
+        console.log(fo)
+        let i = 0, tempstr = ''
+        for (i = 0; i < fo.length; i++) {
+            tempstr = tempstr + fo[i]
+        }
+        state.value.ruleForm.Transrule = [tempstr];
 
+
+    }
+    const changeSourceInput21 = (fo) => {
+        console.log(fo)
+        let i = 0, tempstr = ''
+        for (i = 0; i < fo.length; i++) {
+            tempstr = tempstr + fo[i]+'\n'
+        }
+        state.ruleForm.Transrule = state.ruleForm.funcrule+tempstr;
+
+
+    }
+    const changeSourceInput22 = (fo) => {
+        console.log(fo)
+
+        state.ruleForm.Transrule =  fo[0];
+
+
+    }
+        const changeSourceInput32 = (fo) => {
+        console.log(fo)
+        let i = 0, tempstr = ''
+        for (i = 0; i < fo.length; i++) {
+            tempstr = tempstr + fo[i]+'\n'
+        }
+        state.ruleForm.Transrule = tempstr;
+
+
+    }
     // 打开弹窗
     const openDialog = (type: string, row: RowUserType) => {
         if (type === 'edit') {

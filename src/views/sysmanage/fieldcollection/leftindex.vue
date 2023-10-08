@@ -118,7 +118,7 @@
                 },
                 {
                     classifyName: '飞控标准CN3-2',
-                    id: '2',
+                    id: '3',
                     children: [
                         {
                             classifyName: '陆航机0.1.3',

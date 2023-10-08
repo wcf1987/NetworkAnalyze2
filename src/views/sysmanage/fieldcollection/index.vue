@@ -59,7 +59,7 @@
                     >
                     </el-pagination>
                 </el-card>
-                <UserDialog ref="userDialogRef" @refresh="getTableData('1')"/>
+                <UserDialog ref="userDialogRef" @refresh="getTableData('2')"/>
             </pane>
         </splitpanes>
     </div>
@@ -213,7 +213,7 @@
     };
     // 页面加载时
     onMounted(() => {
-        getTableData();
+        getTableData('1');
     });
 </script>
 
