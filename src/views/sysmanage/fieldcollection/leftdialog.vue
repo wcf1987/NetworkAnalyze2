@@ -22,7 +22,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="标准名称">
-							<el-input v-model="state.ruleForm.deptName" placeholder="请输入标准名称" clearable></el-input>
+							<el-input v-model="state.ruleForm.classifyName" placeholder="请输入标准名称" clearable></el-input>
 						</el-form-item>
 					</el-col>
 
@@ -53,6 +53,7 @@ const emit = defineEmits(['refresh']);
 const deptDialogFormRef = ref();
 const state = reactive({
 	ruleForm: {
+		classifyName:'',
 		deptLevel: [] as string[], // 上级部门
 		deptName: '', // 部门名称
 		person: '', // 负责人

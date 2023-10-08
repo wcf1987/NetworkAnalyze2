@@ -23,10 +23,12 @@
                     row-key="id"
                     default-expand-all
                     :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+                    @cell-click="showRightField"
+                    :row-style="clickStyle"
             >
-                <el-table-column prop="classifyName" label="标准名称" show-overflow-tooltip ></el-table-column>
+                <el-table-column prop="classifyName" label="标准名称" show-overflow-tooltip></el-table-column>
 
-                <el-table-column label="操作" show-overflow-tooltip >
+                <el-table-column label="操作" show-overflow-tooltip>
                     <template #default="scope">
                         <el-button size="small" text type="primary" @click="onOpenEditDept('edit', scope.row)">修改
                         </el-button>
@@ -42,7 +44,7 @@
 <script setup lang="ts" name="systemDept">
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
-
+    const emit = defineEmits(['refresh']);
     // 引入组件
     const DeptDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/leftdialog.vue'));
 
@@ -59,6 +61,35 @@
             },
         },
     });
+    const clickStyle = ({row,  rowIndex}) => {
+        // 状态列字体颜色
+         //console.log(tableRowEditId.value);
+         //console.log(row.id);
+
+        //return {backgroundColor: "rgb(197, 213, 255) !important"};
+        if (row.id == tableRowEditId.value ) {
+            return {backgroundColor: "rgb(197, 213, 255) !important"};
+        }
+    }
+    const tableRowEditId = ref(null);// 控制可编辑的每一行
+    const tableColumnEditIndex = ref(null);//控制可编辑的每一列
+    const showRightField = (row: any, column: any) => {
+        // console.log('row', row)
+        // console.log('column', column)
+        //赋值给定义的变量
+        tableRowEditId.value = row.id //确定点击的单元格在哪行 如果数据中有ID可以用ID判断，没有可以使用其他值判断，只要能确定是哪一行即可
+        tableColumnEditIndex.value = column.id //确定点击的单元格在哪列
+        //alert(row.classifyName);
+
+        if(row.classifyName=='消息字段合集'){
+            emit('refresh','1');
+        }else{
+            emit('refresh','2');
+        }
+
+
+    }
+
 
     // 初始化表格数据
     const getTableData = () => {
@@ -72,34 +103,34 @@
                 {
                     classifyName: '数据包标准ISO9.1',
                     id: '2',
-                    children:[
-						{
-							classifyName: '子包标准IS13.1',
-                    id: '11',
-						},{
-                    	classifyName: '子包标准IS13.2',
-                    id: '12',
-						},{
-                    	classifyName: '子包标准IS13.3',
-                    id: '13',
-						}
-					]
+                    children: [
+                        {
+                            classifyName: '子包标准IS13.1',
+                            id: '11',
+                        }, {
+                            classifyName: '子包标准IS13.2',
+                            id: '12',
+                        }, {
+                            classifyName: '子包标准IS13.3',
+                            id: '13',
+                        }
+                    ]
                 },
                 {
                     classifyName: '飞控标准CN3-2',
                     id: '2',
-					children:[
-						{
-							classifyName: '陆航机0.1.3',
-                    id: '21',
-						},{
-                    	classifyName: '舰载机1.0.2',
-                    id: '22',
-						},{
-                    	classifyName: '无人机9.3',
-                    id: '23',
-						}
-					]
+                    children: [
+                        {
+                            classifyName: '陆航机0.1.3',
+                            id: '21',
+                        }, {
+                            classifyName: '舰载机1.0.2',
+                            id: '22',
+                        }, {
+                            classifyName: '无人机9.3',
+                            id: '23',
+                        }
+                    ]
                 },
             ],
         });
@@ -118,7 +149,7 @@
     };
     // 删除当前行
     const onTabelRowDel = (row: DeptTreeType) => {
-        ElMessageBox.confirm(`此操作将永久删除标准：${row.deptName}, 是否继续?`, '提示', {
+        ElMessageBox.confirm(`此操作将永久删除标准：${row.classifyName}, 是否继续?`, '提示', {
             confirmButtonText: '删除',
             cancelButtonText: '取消',
             type: 'warning',

@@ -127,7 +127,7 @@
     // 提交
     const onSubmit = () => {
         closeDialog();
-        emit('refresh');
+        emit('refresh','1');
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据
