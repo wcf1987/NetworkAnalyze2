@@ -1,6 +1,10 @@
 <template>
     <div class="system-user-container layout-padding">
-
+        <splitpanes class='default-theme' style='height: 100%' v-show='true'>
+            <pane size='0' min-size="0" max-size="0">
+                <leftindex @refresh="getTableData"></leftindex>
+            </pane>
+            <pane>
                 <el-card shadow="hover" class="layout-padding-auto">
                     <div class="system-user-search mb15">
                         <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"></el-input>
@@ -36,10 +40,10 @@
                         <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip v-if="isHide"></el-table-column>
                         <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="TableName" label="标准表名" show-overflow-tooltip v-if="isHide"></el-table-column>
-                        <el-table-column prop="TableSaveName" label="标准表存储名" show-overflow-tooltip v-if="isHide"></el-table-column>
+                        <el-table-column prop="TableName" label="标准表存储名" show-overflow-tooltip v-if="isHide"></el-table-column>
                         <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip v-if="isHide"> </el-table-column>
-                        <el-table-column label="操作" width="130">
+                        <el-table-column label="操作" width="100">
                             <template #default="scope">
 
                                 <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -72,7 +76,8 @@
                     </el-pagination>
                 </el-card>
                 <UserDialog ref="userDialogRef" @refresh="getTableData('2')"/>
-
+            </pane>
+        </splitpanes>
     </div>
 </template>
 

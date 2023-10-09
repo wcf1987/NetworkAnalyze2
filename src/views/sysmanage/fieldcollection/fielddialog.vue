@@ -1,96 +1,53 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" draggable="true">
+
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
-
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"  v-if="false">
-                        <el-form-item label="ID" prop="ID" >
-                            <el-input v-model="state.ruleForm.ID" placeholder="请输入名称" clearable ></el-input>
+                        <el-form-item label="ID" prop="ID">
+                            <el-input v-model="state.ruleForm.ID" placeholder="请输入名称" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="标识号" prop="IDNO">
+                            <el-input v-model="state.ruleForm.IDNO" placeholder="请输入标识号" clearable :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="DFI标识号" prop="DFINO" >
-                            <el-input v-model="state.ruleForm.DFINO" placeholder="请输入DFI标识号" clearable :readonly="isReadOnly"></el-input>
+                        <el-form-item label="版本" prop="Version">
+                            <el-input v-model="state.ruleForm.Version" placeholder="请输入版本" clearable :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="DFI版本" prop="DFIVersion">
-                            <el-input v-model="state.ruleForm.DFIVersion" placeholder="请输入DFI版本" clearable :readonly="isReadOnly"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="DUI标识号" prop="DUINO">
-                            <el-input v-model="state.ruleForm.DUINO" placeholder="请输入DUI标识号" clearable :readonly="isReadOnly"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="DUI版本" prop="DUIVersion">
-                            <el-input v-model="state.ruleForm.DUIVersion" placeholder="请输入DUI版本" clearable :readonly="isReadOnly"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="名称" prop="Name">
+                        <el-form-item label="名称" prop="name">
                             <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="引用名" prop="EName">
-                            <el-input v-model="state.ruleForm.EName" placeholder="请输入引用名" clearable :readonly="isReadOnly"> </el-input>
-                        </el-form-item>
-                    </el-col>
+
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="简称" prop="ShortName">
                             <el-input v-model="state.ruleForm.ShortName" placeholder="请输入简称" clearable :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型" :readonly="isReadOnly">
 
-                            <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable
-                                       class="w100">
-                                <el-option
-                                        v-for="item in options"
-                                        :key="item.id"
-                                        :label="item.label"
-                                        :value="item"
-                                />
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="格式内码" prop="TypeCode">
-                            <el-input v-model="state.ruleForm.TypeCode" placeholder="请输入数据格式内码" clearable :readonly="isReadOnly"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="位数" prop="Length">
-                            <el-input v-model="state.ruleForm.Length" placeholder="请输入位数" clearable :readonly="isReadOnly"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="标准表名" prop="TableName">
-                            <el-input v-model="state.ruleForm.TableName" placeholder="请输入标准表名" clearable :readonly="isReadOnly"></el-input>
+                        <el-form-item label="注释" prop="describe">
+                            <el-input v-model="state.ruleForm.describe" placeholder="请输入注释" clearable :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="表存储名" prop="TableSaveName">
-                            <el-input v-model="state.ruleForm.TableSaveName" placeholder="请输入标准表存储名" clearable :readonly="isReadOnly"></el-input>
+                        <el-form-item label="适用消息" prop="ApplicableMess">
+                            <el-input v-model="state.ruleForm.ApplicableMess" placeholder="请输入适用消息" clearable :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
 
 
 
 
-
-                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="说明" prop="Describe">
-                            <el-input v-model="state.ruleForm.Describe" placeholder="请输入说明" clearable :readonly="isReadOnly"></el-input>
-                        </el-form-item>
-                    </el-col>
 
 
                 </el-row>
@@ -114,6 +71,7 @@
     const options = ref(FieldType);
     // 定义变量内容
     const userDialogFormRef = ref();
+    const isReadOnly=ref(false);
     const rules = reactive({
 // 普通的校验规则
         name: [
@@ -139,10 +97,10 @@
             submitTxt: '',
         },
     });
-    const isReadOnly=ref(false);
+
     // 打开弹窗
     const openDialog = (type: string, row: RowUserType) => {
-      if (type === 'edit') {
+        if (type === 'edit') {
             state.ruleForm = row;
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
@@ -164,6 +122,7 @@
             });
         }
         state.dialog.isShowDialog = true;
+
     };
     // 关闭弹窗
     const closeDialog = () => {
@@ -187,3 +146,6 @@
         openDialog,
     });
 </script>
+<style scoped lang="scss">
+
+</style>

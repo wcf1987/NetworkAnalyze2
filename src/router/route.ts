@@ -60,7 +60,7 @@ export const dynamicRoutes: {
         path: '/',
         name: '/',
         component: () => import('/@/layout/index.vue'),
-        redirect: '/home',
+        redirect: '/flowmanage/flowdesign',
         meta: {
             isKeepAlive: true,
         },
@@ -70,7 +70,7 @@ export const dynamicRoutes: {
                 path: '/sysmanage',
                 name: 'sysmanage',
                 component: () => import('/@/layout/routerView/parent.vue'),
-                redirect: '/system/menu',
+                redirect: '/home',
                 meta: {
                     title: 'message.router.sysmanage',
                     isLink: '',
@@ -276,20 +276,36 @@ export const dynamicRoutes: {
                         ],
                     }
                     , {
-                        path: '/sysmanage/fieldcollection',
-                        name: 'fieldcollection',
-                        component: () => import('/@/views/sysmanage/fieldcollection/index.vue'),
+                        path: '/sysmanage/field',
+                        name: 'field',
+                        component: () => import('/@/views/sysmanage/fieldcollection/field.vue'),
                         meta: {
-                            title: 'message.router.fieldcollection',
+                            title: 'message.router.field',
                             isLink: '',
                             isHide: false,
                             isKeepAlive: true,
                             isAffix: false,
                             isIframe: false,
                             roles: ['admin', 'common'],
-                            icon: 'iconfont icon-ico_shuju',
+                            icon: 'iconfont icon--chaifenhang',
                         },
-                    },
+                        children: [{
+                            path: '/sysmanage/field/fieldcollection',
+                            name: 'fieldcollection',
+                            component: () => import('/@/views/sysmanage/fieldcollection/index.vue'),
+                            meta: {
+                                title: 'message.router.fieldcollection',
+                                isLink: '',
+                                isHide: true,
+                                isKeepAlive: false,
+                                isAffix: false,
+                                isIframe: false,
+                                roles: ['admin', 'common'],
+                                icon: 'iconfont icon-ico_shuju',
+                            },
+
+                        }],
+                    }
                 ]
 
             },
