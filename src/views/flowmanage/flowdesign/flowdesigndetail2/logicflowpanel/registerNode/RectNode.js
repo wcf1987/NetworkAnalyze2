@@ -3,8 +3,13 @@ import { RectResize } from '@logicflow/extension'
 
 // 矩形
 class RectNewModel extends RectResize.model {
+//矩形外框大小设置
+initNodeData(data) {
+    super.initNodeData(data);
+    this.width = 120;
+    this.height = 80;
 
-
+  }
 
   setToBottom () {
     this.zIndex = 0
@@ -27,7 +32,7 @@ class RectNewModel extends RectResize.model {
   }
   getTextStyle () {
     const style = super.getTextStyle()
-    style.fontSize=24;
+    style.fontSize=14;
     const properties = this.getProperties()
     return style
   }

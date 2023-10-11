@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<el-drawer :title="`${state.nodeData.type === 'line' ? '线' : '节点'}操作`" v-model="state.isOpen" size="320px">
+		<el-drawer :title="`${state.nodeData.type === 'bezier' ? '连接' : '节点'}操作`" v-model="state.isOpen" size="320px">
 			<el-scrollbar>
-				<Lines v-if="state.nodeData.type === 'line'" @change="onLineChange" @close="close" ref="lineRef" />
+				<Lines v-if="state.nodeData.type === 'bezier'" @change="onLineChange" @close="close" ref="lineRef" />
 				<Nodes v-else @submit="onNodeSubmit" @close="close" ref="nodeRef" />
 			</el-scrollbar>
 		</el-drawer>
@@ -22,23 +22,22 @@ const Nodes = defineAsyncComponent(() => import('./node.vue'));
 // 定义变量内容
 const lineRef = ref();
 const nodeRef = ref();
-const state = reactive<WorkflowDrawerState>({
+const state = reactive({
 	isOpen: false,
 	nodeData: {
 		type: 'node',
 	},
-	jsplumbConn: {},
+
 });
 
 // 打开抽屉
-const open = (item: WorkflowDrawerLabelType, conn: EmptyObjectType) => {
+const open = (item,lf) => {
 	state.isOpen = true;
-	state.jsplumbConn = conn;
 	state.nodeData = item;
 	nextTick(() => {
 		setTimeout(() => {
-			if (item.type === 'line') lineRef.value.getParentData(item);
-			else nodeRef.value.getParentData(item);
+			if (item.type === 'bezier') lineRef.value.getParentData(item,lf);
+			else nodeRef.value.getParentData(item,lf);
 		}, 300);
 	});
 };
@@ -48,12 +47,11 @@ const close = () => {
 };
 // 线 label 内容改变时
 const onLineChange = (label: string) => {
-	state.jsplumbConn.label = label;
-	emit('label', state.jsplumbConn);
+
 };
 // 节点内容改变时
 const onNodeSubmit = (data: object) => {
-	emit('node', data);
+
 };
 
 // 暴露变量

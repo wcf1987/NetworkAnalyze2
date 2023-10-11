@@ -30,11 +30,16 @@ const state = reactive({
 		{ icon: 'ele-FullScreen', title: '全屏', fnName: 'fullscreen' },
 	],
 });
+const props = defineProps({
+	dropdown: {
+		name: '',
 
+	},
+});
 // 设置 tool 标题
 const setToolTitle = computed(() => {
 	let { globalTitle } = themeConfig.value;
-	return `流程编排工作流`;
+	return '流程编排工作流 : '+props.dropdown;
 });
 // 顶部工具栏
 const onToolClick = (fnName: string) => {

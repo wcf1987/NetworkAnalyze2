@@ -7,10 +7,16 @@ class TimerNode extends IconNode.view {
     return timericon;
   }
 }
+class TimerNodeModel extends IconNode.model{
+    initNodeData(data) {
+    super.initNodeData(data);
+    this.text.value = "定时器"; // 不允许文本被拖动
 
+  }
+}
 
 export default {
   type: 'timer',
   view: TimerNode,
-  model: IconNode.model
+  model: TimerNodeModel
 }

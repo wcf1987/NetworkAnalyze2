@@ -31,7 +31,7 @@
 				<el-table-column prop="describe" label="注释" show-overflow-tooltip v-if="isHide"></el-table-column>
 				<el-table-column prop="ApplicableMess" label="适用消息" show-overflow-tooltip v-if="isHide"></el-table-column>
 				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip v-if="isHide"></el-table-column>
-				<el-table-column label="操作" width="180">
+				<el-table-column label="操作" width="200">
 					<template #default="scope">
 						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEdit('view', scope.row)"
 							>详情</el-button

@@ -3,83 +3,86 @@
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" draggable="true">
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="名称" prop="name">
-                            <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
-                        </el-form-item>
-                    </el-col>
 
 
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型">
-                            <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
-                                <el-option label="char" value="char"></el-option>
-                                <el-option label="unsigned char" value="unsigned char"></el-option>
-                                <el-option label="short" value="char"></el-option>
-                                <el-option label="unsigned short" value="unsigned char"></el-option>
-                                <el-option label="int" value="char"></el-option>
-                                <el-option label="unsigned int" value="unsigned char"></el-option>
 
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="是否可选">
-                            <el-select v-model="state.ruleForm.Optional" placeholder="请选择" clearable class="w100">
-                                <el-option label="强制选择" value="强制选择"></el-option>
-                                <el-option label="可选项" value="可选项"></el-option>
-                                <el-option label="非可选项" value="非可选项"></el-option>
-
-
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="编码">
-                            <el-input v-model="state.ruleForm.Encode" placeholder="" clearable></el-input>
-                        </el-form-item>
-                    </el-col>
-
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="是否嵌套">
-                            <el-select v-model="state.ruleForm.Nest" placeholder="请选择" clearable class="w100">
-                                <el-option label="否" value="否"></el-option>
-                                <el-option label="单嵌套" value="单嵌套"></el-option>
-                                <el-option label="嵌套数组" value="嵌套数组"></el-option>
-
-
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="位数">
-                            <el-input v-model="state.ruleForm.Length" placeholder="" clearable></el-input>
-                        </el-form-item>
-                    </el-col>
 
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="是否数组">
-                            <el-select v-model="state.ruleForm.ArrayOr" placeholder="请选择" clearable class="w100">
-                                <el-option label="是" value="是"></el-option>
-                                <el-option label="否" value="否"></el-option>
+                        <el-form-item label="数据标识">
+                            <el-select v-model="state.ruleForm.Flag" placeholder="请选择" clearable class="w100">
+                                <el-option label="数据域" value="数据域"></el-option>
+                                <el-option label="标识域" value="标识域"></el-option>
 
 
                             </el-select>
                         </el-form-item>
                     </el-col>
 
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="默认值">
-                            <el-input v-model="state.ruleForm.DefaultValue" placeholder="" clearable></el-input>
+   <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"  v-if="false">
+                        <el-form-item label="ID" prop="ID" >
+                            <el-input v-model="state.ruleForm.ID" placeholder="请输入名称" clearable ></el-input>
                         </el-form-item>
                     </el-col>
+
+
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="名称" prop="Name">
+                            <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable :readonly="isReadOnly"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="引用名" prop="EName">
+                            <el-input v-model="state.ruleForm.EName" placeholder="请输入引用名" clearable :readonly="isReadOnly"> </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="简称" prop="ShortName">
+                            <el-input v-model="state.ruleForm.ShortName" placeholder="请输入简称" clearable :readonly="isReadOnly"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="类型" :readonly="isReadOnly">
+
+                            <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable
+                                       class="w100">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.id"
+                                        :label="item.label"
+                                        :value="item"
+                                />
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"  v-if="false">
+                        <el-form-item label="格式内码" prop="TypeCode">
+                            <el-input v-model="state.ruleForm.TypeCode" placeholder="请输入数据格式内码" clearable :readonly="isReadOnly"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="位数" prop="Length">
+                            <el-input v-model="state.ruleForm.Length" placeholder="请输入位数" clearable :readonly="isReadOnly"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"  v-if="false">
+                        <el-form-item label="标准表名" prop="TableName">
+                            <el-input v-model="state.ruleForm.TableName" placeholder="请输入标准表名" clearable :readonly="isReadOnly"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"  v-if="false">
+                        <el-form-item label="表存储名" prop="TableSaveName">
+                            <el-input v-model="state.ruleForm.TableSaveName" placeholder="请输入标准表存储名" clearable :readonly="isReadOnly"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+
+
+
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="用户描述">
-                            <el-input v-model="state.ruleForm.describe" type="textarea" placeholder="请输入用户描述"
-                                      maxlength="150"></el-input>
+                        <el-form-item label="说明" prop="Describe">
+                            <el-input v-model="state.ruleForm.Describe" placeholder="请输入说明" clearable :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -99,7 +102,8 @@
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-
+    import {FieldType} from '/@/utils/common';
+const options = ref(FieldType);
     // 定义变量内容
     const userDialogFormRef = ref();
     const rules = reactive({
@@ -129,22 +133,31 @@
         },
     });
 
+   const isReadOnly=ref(false);
     // 打开弹窗
     const openDialog = (type: string, row: RowUserType) => {
-        if (type === 'edit') {
+      if (type === 'edit') {
             state.ruleForm = row;
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
-        } else {
+            isReadOnly.value=false;
+        }
+        if(type=="view"){
+            state.ruleForm = row;
+            state.dialog.title = '查看';
+            state.dialog.submitTxt = '查 看';
+            isReadOnly.value=true;
+        }
+             if(type=="add") {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
+            isReadOnly.value=false;
             // 清空表单，此项需加表单验证才能使用
             nextTick(() => {
                 userDialogFormRef.value.resetFields();
             });
         }
         state.dialog.isShowDialog = true;
-        getMenuData();
     };
     // 关闭弹窗
     const closeDialog = () => {

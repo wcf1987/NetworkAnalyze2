@@ -7,10 +7,16 @@ class StatisticsNode extends IconNode.view {
     return statisticsicon;
   }
 }
+class StatisticsNodeModel extends IconNode.model{
+    initNodeData(data) {
+    super.initNodeData(data);
+    this.text.value = "数据统计"; // 不允许文本被拖动
 
+  }
+}
 
 export default {
   type: 'statistics',
   view: StatisticsNode,
-  model: IconNode.model
+  model: StatisticsNodeModel
 }

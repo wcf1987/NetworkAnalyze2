@@ -3,8 +3,12 @@ import starticon from '/@/assets/svgicon/start.svg';
 import targeticon from '/@/assets/svgicon/target.svg';
 import pacparseicon from '/@/assets/svgicon/pacparse.svg';
 import pacencapicon from '/@/assets/svgicon/pacencap.svg';
-import messparseicon from '/@/assets/svgicon/messparse.svg';
 import messtraslateicon from '/@/assets/svgicon/messtraslate.svg';
+import messheaderparseicon from '/@/assets/svgicon/messheaderparse.svg';
+import messheaderencapicon from '/@/assets/svgicon/messheaderencap.svg';
+import messbodyparseicon from '/@/assets/svgicon/messbodyparse.svg';
+import messbodyencapicon from '/@/assets/svgicon/messbodyencap.svg';
+
 import swichicon from '/@/assets/svgicon/swich.svg';
 import spemarkicon from '/@/assets/svgicon/spemark.svg';
 import timemarkicon from '/@/assets/svgicon/timemark.svg';
@@ -90,22 +94,42 @@ export const leftNavList = [
 			},
 			{
 				icon: pacparseicon,
-				name: '头部解析',
+				name: '封装/应用头解析',
 				type: 'pacparse',
 				id: '13',
 
 			},
 			{
 				icon: pacencapicon,
-				name: '头部添加',
+				name: '封装/应用头添加',
 				type: 'pacencap',
 				id: '14',
 
+			},{
+				icon: messheaderparseicon,
+				name: '消息头解析',
+				 type: 'messheaderparse',
+				id: '15',
+
 			},
 			{
-				icon: messparseicon,
-				name: '消息解析',
-				 type: 'messparse',
+				icon: messheaderencapicon,
+				name: '消息头添加',
+				 type: 'messheaderencap',
+				id: '15',
+
+			},
+			{
+				icon: messbodyparseicon,
+				name: '消息体解析',
+				 type: 'messbodyparse',
+				id: '15',
+
+			},
+			{
+				icon: messbodyencapicon,
+				name: '消息体添加',
+				 type: 'messbodyencap',
 				id: '15',
 
 			},

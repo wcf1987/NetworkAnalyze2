@@ -7,10 +7,16 @@ class SpemarkNode extends IconNode.view {
     return spemarkicon;
   }
 }
+class SpemarkNodeModel extends IconNode.model{
+    initNodeData(data) {
+    super.initNodeData(data);
+    this.text.value = "特殊标记"; // 不允许文本被拖动
 
+  }
+}
 
 export default {
   type: 'spemark',
   view: SpemarkNode,
-  model: IconNode.model
+  model: SpemarkNodeModel
 }

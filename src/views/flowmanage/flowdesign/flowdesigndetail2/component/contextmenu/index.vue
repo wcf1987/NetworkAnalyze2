@@ -19,7 +19,7 @@
 					@click="onCurrentClick(v.contextMenuClickId)"
 				>
 					<SvgIcon :name="v.icon" />
-					<span>{{ v.txt }}{{ state.item.type === 'line' ? '线' : '节点' }}</span>
+					<span>{{ v.txt }}{{ state.item.type === 'bezier' ? '连接' : '节点' }}</span>
 				</li>
 			</ul>
 			<div class="el-popper__arrow" style="left: 10px"></div>
@@ -59,16 +59,17 @@ const state = reactive({
 
 // 父级传过来的坐标 x,y 值
 const dropdowns = computed(() => {
+	//console.log(props.dropdown);
 	return props.dropdown;
 });
 // 当前项菜单点击
 const onCurrentClick = (contextMenuClickId: number) => {
-	emit('current', Object.assign({}, { contextMenuClickId }, state.item), state.conn);
+	emit('current', contextMenuClickId , state.item);
 };
 // 打开右键菜单：判断是否固定，固定则不显示关闭按钮
-const openContextmenu = (item: WorkflowDrawerLabelType, conn = {}) => {
-	state.item = item;
-	state.conn = conn;
+const openContextmenu = (type,data) => {
+	state.item = data;
+
 	closeContextmenu();
 	setTimeout(() => {
 		state.isShow = true;

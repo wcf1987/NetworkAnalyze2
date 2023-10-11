@@ -25,17 +25,18 @@
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
-                <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Optional" label="是否可选" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Encode" label="编码" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Nest" label="嵌套" show-overflow-tooltip></el-table-column>
+                 <el-table-column type="Flag" label="数据标识" />
+               <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="Describe" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
+                        <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip v-if="isHide"></el-table-column>
+                        <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="TableName" label="标准表名" show-overflow-tooltip v-if="isHide"></el-table-column>
+                        <el-table-column prop="TableSaveName" label="标准表存储名" show-overflow-tooltip v-if="isHide"></el-table-column>
+                        <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip v-if="isHide"> </el-table-column>
 
-                <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="ArrayOr" label="是否数组" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="DefaultValue" label="默认值" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="160">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -69,6 +70,7 @@
             </el-pagination>
         </el-card>
         <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
+             <ImportDialog ref="importDialogRef" @refresh="getTableData()"/>
     </div>
 </template>
 
@@ -79,9 +81,12 @@
 
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messbody/detaildialog.vue'));
+    const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messbody/importdialog.vue'));
+
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
+    const importDialogRef=ref();
     const state = reactive<SysUserState>({
         tableData: {
             data: [],
@@ -134,6 +139,9 @@
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
         userDialogRef.value.openDialog(type);
+    };
+        const onOpenImport= (type: string) => {
+        importDialogRef.value.openDialog(type);
     };
     // 打开修改用户弹窗
     const onOpenEdit = (type: string, row: RowUserType) => {

@@ -7,10 +7,16 @@ class CalcNode extends IconNode.view {
     return calcicon;
   }
 }
+class CalcNodeModel extends IconNode.model{
+    initNodeData(data) {
+    super.initNodeData(data);
+    this.text.value = "计算节点"; // 不允许文本被拖动
 
+  }
+}
 
 export default {
   type: 'calc',
   view: CalcNode,
-  model: IconNode.model
+  model: CalcNodeModel
 }

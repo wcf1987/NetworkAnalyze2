@@ -9,11 +9,15 @@ import CustomLine from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicfl
 import MesstraslateNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/MesstraslateNode";
 import PacparseNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/PacparseNode";
 import PacencapNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/PacencapNode";
-import MessparseNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/MessparseNode";
+import MessheaderparseNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/MessheaderparseNode";
+import MessheaderencapNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/MessheaderencapNode";
+import MessbodyparseNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/MessbodyparseNode";
+import MessbodyencapNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/MessbodyencapNode";
+
 import CalcNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/CalcNode";
 import SpemarkNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/SpemarkNode";
 import StatisticsNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/StatisticsNode";
 import SwichNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/SwichNode";
 import TimemarkNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/TimemarkNode";
 import TimerNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/TimerNode";
-export { StartNode,EndNode, CustomLine,MesstraslateNode,PacparseNode,PacencapNode,MessparseNode,CalcNode,SpemarkNode,StatisticsNode,SwichNode,TimemarkNode,TimerNode}
+export { StartNode,EndNode, CustomLine,MesstraslateNode,PacparseNode,PacencapNode,MessheaderparseNode,MessheaderencapNode,MessbodyparseNode,MessbodyencapNode,CalcNode,SpemarkNode,StatisticsNode,SwichNode,TimemarkNode,TimerNode}

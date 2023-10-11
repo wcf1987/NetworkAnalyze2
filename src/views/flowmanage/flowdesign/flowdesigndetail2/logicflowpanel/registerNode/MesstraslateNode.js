@@ -7,10 +7,16 @@ class MesstraslateNode extends IconNode.view {
     return messtraslateicon;
   }
 }
+class MesstraslateNodeModel extends IconNode.model{
+    initNodeData(data) {
+    super.initNodeData(data);
+    this.text.value = "消息转化"; // 不允许文本被拖动
 
+  }
+}
 
 export default {
   type: 'messtraslate',
   view: MesstraslateNode,
-  model: IconNode.model
+  model: MesstraslateNodeModel
 }

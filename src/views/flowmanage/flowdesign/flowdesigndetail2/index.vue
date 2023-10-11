@@ -4,7 +4,7 @@
         <div class="layout-padding-auto layout-padding-view workflow-warp">
             <div class="workflow">
                 <!-- 顶部工具栏 -->
-                <Tool @tool="onToolClick"/>
+                <Tool @tool="onToolClick" :dropdown="state.FlowName"/>
 
                 <!-- 左侧导航区 -->
                 <div class="workflow-content">
@@ -24,7 +24,7 @@
                                 <div class="workflow-left-item" v-for="(v, k) in val.children" :key="k"
                                      :data-name="v.name" :data-icon="v.icon" :data-id="v.id" @mousedown="dragNode(v)">
                                     <div class="workflow-left-item-icon">
-                                        <SvgIcon :name="v.icon" class="workflow-icon-drag" left="0" size="16"/>
+                                        <SvgIcon :name="v.icon" class="workflow-icon-drag" left=0 size=16 />
                                         <div class="font10 pl5 name">{{ v.name }}</div>
                                     </div>
                                 </div>
@@ -40,7 +40,10 @@
             </div>
         </div>
 
-
+        <!-- 节点右键菜单 -->
+        <Contextmenu :dropdown="state.dropdownNode" ref="contextmenuNodeRef" @current="onCurrentNodeClick"/>
+        <!-- 线右键菜单 -->
+        <Contextmenu :dropdown="state.dropdownLine" ref="contextmenuLineRef" @current="onCurrentLineClick"/>
         <!-- 抽屉表单、线 -->
         <Drawer ref="drawerRef" @label="setLineLabel" @node="setNodeContent"/>
 
@@ -69,7 +72,11 @@
         CalcNode,
         CustomLine,
         EndNode,
-        MessparseNode,
+        MessheaderparseNode,
+
+    MessheaderencapNode,
+MessbodyparseNode,
+    MessbodyencapNode,
         MesstraslateNode,
         PacencapNode,
         PacparseNode,
@@ -84,7 +91,7 @@
     // 引入组件
 
     const Tool = defineAsyncComponent(() => import('./component/tool/index.vue'));
-
+    const Contextmenu = defineAsyncComponent(() => import('./component/contextmenu/index.vue'));
     const Drawer = defineAsyncComponent(() => import('./component/drawer/index.vue'));
     const Help = defineAsyncComponent(() => import('./component/tool/help.vue'));
 
@@ -135,33 +142,33 @@
         });
         lf.value.extension.menu.setMenuConfig({
             nodeMenu: [
-                {
-                    className: "lf-menu-delete",
-                    text: "删除",
-                    callback(node) {
-                        lf.value.deleteNode(node.id);
-                    },
-                    icon: true,
-                },
-                {
-                    className: "lf-menu-edit",
-                    text: "编辑",
-                    callback(node: any) {
-                        drawerRef.value.open(node);
-                    },
-                    icon: true,
-                }
+                /*  {
+                      className: "lf-menu-delete",
+                      text: "删除",
+                      callback(node) {
+                          lf.value.deleteNode(node.id);
+                      },
+                      icon: true,
+                  },
+                  {
+                      className: "lf-menu-edit",
+                      text: "编辑",
+                      callback(node: any) {
+                          drawerRef.value.open(node);
+                      },
+                      icon: true,
+                  }*/
 
             ], // 覆盖默认的节点右键菜单
             edgeMenu: [
-                {
-                    className: "lf-menu-delete",
-                    text: "删除",
-                    callback(edge) {
-                        lf.value.deleteEdge(edge.id);
-                    },
-                    icon: true,
-                },
+                /*       {
+                           className: "lf-menu-delete",
+                           text: "删除",
+                           callback(edge) {
+                               lf.value.deleteEdge(edge.id);
+                           },
+                           icon: true,
+                       },*/
             ], // 删除默认的边右键菜单
             graphMenu: [], // 覆盖默认的边右键菜单，与false表现一样
         });
@@ -222,7 +229,10 @@
         lf.value.register(EndNode);
         lf.value.register(SwichNode);
         lf.value.register(MesstraslateNode);
-        lf.value.register(MessparseNode);
+        lf.value.register(MessheaderparseNode);
+        lf.value.register(MessheaderencapNode);
+        lf.value.register(MessbodyparseNode);
+        lf.value.register(MessbodyencapNode);
 
         lf.value.register(CalcNode);
         lf.value.register(PacparseNode);
@@ -239,10 +249,50 @@
         lf.value.render()
         //lf.value.render()
 
-        //LfEvent()
+        LfEvent()
         //getFromDatabase()
     }
 
+    function LfEvent() {
+        lf.value.on('node:click', ({data}) => {
+            console.log('node:click', data)
+        })
+        lf.value.on('edge:click', ({data}) => {
+        })
+        lf.value.on('element:click', () => {
+            //hideAddPanel()
+        })
+        lf.value.on('edge:add', ({data}) => {
+            console.log('edge:add', data)
+        })
+        lf.value.on('node:add', ({data}) => {
+            console.log('node:add', data)
+            const nodeModel = lf.value.getNodeModelById(data.id);
+            nodeModel.updateText("hello world");
+        })
+        lf.value.on('node:mousemove', ({data}) => {
+            console.log('node:mousemove')
+
+        })
+        lf.value.on('blank:click', () => {
+            // hideAddPanel()
+        })
+        lf.value.on('connection:not-allowed', (data) => {
+            this.$message({
+                type: 'error',
+                message: data.msg
+            })
+        })
+        lf.value.on('node:contextmenu', (data) => {
+            console.log('节点右键');
+            onContextmenu('node', data);
+
+        })
+        lf.value.on('edge:contextmenu', (data) => {
+            console.log('连接右键');
+            onContextmenu('edge', data);
+        })
+    }
 
     const leftNavRefs = ref([]);
     const workflowRightRef = ref();
@@ -255,6 +305,7 @@
     const {themeConfig} = storeToRefs(storesThemeConfig);
     const {copyText} = commonFunction();
     const state = reactive<WorkflowState>({
+        FlowName:'天地协同流程编排设计3.2.7',
         leftNavList: [],
         dropdownNode: {x: '', y: ''},
         dropdownLine: {x: '', y: ''},
@@ -291,39 +342,39 @@
         state.jsPlumbNodeIndex = k;
     };
     // 右侧内容区-当前项右键菜单点击
-    const onContextmenu = (v: any, k: number, e: MouseEvent) => {
-        state.jsPlumbNodeIndex = k;
-        const {clientX, clientY} = e;
-        state.dropdownNode.x = clientX;
-        state.dropdownNode.y = clientY;
-        v.type = 'node';
-        v.label = '';
-        let item: any = {};
-        state.leftNavList.forEach((l) => {
-            if (l.children) if (l.children.find((c: any) => c.id === v.id)) item = l.children.find((c: any) => c.id === v.id);
-        });
-        v.from = item.form;
-        contextmenuNodeRef.value.openContextmenu(v);
+    const onContextmenu = (type, e) => {
+        let loc = container.value.getBoundingClientRect();
+        //console.log(loc);
+
+        if (type == 'node') {
+                    state.dropdownNode.x = loc.x + e.position.domOverlayPosition.x;
+        state.dropdownNode.y = loc.y + e.position.domOverlayPosition.y;
+            contextmenuNodeRef.value.openContextmenu('node', e.data);
+        }
+        if (type == 'edge') {
+                    state.dropdownLine.x = loc.x + e.position.domOverlayPosition.x;
+        state.dropdownLine.y = loc.y + e.position.domOverlayPosition.y;
+            contextmenuLineRef.value.openContextmenu('edge', e.data);
+        }
     };
     // 右侧内容区-当前项右键菜单点击回调(节点)
-    const onCurrentNodeClick = (item: any) => {
-        drawerRef.value.open(item);
+    const onCurrentNodeClick = (contextMenuClickId, item: any) => {
+        if (contextMenuClickId == 0) {
+            lf.value.deleteNode(item.id);
+        }
+        if (contextMenuClickId == 1) {
+            drawerRef.value.open(item,lf.value);
+        }
     };
 
     // 右侧内容区-当前项右键菜单点击回调(线)
-    const onCurrentLineClick = (item: any, conn: any) => {
-        const {contextMenuClickId} = item;
-        const {endpoints} = conn;
-        const intercourse: any = [];
-        endpoints.forEach((v: any) => {
-            intercourse.push({
-                id: v.element.id,
-                innerText: v.element.innerText,
-            });
-        });
-        item.contact = `${intercourse[0].innerText}(${intercourse[0].id}) => ${intercourse[1].innerText}(${intercourse[1].id})`;
-        if (contextMenuClickId === 0) state.jsPlumb.deleteConnection(conn);
-        else if (contextMenuClickId === 1) drawerRef.value.open(item, conn);
+    const onCurrentLineClick = (contextMenuClickId, item: any) => {
+        if (contextMenuClickId == 0) {
+            lf.value.deleteEdgeById(item.id);
+        }
+        if (contextMenuClickId == 1) {
+            drawerRef.value.open(item,lf.value);
+        }
     };
     // 设置线的 label
     const setLineLabel = (obj: any) => {
@@ -431,8 +482,7 @@
     // 页面卸载时
     onUnmounted(() => {
         window.removeEventListener('resize', setClientWidth);
-    });
-</script>
+    });</script>
 
 <style scoped lang="scss">
 
@@ -609,7 +659,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            background: url("./delete.png") no-repeat;
+            background: url("./assets/svgicon/delete.png") no-repeat;
             background-size: 20px;
         }
 
@@ -617,7 +667,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            background: url("./edit.png") no-repeat;
+            background: editicon;
             background-size: 20px;
         }
 

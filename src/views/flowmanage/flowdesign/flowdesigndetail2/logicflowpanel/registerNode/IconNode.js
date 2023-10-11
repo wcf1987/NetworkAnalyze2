@@ -13,8 +13,8 @@ class IconNode extends RectNode.view {
     const iconAttrs = {
       x: x -  1/2 * width + 5,
       y: y - 1/2 * height + 5, // icon在左上角
-      width: 25,
-      height: 18,
+      width: 20,
+      height: 20,
       href,
       // 根据宽高缩放
       preserveAspectRatio: 'none meet'
@@ -28,7 +28,7 @@ class IconNode extends RectNode.view {
       ry: 5,
       x: x- 1/2 * width,
       y: y - 1/2 * height,
-      width,
+      width:width,
       height,
     }
     return h('g', {}, [

@@ -7,10 +7,20 @@ class PacencapNode extends IconNode.view {
     return pacparseicon;
   }
 }
+class PacencapNodeModel extends IconNode.model{
+    initNodeData(data) {
+    super.initNodeData(data);
+    this.text.value = "封装/应用头添加"; // 不允许文本被拖动
+    this.properties={
 
+        pacencapID:'',
+
+    }
+  }
+}
 
 export default {
   type: 'pacencap',
   view: PacencapNode,
-  model: IconNode.model
+  model: PacencapNodeModel
 }

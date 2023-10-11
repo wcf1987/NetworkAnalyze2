@@ -7,10 +7,16 @@ class SwichNode extends IconNode.view {
     return swichicon;
   }
 }
+class SwichNodeModel extends IconNode.model{
+    initNodeData(data) {
+    super.initNodeData(data);
+    this.text.value = "分支选择"; // 不允许文本被拖动
 
+  }
+}
 
 export default {
   type: 'swich',
   view: SwichNode,
-  model: IconNode.model
+  model: SwichNodeModel
 }

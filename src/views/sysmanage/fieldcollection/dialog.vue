@@ -108,10 +108,10 @@
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
     import {FieldType} from '/@/utils/common';
-
+const options = ref(FieldType);
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-    const options = ref(FieldType);
+
     // 定义变量内容
     const userDialogFormRef = ref();
     const rules = reactive({
