@@ -21,6 +21,12 @@
                     </el-icon>
                     从数据域引入字段
                 </el-button>
+                <el-button size="default" type="success" class="ml10" @click="onOpenGroup('add')">
+                    <el-icon>
+                        <ele-Wallet/>
+                    </el-icon>
+                    新增嵌套结构
+                </el-button>
             </div>
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
@@ -72,6 +78,7 @@
         </el-card>
         <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
         <ImportDialog ref="importDialogRef" @refresh="getTableData()"/>
+        <GroupDialog ref="groupDialogRef" @refresh="getTableData()"/>
     </div>
 </template>
 
@@ -83,11 +90,13 @@
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/detaildialog.vue'));
     const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/importdialog.vue'));
+    const GroupDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/groupdialog.vue'));
 
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
     const importDialogRef=ref();
+    const groupDialogRef=ref();
     const isHide=ref(false);
     const state = reactive<SysUserState>({
         tableData: {
@@ -141,6 +150,9 @@
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
         userDialogRef.value.openDialog(type);
+    };
+    const onOpenGroup = (type: string) => {
+        groupDialogRef.value.openDialog(type);
     };
     const onOpenImport= (type: string) => {
         importDialogRef.value.openDialog(type);
