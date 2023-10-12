@@ -27,12 +27,19 @@
                     </el-icon>
                     新增嵌套结构
                 </el-button>
+                <el-button size="default" type="warning" class="mr10" @click="this.$router.back()" v-if="state.tableData.deep!=0">
+                    <el-icon>
+                        <ele-ArrowLeftBold/>
+                    </el-icon>
+                    返回上一级
+                </el-button>
             </div>
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
-                 <el-table-column type="Flag" label="数据标识" />
-               <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
+                 <el-table-column type="Flag" label="数据标识"  show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Nest" label="名称" v-if="false"></el-table-column>
+                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="Describe" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
@@ -51,8 +58,8 @@
                         </el-button
                         >
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEditDetail('edit', scope.row)"
-                                    v-if="scope.row.Nest!='无'">编辑嵌套
+                                   @click="onOpenEditGroup('edit', scope.row)"
+                                    v-if="scope.row.Nest=='1'">编辑嵌套
                         </el-button
                         >
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -84,21 +91,24 @@
 <script setup lang="ts">
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
-    import {useRouter} from "vue-router";
+    import {useRouter,useRoute} from "vue-router";
 
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messbody/detaildialog.vue'));
     const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messbody/importdialog.vue'));
 const GroupDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/groupdialog.vue'));
-
+    const route = useRoute()
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
     const importDialogRef=ref();
      const groupDialogRef=ref();
-    const state = reactive<SysUserState>({
+    const querys = route.query
+    const state = reactive({
         tableData: {
             data: [],
+            id:'',
+            deep:'',
             total: 0,
             loading: false,
             param: {
@@ -113,33 +123,136 @@ const GroupDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messhe
         state.tableData.loading = true;
         const data = [{
             id: 1,
-            Name: '版本号',
-            Type: 'unsigned short',
-            Encode:'否',
-            Nest:'单嵌套',
-            Optional:'强制选择',
-            Length: '4',
-            ArrayOr: '否',
-            DefaultValue: '0xf',
-            describe: 'IP数据包A头结构',
+            Nest:0,
+            Flag: '数据域',
+            Name:'数据类型',
+            EName:'dataype',
+            ShortName:'数据类型',
+            TypeCode:'12',
+            Length:'4',
+            TableName:'',
+            TableSaveName:'',
+            Type:'int16_t',
+            Describe:'IP数据包A头结构',
             createTime: new Date().toLocaleString(),
         }, {
             id: 2,
-            Name: '服务类型',
-            Type: 'unsigned int',
-            Encode:'0XFF',
-            Nest:'无',
-            Optional:'可选项',
-            Length: '8',
-            ArrayOr: '是',
-            DefaultValue: '0xeb',
-            describe: 'IP数据包A头结构',
-
+            Nest:0,
+                     Flag: '标识域',
+            Name:'数据长度',
+            EName:'datalength',
+            ShortName:'数据长度',
+            TypeCode:'12',
+            Length:'1',
+            TableName:'',
+            TableSaveName:'',
+            Type:'int8_t',
+            Describe:'IP数据包A头结构',
             createTime: new Date().toLocaleString(),
-        }];
+        },{
+            id: 3,
+            Nest:1,
+            Flag: '标识域',
+            Name:'嵌套结构',
+            EName:'',
+            ShortName:'',
+            TypeCode:'',
+            Length:'',
+            TableName:'',
+            TableSaveName:'',
+            Type:'',
+            Describe:'嵌套结构',
+            createTime: new Date().toLocaleString(),
+        },
+        ];
+        const data1 = [{
+            id: 1,
+            Nest:0,
+            Flag: '数据域',
+            Name:'节点类型',
+            EName:'dataype',
+            ShortName:'数据类型',
+            TypeCode:'12',
+            Length:'4',
+            TableName:'',
+            TableSaveName:'',
+            Type:'int16_t',
+            Describe:'IP数据包A头结构',
+            createTime: new Date().toLocaleString(),
+        }, {
+            id: 2,
+            Nest:0,
+                     Flag: '标识域',
+            Name:'节点速率',
+            EName:'datalength',
+            ShortName:'数据长度',
+            TypeCode:'12',
+            Length:'1',
+            TableName:'',
+            TableSaveName:'',
+            Type:'int8_t',
+            Describe:'IP数据包A头结构',
+            createTime: new Date().toLocaleString(),
+        },{
+            id: 3,
+            Nest:1,
+            Flag: '标识域',
+            Name:'嵌套结构',
+            EName:'',
+            ShortName:'',
+            TypeCode:'',
+            Length:'',
+            TableName:'',
+            TableSaveName:'',
+            Type:'',
+            Describe:'嵌套结构',
+            createTime: new Date().toLocaleString(),
+        },
+        ];
+
+        const data2 = [{
+            id: 1,
+            Nest:0,
+            Flag: '数据域',
+            Name:'威力半径',
+            EName:'dataype',
+            ShortName:'数据类型',
+            TypeCode:'12',
+            Length:'4',
+            TableName:'',
+            TableSaveName:'',
+            Type:'int16_t',
+            Describe:'IP数据包A头结构',
+            createTime: new Date().toLocaleString(),
+        }, {
+            id: 2,
+            Nest:0,
+                     Flag: '标识域',
+            Name:'火力强度',
+            EName:'datalength',
+            ShortName:'数据长度',
+            TypeCode:'12',
+            Length:'1',
+            TableName:'',
+            TableSaveName:'',
+            Type:'int8_t',
+            Describe:'IP数据包A头结构',
+            createTime: new Date().toLocaleString(),
+        }
+        ];
 
 
-        state.tableData.data = data;
+        state.tableData.id=querys.id;
+        state.tableData.deep=querys.deep;
+        if(state.tableData.deep==0){
+            state.tableData.data = data;
+        }
+        if(state.tableData.deep==1){
+            state.tableData.data = data1;
+        }
+        if(state.tableData.deep==2){
+            state.tableData.data = data2;
+        }
         state.tableData.total = state.tableData.data.length;
         setTimeout(() => {
             state.tableData.loading = false;
@@ -156,10 +269,21 @@ const GroupDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messhe
         groupDialogRef.value.openDialog(type);
     };
     // 打开修改用户弹窗
-    const onOpenEdit = (type: string, row: RowUserType) => {
-        userDialogRef.value.openDialog(type, row);
+    const onOpenEdit = (type: string, row) => {
+        if(row.Nest=='1'){
+            groupDialogRef.value.openDialog(type, row);
+        }else{
+           userDialogRef.value.openDialog(type, row);
+        }
+
     };
 
+    const onOpenEditGroup = (type: string, row: RowUserType) => {
+        router.push({
+            path: '/sysmanage/messbody/messbodydetail',
+            query: {id: row.ID,deep:parseInt(state.tableData.deep)+1},
+        });
+    };
     const onOpenEditDetail = (type: string, row: RowUserType) => {
         router.push({
             path: '/sysmanage/messbody/messbodydetail',

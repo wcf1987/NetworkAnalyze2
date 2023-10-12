@@ -113,7 +113,7 @@ const onOpenEdit = (type: string, row: RowUserType) => {
 const onOpenEditDetail = (type: string, row: RowUserType) => {
 	router.push({
 			path: '/sysmanage/messheader/messheaderdetail',
-			query: { id: row.ID },
+			query: { id: row.ID,deep:0  },
 		});
 };
 
