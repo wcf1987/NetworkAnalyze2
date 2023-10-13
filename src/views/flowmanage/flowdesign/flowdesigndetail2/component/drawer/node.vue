@@ -214,6 +214,11 @@
                                 <SvgIcon name="ele-EditPen"/>
                                 编辑模板
                             </el-button>
+                            <el-button type="primary" class="mb15" @click="onExtendEditMessheader"
+                                       :loading="state.loading.extend" v-if="state.showFlag['messheaderencap']">
+                                <SvgIcon name="ele-EditPen"/>
+                                编辑消息头
+                            </el-button>
 
                             <el-button type="primary" class="mb15" @click="onExtendSubmit"
                                        :loading="state.loading.extend">
@@ -235,7 +240,8 @@
                 </el-scrollbar>
             </el-tab-pane>
         </el-tabs>
-        <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
+        <Translatedialog ref="translateDialogRef" @refresh="getTableData()"/>
+        <Messdialog ref="messDialogRef" @refresh="getTableData()"/>
     </div>
 </template>
 
@@ -243,8 +249,11 @@
     import {defineAsyncComponent, nextTick, reactive, ref} from 'vue';
     import {ElMessage} from 'element-plus';
     import * as echarts from 'echarts';
-    const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
-    const userDialogRef = ref();
+
+    const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
+    const translateDialogRef = ref();
+        const Messdialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/messdialog.vue'));
+    const messDialogRef = ref();
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['submit', 'close']);
 
@@ -385,8 +394,11 @@
     const onExtendRefresh = () => {
         extendFormRef.value.resetFields();
     };
-        const onExtendEdit = () => {
-       userDialogRef.value.openDialog(state.node.id,state.properForm.transid);
+    const onExtendEdit = () => {
+       translateDialogRef.value.openDialog(state.node.id,state.properForm.transid);
+    };
+    const onExtendEditMessheader = () => {
+       messDialogRef.value.openDialog(state.node.id,state.properForm.messheaderencapID);
     };
 
     // 扩展表单-保存
