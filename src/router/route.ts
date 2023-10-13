@@ -60,11 +60,26 @@ export const dynamicRoutes: {
         path: '/',
         name: '/',
         component: () => import('/@/layout/index.vue'),
-        redirect: '/flowmanage/flowdesign',
+        redirect: '/home',
         meta: {
             isKeepAlive: true,
         },
         children: [
+                       {
+                path: '/homepage',
+                name: 'homepage',
+                component: () => import('/@/views/home/homepage.vue'),
+                meta: {
+                    title: 'message.router.homepage',
+                    isLink: '',
+                    isHide: false,
+                    isKeepAlive: true,
+                    isAffix: true,
+                    isIframe: false,
+                    roles: ['admin','common'],
+                    icon: 'iconfont icon-shouye',
+                },
+            },
             {
 
                 path: '/sysmanage',

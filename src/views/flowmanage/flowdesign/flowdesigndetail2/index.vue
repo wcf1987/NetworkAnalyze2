@@ -267,8 +267,7 @@ MessbodyparseNode,
         })
         lf.value.on('node:add', ({data}) => {
             console.log('node:add', data)
-            const nodeModel = lf.value.getNodeModelById(data.id);
-            nodeModel.updateText("hello world");
+
         })
         lf.value.on('node:mousemove', ({data}) => {
             console.log('node:mousemove')
@@ -351,10 +350,12 @@ MessbodyparseNode,
         state.dropdownNode.y = loc.y + e.position.domOverlayPosition.y;
             contextmenuNodeRef.value.openContextmenu('node', e.data);
         }
-        if (type == 'edge') {
-                    state.dropdownLine.x = loc.x + e.position.domOverlayPosition.x;
+        if (type == 'edge' ) {
+
+            state.dropdownLine.x = loc.x + e.position.domOverlayPosition.x;
         state.dropdownLine.y = loc.y + e.position.domOverlayPosition.y;
             contextmenuLineRef.value.openContextmenu('edge', e.data);
+
         }
     };
     // 右侧内容区-当前项右键菜单点击回调(节点)
@@ -373,45 +374,51 @@ MessbodyparseNode,
             lf.value.deleteEdgeById(item.id);
         }
         if (contextMenuClickId == 1) {
+             const sourenode=lf.value.getNodeModelById(item.sourceNodeId)
+            if(sourenode.type=='swich'){
+
             drawerRef.value.open(item,lf.value);
+            }else{
+                ElMessage.success('只有条件分支后续连接可以编辑');
+            }
+
+
         }
     };
     // 设置线的 label
     const setLineLabel = (obj: any) => {
         const {sourceId, targetId, label} = obj;
-        const conn = state.jsPlumb.getConnections({
-            source: sourceId,
-            target: targetId,
-        })[0];
-        conn.setLabel(label);
-        if (!label || label === '') {
-            conn.addClass('workflow-right-empty-label');
-        } else {
-            conn.removeClass('workflow-right-empty-label');
-            conn.addClass('workflow-right-label');
-        }
-        state.jsplumbData.lineList.forEach((v) => {
-            if (v.sourceId === sourceId && v.targetId === targetId) v.label = label;
-        });
+
     };
     // 设置节点内容
     const setNodeContent = (obj: any) => {
-        const {nodeId, name, icon} = obj;
-        // 设置节点 name 与 icon
-        state.jsplumbData.nodeList.forEach((v) => {
-            if (v.nodeId === nodeId) {
-                v.name = name;
-                v.icon = icon;
-            }
-        });
-        // 重绘
-        nextTick(() => {
-            state.jsPlumb.setSuspendDrawing(false, true);
-        });
+
     };
     // 顶部工具栏-当前项点击
     const onToolClick = (fnName: String) => {
         switch (fnName) {
+            case 'zoomIn':
+                lf.value.zoom(true);
+                break;
+            case 'zoomOut':
+                lf.value.zoom(false);
+                break;
+            case 'zoomReset':
+                lf.value.resetZoom();
+                break;
+            case 'translateRest':
+                lf.value.resetZoom();
+                lf.value.resetTranslate();
+                break;
+            case 'undo':
+                lf.value.undo();
+                break;
+            case 'redo':
+                lf.value.redo();
+                break;
+            case 'showMiniMap':
+                lf.value.extension.miniMap.show(lf.value.graphModel.width - 150, 40)
+                break;
             case 'help':
                 onToolHelp();
                 break;

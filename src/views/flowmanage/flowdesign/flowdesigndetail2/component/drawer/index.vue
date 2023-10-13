@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-drawer :title="`${state.nodeData.type === 'bezier' ? '连接' : '节点'}操作`" v-model="state.isOpen" size="320px">
+		<el-drawer :title="`${state.nodeData.type === 'bezier' ? '连接' : '节点'}操作`" v-model="state.isOpen" size="500px">
 			<el-scrollbar>
 				<Lines v-if="state.nodeData.type === 'bezier'" @change="onLineChange" @close="close" ref="lineRef" />
 				<Nodes v-else @submit="onNodeSubmit" @close="close" ref="nodeRef" />
