@@ -60,7 +60,7 @@ export const dynamicRoutes: {
         path: '/',
         name: '/',
         component: () => import('/@/layout/index.vue'),
-        redirect: '/home',
+        redirect: '/homepage',
         meta: {
             isKeepAlive: true,
         },

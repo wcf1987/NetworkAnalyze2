@@ -40,7 +40,7 @@
             <!-- 扩展表单 -->
             <el-tab-pane label="属性" name="2">
                 <el-scrollbar>
-                    <el-form :model="state.form" ref="extendFormRef" size="default" label-width="80px"
+                    <el-form :model="state.form" ref="extendFormRef" size="default" label-width="100px"
                              class="pt15 pr15 pb15 pl15">
 
                         <div class="customproper" v-if="state.showFlag['start']">
@@ -190,8 +190,8 @@
 
 
                            <div class="customproper" v-if="state.showFlag['messtraslate']">
-                            <el-form-item label="转化规则">
-                                <el-select v-model="state.properForm.name" placeholder="请选择" clearable class="w100">
+                            <el-form-item label="转化规则模板">
+                                <el-select v-model="state.properForm.transid" placeholder="请选择" clearable class="w100">
                                     <el-option label="消息转化规则A" value="消息转化规则A"></el-option>
                                     <el-option label="消息转化规则B" value="消息转化规则B"></el-option>
                                 </el-select>
@@ -207,6 +207,12 @@
                             <el-button class="mb15" @click="onExtendRefresh">
                                 <SvgIcon name="ele-RefreshRight"/>
                                 重置
+                            </el-button>
+
+                            <el-button type="primary" class="mb15" @click="onExtendEdit"
+                                       :loading="state.loading.extend" v-if="state.showFlag['messtraslate']">
+                                <SvgIcon name="ele-EditPen"/>
+                                编辑模板
                             </el-button>
 
                             <el-button type="primary" class="mb15" @click="onExtendSubmit"
@@ -229,14 +235,16 @@
                 </el-scrollbar>
             </el-tab-pane>
         </el-tabs>
+        <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
     </div>
 </template>
 
 <script setup lang="ts" name="pagesWorkflowDrawerNode">
-    import {nextTick, reactive, ref} from 'vue';
+    import {defineAsyncComponent, nextTick, reactive, ref} from 'vue';
     import {ElMessage} from 'element-plus';
     import * as echarts from 'echarts';
-
+    const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
+    const userDialogRef = ref();
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['submit', 'close']);
 
@@ -377,6 +385,10 @@
     const onExtendRefresh = () => {
         extendFormRef.value.resetFields();
     };
+        const onExtendEdit = () => {
+       userDialogRef.value.openDialog(state.node.id,state.properForm.transid);
+    };
+
     // 扩展表单-保存
     const onExtendSubmit = () => {
         extendFormRef.value.validate((valid: boolean) => {
