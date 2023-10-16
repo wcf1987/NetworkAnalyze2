@@ -21,13 +21,27 @@
                                     <span>{{ val.title }}</span>
                                     <SvgIcon :name="val.isOpen ? 'ele-ArrowDown' : 'ele-ArrowRight'"/>
                                 </div>
+
                                 <div class="workflow-left-item" v-for="(v, k) in val.children" :key="k"
-                                     :data-name="v.name" :data-icon="v.icon" :data-id="v.id" @mousedown="dragNode(v)" >
-                                    <div class="workflow-left-item-icon">
-                                        <SvgIcon :name="v.icon" class="workflow-icon-drag" left=0 size=16 />
-                                        <div class="font10 pl5 name" >{{ v.name }}</div>
-                                    </div>
+                                     :data-name="v.name" :data-icon="v.icon" :data-id="v.id"
+                                     @mousedown="dragNode(v)">
+
+                                    <el-popover
+                                            placement="top-start"
+                                            :title="v.name"
+                                            :width="200"
+                                            trigger="hover"
+                                            :content="v.descrip"
+                                    >
+                                        <template #reference>
+                                            <div class="workflow-left-item-icon">
+                                                <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0 :size=16 />
+                                                <div class="font10 pl5 name">{{ v.name }}</div>
+                                            </div>
+                                        </template>
+                                    </el-popover>
                                 </div>
+
                             </div>
                         </el-scrollbar>
                     </div>
@@ -72,11 +86,10 @@
         CalcNode,
         CustomLine,
         EndNode,
+        MessbodyencapNode,
+        MessbodyparseNode,
+        MessheaderencapNode,
         MessheaderparseNode,
-
-    MessheaderencapNode,
-MessbodyparseNode,
-    MessbodyencapNode,
         MesstraslateNode,
         PacencapNode,
         PacparseNode,
@@ -99,6 +112,7 @@ MessbodyparseNode,
     const lf = ref(null)
 
     function dragNode(item) {
+        console.log(item)
         lf.value.dnd.startDrag({
             type: item.type,
         })
@@ -303,8 +317,8 @@ MessbodyparseNode,
     const storesThemeConfig = useThemeConfig();
     const {themeConfig} = storeToRefs(storesThemeConfig);
     const {copyText} = commonFunction();
-    const state = reactive<WorkflowState>({
-        FlowName:'天地协同流程编排设计3.2.7',
+    const state = reactive({
+        FlowName: '天地协同流程编排设计3.2.7',
         leftNavList: [],
         dropdownNode: {x: '', y: ''},
         dropdownLine: {x: '', y: ''},
@@ -328,6 +342,7 @@ MessbodyparseNode,
     };
     // 左侧导航-数据初始化
     const initLeftNavList = () => {
+        console.log(leftNavList)
         state.leftNavList = leftNavList;
 
     };
@@ -346,14 +361,14 @@ MessbodyparseNode,
         //console.log(loc);
 
         if (type == 'node') {
-                    state.dropdownNode.x = loc.x + e.position.domOverlayPosition.x;
-        state.dropdownNode.y = loc.y + e.position.domOverlayPosition.y;
+            state.dropdownNode.x = loc.x + e.position.domOverlayPosition.x;
+            state.dropdownNode.y = loc.y + e.position.domOverlayPosition.y;
             contextmenuNodeRef.value.openContextmenu('node', e.data);
         }
-        if (type == 'edge' ) {
+        if (type == 'edge') {
 
             state.dropdownLine.x = loc.x + e.position.domOverlayPosition.x;
-        state.dropdownLine.y = loc.y + e.position.domOverlayPosition.y;
+            state.dropdownLine.y = loc.y + e.position.domOverlayPosition.y;
             contextmenuLineRef.value.openContextmenu('edge', e.data);
 
         }
@@ -364,21 +379,21 @@ MessbodyparseNode,
             lf.value.deleteNode(item.id);
         }
         if (contextMenuClickId == 1) {
-            drawerRef.value.open(item,lf.value);
+            drawerRef.value.open(item, lf.value);
         }
     };
 
     // 右侧内容区-当前项右键菜单点击回调(线)
     const onCurrentLineClick = (contextMenuClickId, item: any) => {
         if (contextMenuClickId == 0) {
-            lf.value.deleteEdgeById(item.id);
+            lf.value.deleteEdge(item.id);
         }
         if (contextMenuClickId == 1) {
-             const sourenode=lf.value.getNodeModelById(item.sourceNodeId)
-            if(sourenode.type=='swich'){
+            const sourenode = lf.value.getNodeModelById(item.sourceNodeId)
+            if (sourenode.type == 'swich') {
 
-            drawerRef.value.open(item,lf.value);
-            }else{
+                drawerRef.value.open(item, lf.value);
+            } else {
                 ElMessage.success('只有条件分支后续连接可以编辑');
             }
 
@@ -397,6 +412,11 @@ MessbodyparseNode,
     // 顶部工具栏-当前项点击
     const onToolClick = (fnName: String) => {
         switch (fnName) {
+            case 'editProp':
+                const GraphConfigData =lf.value.getSelectElements(false);
+                //GraphConfigData.nodes[0];
+                drawerRef.value.open(GraphConfigData.nodes[0], lf.value);
+                break;
             case 'zoomIn':
                 lf.value.zoom(true);
                 break;

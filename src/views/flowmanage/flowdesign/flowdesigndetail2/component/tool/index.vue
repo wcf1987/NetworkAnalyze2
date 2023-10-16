@@ -23,6 +23,7 @@
     const {themeConfig} = storeToRefs(storesThemeConfig);
     const state = reactive({
         toolList: [
+            {icon: 'ele-Edit', title: '编辑属性', fnName: 'editProp'},
             {icon: 'ele-ZoomIn', title: '放大', fnName: 'zoomIn'},
             {icon: 'ele-ZoomOut', title: '缩小', fnName: 'zoomOut'},
             {icon: 'ele-RefreshRight', title: '大小适应', fnName: 'zoomReset'},
