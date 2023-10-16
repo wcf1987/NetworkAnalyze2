@@ -49,7 +49,7 @@
 			>
 			</el-pagination>
 		</el-card>
-		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
+		<UserDialog ref="userDialogRef" @refresh="getTableData()" @editdetail="onOpenEditDetailByID"/>
 	</div>
 </template>
 
@@ -111,12 +111,15 @@ const onOpenEdit = (type: string, row: RowUserType) => {
 };
 
 const onOpenEditDetail = (type: string, row: RowUserType) => {
+	onOpenEditDetailByID(row.ID);
+
+};
+const onOpenEditDetailByID= (id) => {
 	router.push({
 			path: '/sysmanage/messbody/messbodydetail',
-			query: { id: row.ID,deep:0 },
+			query: { id: id,deep:0 },
 		});
 };
-
 
 
 // 删除用户

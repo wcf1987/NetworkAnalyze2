@@ -4,27 +4,40 @@
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
 
-                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
-                    >
+                   <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 
                         <el-form-item label="导入字段" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.sourceData" :options="DUIoptions" :props="DUIprops"
-                                         @change="changeSourceInput"
-                                         clearable
-                                         placeholder="可输入搜索" filterable
-
-                                         collapse-tags/>
+                            <el-select v-model="state.ruleForm.sourceDFI" value-key="id" placeholder="请先选择DFI" clearable class="w100">
+                                   <el-option label="国际标准ISK" value="国际标准ISK"></el-option>
+                                <el-option label="海洋标准KF" value="海洋标准KF"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 
- <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="二次查询" prop="source">
+
+
+                             <el-select v-model="state.ruleForm.sourceDUI" value-key="id" placeholder="请后选择DUI" clearable class="w100">
+                                 <el-option label="版本号" value="版本号"></el-option>
+                                <el-option label="服务类型" value="服务类型"></el-option>
+                                 <el-option label="序号" value="序号"></el-option>
+                                <el-option label="确认号" value="确认号"></el-option>
+                                 <el-option label="数据偏移" value="数据偏移"></el-option>
+
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="数据标识">
-                            <el-select v-model="state.ruleForm.Flag" placeholder="请选择" clearable class="w100">
-                                <el-option label="数据域" value="数据域"></el-option>
-                                <el-option label="标识域" value="标识域"></el-option>
-
-
+                            <el-select v-model="state.ruleForm.Flag" value-key="id" placeholder="请选择" clearable class="w100">
+                               <el-option
+                                        v-for="item in dataFlagOptions"
+                                        :key="item.id"
+                                        :label="item.label"
+                                        :value="item.value"
+                                />
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -141,11 +154,14 @@
 
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
-    import {FieldType} from '/@/utils/common';
+
+    import {FieldType,DataFlag} from '/@/utils/common';
+const options = ref(FieldType);
+const dataFlagOptions = ref(DataFlag);
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-    const options = ref(FieldType);
+
     // 定义变量内容
     const userDialogFormRef = ref();
 

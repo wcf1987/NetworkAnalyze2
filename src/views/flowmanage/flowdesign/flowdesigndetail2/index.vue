@@ -22,10 +22,10 @@
                                     <SvgIcon :name="val.isOpen ? 'ele-ArrowDown' : 'ele-ArrowRight'"/>
                                 </div>
                                 <div class="workflow-left-item" v-for="(v, k) in val.children" :key="k"
-                                     :data-name="v.name" :data-icon="v.icon" :data-id="v.id" @mousedown="dragNode(v)">
+                                     :data-name="v.name" :data-icon="v.icon" :data-id="v.id" @mousedown="dragNode(v)" >
                                     <div class="workflow-left-item-icon">
                                         <SvgIcon :name="v.icon" class="workflow-icon-drag" left=0 size=16 />
-                                        <div class="font10 pl5 name">{{ v.name }}</div>
+                                        <div class="font10 pl5 name" >{{ v.name }}</div>
                                     </div>
                                 </div>
                             </div>

@@ -84,13 +84,13 @@
                                     <el-option label="串口" value="串口"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="串口信息" prop="type" v-if="state.properForm.interfacetype=='串口'">
+                            <el-form-item label="目的串口" prop="type" v-if="state.properForm.interfacetype=='串口'">
                                <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100">
                                     <el-option label="串口A" value="串口A"></el-option>
                                     <el-option label="串口B" value="串口B"></el-option>
                                 </el-select>
                             </el-form-item>
-                             <el-form-item label="源地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
+                             <el-form-item label="目的网口" prop="type" v-if="state.properForm.interfacetype=='网口'">
                                <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable class="w100">
                                     <el-option label="网口A" value="网口A"></el-option>
                                     <el-option label="网口B" value="网口B"></el-option>

@@ -74,7 +74,7 @@ const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldco
 const router = useRouter();
 // 定义变量内容
 const userDialogRef = ref();
-    const isHide=ref(false);
+    const isHide=ref(true);
 const state = reactive<SysUserState>({
 	tableData: {
 		data: [],

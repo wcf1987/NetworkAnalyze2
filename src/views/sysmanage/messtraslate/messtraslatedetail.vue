@@ -9,7 +9,12 @@
                     </el-icon>
                     查询
                 </el-button>
-
+                <el-button size="default" type="primary" class="ml10" @click="viewMess('view','123')">
+                    <el-icon>
+                        <ele-Coin/>
+                    </el-icon>
+                    查询数据源定义
+                </el-button>
             </div>
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
@@ -22,7 +27,7 @@
 
                 <el-table-column prop="DefaultValue" label="源字段" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column label="操作" width="60">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -50,6 +55,7 @@
             </el-pagination>
         </el-card>
         <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
+            <ViewDialog ref="viewDialogRef" @refresh="getTableData()"/>
     </div>
 </template>
 
@@ -60,9 +66,12 @@
 
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messtraslate/detaildialog.vue'));
+    const ViewDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messtraslate/viewdialog.vue'));
+
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
+        const viewDialogRef = ref();
     const state = reactive<SysUserState>({
         tableData: {
             data: [],
@@ -143,7 +152,9 @@
             query: {id: row.ID},
         });
     };
-
+    const viewMess = (type: string, row) => {
+        viewDialogRef.value.openDialog(type, row);
+    };
 
     // 删除用户
     const onRowDel = (row: RowUserType) => {

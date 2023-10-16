@@ -43,7 +43,7 @@
 import { reactive, ref,nextTick } from 'vue';
 
 // 定义子组件向父组件传值/事件
-const emit = defineEmits(['refresh']);
+const emit = defineEmits(['refresh','editdetail']);
 
 // 定义变量内容
 const userDialogFormRef = ref();
@@ -88,7 +88,7 @@ const openDialog = (type: string, row: RowUserType) => {
 		 });
 	}
 	state.dialog.isShowDialog = true;
-	getMenuData();
+
 };
 // 关闭弹窗
 const closeDialog = () => {
@@ -101,7 +101,12 @@ const onCancel = () => {
 // 提交
 const onSubmit = () => {
 	closeDialog();
+	const id=1;
+	if(state.dialog.title=="新增"){
+	emit('editdetail',id);}
+	else{
 	emit('refresh');
+	}
 	// if (state.dialog.type === 'add') { }
 };
 // 初始化部门数据

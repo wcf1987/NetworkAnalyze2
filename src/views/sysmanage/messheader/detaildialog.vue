@@ -9,9 +9,13 @@
 
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="数据标识">
-                            <el-select v-model="state.ruleForm.Flag" placeholder="请选择" clearable class="w100">
-                                <el-option label="数据域" value="数据域"></el-option>
-                                <el-option label="标识域" value="标识域"></el-option>
+                            <el-select v-model="state.ruleForm.Flag" value-key="id" placeholder="请选择" clearable class="w100">
+                                <el-option
+                                        v-for="item in dataFlagOptions"
+                                        :key="item.id"
+                                        :label="item.label"
+                                        :value="item.value"
+                                />
 
 
                             </el-select>
@@ -102,8 +106,9 @@
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-    import {FieldType} from '/@/utils/common';
+    import {FieldType,DataFlag} from '/@/utils/common';
 const options = ref(FieldType);
+const dataFlagOptions = ref(DataFlag);
     // 定义变量内容
     const userDialogFormRef = ref();
     const rules = reactive({

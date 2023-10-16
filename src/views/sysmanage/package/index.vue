@@ -49,7 +49,7 @@
 			>
 			</el-pagination>
 		</el-card>
-		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
+		<UserDialog ref="userDialogRef" @refresh="getTableData()" @editdetail="onOpenEditDetailByID"/>
 	</div>
 </template>
 
@@ -110,13 +110,18 @@ const onOpenEdit = (type: string, row: RowUserType) => {
 	userDialogRef.value.openDialog(type, row);
 };
 
+
+
 const onOpenEditDetail = (type: string, row: RowUserType) => {
+	onOpenEditDetailByID(row.ID);
+
+};
+const onOpenEditDetailByID= (id) => {
 	router.push({
 			path: '/sysmanage/package/packagedetail',
-			query: { id: row.ID },
+			query: { id: id,deep:0 },
 		});
 };
-
 
 
 // 删除用户

@@ -13,3 +13,13 @@ export const FieldType = [
     {id: 11, label: 'bit', length: 1},
 
 ];
+export const DataFlag = [
+    {id: 1, label: '数据域（数据）', value: '数据域（数据）'},
+    {id: 2, label: '数据域（数据组数量）', value: '数据域（数据组数量）'},
+    {id: 3, label: '标识域（FPI）', value: '标识域（FPI）'},
+    {id: 4, label: '标识域（FRI）', value: '标识域（FRI）'},
+    {id: 5, label: '标识域（GPI）', value: '标识域（GPI）'},
+    {id: 6, label: '标识域（GRI）', value: '标识域（GRI）'},
+
+
+];

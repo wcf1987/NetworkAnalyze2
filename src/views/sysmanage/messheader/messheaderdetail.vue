@@ -34,14 +34,14 @@
                     返回上一级
                 </el-button>
             </div>
-            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
+            <el-table :data="state.tableData.data" row-key="id" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                      <el-table-column prop="Nest" label="名称" v-if="false"></el-table-column>
-                <el-table-column type="Flag" label="数据标识" width="60"/>
                         <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
+                <el-table-column type="Flag" label="数据标识" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="Describe" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
                         <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip v-if="isHide"></el-table-column>
                         <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
@@ -60,7 +60,7 @@
                         >
                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                    @click="onOpenEditGroup('edit', scope.row)"
-                                    v-if="scope.row.Nest=='1'">编辑嵌套
+                                    v-if="scope.row.Nest=='2'">编辑嵌套
                         </el-button
                         >
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -125,46 +125,120 @@
         state.tableData.loading = true;
         const data = [{
             id: 1,
-            Nest:0,
+            Nest: 0,
             Flag: '数据域',
-            Name:'数据类型',
-            EName:'dataype',
-            ShortName:'数据类型',
-            TypeCode:'12',
-            Length:'4',
-            TableName:'',
-            TableSaveName:'',
-            Type:'int16_t',
-            Describe:'IP数据包A头结构',
+            Name: '数据类型',
+            EName: 'dataype',
+            ShortName: '数据类型',
+            TypeCode: '12',
+            Length: '4',
+            TableName: '',
+            TableSaveName: '',
+            Type: 'int16_t',
+            Describe: 'IP数据包A头结构',
             createTime: new Date().toLocaleString(),
         }, {
             id: 2,
-            Nest:0,
-                     Flag: '标识域',
-            Name:'数据长度',
-            EName:'datalength',
-            ShortName:'数据长度',
-            TypeCode:'12',
-            Length:'1',
-            TableName:'',
-            TableSaveName:'',
-            Type:'int8_t',
-            Describe:'IP数据包A头结构',
-            createTime: new Date().toLocaleString(),
-        },{
-            id: 3,
-            Nest:1,
+            Nest: 0,
             Flag: '标识域',
-            Name:'嵌套结构',
-            EName:'',
-            ShortName:'',
-            TypeCode:'',
-            Length:'',
-            TableName:'',
-            TableSaveName:'',
-            Type:'',
-            Describe:'嵌套结构',
+            Name: '数据长度',
+            EName: 'datalength',
+            ShortName: '数据长度',
+            TypeCode: '12',
+            Length: '1',
+            TableName: '',
+            TableSaveName: '',
+            Type: 'int8_t',
+            Describe: 'IP数据包A头结构',
             createTime: new Date().toLocaleString(),
+        }, {
+            id: 3,
+            Nest: 1,
+            Flag: '标识域',
+            Name: '数据组',
+            EName: '',
+            ShortName: '',
+            TypeCode: '',
+            Length: '',
+            TableName: '',
+            TableSaveName: '',
+            Type: '',
+            Describe: '嵌套结构',
+            createTime: new Date().toLocaleString(),
+            children: [{
+                id: 11,
+                Nest: 0,
+                Flag: '数据域',
+                Name: '节点类型',
+                EName: 'dataype',
+                ShortName: '数据类型',
+                TypeCode: '12',
+                Length: '4',
+                TableName: '',
+                TableSaveName: '',
+                Type: 'int16_t',
+                Describe: 'IP数据包A头结构',
+                createTime: new Date().toLocaleString(),
+            }, {
+                id: 12,
+                Nest: 0,
+                Flag: '标识域',
+                Name: '节点速率',
+                EName: 'datalength',
+                ShortName: '数据长度',
+                TypeCode: '12',
+                Length: '1',
+                TableName: '',
+                TableSaveName: '',
+                Type: 'int8_t',
+                Describe: 'IP数据包A头结构',
+                createTime: new Date().toLocaleString(),
+            }, {
+                id: 13,
+                Nest: 1,
+                Flag: '标识域',
+                Name: '数据组',
+                EName: '',
+                ShortName: '',
+                TypeCode: '',
+                Length: '',
+                TableName: '',
+                TableSaveName: '',
+                Type: '',
+                Describe: '数据组',
+                createTime: new Date().toLocaleString(),
+                children: [{
+                    id: 21,
+                    Nest: 0,
+                    Flag: '数据域',
+                    Name: '威力半径',
+                    EName: 'dataype',
+                    ShortName: '数据类型',
+                    TypeCode: '12',
+                    Length: '4',
+                    TableName: '',
+                    TableSaveName: '',
+                    Type: 'int16_t',
+                    Describe: 'IP数据包A头结构',
+                    createTime: new Date().toLocaleString(),
+                }, {
+                    id: 22,
+                    Nest: 0,
+                    Flag: '标识域',
+                    Name: '火力强度',
+                    EName: 'datalength',
+                    ShortName: '数据长度',
+                    TypeCode: '12',
+                    Length: '1',
+                    TableName: '',
+                    TableSaveName: '',
+                    Type: 'int8_t',
+                    Describe: 'IP数据包A头结构',
+                    createTime: new Date().toLocaleString(),
+                }
+                ]
+            },
+            ]
         },
         ];
         const data1 = [{
@@ -333,6 +407,29 @@
             .el-table {
                 flex: 1;
             }
+        }
+    }
+     :deep(.el-table) {
+        /* 替换默认展开收起图片 */
+        /* prettier-ignore */
+        .el-table__expand-icon {
+            width: 12PX;
+            height: 12PX;
+            //background: ele-Plus no-repeat;
+            //ele-Plus
+            background: url("/@/assets/public/add-bold.png") no-repeat;
+            background-size: 100% 100%;
+
+            .el-icon {
+                display: none;
+            }
+        }
+
+        .el-table__expand-icon--expanded {
+            transform: none;
+            background: url("/@/assets/public/minus-bold.png") no-repeat;
+            //ele-SemiSelect
+            background-size: 100% 100%;
         }
     }
 </style>
