@@ -24,7 +24,7 @@
 				<el-table-column prop="Port" label="端口" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="Protocol" label="协议" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
 						<el-button  size="small" text type="primary" @click="onOpenEdit('edit', scope.row)"

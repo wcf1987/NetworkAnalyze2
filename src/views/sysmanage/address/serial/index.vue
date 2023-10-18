@@ -26,7 +26,7 @@
                 <el-table-column prop="StopBit" label="停止位" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="FlowControl" label="流控" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
                 <el-table-column label="操作" width="100">
                     <template #default="scope">
                         <el-button size="small" text type="primary" @click="onOpenEdit('edit', scope.row)"
