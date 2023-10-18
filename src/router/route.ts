@@ -85,7 +85,7 @@ export const dynamicRoutes: {
                 path: '/sysmanage',
                 name: 'sysmanage',
                 component: () => import('/@/layout/routerView/parent.vue'),
-                redirect: '/home',
+                redirect: '/homepage',
                 meta: {
                     title: 'message.router.sysmanage',
                     isLink: '',
@@ -329,7 +329,7 @@ export const dynamicRoutes: {
                 path: '/flowmanage',
                 name: 'flowmanage',
                 component: () => import('/@/layout/routerView/parent.vue'),
-                redirect: '/system/menu',
+                redirect: '/homepage',
                 meta: {
                     title: 'message.router.flowmanage',
                     isLink: '',
@@ -403,6 +403,58 @@ export const dynamicRoutes: {
                             isIframe: false,
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon-zujian',
+                        },
+                    }
+                ]
+
+            },
+              {
+
+                path: '/distribution',
+                name: 'distribution',
+                component: () => import('/@/layout/routerView/parent.vue'),
+                redirect: '/homepage',
+                meta: {
+                    title: 'message.router.distribution',
+                    isLink: '',
+                    isHide: false,
+                    isKeepAlive: true,
+                    isAffix: false,
+                    isIframe: false,
+                    roles: ['admin', 'common'],
+                    icon: 'ele-Guide',
+                },
+                children: [
+
+
+                    {
+                        path: '/distribution/gateway',
+                        name: 'gateway',
+                        component: () => import('/@/views/distribution/gateway/index.vue'),
+                        meta: {
+                            title: 'message.router.gateway',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-Cpu',
+                        },
+                    },
+                    {
+                        path: '/distribution/flowdistribution',
+                        name: 'flowdistribution',
+                        component: () => import('/@/views/distribution/flowdistribution/index.vue'),
+                        meta: {
+                            title: 'message.router.flowdistribution',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-Connection',
                         },
                     }
                 ]

@@ -10,7 +10,7 @@ class SpemarkNode extends IconNode.view {
 class SpemarkNodeModel extends IconNode.model{
     initNodeData(data) {
     super.initNodeData(data);
-    this.text.value = "特殊标记"; // 不允许文本被拖动
+    this.text.value = "临时变量"; // 不允许文本被拖动
 
   }
 }

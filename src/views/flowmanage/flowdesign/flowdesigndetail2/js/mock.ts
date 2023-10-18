@@ -107,10 +107,10 @@ export const leftNavList = [
         children: [
             {
                 icon: spemarkicon,
-                name: '特殊标记',
+                name: '临时变量',
                 id: '21',
                 type: 'spemark',
-                descrip: '全局变量，可做特殊标记',
+                descrip: '全局变量，可做中间计算结果储存',
             },
             {
                 icon: timemarkicon,

@@ -51,21 +51,33 @@
                                     <el-option label="串口" value="串口"></el-option>
                                 </el-select>
                             </el-form-item>
+                            <el-form-item label="源地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
+                                <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable
+                                           class="w100">
+                                    <el-option label="无" value="无"></el-option>
+                                    <el-option label="网口A" value="网口A"></el-option>
+                                    <el-option label="网口B" value="网口B"></el-option>
+                                </el-select>
+                            </el-form-item>
                             <el-form-item label="串口信息" prop="type" v-if="state.properForm.interfacetype=='串口'">
-                                <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"  v-on:change="onChangeStartSerialChoose">
+                                <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
+                                           v-on:change="onChangeStartSerialChoose">
                                     <el-option label="串口A" value="串口A"></el-option>
                                     <el-option label="串口B" value="串口B"></el-option>
                                     <el-option label="手动输入" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="源地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
-                                <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable
-                                           class="w100">
-                                     <el-option label="无" value="无"></el-option>
-                                    <el-option label="网口A" value="网口A"></el-option>
-                                    <el-option label="网口B" value="网口B"></el-option>
-                                </el-select>
+                            <el-form-item label="本地串口号" prop="type"
+                                          v-if="state.properForm.interfacetype=='串口'">
+                                <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
+                                          :readonly=" state.properForm.serialID!='-1'"></el-input>
                             </el-form-item>
+                            <el-form-item label="本地波特率" prop="type"
+                                          v-if="state.properForm.interfacetype=='串口' ">
+                                <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
+                                          :readonly=" state.properForm.serialID!='-1'"></el-input>
+                            </el-form-item>
+
                             <el-form-item label="本地地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
                                            class="w100" v-on:change="onChangeStartNetworkChoose">
@@ -75,21 +87,17 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="本地地址" prop="type"
-                                          v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null" >
-                                <el-input v-model="state.properForm.ip" placeholder="请输入ip地址" clearable :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
+                                          v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
+                                <el-input v-model="state.properForm.ip" placeholder="请输入ip地址" clearable
+                                          :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
                             </el-form-item>
                             <el-form-item label="本地端口" prop="type"
-                                          v-if="state.properForm.interfacetype=='网口' " :readonly=" state.properForm.localnetworkID!='-1'">
-                                <el-input v-model="state.properForm.port" placeholder="请输入端口" clearable :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
+                                          v-if="state.properForm.interfacetype=='网口' "
+                                          :readonly=" state.properForm.localnetworkID!='-1'">
+                                <el-input v-model="state.properForm.port" placeholder="请输入端口" clearable
+                                          :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
                             </el-form-item>
-                            <el-form-item label="本地串口号" prop="type"
-                                          v-if="state.properForm.interfacetype=='串口'" >
-                                <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable :readonly=" state.properForm.serialID!='-1'"></el-input>
-                            </el-form-item>
-                            <el-form-item label="本地波特率" prop="type"
-                                          v-if="state.properForm.interfacetype=='串口' " >
-                                <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable :readonly=" state.properForm.serialID!='-1'"></el-input>
-                            </el-form-item>
+
                         </div>
 
                         <div class="customproper" v-if="state.showFlag['end']">
@@ -101,28 +109,68 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="目的串口" prop="type" v-if="state.properForm.interfacetype=='串口'">
-                                <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100">
+                                <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
+                                           v-on:change="onChangeStartSerialChoose">
                                     <el-option label="串口A" value="串口A"></el-option>
                                     <el-option label="串口B" value="串口B"></el-option>
+                                    <el-option label="手动输入" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
-
+                            <el-form-item label="目的串口号" prop="type"
+                                          v-if="state.properForm.interfacetype=='串口'">
+                                <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
+                                          :readonly=" state.properForm.serialID!='-1'"></el-input>
+                            </el-form-item>
+                            <el-form-item label="目的波特率" prop="type"
+                                          v-if="state.properForm.interfacetype=='串口' ">
+                                <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
+                                          :readonly=" state.properForm.serialID!='-1'"></el-input>
+                            </el-form-item>
                             <el-form-item label="目的地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
-                                           class="w100">
+                                           class="w100" v-on:change="onChangeEndNetworkChoose">
                                     <el-option label="网口A" value="网口A"></el-option>
                                     <el-option label="网口B" value="网口B"></el-option>
                                     <el-option label="手动输入" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="目的地址" prop="type"
-                                          v-if="state.properForm.interfacetype=='网口' && state.properForm.localnetworkID=='-1'">
-                                <el-input v-model="state.properForm.ip" placeholder="请输入ip地址" clearable></el-input>
-                            </el-form-item>
-                            <el-form-item label="目的端口" prop="type"
-                                          v-if="state.properForm.interfacetype=='网口' && state.properForm.localnetworkID=='-1'">
-                                <el-input v-model="state.properForm.port" placeholder="请输入端口" clearable></el-input>
-                            </el-form-item>
+
+                            <el-row v-for="(v, k) in state.properForm.IPlist" :key="k">
+                                <el-form-item label="目的IP" prop="type"
+                                              v-if="state.properForm.interfacetype=='网口'">
+                                    <el-col :span="11">
+
+                                        <el-input v-model="v.ip" placeholder="请输入ip地址" clearable
+                                                  ></el-input>
+                                    </el-col>
+                                    <el-col :span="1" class="text-center">
+                                        <span style="display:block;text-align: center" class="text-gray-500">:</span>
+                                    </el-col>
+                                    <el-col :span="4">
+                                        <el-input v-model="v.port" placeholder="请输入端口" clearable
+                                                  ></el-input>
+                                    </el-col>
+                                    <el-col :span="1"/>
+                                    <el-col :span="2">
+                                        <el-button type="success" size="small" circle @click="onAddEndIP">
+                                            <el-icon>
+                                                <ele-Plus/>
+                                            </el-icon>
+
+                                        </el-button>
+                                    </el-col>
+                                    <el-col :span="1"/>
+                                    <el-col :span="2">
+                                        <el-button type="danger" size="small" circle @click="onDelEndIP(k)">
+                                            <el-icon>
+                                                <ele-Delete/>
+                                            </el-icon>
+
+                                        </el-button>
+                                    </el-col>
+                                </el-form-item>
+                            </el-row>
+
                         </div>
 
 
@@ -215,6 +263,15 @@
 
                         </div>
 
+                        <div class="customproper" v-if="state.showFlag['spemark']">
+                            <el-form-item label="变量名">
+                                <el-input v-model="state.properForm.globalVarName" placeholder="请输入临时变量代码名称" clearable>
+                                </el-input>
+                            </el-form-item>
+
+
+                        </div>
+
                         <el-form-item class="btn">
                             <el-button class="mb15" @click="state.tabsActive = '1'">
                                 <SvgIcon name="ele-DArrowLeft"/>
@@ -231,9 +288,15 @@
                                 <SvgIcon name="ele-EditPen"/>
                                 编辑模板
                             </el-button>
+                            <el-button type="primary" class="mb15" @click="onExtendGlobalVar"
+                                       :loading="state.loading.extend" v-if="state.showFlag['spemark']">
+                                <SvgIcon name="ele-EditPen"/>
+                                编辑变量
+                            </el-button>
 
                             <el-button type="primary" class="mb15" @click="viewNess"
-                                       :loading="state.loading.extend" v-if="state.showFlag['messbodyencap'] || state.showFlag['messbodyparse'] ||  state.showFlag['messheaderparse'] ">
+                                       :loading="state.loading.extend"
+                                       v-if="state.showFlag['messbodyencap'] || state.showFlag['messbodyparse'] ||  state.showFlag['messheaderparse'] ">
                                 <SvgIcon name="ele-EditPen"/>
                                 查看详细信息
                             </el-button>
@@ -267,6 +330,7 @@
         <Translatedialog ref="translateDialogRef" @refresh="getTableData()"/>
         <Messdialog ref="messDialogRef" @refresh="getTableData()"/>
         <ViewDialog ref="viewDialogRef" @refresh="getTableData()"/>
+        <GlobalEditdialog ref="globalEditDialogRef" @refresh="getTableData()"/>
     </div>
 </template>
 
@@ -281,6 +345,8 @@
     const messDialogRef = ref();
     const ViewDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/viewdialog.vue'));
     const viewDialogRef = ref();
+    const GlobalEditdialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/globaleditdialog.vue'));
+    const globalEditDialogRef = ref();
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['submit', 'close']);
 
@@ -356,7 +422,7 @@
             state.proper.typeC = '消息体添加';
         }
         if (data.type == 'spemark') {
-            state.proper.typeC = '特殊标记';
+            state.proper.typeC = '临时变量';
         }
 
         if (data.type == 'statistics') {
@@ -418,27 +484,40 @@
         });
     };
 
-        // 开始节点中-网口类-本地地址菜单菜单联动
-    const onChangeStartNetworkChoose = (value:any) => {
-        if(state.properForm.localnetworkID=='-1'){
-            state.properForm.ip="";
-            state.properForm.port="";
-        }else{
-                    state.properForm.ip="192.168.3.27";
-        state.properForm.port="8080";
+    // 开始节点中-网口类-本地地址菜单菜单联动
+    const onChangeStartNetworkChoose = (value: any) => {
+        if (state.properForm.localnetworkID == '-1') {
+            state.properForm.ip = "";
+            state.properForm.port = "";
+        } else {
+            state.properForm.ip = "192.168.3.27";
+            state.properForm.port = "8080";
         }
 
 
     };
-    // 开始节点中-串口类-本地地址菜单菜单联动
-        const onChangeStartSerialChoose = (value:any) => {
-        if(state.properForm.serialID=='-1'){
-            state.properForm.BAUD="";
-            state.properForm.SerialNO="0";
 
-        }else{
-        state.properForm.BAUD="19200";
-            state.properForm.SerialNO="COM1";
+    // 目的节点中-网口类-目的地址菜单菜单联动
+    const onChangeEndNetworkChoose = (value: any) => {
+        if (state.properForm.localnetworkID == '-1') {
+            state.properForm.IPlist = [{ip: '', port: ''}];
+        } else {
+            state.properForm.IPlist = [{ip: '192.168.12.31', port: '9080'}];
+
+        }
+
+
+    };
+
+    // 开始节点中-串口类-本地地址菜单菜单联动
+    const onChangeStartSerialChoose = (value: any) => {
+        if (state.properForm.serialID == '-1') {
+            state.properForm.BAUD = "";
+            state.properForm.SerialNO = "0";
+
+        } else {
+            state.properForm.BAUD = "19200";
+            state.properForm.SerialNO = "COM1";
         }
 
 
@@ -453,8 +532,17 @@
     const onExtendEditMessheader = () => {
         messDialogRef.value.openDialog(state.node.id, state.properForm.messheaderencapID);
     };
-        const viewNess = () => {
+    const viewNess = () => {
         viewDialogRef.value.openDialog('view', state.properForm.messheaderparseID);
+    };
+    const onAddEndIP = () => {
+        state.properForm.IPlist.push({ip: '', port: '0'});
+    };
+    const onDelEndIP = (k: number) => {
+        state.properForm.IPlist.splice(k, 1);
+    };
+    const onExtendGlobalVar = () => {
+        globalEditDialogRef.value.openDialog('add', state.properForm.messheaderparseID);
     };
     // 扩展表单-保存
     const onExtendSubmit = () => {
@@ -536,15 +624,17 @@
     }
 
     //解决按钮过多延长至第二排问题
-    .btn{
+    .btn {
         display: flex;
         justify-content: center;
-        :deep(){
-            .el-form-item__content{
+
+        :deep() {
+            .el-form-item__content {
                 margin-left: 30px !important;
             }
         }
     }
+
     .workflow-drawer-node {
         :deep() {
             .el-tabs {
