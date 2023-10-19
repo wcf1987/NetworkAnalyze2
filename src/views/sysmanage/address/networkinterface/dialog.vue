@@ -59,9 +59,12 @@
 </template>
 
 <script setup lang="ts" name="systemUserDialog">
-import { reactive, ref,nextTick } from 'vue';
-import {NetworkProtocol} from '/@/utils/common';
-    const NetworkProtocolOptions = ref(NetworkProtocol);
+	import {nextTick, reactive, ref} from 'vue';
+	import {NetworkProtocol} from '/@/utils/common';
+	import {addressApi} from '/@/api/sysmanage/address';
+	import {ElMessage} from "element-plus";
+
+	const NetworkProtocolOptions = ref(NetworkProtocol);
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 
@@ -119,9 +122,7 @@ const closeDialog = () => {
 const onCancel = () => {
 	closeDialog();
 };
-import {addressApi} from '/@/api/sysmanage/address';
-import {ElMessage} from "element-plus";
-// 提交
+	// 提交
 const onSubmit = () => {
 	if(state.dialog.type=='edit'){
 		addressApi().updateNetworkInter(

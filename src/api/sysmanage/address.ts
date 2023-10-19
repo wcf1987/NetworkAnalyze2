@@ -59,5 +59,43 @@ export function addressApi() {
                 data,
             });
         },
+
+
+
+        getSerialSearchListSize: (data: object) => {
+            return request({
+                url: '/serialinter/searchSize',
+                method: 'post',
+                data,
+            });
+        },
+        addSerialInter: (data: object) => {
+            return request({
+                url: '/serialinter/add',
+                method: 'post',
+                data,
+            });
+        },
+		        updateSerialInter: (data: object) => {
+            return request({
+                url: '/serialinter/update',
+                method: 'post',
+                data,
+            });
+        },
+        delSerialInter: (data: object) => {
+            return request({
+                url: '/serialinter/delete',
+                method: 'post',
+                data,
+            });
+        },
+        searchSerialInter: (data: object) => {
+            return request({
+                url: '/serialinter/search',
+                method: 'post',
+                data,
+            });
+        },
     };
 }
