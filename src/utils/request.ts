@@ -34,6 +34,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
 	(response) => {
 		// 对响应数据做点什么
+		//console.log(response);
 		const res = response.data;
 		if (res.code && res.code !== 0) {
 			// `token` 过期或者账号已在别处登录
@@ -44,7 +45,7 @@ service.interceptors.response.use(
 					.then(() => {})
 					.catch(() => {});
 			}
-			return Promise.reject(service.interceptors.response);
+			return res;
 		} else {
 			return res;
 		}

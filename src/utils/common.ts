@@ -13,6 +13,12 @@ export const FieldType = [
     {id: 11, label: 'bit', length: 1},
 
 ];
+export const NetworkProtocol = [
+    {id: 1, label: 'TCP', value: 'TCP'},
+    {id: 2, label: 'UDP', value: 'UDP'},
+
+
+];
 export const DataFlag = [
     {id: 1, label: '数据域（数据）', value: '数据域（数据）'},
     {id: 2, label: '数据域（数据组数量）', value: '数据域（数据组数量）'},

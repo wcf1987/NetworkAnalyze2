@@ -1,6 +1,6 @@
 <template>
 	<div class="system-user-dialog-container">
-		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" draggable="true">
+		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" draggable=true>
 			<el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px"  >
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -31,15 +31,19 @@
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="协议">
 							<el-select v-model="state.ruleForm.Protocol" placeholder="请选择" clearable class="w100">
-								<el-option label="UDP" value="UDP"></el-option>
-								<el-option label="TCP" value="TCP"></el-option>
+								<el-option
+                                        v-for="item in NetworkProtocolOptions"
+                                        :key="item.id"
+                                        :label="item.label"
+                                        :value="item.value"
+                                />
 							</el-select>
 						</el-form-item>
 					</el-col>
 
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="用户描述">
-							<el-input v-model="state.ruleForm.describe" type="textarea" placeholder="请输入用户描述" maxlength="150"></el-input>
+							<el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述" maxlength="150"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -56,7 +60,8 @@
 
 <script setup lang="ts" name="systemUserDialog">
 import { reactive, ref,nextTick } from 'vue';
-
+import {NetworkProtocol} from '/@/utils/common';
+    const NetworkProtocolOptions = ref(NetworkProtocol);
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 
@@ -89,6 +94,7 @@ const state = reactive({
 
 // 打开弹窗
 const openDialog = (type: string, row: RowUserType) => {
+	state.dialog.type=type;
 	if (type === 'edit') {
 		state.ruleForm = row;
 		state.dialog.title = '修改';
@@ -96,6 +102,7 @@ const openDialog = (type: string, row: RowUserType) => {
 	} else {
 		state.dialog.title = '新增';
 		state.dialog.submitTxt = '新 增';
+		state.ruleForm.Type="网口";
 		// 清空表单，此项需加表单验证才能使用
 		 nextTick(() => {
 		 	userDialogFormRef.value.resetFields();
@@ -112,40 +119,59 @@ const closeDialog = () => {
 const onCancel = () => {
 	closeDialog();
 };
+import {addressApi} from '/@/api/sysmanage/address';
+import {ElMessage} from "element-plus";
 // 提交
 const onSubmit = () => {
+	if(state.dialog.type=='edit'){
+		addressApi().updateNetworkInter(
+            state.ruleForm
+	)
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    ElMessage.success("修改成功");
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+	}
+	if(state.dialog.type=='add'){
+		state.ruleForm['AuthorID']=1
+	addressApi().addNetworkInter(
+            state.ruleForm
+	)
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    ElMessage.success("添加成功");
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+	}
+
 	closeDialog();
 	emit('refresh');
 	// if (state.dialog.type === 'add') { }
 };
-// 初始化部门数据
+// 初始化列表数据
 const getMenuData = () => {
-	state.deptData.push({
-		deptName: 'vueNextAdmin',
-		createTime: new Date().toLocaleString(),
-		status: true,
-		sort: Math.random(),
-		describe: '顶级部门',
-		id: Math.random(),
-		children: [
-			{
-				deptName: 'IT外包服务',
-				createTime: new Date().toLocaleString(),
-				status: true,
-				sort: Math.random(),
-				describe: '总部',
-				id: Math.random(),
-			},
-			{
-				deptName: '资本控股',
-				createTime: new Date().toLocaleString(),
-				status: true,
-				sort: Math.random(),
-				describe: '分部',
-				id: Math.random(),
-			},
-		],
-	});
+
 };
 
 // 暴露变量
