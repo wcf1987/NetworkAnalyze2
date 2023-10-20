@@ -2,8 +2,8 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"></el-input>
-                <el-button size="default" type="primary" class="ml10">
+                <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
+                <el-button size="default" type="primary" class="ml10"  @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
@@ -24,8 +24,8 @@
                 <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="ArrayOr" label="是否数组" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="DefaultValue" label="默认值" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
+                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
                 <el-table-column label="操作" width="100">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -58,22 +58,25 @@
             >
             </el-pagination>
         </el-card>
-        <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
+        <UserDialog ref="userDialogRef"  @refresh="getTableData()"/>
     </div>
 </template>
 
 <script setup lang="ts">
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
-    import {useRouter} from "vue-router";
-
+    import {useRoute, useRouter} from "vue-router";
+import {packageApi} from '/@/api/sysmanage/package';
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/package/detaildialog.vue'));
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
-    const state = reactive<SysUserState>({
+    const route = useRoute()
+    const querys = route.query
+    const state = reactive({
         tableData: {
+            id:0,
             data: [],
             total: 0,
             loading: false,
@@ -81,67 +84,113 @@
                 pageNum: 1,
                 pageSize: 10,
             },
+               search: '',
+            searchStr: '',
         },
     });
 
     // 初始化表格数据
     const getTableData = () => {
+
         state.tableData.loading = true;
-        const data = [{
-            id: 1,
-            Name: '版本号',
-            Type: 'unsigned short',
-            Length: '4',
-            ArrayOr: '否',
-            DefaultValue: '0xf',
-            describe: 'IP数据包A头结构',
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 2,
-            Name: '服务类型',
-            Type: 'unsigned int',
-            Length: '8',
-            ArrayOr: '是',
-            DefaultValue: '0xeb',
-            describe: 'IP数据包A头结构',
+         packageApi().searchPackageDetail(
+            {
+                uid: 1,
+                pid:state.tableData.id,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
 
-            createTime: new Date().toLocaleString(),
-        }];
+                    state.tableData.data = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+        packageApi().getPackageDetailSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+                pid:state.tableData.id,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
 
 
-        state.tableData.data = data;
-        state.tableData.total = state.tableData.data.length;
+        //state.tableData.data = data;
+        //state.tableData.total = state.tableData.data.length;
         setTimeout(() => {
             state.tableData.loading = false;
-        }, 500);
+        }, 300);
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
-        userDialogRef.value.openDialog(type);
+        userDialogRef.value.openDialog(type,state.tableData.id);
     };
     // 打开修改用户弹窗
     const onOpenEdit = (type: string, row: RowUserType) => {
-        userDialogRef.value.openDialog(type, row);
+        userDialogRef.value.openDialog(type, state.tableData.id,row);
+    };
+    const onSearch = () => {
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
     };
 
-    const onOpenEditDetail = (type: string, row: RowUserType) => {
-        router.push({
-            path: '/sysmanage/package/packagedetail',
-            query: {id: row.ID},
-        });
-    };
 
 
     // 删除用户
     const onRowDel = (row: RowUserType) => {
-        ElMessageBox.confirm(`此操作将永久删除名称：“${row.Name}”，是否继续?`, '提示', {
+        ElMessageBox.confirm(`此操作将永久删除字段：“${row.Name}”，是否继续?`, '提示', {
             confirmButtonText: '确认',
             cancelButtonText: '取消',
             type: 'warning',
         })
             .then(() => {
+ packageApi().delPackageDetail(
+                    {
+                        ID: row.ID,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
                 getTableData();
-                ElMessage.success('删除成功');
+
             })
             .catch(() => {
             });
@@ -158,6 +207,7 @@
     };
     // 页面加载时
     onMounted(() => {
+        state.tableData.id = querys.id;
         getTableData();
     });
 </script>

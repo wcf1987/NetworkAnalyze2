@@ -2,8 +2,8 @@
 	<div class="system-user-container layout-padding">
 		<el-card shadow="hover" class="layout-padding-auto">
 			<div class="system-user-search mb15">
-				<el-input size="default" placeholder="请输入消息头名称" style="max-width: 180px"> </el-input>
-				<el-button size="default" type="primary" class="ml10">
+				<el-input size="default" placeholder="请输入消息头名称" style="max-width: 180px" v-model="state.tableData.search"> </el-input>
+				<el-button size="default" type="primary" class="ml10" @click="onSearch">
 					<el-icon>
 						<ele-Search />
 					</el-icon>
@@ -21,8 +21,8 @@
 				<el-table-column type="index" label="序号" width="60" />
 				<el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="Type" label="格式" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
+				<el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
 				<el-table-column label="操作" width="180">
 					<template #default="scope">
 						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEdit('edit', scope.row)"
@@ -57,13 +57,14 @@
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import {useRouter} from "vue-router";
-
+import {messheaderApi} from '/@/api/sysmanage/messheader';
+import {packageApi} from "/@/api/sysmanage/package";
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/dialog.vue'));
 const router = useRouter();
 // 定义变量内容
 const userDialogRef = ref();
-const state = reactive<SysUserState>({
+const state = reactive({
 	tableData: {
 		data: [],
 		total: 0,
@@ -72,31 +73,59 @@ const state = reactive<SysUserState>({
 			pageNum: 1,
 			pageSize: 10,
 		},
+		     search: '',
+            searchStr: '',
 	},
 });
 
 // 初始化表格数据
 const getTableData = () => {
 	state.tableData.loading = true;
-	 const data =  [{
-	 			id:1,
-                Name: '消息头A',
-                Type: '可变长度',
 
-                describe: '特殊通讯稿A',
-                createTime: new Date().toLocaleString(),
-            }, {
-	 	id:2,
-		 Name: '消息头B',
-                Type: '固定长度',
+     messheaderApi().searchMessHeader(
+            {
+                uid: 1,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
 
-                describe: '特殊通讯稿B',
-                createTime: new Date().toLocaleString(),
-            }];
+                    state.tableData.data = res.data;
 
+                } else {
+                    ElMessage.error(res.message);
+                }
 
-	state.tableData.data = data;
-	state.tableData.total = state.tableData.data.length;
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+        messheaderApi().getMessHeaderSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
 	setTimeout(() => {
 		state.tableData.loading = false;
 	}, 500);
@@ -110,7 +139,10 @@ const onOpenEdit = (type: string, row: RowUserType) => {
 	userDialogRef.value.openDialog(type, row);
 };
 
-
+    const onSearch = () => {
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
+    };
 
 const onOpenEditDetail = (type: string, row: RowUserType) => {
 	onOpenEditDetailByID(row.ID);
@@ -125,14 +157,34 @@ const onOpenEditDetailByID= (id) => {
 
 // 删除用户
 const onRowDel = (row: RowUserType) => {
-	ElMessageBox.confirm(`此操作将永久删除名称：“${row.Name}”，是否继续?`, '提示', {
+	ElMessageBox.confirm(`此操作将永久删除：“${row.Name}”，是否继续?`, '提示', {
 		confirmButtonText: '确认',
 		cancelButtonText: '取消',
 		type: 'warning',
 	})
 		.then(() => {
+			 messheaderApi().delMessHeader(
+                    {
+                        ID: row.ID,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
 			getTableData();
-			ElMessage.success('删除成功');
+
 		})
 		.catch(() => {});
 };
