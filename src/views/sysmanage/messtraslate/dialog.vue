@@ -12,25 +12,33 @@
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="源消息体">
-                            <el-select v-model="state.ruleForm.sourmess" placeholder="请选择" clearable class="w100">
-                                <el-option label="消息体A" value="消息体A"></el-option>
-                                <el-option label="消息体B" value="消息体B"></el-option>
+                            <el-select v-model="state.ruleForm.sourceID" placeholder="请选择" clearable class="w100">
+                                <el-option
+                                        v-for="item in MessBodyOptions"
+                                        :key="item.ID"
+                                        :label="item.Name"
+                                        :value="item.ID"
+                                />
                             </el-select>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="目的消息体">
-                            <el-select v-model="state.ruleForm.tarmess" placeholder="请选择" clearable class="w100">
-                                <el-option label="消息体A" value="消息体A"></el-option>
-                                <el-option label="消息体B" value="消息体B"></el-option>
+                            <el-select v-model="state.ruleForm.targetID" placeholder="请选择" clearable class="w100">
+                                <el-option
+                                        v-for="item in MessBodyOptions"
+                                        :key="item.ID"
+                                        :label="item.Name"
+                                        :value="item.ID"
+                                />
                             </el-select>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
                         <el-form-item label="用户描述">
-                            <el-input v-model="state.ruleForm.describe" type="textarea" placeholder="请输入用户描述"
+                            <el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述"
                                       maxlength="150"></el-input>
                         </el-form-item>
                     </el-col>
@@ -48,10 +56,12 @@
 
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
-
+    import {messbodyApi} from "/@/api/sysmanage/messbody";
+    import {ElMessage} from "element-plus";
+    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-
+    const MessBodyOptions=ref();
     // 定义变量内容
     const userDialogFormRef = ref();
     const rules = reactive({
@@ -64,9 +74,9 @@
     const state = reactive({
         ruleForm: {
             Name: '', // 账户名称
-            sourmess:'',
-			tarmess:'',
-			describe: '', // 用户描述
+            sourmess: '',
+            tarmess: '',
+            describe: '', // 用户描述
         },
         dialog: {
             isShowDialog: false,
@@ -78,6 +88,7 @@
 
     // 打开弹窗
     const openDialog = (type: string, row: RowUserType) => {
+        state.dialog.type = type;
         if (type === 'edit') {
             state.ruleForm = row;
             state.dialog.title = '修改';
@@ -93,6 +104,33 @@
         state.dialog.isShowDialog = true;
         getMenuData();
     };
+    const getMenuData = () => {
+      messbodyApi().searchMessBody(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    MessBodyOptions.value = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+
+
+    };
     // 关闭弹窗
     const closeDialog = () => {
         state.dialog.isShowDialog = false;
@@ -103,8 +141,55 @@
     };
     // 提交
     const onSubmit = () => {
-        closeDialog();
-        emit('refresh');
+      if (state.dialog.type == 'edit') {
+            messtranslateApi().updateMessTranslate(
+                state.ruleForm
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+
+                        ElMessage.success("修改成功");
+                        closeDialog();
+                        emit('refresh');
+                    } else {
+                        ElMessage.error(res.message);
+                    }
+
+                }).catch(err => {
+
+            }).finally(() => {
+
+            });
+        }
+        if (state.dialog.type == 'add') {
+            state.ruleForm['AuthorID'] = 1
+            messtranslateApi().addMessTranslate(
+                state.ruleForm
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+
+                        ElMessage.success("添加成功");
+                        closeDialog();
+                        emit('refresh');
+                        emit('editdetail', state.ruleForm['ID']);
+                    }
+
+        else
+            {
+                ElMessage.error(res.message);
+            }
+
+        }
+    )
+    .catch(err => {
+
+    }).finally(() => {
+
+    });
+    }
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据

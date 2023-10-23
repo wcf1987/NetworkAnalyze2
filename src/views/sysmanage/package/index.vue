@@ -178,6 +178,7 @@
                         if (res.code == '200') {
 
                             ElMessage.success('删除成功');
+                            getTableData();
 
                         } else {
                             ElMessage.error(res.message);
@@ -188,7 +189,7 @@
                 }).finally(() => {
 
                 });
-                getTableData();
+
 
             })
             .catch(() => {

@@ -133,6 +133,8 @@ const onSubmit = () => {
                 if (res.code == '200') {
 
                     ElMessage.success("修改成功");
+                    closeDialog();
+	                emit('refresh');
 
                 } else {
                     ElMessage.error(res.message);
@@ -154,6 +156,8 @@ const onSubmit = () => {
                 if (res.code == '200') {
 
                     ElMessage.success("添加成功");
+                    closeDialog();
+	                emit('refresh');
 
                 } else {
                     ElMessage.error(res.message);
@@ -166,8 +170,7 @@ const onSubmit = () => {
         });
 	}
 
-	closeDialog();
-	emit('refresh');
+
 	// if (state.dialog.type === 'add') { }
 };
 // 初始化列表数据

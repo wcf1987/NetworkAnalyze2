@@ -166,6 +166,7 @@ import {addressApi} from '/@/api/sysmanage/address';
                 if (res.code == '200') {
 
                       ElMessage.success('删除成功');
+                         getTableData();
 
                 } else {
                     ElMessage.error(res.message);
@@ -176,7 +177,7 @@ import {addressApi} from '/@/api/sysmanage/address';
         }).finally(() => {
 
         });
-                getTableData();
+
 
             })
             .catch(() => {

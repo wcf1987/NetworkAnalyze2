@@ -179,6 +179,7 @@ import {packageApi} from '/@/api/sysmanage/package';
                         if (res.code == '200') {
 
                             ElMessage.success('删除成功');
+                                   getTableData();
 
                         } else {
                             ElMessage.error(res.message);
@@ -189,7 +190,7 @@ import {packageApi} from '/@/api/sysmanage/package';
                 }).finally(() => {
 
                 });
-                getTableData();
+
 
             })
             .catch(() => {

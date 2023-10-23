@@ -50,7 +50,7 @@ import {MessHeader, PackageHeader} from '/@/utils/common';
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh','editdetail']);
 import {messheaderApi} from "/@/api/sysmanage/messheader";
-import {packageApi} from "/@/api/sysmanage/package";
+
 import {ElMessage} from "element-plus";
 // 定义变量内容
 const userDialogFormRef = ref();
@@ -140,6 +140,7 @@ const onSubmit = () => {
 
                         ElMessage.success("添加成功");
                         closeDialog();
+                         emit('refresh');
                         emit('editdetail', state.ruleForm['ID']);
                     }
 

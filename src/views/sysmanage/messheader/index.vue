@@ -173,6 +173,7 @@ const onRowDel = (row: RowUserType) => {
                         if (res.code == '200') {
 
                             ElMessage.success('删除成功');
+                            	getTableData();
 
                         } else {
                             ElMessage.error(res.message);
@@ -183,7 +184,7 @@ const onRowDel = (row: RowUserType) => {
                 }).finally(() => {
 
                 });
-			getTableData();
+
 
 		})
 		.catch(() => {});

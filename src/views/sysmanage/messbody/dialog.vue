@@ -14,8 +14,12 @@
 				<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="类型">
 							<el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
-								<el-option label="可变长度" value="可变长度"></el-option>
-								<el-option label="固定长度" value="固定长度"></el-option>
+						 <el-option
+                                        v-for="item in TypeOptions"
+                                        :key="item.id"
+                                        :label="item.label"
+                                        :value="item.value"
+                                />
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -24,7 +28,7 @@
 
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="用户描述">
-							<el-input v-model="state.ruleForm.describe" type="textarea" placeholder="请输入用户描述" maxlength="150"></el-input>
+							<el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述" maxlength="150"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -41,9 +45,13 @@
 
 <script setup lang="ts" name="systemUserDialog">
 import { reactive, ref,nextTick } from 'vue';
-
+import {MessHeader, PackageHeader} from '/@/utils/common';
+        const TypeOptions = ref(MessHeader);
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh','editdetail']);
+import {messbodyApi} from "/@/api/sysmanage/messbody";
+
+import {ElMessage} from "element-plus";
 
 // 定义变量内容
 const userDialogFormRef = ref();
@@ -75,6 +83,7 @@ const state = reactive({
 
 // 打开弹窗
 const openDialog = (type: string, row: RowUserType) => {
+	state.dialog.type = type;
 	if (type === 'edit') {
 		state.ruleForm = row;
 		state.dialog.title = '修改';
@@ -100,14 +109,57 @@ const onCancel = () => {
 };
 // 提交
 const onSubmit = () => {
-	closeDialog();
-	const id=1;
-	if(state.dialog.title=="新增"){
-	emit('editdetail',id);}
-	else{
-	emit('refresh');
-	}
-	// if (state.dialog.type === 'add') { }
+ if (state.dialog.type == 'edit') {
+            messbodyApi().updateMessBody(
+                state.ruleForm
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+
+                        ElMessage.success("修改成功");
+                        closeDialog();
+                        emit('refresh');
+                    } else {
+                        ElMessage.error(res.message);
+                    }
+
+                }).catch(err => {
+
+            }).finally(() => {
+
+            });
+        }
+        if (state.dialog.type == 'add') {
+            state.ruleForm['AuthorID'] = 1
+            messbodyApi().addMessBody(
+                state.ruleForm
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+
+                        ElMessage.success("添加成功");
+                        closeDialog();
+                        emit('refresh');
+                        emit('editdetail', state.ruleForm['ID']);
+                    }
+
+        else
+            {
+                ElMessage.error(res.message);
+            }
+
+        }
+    )
+    .catch(err => {
+
+    }).finally(() => {
+
+    });
+    }
+
+
 };
 // 初始化部门数据
 

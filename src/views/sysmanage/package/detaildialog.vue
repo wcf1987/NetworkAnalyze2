@@ -91,7 +91,7 @@
 
             describe: '', // 用户描述
         },
-        pid:0,
+        pid: 0,
         dialog: {
             isShowDialog: false,
             type: '',
@@ -101,9 +101,9 @@
     });
 
     // 打开弹窗
-    const openDialog = (type: string,pid, row: RowUserType) => {
+    const openDialog = (type: string, pid, row: RowUserType) => {
         state.dialog.type = type;
-        state.pid=pid;
+        state.pid = pid;
 
         if (type === 'edit') {
             state.ruleForm = row;
@@ -153,37 +153,32 @@
         }
         if (state.dialog.type == 'add') {
             state.ruleForm['AuthorID'] = 1;
-            state.ruleForm['packID']=state.pid;
+            state.ruleForm['packID'] = state.pid;
             packageApi().addPackageDetail(
                 state.ruleForm
             )
                 .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+                        //console.log(res);
+                        if (res.code == '200') {
 
-                        ElMessage.success("添加成功");
+                            ElMessage.success("添加成功");
 
+                            closeDialog();
+                            emit('refresh');
+                        } else {
+                            ElMessage.error(res.message);
+                        }
 
                     }
+                )
+                .catch(err => {
 
-        else
-            {
-                ElMessage.error(res.message);
-            }
+                }).finally(() => {
 
+            });
         }
-    )
-    .catch(err => {
-
-    }).finally(() => {
-
-    });
-    }
 
 
-
-        closeDialog();
-        emit('refresh');
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据

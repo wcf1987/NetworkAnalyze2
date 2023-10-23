@@ -2,8 +2,9 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入转换规则名称" style="max-width: 180px"></el-input>
-                <el-button size="default" type="primary" class="ml10">
+                <el-input size="default" placeholder="请输入转换规则名称" style="max-width: 180px"
+                          v-model="state.tableData.search"></el-input>
+                <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
@@ -20,10 +21,12 @@
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="sourceID" label="源消息体ID" show-overflow-tooltip v-if="false"></el-table-column>
+                <el-table-column prop="targetID" label="目的消息体ID" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column prop="sourmess" label="源消息体" show-overflow-tooltip @cell-click="viewmess">
                     <template #default="scope">
                         <el-button size="default" text type="primary"
-                                   @click="viewNess('view', scope.row.sourmess)"
+                                   @click="viewNess('view', scope.row.sourceID)"
                         >{{scope.row.sourmess}}
                         </el-button
                         >
@@ -34,15 +37,16 @@
                 <el-table-column prop="tarmess" label="目的消息体" show-overflow-tooltip>
                     <template #default="scope">
                         <el-button size="default" text type="primary"
-                                   @click="viewNess('view', scope.row.tarmess)"
+                                   @click="viewNess('view', scope.row.targetID)"
                         >{{scope.row.tarmess}}
                         </el-button
                         >
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
+                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip
+                                 v-if="false"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -85,7 +89,8 @@
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRouter} from "vue-router";
-
+    import {messheaderApi} from "/@/api/sysmanage/messheader";
+    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messtraslate/dialog.vue'));
     const ViewDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messtraslate/viewdialog.vue'));
@@ -93,7 +98,7 @@
     // 定义变量内容
     const userDialogRef = ref();
     const viewDialogRef = ref();
-    const state = reactive<SysUserState>({
+    const state = reactive({
         tableData: {
             data: [],
             total: 0,
@@ -102,34 +107,62 @@
                 pageNum: 1,
                 pageSize: 10,
             },
+            search: '',
+            searchStr: '',
         },
     });
 
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
-        const data = [{
-            id: 1,
-            Name: '转换规则A',
-            sourmess: '消息体A',
-            tarmess: '消息体B',
-            describe: '特殊转换1',
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 2,
-            Name: '转换规则3',
-            sourmess: '消息体B',
-            tarmess: '消息体A',
-            describe: '空天转换',
-            createTime: new Date().toLocaleString(),
-        }];
+        messtranslateApi().searchMessTranslate(
+            {
+                uid: 1,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.data = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+        messtranslateApi().getMessTranslateSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
 
 
-        state.tableData.data = data;
-        state.tableData.total = state.tableData.data.length;
         setTimeout(() => {
             state.tableData.loading = false;
-        }, 500);
+        }, 300);
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
@@ -150,17 +183,40 @@
         viewDialogRef.value.openDialog(type, row);
     };
 
+    const onSearch = () => {
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
+    };
 
     // 删除用户
     const onRowDel = (row: RowUserType) => {
-        ElMessageBox.confirm(`此操作将永久删除名称：“${row.Name}”，是否继续?`, '提示', {
+        ElMessageBox.confirm(`此操作将永久删除：“${row.Name}”，是否继续?`, '提示', {
             confirmButtonText: '确认',
             cancelButtonText: '取消',
             type: 'warning',
         })
             .then(() => {
-                getTableData();
-                ElMessage.success('删除成功');
+               messtranslateApi().delMessTranslate(
+                    {
+                        ID: row.ID,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+                            	getTableData();
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
             })
             .catch(() => {
             });

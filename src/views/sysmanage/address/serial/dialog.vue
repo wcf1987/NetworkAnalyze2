@@ -137,6 +137,8 @@
                 if (res.code == '200') {
 
                     ElMessage.success("修改成功");
+                            closeDialog();
+        emit('refresh');
 
                 } else {
                     ElMessage.error(res.message);
@@ -158,6 +160,8 @@
                 if (res.code == '200') {
 
                     ElMessage.success("添加成功");
+                            closeDialog();
+        emit('refresh');
 
                 } else {
                     ElMessage.error(res.message);
@@ -169,8 +173,7 @@
 
         });
 	}
-        closeDialog();
-        emit('refresh');
+
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据
