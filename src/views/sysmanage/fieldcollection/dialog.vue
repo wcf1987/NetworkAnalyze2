@@ -10,15 +10,21 @@
                         </el-form-item>
                     </el-col>
 
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
+                        <el-form-item label="DFI标识号" prop="DFIID" >
+                            <el-input v-model="state.ruleForm.DFIID" placeholder="" clearable :readonly="true"></el-input>
+                        </el-form-item>
+                    </el-col>
+
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="DFI标识号" prop="DFINO" >
-                            <el-input v-model="state.ruleForm.DFINO" placeholder="请输入DFI标识号" clearable :readonly="isReadOnly"></el-input>
+                            <el-input v-model="state.ruleForm.DFINO" placeholder="请输入DFI标识号" clearable :readonly="true"></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="DFI版本" prop="DFIVersion">
-                            <el-input v-model="state.ruleForm.DFIVersion" placeholder="请输入DFI版本" clearable :readonly="isReadOnly"></el-input>
+                            <el-input v-model="state.ruleForm.DFIVersion" placeholder="请输入DFI版本" clearable :readonly="true"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -55,7 +61,7 @@
                                         v-for="item in options"
                                         :key="item.id"
                                         :label="item.label"
-                                        :value="item"
+                                        :value="item.label"
                                 />
                             </el-select>
                         </el-form-item>
@@ -88,7 +94,7 @@
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
                         <el-form-item label="说明" prop="Describe">
-                            <el-input v-model="state.ruleForm.Describe" placeholder="请输入说明" clearable :readonly="isReadOnly"></el-input>
+                            <el-input v-model="state.ruleForm.Describes" placeholder="请输入说明" clearable :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -108,6 +114,10 @@
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
     import {FieldType} from '/@/utils/common';
+     import {fieldsdetailApi} from "/@/api/sysmanage/fieldsdetail";
+     import {fieldsApi} from "/@/api/sysmanage/fields";
+    import {packageApi} from "/@/api/sysmanage/package";
+    import {ElMessage} from "element-plus";
 const options = ref(FieldType);
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
@@ -132,6 +142,7 @@ const options = ref(FieldType);
             FlowControl: '',
             describe: '', // 用户描述
         },
+        pid: 0,
         dialog: {
             isShowDialog: false,
             type: '',
@@ -141,7 +152,9 @@ const options = ref(FieldType);
     });
     const isReadOnly=ref(false);
     // 打开弹窗
-    const openDialog = (type: string, row: RowUserType) => {
+    const openDialog = (type: string, pid, row: RowUserType) => {
+         state.dialog.type = type;
+        state.pid = pid;
       if (type === 'edit') {
             state.ruleForm = row;
             state.dialog.title = '修改';
@@ -163,11 +176,37 @@ const options = ref(FieldType);
                 userDialogFormRef.value.resetFields();
             });
         }
+             getMenuData();
         state.dialog.isShowDialog = true;
     };
     // 关闭弹窗
     const closeDialog = () => {
         state.dialog.isShowDialog = false;
+    };
+    //获取dfi数据
+    const getMenuData = () => {
+        //state.dialog.isShowDialog = false;
+        fieldsApi().getFieldsByID(
+            { pid:state.pid,}
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+                        state.ruleForm.DFIID=res.data.ID;
+                        state.ruleForm.DFINO=res.data.IDNO;
+                        state.ruleForm.DFIVersion=res.data.Version;
+                        //ElMessage.success("修改成功");
+                        //closeDialog();
+                        //emit('refresh');
+                    } else {
+                        //ElMessage.error(res.message);
+                    }
+
+                }).catch(err => {
+
+            }).finally(() => {
+
+            });
     };
     // 取消
     const onCancel = () => {
@@ -175,9 +214,54 @@ const options = ref(FieldType);
     };
     // 提交
     const onSubmit = () => {
-        closeDialog();
-        emit('refresh', '1');
-        // if (state.dialog.type === 'add') { }
+        if (state.dialog.type == 'edit') {
+            fieldsdetailApi().updateFieldsDetail(
+                state.ruleForm
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+
+                        ElMessage.success("修改成功");
+                        closeDialog();
+                        emit('refresh');
+                    } else {
+                        ElMessage.error(res.message);
+                    }
+
+                }).catch(err => {
+
+            }).finally(() => {
+
+            });
+        }
+        if (state.dialog.type == 'add') {
+            state.ruleForm['AuthorID'] = 1;
+            state.ruleForm['DFIID'] = state.pid;
+            fieldsdetailApi().addFieldsDetail(
+                state.ruleForm
+            )
+                .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success("添加成功");
+
+                            closeDialog();
+                            emit('refresh');
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }
+                )
+                .catch(err => {
+
+                }).finally(() => {
+
+            });
+        }
+
     };
     // 初始化部门数据
 

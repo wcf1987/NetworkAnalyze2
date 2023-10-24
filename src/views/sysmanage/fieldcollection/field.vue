@@ -2,8 +2,8 @@
 	<div class="system-user-container layout-padding">
 		<el-card shadow="hover" class="layout-padding-auto">
 			<div class="system-user-search mb15">
-				<el-input size="default" placeholder="请输入数据域名称" style="max-width: 180px"> </el-input>
-				<el-button size="default" type="primary" class="ml10">
+				<el-input size="default" placeholder="请输入数据域名称" style="max-width: 180px" v-model="state.tableData.search"> </el-input>
+				<el-button size="default" type="primary" class="ml10" @click="onSearch">
 					<el-icon>
 						<ele-Search />
 					</el-icon>
@@ -24,6 +24,7 @@
 			</div>
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column prop="ID" label="ID" width="60" v-if="false"/>
+				<el-table-column  type="index" label="序号" width="60"/>
 				<el-table-column prop="IDNO" label="标识号" />
 				<el-table-column prop="Version" label="版本" v-if="isHide"/>
 				<el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
@@ -68,14 +69,15 @@
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import {useRouter} from "vue-router";
-
+	import {fieldsApi} from "/@/api/sysmanage/fields";
+import {messbodyApi} from "/@/api/sysmanage/messbody";
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/fielddialog.vue'));
 const router = useRouter();
 // 定义变量内容
 const userDialogRef = ref();
     const isHide=ref(true);
-const state = reactive<SysUserState>({
+const state = reactive({
 	tableData: {
 		data: [],
 		total: 0,
@@ -84,41 +86,60 @@ const state = reactive<SysUserState>({
 			pageNum: 1,
 			pageSize: 10,
 		},
+		  search: '',
+            searchStr: '',
 	},
 });
 
 // 初始化表格数据
 const getTableData = () => {
 	state.tableData.loading = true;
-	 const data =  [{
-	 			id:1,
-		 		IDNO:1001,
-		 Version:'1.02',
-                Name: '国际标准ISK',
-                ShortName: 'ISK',
+	 fieldsApi().searchFields(
+            {
+                uid: 1,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
 
-                describe: '通讯标准',
-		 ApplicableMess:'东南区域',
-                createTime: new Date().toLocaleString(),
-            }, {
-	 	id:2,
-		  		IDNO:1001,
-		 Version:'2.03',
-                Name: '海洋标准KF',
-                ShortName: 'KF',
+                    state.tableData.data = res.data;
 
-                describe: '通信标准',
-		 ApplicableMess:'西北区域',
+                } else {
+                    ElMessage.error(res.message);
+                }
 
-                createTime: new Date().toLocaleString(),
-            }];
+            }).catch(err => {
 
+        }).finally(() => {
 
-	state.tableData.data = data;
-	state.tableData.total = state.tableData.data.length;
+        });
+        //const data = [];
+        fieldsApi().getFieldsSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
 	setTimeout(() => {
 		state.tableData.loading = false;
-	}, 500);
+	}, 300);
 };
 // 打开新增用户弹窗
 const onOpenAdd = (type: string) => {
@@ -129,7 +150,10 @@ const onOpenEdit = (type: string, row: RowUserType) => {
 
 	userDialogRef.value.openDialog(type, row);
 };
-
+    const onSearch = () => {
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
+    };
 const onOpenEditDetail = (type: string, row: RowUserType) => {
 	router.push({
 			path: '/sysmanage/field/fieldcollection',
@@ -141,16 +165,37 @@ const onOpenEditDetail = (type: string, row: RowUserType) => {
 
 // 删除用户
 const onRowDel = (row: RowUserType) => {
-	ElMessageBox.confirm(`此操作将永久删除名称：“${row.Name}”，是否继续?`, '提示', {
+	ElMessageBox.confirm(`此操作将永久删除：“${row.Name}”，是否继续?`, '提示', {
 		confirmButtonText: '确认',
 		cancelButtonText: '取消',
 		type: 'warning',
 	})
 		.then(() => {
-			getTableData();
-			ElMessage.success('删除成功');
-		})
-		.catch(() => {});
+		 fieldsApi().delFields(
+                    {
+                        ID: row.ID,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+                            	getTableData();
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+            })
+            .catch(() => {
+            });
 };
 // 分页改变
 const onHandleSizeChange = (val: number) => {
