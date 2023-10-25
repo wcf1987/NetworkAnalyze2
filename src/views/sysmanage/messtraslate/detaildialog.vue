@@ -1,17 +1,17 @@
 <template>
     <div class="system-user-dialog-container">
-        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" draggable="true">
+        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="转换名称" prop="name">
-                            <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
+                            <el-input v-model="state.ruleForm.TName" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="目的字段">
-                            <el-input v-model="state.ruleForm.TargetName" placeholder="" clearable
+                            <el-input v-model="state.ruleForm.Name" placeholder="" clearable
                                       readonly='true'></el-input>
                         </el-form-item>
                     </el-col>
@@ -42,9 +42,15 @@
 
                         <el-form-item label="源字段" :label-width="formLabelWidth" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.Transrule" :options="sourceoptions" :props="props1"
-                                         clearable
-                                         style="width: 300px; " collapse-tags/>
+
+                            <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions" :props="props1"
+                                         @change="changeSourceInput12"
+                                         clearable collapse-tags class="w100" placeholder="可以多选">
+
+
+                            </el-cascader>
+
+
                         </el-form-item>
                     </el-col>
 
@@ -53,7 +59,7 @@
                             v-if="state.ruleForm.Optional=='系统函数'">
                         <el-form-item label="转换函数" prop="funcrule">
 
-                            <el-cascader v-model="state.ruleForm.funcrule" :options="funcoptions" :props="props22"
+                            <el-cascader v-model="state.ruleForm.Funcrule" :options="funcoptions" :props="props22"
                                          clearable @change="changeSourceInput22"
                                          collapse-tags/>
                         </el-form-item>
@@ -64,7 +70,7 @@
 
                         <el-form-item label="源字段" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.sourceData" :options="sourceoptions" :props="props21"
+                            <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions" :props="props21"
                                          @change="changeSourceInput21"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
@@ -85,12 +91,11 @@
                     </el-col>
 
 
-
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='自定义转换计算'">
                         <el-form-item label="转换函数" prop="funcrule">
 
-                            <el-cascader v-model="state.ruleForm.funcrule" :options="funcoptions" :props="props32"
+                            <el-cascader v-model="state.ruleForm.Funcrule" :options="funcoptions" :props="props32"
                                          clearable @change="changeSourceInput32"
                                          collapse-tags/>
                         </el-form-item>
@@ -101,7 +106,7 @@
 
                         <el-form-item label="源字段" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.sourceData" :options="sourceoptions" :props="props21"
+                            <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions" :props="props21"
                                          @change="changeSourceInput21"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
@@ -123,7 +128,7 @@
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
                         <el-form-item label="用户描述">
-                            <el-input v-model="state.ruleForm.describe" type="textarea" placeholder="请输入用户描述"
+                            <el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述"
                                       maxlength="150"></el-input>
                         </el-form-item>
                     </el-col>
@@ -141,10 +146,13 @@
 
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
+    import {messdetailApi} from "/@/api/sysmanage/messdetail";
+    import {ElMessage} from "element-plus";
+    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-
+    const sourceoptions = ref();
     // 定义变量内容
     const userDialogFormRef = ref();
     const rules = reactive({
@@ -154,24 +162,45 @@
             {min: 1, max: 10, message: '名称长度为1 - 10位'},
         ],
     });
-    const sourceoptions = [
-        {ename: "A.name", name: 'A.name'},
-        {ename: "A.type", name: 'A.type'},
-        {ename: "A.power", name: 'A.power'},
-        {ename: 'A.score', name: 'A.score'},
-        {ename: 'A.aditional', name: 'A.aditional'},
-    ]
+
+    const getMenuOptions = () => {
+
+        messdetailApi().searchMessDetail(
+            {
+                uid: 1,
+                pid: state.sourceid,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+                ttype: 'body'
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    sourceoptions.value = res.data;
+                    //locOptions.value.push({ID:-1,Name:'最后'});
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+    }
     const props1 = {
         multiple: false,
         expandTrigger: 'hover',
-        value: 'ename',
-        label: 'name'
+        value: 'EName',
+        label: 'Name'
     }
     const props21 = {
         multiple: true,
         expandTrigger: 'hover',
-        value: 'ename',
-        label: 'name'
+        value: 'EName',
+        label: 'Name'
     }
     const props22 = {
         expandTrigger: 'hover',
@@ -179,7 +208,7 @@
         value: 'name',
         label: 'name'
     }
-        const props32= {
+    const props32 = {
         multiple: true,
         expandTrigger: 'hover',
 
@@ -201,9 +230,9 @@
             Type: '', // 用户昵称
             Optional: '',
             Transrule: '',
-            sourceData: '',
-            funcrule: '',
-            describe: '', // 用户描述
+            SourceData: '',
+            Funcrule: '',
+            Describes: '', // 用户描述
         },
         dialog: {
             isShowDialog: false,
@@ -222,37 +251,48 @@
 
 
     }
+        const changeSourceInput12 = (fo) => {
+        console.log(fo)
+        let i = 0, tempstr = ''
+        for (i = 0; i < fo.length; i++) {
+            tempstr = tempstr + fo[i]
+        }
+        state.ruleForm.Transrule = tempstr;
+
+
+    }
     const changeSourceInput21 = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
         for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i]+'\n'
+            tempstr = tempstr + fo[i] + '\n'
         }
-        state.ruleForm.Transrule = state.ruleForm.funcrule+tempstr;
+        state.ruleForm.Transrule = state.ruleForm.Funcrule + tempstr;
 
 
     }
     const changeSourceInput22 = (fo) => {
         console.log(fo)
 
-        state.ruleForm.Transrule =  fo[0];
+        state.ruleForm.Transrule = fo[0];
 
 
     }
-        const changeSourceInput32 = (fo) => {
+    const changeSourceInput32 = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
         for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i]+'\n'
+            tempstr = tempstr + fo[i] + '\n'
         }
         state.ruleForm.Transrule = tempstr;
 
 
     }
     // 打开弹窗
-    const openDialog = (type: string, row: RowUserType) => {
+    const openDialog = (type: string, sourceid, row: RowUserType) => {
         if (type === 'edit') {
             state.ruleForm = row;
+            state.sourceid = sourceid;
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
         } else {
@@ -264,7 +304,7 @@
             });
         }
         state.dialog.isShowDialog = true;
-        getMenuData();
+        getMenuOptions();
     };
     // 关闭弹窗
     const closeDialog = () => {
@@ -276,8 +316,28 @@
     };
     // 提交
     const onSubmit = () => {
-        closeDialog();
-        emit('refresh');
+        state.ruleForm['SourceData']=JSON.stringify(state.ruleForm.SourceData);
+state.ruleForm['Funcrule']=JSON.stringify(state.ruleForm.Funcrule);
+
+        messtranslateApi().updateMessTranslateDetail(
+            state.ruleForm
+        )
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    ElMessage.success("修改成功");
+                    closeDialog();
+                    emit('refresh');
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据

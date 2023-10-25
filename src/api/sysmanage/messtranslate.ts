@@ -49,37 +49,37 @@ export function messtranslateApi() {
 
 
 
-        getMessHeaderDetailSearchListSize: (data: object) => {
+        getMessTranslateDetailSearchListSize: (data: object) => {
             return request({
-                url: '/messheaderdetail/searchSize',
+                url: '/messtranslatedetail/searchSize',
                 method: 'post',
                 data,
             });
         },
-        addMessHeaderDetail: (data: object) => {
+        addMessTranslateDetail: (data: object) => {
             return request({
-                url: '/messheaderdetail/add',
+                url: '/messtranslatedetail/add',
                 method: 'post',
                 data,
             });
         },
-		        updateMessHeaderDetail: (data: object) => {
+		        updateMessTranslateDetail: (data: object) => {
             return request({
-                url: '/messheaderdetail/update',
+                url: '/messtranslatedetail/update',
                 method: 'post',
                 data,
             });
         },
-        delMessHeaderDetail: (data: object) => {
+        delMessTranslateDetail: (data: object) => {
             return request({
-                url: '/messheaderdetail/delete',
+                url: '/messtranslatedetail/delete',
                 method: 'post',
                 data,
             });
         },
-        searchMessHeaderDetail: (data: object) => {
+        searchMessTranslateDetail: (data: object) => {
             return request({
-                url: '/messheaderdetail/search',
+                url: '/messtranslatedetail/search',
                 method: 'post',
                 data,
             });

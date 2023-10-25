@@ -176,11 +176,11 @@
     const onOpenEditDetail = (type: string, row: RowUserType) => {
         router.push({
             path: '/sysmanage/messtraslate/messtraslatedetail',
-            query: {id: row.ID},
+            query: {id: row.ID,sourceid:row.sourceID,targetid:row.targetID},
         });
     };
-    const viewNess = (type: string, row) => {
-        viewDialogRef.value.openDialog(type, row);
+    const viewNess = (type: string, id) => {
+        viewDialogRef.value.openDialog(type, id);
     };
 
     const onSearch = () => {

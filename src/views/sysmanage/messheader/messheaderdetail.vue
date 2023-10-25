@@ -39,14 +39,15 @@
             <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
-                <el-table-column prop="Nest" label="名称" v-if="false"></el-table-column>
+                <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
+                <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Describes" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
                 <el-table-column prop="OutType" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
-
+                <el-table-column prop="NestID" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
                 <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip v-if="isHide"></el-table-column>
                 <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="TableName" label="标准表名" show-overflow-tooltip v-if="isHide"></el-table-column>
@@ -56,10 +57,10 @@
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="isHide"></el-table-column>
 
 
-                <el-table-column label="操作" width="160">
+                <el-table-column label="操作" width="100">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEdit('edit', scope.row)" v-if="scope.row.OutType!='fields'"
+                                   @click="onOpenEdit('edit', scope.row)"
                         >修改
                         </el-button
                         >
@@ -191,10 +192,10 @@
         userDialogRef.value.openDialog(type,state.tableData.id);
     };
     const onOpenGroup = (type: string) => {
-        groupDialogRef.value.openDialog(type);
+        groupDialogRef.value.openDialog(type,state.tableData.id);
     };
     const onOpenImport = (type: string) => {
-        importDialogRef.value.openDialog(type);
+        importDialogRef.value.openDialog(type,state.tableData.id);
     };
     const onSearch = () => {
         state.tableData.searchStr = state.tableData.search;
@@ -202,11 +203,19 @@
     };
     // 打开修改用户弹窗
     const onOpenEdit = (type: string, row) => {
-        if (row.Nest == '1') {
-            groupDialogRef.value.openDialog(type, row);
-        } else {
+        if (row.OutType == 'custom') {
+
             userDialogRef.value.openDialog(type, state.tableData.id,row);
         }
+        if (row.OutType == 'fields') {
+
+           importDialogRef.value.openDialog(type,state.tableData.id,row);
+        }
+        if (row.OutType == 'nest') {
+
+           groupDialogRef.value.openDialog(type,state.tableData.id,row);
+        }
+
     };
 
     const onOpenEditDetail = (type: string, row: RowUserType) => {

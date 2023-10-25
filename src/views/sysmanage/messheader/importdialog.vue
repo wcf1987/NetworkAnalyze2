@@ -1,16 +1,21 @@
 <template>
     <div class="system-user-dialog-container">
-        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" draggable="true">
+        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable=true>
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
 
-                   <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 
                         <el-form-item label="导入字段" prop="source">
 
-                            <el-select v-model="state.ruleForm.sourceDFI" value-key="id" placeholder="请先选择DFI" clearable class="w100">
-                                   <el-option label="国际标准ISK" value="国际标准ISK"></el-option>
-                                <el-option label="海洋标准KF" value="海洋标准KF"></el-option>
+                            <el-select v-model="state.ruleFormOri.sourceDFI" value-key="ID" @change="changeDFI"
+                                       placeholder="请先选择DFI" clearable class="w100">
+                                <el-option
+                                        v-for="item in DFIOptions"
+                                        :key="item.ID"
+                                        :label="item.IDNO+' - '+item.Name"
+                                        :value="item.ID"
+                                />
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -19,20 +24,23 @@
                         <el-form-item label="二次查询" prop="source">
 
 
-                             <el-select v-model="state.ruleForm.sourceDUI" value-key="id" placeholder="请后选择DUI" clearable class="w100">
-                                 <el-option label="版本号" value="版本号"></el-option>
-                                <el-option label="服务类型" value="服务类型"></el-option>
-                                 <el-option label="序号" value="序号"></el-option>
-                                <el-option label="确认号" value="确认号"></el-option>
-                                 <el-option label="数据偏移" value="数据偏移"></el-option>
+                            <el-select v-model="state.ruleFormOri.sourceDUI" value-key="id" @change="changeDUI"
+                                       placeholder="请后选择DUI" clearable class="w100">
+                                <el-option
+                                        v-for="item in DUIOptions"
+                                        :key="item.ID"
+                                        :label="item.DUINO+' - '+item.Name"
+                                        :value="item.ID"
+                                />
 
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="数据标识">
-                            <el-select v-model="state.ruleForm.Flag" value-key="id" placeholder="请选择" clearable class="w100">
-                               <el-option
+                            <el-select v-model="state.ruleFormOri.Flag" value-key="id" placeholder="请选择" clearable
+                                       class="w100">
+                                <el-option
                                         v-for="item in dataFlagOptions"
                                         :key="item.id"
                                         :label="item.label"
@@ -41,10 +49,30 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="插入">
+
+
+                            <el-cascader v-model="state.ruleFormOri.SortID" :options="locOptions" :props="props1"
+                                         @change="changeLoc"
+                                         clearable collapse-tags class="w100" placeholder="插入到选择位置之前">
+
+
+                            </el-cascader>
+
+
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
+                        <el-form-item label="NestID"  v-if="false">
+                            <el-input v-model="state.ruleFormOri.NestID" placeholder="请输入名称" clearable ></el-input>
+                        </el-form-item>
+                    </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
                         <el-form-item label="ID" prop="ID">
-                            <el-input v-model="state.ruleForm.ID" placeholder="请输入名称" clearable></el-input>
+                            <el-input v-model="state.ruleFormOri.ID" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -155,92 +183,74 @@
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
 
-    import {FieldType,DataFlag} from '/@/utils/common';
-const options = ref(FieldType);
-const dataFlagOptions = ref(DataFlag);
+    import {DataFlag, FieldType} from '/@/utils/common';
+    import {fieldsApi} from "/@/api/sysmanage/fields";
+    import {fieldsdetailApi} from "/@/api/sysmanage/fieldsdetail";
+    import {ElMessage} from "element-plus";
+    import {messdetailApi} from "/@/api/sysmanage/messdetail";
+
+    const locOptions = ref();
+    const options = ref(FieldType);
+    const dataFlagOptions = ref(DataFlag);
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-
+    const changeLoc = (fo) => {
+        console.log(fo)
+        state.ruleFormOri.SortID = fo;
+        //
+    };
+    const props1 = {
+        multiple: false,
+        emitPath: false,
+        expandTrigger: 'hover',
+        value: 'ID',
+        label: 'Name',
+        checkStrictly: true,
+    }
     // 定义变量内容
     const userDialogFormRef = ref();
+    const DUIOptions = ref();
+    const DFIOptions = ref();
 
-    const DUIprops = {
-        multiple: false,
-        expandTrigger: 'hover',
-        value: 'ename',
-        label: 'name'
-    }
-    const DUIoptions = [
-        {
-            ename: "1001", name: '1001(国际标准ISK)',
-            children: [
-                {
-                    ename: "201", name: '201(版本号)'
+    const changeDFI = (fo) => {
+        console.log(fo)
+        fieldsdetailApi().searchFieldsDetail(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 9999,
+                name: '',
+                pid: fo,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
 
+                    DUIOptions.value = res.data;
+                    //locOptions.value.push({ID:-1,Name:'最后'});
+                } else {
+                    DUIOptions.value = [];
+                    ElMessage.error(res.message);
+                }
 
-                },
-                {
-                    ename: "202", name: '202(服务类型)'
+            }).catch(err => {
 
+        }).finally(() => {
 
-                },
-                {
-                    ename: "203", name: '203(序号)'
+        });
+    };
+    const changeDUI = (fo) => {
+        console.log(fo);
+        let i = 0;
+        for (i = 0; i < DUIOptions.value.length; i++) {
+            if (DUIOptions.value[i].ID == fo) {
+                state.ruleForm = DUIOptions.value[i];
+            }
+        }
 
+    };
 
-                },
-                {
-                    ename: "204", name: '204(校验和)'
-
-
-                },
-            ]
-        },
-        {
-            ename: "1002", name: '1002(海洋标准KF)',
-            children: [
-               {
-                    ename: "321", name: '321(经度)'
-
-
-                },
-                {
-                    ename: "323", name: '323(纬度)'
-
-
-                },
-                {
-                    ename: "325", name: '325(海里数)'
-
-
-                },
-                {
-                    ename: "401", name: '401(深度)'
-
-
-                },
-            ]
-        },
-    ]
-    const changeSourceInput = (fo) => {
-
-            state.ruleForm.DFINO= fo[0];
-            state.ruleForm.DFIVersion= '1.02';
-            state.ruleForm.DUINO=fo[1];
-            state.ruleForm.DUIVersion= '2.1';
-            state.ruleForm.Name= 'test';
-            state.ruleForm.EName= 't1';
-        state.ruleForm.ShortName= 't2';
-        state.ruleForm.Type='t3';
-        state.ruleForm.TypeCode='t4';
-        state.ruleForm.Length='t5';
-        state.ruleForm.TableName= 't6';
-        state.ruleForm.TableSaveName='t7';
-        state.ruleForm.Describe= 't8';
-
-
-    }
     const rules = reactive({
 // 普通的校验规则
         name: [
@@ -249,6 +259,8 @@ const dataFlagOptions = ref(DataFlag);
         ],
     });
     const state = reactive({
+        pid: 0,
+        ruleFormOri: {},
         ruleForm: {
 
             DFINO: '',
@@ -257,13 +269,13 @@ const dataFlagOptions = ref(DataFlag);
             DUIVersion: '',
             Name: '',
             EName: '',
-        ShortName: '',
-        Type: '',
-        TypeCode: '',
-        Length: '',
-        TableName: '',
-        TableSaveName: '',
-        Describe: '',
+            ShortName: '',
+            Type: '',
+            TypeCode: '',
+            Length: '',
+            TableName: '',
+            TableSaveName: '',
+            Describe: '',
         },
         dialog: {
             isShowDialog: false,
@@ -274,18 +286,95 @@ const dataFlagOptions = ref(DataFlag);
     });
     const isReadOnly = ref(false);
     // 打开弹窗
-    const openDialog = (type: string, row: RowUserType) => {
-
+    const openDialog = (type: string, pid, row: RowUserType) => {
+        state.dialog.type = type;
+        state.pid = pid;
         state.dialog.title = '导入字段';
         state.dialog.submitTxt = '确 定';
         isReadOnly.value = true;
+        if (type === 'edit') {
+            state.ruleFormOri = row;
+            state.ruleFormOri.sourceDFI = row.DFIID;
+            changeDFI(row.DFIID);
+            state.ruleFormOri.sourceDUI = row.OutID;
+            setTimeout(() => {
+                changeDUI(row.OutID);
+            }, 300);
+
+            state.dialog.title = '修改';
+            state.dialog.submitTxt = '修 改';
+
+        }
+        if (type == "view") {
+            state.ruleForm = row;
+            state.dialog.title = '查看';
+            state.dialog.submitTxt = '查 看';
+
+        }
+        if (type == "add") {
+            state.dialog.title = '导入';
+            state.dialog.submitTxt = '导 入';
+
+
+        }
+
         // 清空表单，此项需加表单验证才能使用
         nextTick(() => {
             userDialogFormRef.value.resetFields();
         });
-
+        getMenuOptions();
         state.dialog.isShowDialog = true;
     };
+
+    const getMenuOptions = () => {
+
+        fieldsApi().searchFields(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 10000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    DFIOptions.value = res.data;
+                    //locOptions.value.push({ID:-1,Name:'最后'});
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        messdetailApi().searchMessDetail(
+            {
+                uid: 1,
+                pid: state.pid,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+                ttype: 'header'
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    locOptions.value = res.data;
+                    //locOptions.value.push({ID:-1,Name:'最后'});
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+    }
     // 关闭弹窗
     const closeDialog = () => {
         state.dialog.isShowDialog = false;
@@ -296,9 +385,67 @@ const dataFlagOptions = ref(DataFlag);
     };
     // 提交
     const onSubmit = () => {
-        closeDialog();
-        emit('refresh', '1');
-        // if (state.dialog.type === 'add') { }
+        if (state.dialog.type == 'edit') {
+            state.ruleForm['AuthorID'] = 1;
+            state.ruleForm['PID'] = state.pid;
+            state.ruleForm['TType'] = 'header';
+            state.ruleForm['OutType'] = 'fields';
+            state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
+            state.ruleForm['SortID'] = state.ruleFormOri.SortID;
+            state.ruleForm['NestID'] = state.ruleFormOri.NestID;
+            state.ruleForm['Flag'] = state.ruleFormOri.Flag;
+            state.ruleForm['ID'] = state.ruleFormOri.ID;
+            messdetailApi().updateMessDetail(
+                state.ruleForm
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+
+                        ElMessage.success("修改成功");
+                        closeDialog();
+                        emit('refresh');
+                    } else {
+                        ElMessage.error(res.message);
+                    }
+
+                }).catch(err => {
+
+            }).finally(() => {
+
+            });
+        }
+        if (state.dialog.type == 'add') {
+            state.ruleForm['AuthorID'] = 1;
+            state.ruleForm['PID'] = state.pid;
+            state.ruleForm['TType'] = 'header';
+            state.ruleForm['OutType'] = 'fields';
+            state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
+            state.ruleForm['SortID'] = state.ruleFormOri.SortID;
+            state.ruleForm['Flag'] = state.ruleFormOri.Flag;
+            messdetailApi().addMessDetail(
+                state.ruleForm
+            )
+                .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success("添加成功");
+
+                            closeDialog();
+                            emit('refresh');
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }
+                )
+                .catch(err => {
+
+                }).finally(() => {
+
+            });
+        }
     };
     // 初始化部门数据
 

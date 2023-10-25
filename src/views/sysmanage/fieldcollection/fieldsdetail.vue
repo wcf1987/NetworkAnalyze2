@@ -1,5 +1,6 @@
 <template>
     <div class="system-user-container layout-padding">
+
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
                 <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"
@@ -10,39 +11,55 @@
                     </el-icon>
                     查询
                 </el-button>
-                <el-button size="default" type="primary" class="ml10" @click="viewMess('view')">
+                <el-button size="default" type="success" class="ml10" @click="onOpenAdd('add')">
                     <el-icon>
-                        <ele-Coin/>
+                        <ele-FolderAdd/>
                     </el-icon>
-                    查询数据源定义
+                    新增字段
+                </el-button>
+                <el-button size="default" type="success" class="ml10" @click="onOpenImport('add')">
+                    <el-icon>
+                        <ele-UploadFilled/>
+                    </el-icon>
+                    导入
                 </el-button>
             </div>
-            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%">
+            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                <el-table-column type="index" label="序号" width="60"/>
-                <el-table-column prop="Name" label="目的字段名" show-overflow-tooltip></el-table-column>
+                <el-table-column label="序号" type="index" width="60"/>
 
-                <el-table-column prop="TName" label="转换名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="TransID" label="转换ID" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="FieldsID" label="字段外键" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="OutType" label="类型" show-overflow-tooltip v-if="false"></el-table-column>
-
-
-                <el-table-column prop="Optional" label="转换模式" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Transrule" label="转换规则" show-overflow-tooltip></el-table-column>
-
-                <el-table-column prop="DefaultValue" label="源字段" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column label="操作" width="60">
+                <el-table-column prop="DFIID" label="DFIID" show-overflow-tooltip v-if="isHide"/>
+                <el-table-column prop="DFINO" label="DFI标识号" show-overflow-tooltip/>
+                <el-table-column prop="DFIVersion" label="DFI版本" show-overflow-tooltip v-if="isHide"/>
+                <el-table-column prop="DUINO" label="DUI标识号" show-overflow-tooltip/>
+                <el-table-column prop="DUIVersion" label="DUI版本" show-overflow-tooltip/>
+                <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Describes" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
+                <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip v-if="isHide"></el-table-column>
+                <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="TableName" label="标准表名" show-overflow-tooltip v-if="isHide"></el-table-column>
+                <el-table-column prop="TableSaveName" label="标准表存储名" show-overflow-tooltip
+                                 v-if="isHide"></el-table-column>
+                <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="CreateTimes" label="创建时间" show-overflow-tooltip v-if="isHide"></el-table-column>
+                <el-table-column label="操作" width="130">
                     <template #default="scope">
+
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEdit('edit', scope.row)" v-if="scope.row.OutType!='nest'"
+                                   @click="onOpenEdit('view', scope.row)"
+                        >详情
+                        </el-button>
+                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+                                   @click="onOpenEdit('edit', scope.row)"
                         >修改
                         </el-button
                         >
 
-
+                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+                                   @click="onRowDel(scope.row)">删除
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -60,32 +77,34 @@
             >
             </el-pagination>
         </el-card>
-        <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
-        <ViewDialog ref="viewDialogRef" @refresh="getTableData()"/>
+        <UserDialog ref="userDialogRef" @refresh="getTableData('2')"/>
+
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="systemUser">
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRoute, useRouter} from "vue-router";
-    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
-
+    import 'splitpanes/dist/splitpanes.css';
+    import {fieldsdetailApi} from "/@/api/sysmanage/fieldsdetail";
     // 引入组件
-    const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messtraslate/detaildialog.vue'));
-    const ViewDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messtraslate/viewdialog.vue'));
-
+    const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/fieldsdetaildialog.vue'));
     const router = useRouter();
-    // 定义变量内容
-    const userDialogRef = ref();
-    const viewDialogRef = ref();
+    const isHide = ref(false);
+    const stateconfig = reactive({
+        url: '/sys/org/dept', loading: true, ids: [], moreParams: false,
+        form: {} as any, single: true, multiple: true, list: [], total: 0,
+        pageShow: false, leftPaneSize: 250 / (window.innerWidth - 220) * 100,
+
+    });
     const route = useRoute()
     const querys = route.query
+    // 定义变量内容
+    const userDialogRef = ref();
     const state = reactive({
+        id:0,
         tableData: {
-            id: 0,
-            sourceid: 0,
-            targetid: 0,
             data: [],
             total: 0,
             loading: false,
@@ -97,30 +116,22 @@
             searchStr: '',
         },
     });
-    const onSearch = () => {
-        state.tableData.searchStr = state.tableData.search;
-        getTableData();
-    };
+
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
-        messtranslateApi().searchMessTranslateDetail(
+      fieldsdetailApi().searchFieldsDetail(
             {
                 uid: 1,
-                pid: state.tableData.targetid,
-                transid: state.tableData.id,
                 pageNum: state.tableData.param.pageNum,
                 pageSize: state.tableData.param.pageSize,
                 name: state.tableData.searchStr,
-                ttype: 'body'
+                pid:state.id,
             })
             .then(res => {
                 //console.log(res);
                 if (res.code == '200') {
-                    for (let i = 0; i < res.data.length; i++) {
-                    res.data[i].SourceData = JSON.parse(res.data[i].SourceData)
-                    res.data[i].Funcrule = JSON.parse(res.data[i].Funcrule)
-                }
+
                     state.tableData.data = res.data;
 
                 } else {
@@ -133,13 +144,11 @@
 
         });
         //const data = [];
-        messtranslateApi().getMessTranslateDetailSearchListSize(
+        fieldsdetailApi().getFieldsDetailSearchListSize(
             {
                 uid: 1,
                 name: state.tableData.searchStr,
-                pid: state.tableData.targetid,
-                transid: state.tableData.id,
-                ttype: 'body',
+                pid:state.id,
             })
             .then(res => {
                 //console.log(res);
@@ -156,30 +165,25 @@
         }).finally(() => {
 
         });
-
         setTimeout(() => {
             state.tableData.loading = false;
-        }, 500);
+        }, 300);
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
-        userDialogRef.value.openDialog(type);
+        userDialogRef.value.openDialog(type,state.tableData.id);
     };
     // 打开修改用户弹窗
     const onOpenEdit = (type: string, row: RowUserType) => {
-        userDialogRef.value.openDialog(type,state.tableData.sourceid, row);
+
+         userDialogRef.value.openDialog(type, state.tableData.id,row);
+    };
+    const onSearch = () => {
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
     };
 
-    const onOpenEditDetail = (type: string, row: RowUserType) => {
-        router.push({
-            path: '/sysmanage/messbody/messbodydetail',
-            query: {id: row.ID},
-        });
-    };
-    const viewMess = (type: string, row) => {
-        console.log(state.tableData);
-        viewDialogRef.value.openDialog(type, state.tableData.sourceid);
-    };
+
 
     // 删除用户
     const onRowDel = (row: RowUserType) => {
@@ -189,8 +193,29 @@
             type: 'warning',
         })
             .then(() => {
-                getTableData();
-                ElMessage.success('删除成功');
+                fieldsdetailApi().delFieldsDetail(
+                    {
+                        ID: row.ID,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+                                   getTableData();
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+
             })
             .catch(() => {
             });
@@ -208,10 +233,6 @@
     // 页面加载时
     onMounted(() => {
         state.tableData.id = querys.id;
-
-        state.tableData.sourceid = querys.sourceid;
-        state.tableData.targetid = querys.targetid;
-
         getTableData();
     });
 </script>
@@ -227,30 +248,6 @@
             .el-table {
                 flex: 1;
             }
-        }
-    }
-
-    :deep(.el-table) {
-        /* 替换默认展开收起图片 */
-        /* prettier-ignore */
-        .el-table__expand-icon {
-            width: 12PX;
-            height: 12PX;
-            //background: ele-Plus no-repeat;
-            //ele-Plus
-            background: url("/@/assets/public/add-bold.png") no-repeat;
-            background-size: 100% 100%;
-
-            .el-icon {
-                display: none;
-            }
-        }
-
-        .el-table__expand-icon--expanded {
-            transform: none;
-            background: url("/@/assets/public/minus-bold.png") no-repeat;
-            //ele-SemiSelect
-            background-size: 100% 100%;
         }
     }
 </style>

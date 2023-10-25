@@ -293,7 +293,7 @@ export const dynamicRoutes: {
                     , {
                         path: '/sysmanage/field',
                         name: 'field',
-                        component: () => import('/@/views/sysmanage/fieldcollection/field.vue'),
+                        component: () => import('/@/views/sysmanage/fieldcollection/index.vue'),
                         meta: {
                             title: 'message.router.field',
                             isLink: '',
@@ -307,7 +307,7 @@ export const dynamicRoutes: {
                         children: [{
                             path: '/sysmanage/field/fieldcollection',
                             name: 'fieldcollection',
-                            component: () => import('/@/views/sysmanage/fieldcollection/index.vue'),
+                            component: () => import('/@/views/sysmanage/fieldcollection/fieldsdetail.vue'),
                             meta: {
                                 title: 'message.router.fieldcollection',
                                 isLink: '',
