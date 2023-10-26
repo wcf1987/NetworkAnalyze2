@@ -2,8 +2,8 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入对象名称" style="max-width: 180px"></el-input>
-                <el-button size="default" type="primary" class="ml10">
+                <el-input size="default" placeholder="请输入对象名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
+                <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
@@ -20,12 +20,14 @@
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="Name" label="分发名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="flows" label="流程名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="gateways" label="网关集合" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="FlowID" label="流程名称" show-overflow-tooltip v-if="false"></el-table-column>
+              <el-table-column prop="GatewayIDs" label="流程名称" show-overflow-tooltip v-if="false"></el-table-column>
+                <el-table-column prop="FlowName" label="流程名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="GatewayNames" label="网关集合" show-overflow-tooltip></el-table-column>
 
-                <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
-                <el-table-column label="操作" width="100">
+                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
+                <el-table-column label="操作" width="180">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                    @click="onOpenEdit('edit', scope.row)"
@@ -36,6 +38,9 @@
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                    @click="onRowDel(scope.row)">删除
                         </el-button>
+                      <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+                                 @click="onDistri(scope.row)">下发
+                      </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -61,6 +66,8 @@
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRouter} from "vue-router";
+    import {gatewayApi} from "/@/api/distribution/gateway";
+    import {flowdistributionApi} from "/@/api/distribution/flowdistribution";
 
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/distribution/flowdistribution/dialog.vue'));
@@ -76,45 +83,61 @@
                 pageNum: 1,
                 pageSize: 10,
             },
+          search: '',
+          searchStr: '',
         },
     });
 
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
-        const data = [{
-            id: 1,
-            Name: '远程指挥1.2',
+      flowdistributionApi().searchFlowDistribution(
+          {
+            uid: 1,
+            pageNum: state.tableData.param.pageNum,
+            pageSize: state.tableData.param.pageSize,
+            name: state.tableData.searchStr,
+          })
+          .then(res => {
+            //console.log(res);
+            if (res.code == '200') {
 
-            flows:'天地转换规则A',
-            gateways:['秦岭网关'],
-            describe: '北半球分发',
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 2,
+              state.tableData.data = res.data;
 
-            Name: '海洋指挥3.1',
+            } else {
+              ElMessage.error(res.message);
+            }
 
-            flows:'海洋转换规则A',
-            gateways:['长白山网关B'],
-            describe: '太平洋分发',
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 2,
-            Name: '五省地下管道指挥C方案',
-            flows:'地底转化规则3.1.2',
-            gateways:['终南山隧道网关C'],
-            describe: '隧道分发',
-            createTime: new Date().toLocaleString(),
-        },
-        ];
+          }).catch(err => {
 
+      }).finally(() => {
 
-        state.tableData.data = data;
-        state.tableData.total = state.tableData.data.length;
-        setTimeout(() => {
-            state.tableData.loading = false;
-        }, 500);
+      });
+      //const data = [];
+      flowdistributionApi().getFlowDistributionSearchListSize(
+          {
+            uid: 1,
+            name: state.tableData.searchStr,
+          })
+          .then(res => {
+            //console.log(res);
+            if (res.code == '200') {
+
+              state.tableData.total = res.data;
+
+            } else {
+              ElMessage.error(res.message);
+            }
+
+          }).catch(err => {
+
+      }).finally(() => {
+
+      });
+
+      setTimeout(() => {
+        state.tableData.loading = false;
+      }, 300);
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
@@ -129,6 +152,10 @@
     const onOpenEditDetail = (type: string, row: RowUserType) => {
         onOpenEditDetailByID(row.ID);
 
+    };
+    const onSearch = () => {
+      state.tableData.searchStr=state.tableData.search;
+      getTableData();
     };
     const onOpenEditDetailByID = (id) => {
         router.push({
@@ -146,8 +173,29 @@
             type: 'warning',
         })
             .then(() => {
-                getTableData();
-                ElMessage.success('删除成功');
+              flowdistributionApi().delFlowDistribution(
+                  {
+                    ID: row.ID,
+
+                  })
+                  .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+
+                      ElMessage.success('删除成功');
+                      getTableData();
+
+                    } else {
+                      ElMessage.error(res.message);
+                    }
+
+                  }).catch(err => {
+
+              }).finally(() => {
+
+              });
+
+
             })
             .catch(() => {
             });

@@ -1,6 +1,6 @@
 <template>
 	<div class="system-user-dialog-container">
-		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" draggable="true">
+		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
 			<el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px"  >
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -21,7 +21,7 @@
 
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="用户描述">
-							<el-input v-model="state.ruleForm.describe" type="textarea" placeholder="请输入用户描述" maxlength="150"></el-input>
+							<el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述" maxlength="150"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -38,7 +38,9 @@
 
 <script setup lang="ts" name="systemUserDialog">
 import { reactive, ref,nextTick } from 'vue';
-
+import {gatewayApi} from "/@/api/distribution/gateway";
+import {packageApi} from "/@/api/sysmanage/package";
+import {ElMessage} from "element-plus";
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh','editdetail']);
 
@@ -72,6 +74,7 @@ const state = reactive({
 
 // 打开弹窗
 const openDialog = (type: string, row: RowUserType) => {
+  state.dialog.type = type;
 	if (type === 'edit') {
 		state.ruleForm = row;
 		state.dialog.title = '修改';
@@ -85,7 +88,7 @@ const openDialog = (type: string, row: RowUserType) => {
 		 });
 	}
 	state.dialog.isShowDialog = true;
-	getMenuData();
+	//getMenuData();
 };
 // 关闭弹窗
 const closeDialog = () => {
@@ -97,14 +100,54 @@ const onCancel = () => {
 };
 // 提交
 const onSubmit = () => {
-	const id=1;
-	if(state.dialog.title=="新增"){
-	//emit('editdetail',id);
-		}
-	else{
-	emit('refresh');
-	}
-		closeDialog();
+  if (state.dialog.type == 'edit') {
+    gatewayApi().updateGateway(
+        state.ruleForm
+    )
+        .then(res => {
+          //console.log(res);
+          if (res.code == '200') {
+
+            ElMessage.success("修改成功");
+            closeDialog();
+            emit('refresh');
+          } else {
+            ElMessage.error(res.message);
+          }
+
+        }).catch(err => {
+
+    }).finally(() => {
+
+    });
+  }
+  if (state.dialog.type == 'add') {
+    state.ruleForm['AuthorID'] = 1
+    gatewayApi().addGateway(
+        state.ruleForm
+    )
+        .then(res => {
+              //console.log(res);
+              if (res.code == '200') {
+
+                ElMessage.success("添加成功");
+                closeDialog();
+                emit('refresh');
+              }
+
+              else
+              {
+                ElMessage.error(res.message);
+              }
+
+            }
+        )
+        .catch(err => {
+
+        }).finally(() => {
+
+    });
+  }
 	// if (state.dialog.type === 'add') { }
 };
 // 初始化部门数据

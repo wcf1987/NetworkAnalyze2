@@ -44,7 +44,7 @@ import { reactive, ref,nextTick } from 'vue';
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
-    import {flowApi} from "/@/api/sysmanage/flow";
+    import {flowApi} from "/@/api/flowmanage/flow";
 import {packageApi} from "/@/api/sysmanage/package";
 import {ElMessage} from "element-plus";
 // 定义变量内容

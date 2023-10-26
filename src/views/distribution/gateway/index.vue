@@ -2,8 +2,8 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入对象名称" style="max-width: 180px"></el-input>
-                <el-button size="default" type="primary" class="ml10">
+                <el-input size="default" placeholder="请输入对象名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
+                <el-button size="default" type="primary" class="ml10"  @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
@@ -21,8 +21,8 @@
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="Name" label="网关名称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="IP" label="IP地址" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
+                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
                 <el-table-column label="操作" width="100">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -59,13 +59,15 @@
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRouter} from "vue-router";
+    import {gatewayApi} from "/@/api/distribution/gateway";
+    import {packageApi} from "/@/api/sysmanage/package";
 
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/distribution/gateway/dialog.vue'));
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
-    const state = reactive<SysUserState>({
+    const state = reactive({
         tableData: {
             data: [],
             total: 0,
@@ -74,42 +76,61 @@
                 pageNum: 1,
                 pageSize: 10,
             },
+          search: '',
+          searchStr: '',
         },
     });
 
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
-        const data = [{
-            id: 1,
-            Name: '秦岭网关',
-            IP: '192.168.3.1',
+      gatewayApi().searchGateway(
+          {
+            uid: 1,
+            pageNum: state.tableData.param.pageNum,
+            pageSize: state.tableData.param.pageSize,
+            name: state.tableData.searchStr,
+          })
+          .then(res => {
+            //console.log(res);
+            if (res.code == '200') {
 
-            describe: '深山基地A',
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 2,
-            Name: '长白山网关B',
-            IP: '192.168.55.14',
+              state.tableData.data = res.data;
 
-            describe: '深山基地B',
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 2,
-            Name: '终南山隧道网关C',
-            IP: '10.12.9.4',
+            } else {
+              ElMessage.error(res.message);
+            }
 
-            describe: '终南山隧道',
-            createTime: new Date().toLocaleString(),
-        },
-        ];
+          }).catch(err => {
 
+      }).finally(() => {
 
-        state.tableData.data = data;
-        state.tableData.total = state.tableData.data.length;
-        setTimeout(() => {
-            state.tableData.loading = false;
-        }, 500);
+      });
+      //const data = [];
+      gatewayApi().getGatewaySearchListSize(
+          {
+            uid: 1,
+            name: state.tableData.searchStr,
+          })
+          .then(res => {
+            //console.log(res);
+            if (res.code == '200') {
+
+              state.tableData.total = res.data;
+
+            } else {
+              ElMessage.error(res.message);
+            }
+
+          }).catch(err => {
+
+      }).finally(() => {
+
+      });
+
+      setTimeout(() => {
+        state.tableData.loading = false;
+      }, 300);
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
@@ -119,7 +140,10 @@
     const onOpenEdit = (type: string, row: RowUserType) => {
         userDialogRef.value.openDialog(type, row);
     };
-
+    const onSearch = () => {
+      state.tableData.searchStr=state.tableData.search;
+      getTableData();
+    };
 
     const onOpenEditDetail = (type: string, row: RowUserType) => {
         onOpenEditDetailByID(row.ID);
@@ -141,8 +165,29 @@
             type: 'warning',
         })
             .then(() => {
-                getTableData();
-                ElMessage.success('删除成功');
+              gatewayApi().delGateway(
+                  {
+                    ID: row.ID,
+
+                  })
+                  .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
+
+                      ElMessage.success('删除成功');
+                      getTableData();
+
+                    } else {
+                      ElMessage.error(res.message);
+                    }
+
+                  }).catch(err => {
+
+              }).finally(() => {
+
+              });
+
+
             })
             .catch(() => {
             });

@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts" name="pagesWorkflow">
-    import {flowApi} from "/@/api/sysmanage/flow";
+    import {flowApi} from "/@/api/flowmanage/flow";
     import '@logicflow/core/dist/style/index.css'
     import '@logicflow/extension/lib/style/index.css'
     import LogicFlow from '@logicflow/core'

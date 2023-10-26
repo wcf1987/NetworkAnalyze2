@@ -117,7 +117,7 @@
     import {useRoute, useRouter} from 'vue-router';
     import flowdesignimg from '/@/assets/flowdesign.jpg';
     import {ElMessage, ElMessageBox} from "element-plus";
-    import {flowApi} from "/@/api/sysmanage/flow";
+    import {flowApi} from "/@/api/flowmanage/flow";
 
     const flowimg = ref(flowdesignimg);
     const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/dialog.vue'));
