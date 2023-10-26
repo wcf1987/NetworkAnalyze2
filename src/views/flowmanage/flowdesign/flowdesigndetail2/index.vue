@@ -4,7 +4,7 @@
         <div class="layout-padding-auto layout-padding-view workflow-warp">
             <div class="workflow">
                 <!-- 顶部工具栏 -->
-                <Tool @tool="onToolClick" :dropdown="state.FlowName"/>
+                <Tool @tool="onToolClick" :dropdown="state.FlowName" :lasttime="state.LastModified"/>
 
                 <!-- 左侧导航区 -->
                 <div class="workflow-content">
@@ -35,7 +35,7 @@
                                     >
                                         <template #reference>
                                             <div class="workflow-left-item-icon">
-                                                <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0 :size=16 />
+                                                <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0 :size=16></SvgIcon>
                                                 <div class="font10 pl5 name">{{ v.name }}</div>
                                             </div>
                                         </template>
@@ -67,6 +67,7 @@
 </template>
 
 <script setup lang="ts" name="pagesWorkflow">
+    import {flowApi} from "/@/api/sysmanage/flow";
     import '@logicflow/core/dist/style/index.css'
     import '@logicflow/extension/lib/style/index.css'
     import LogicFlow from '@logicflow/core'
@@ -100,7 +101,10 @@
         TimemarkNode,
         TimerNode,
     } from './logicflowpanel/registerNode/index.js'
+    import {useRoute} from "vue-router";
 
+    const route = useRoute()
+    const querys = route.query
     // 引入组件
 
     const Tool = defineAsyncComponent(() => import('./component/tool/index.vue'));
@@ -118,6 +122,66 @@
         })
     }
 
+    const getFlowFromDB = () => {
+        flowApi().getFlowByID(
+            {
+                id: state.ID,
+
+            }
+        )
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+                    let temps = decodeURIComponent(res.data.FlowJson)
+                    let xmlStrread = JSON.parse(temps)
+                    console.log(xmlStrread);
+                    lf.value.render(xmlStrread)
+                    LfEvent()
+                    // ElMessage.success("修改成功");
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+
+    }
+    const saveFlow = () => {
+        let flowGraphStr = lf.value.getGraphData();
+        let data = JSON.stringify(flowGraphStr)
+        //const { href, filename } = setEncoded(type.toUpperCase(), name, data)
+        const encodedData = encodeURIComponent(data)
+        // const encodeJson = JSON.stringify(script)
+
+
+        flowApi().updateFlowJson(
+            {
+                ID: state.ID,
+                FlowJson: encodedData,
+            }
+        )
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    // ElMessage.success("修改成功");
+                    state.LastModified = res.data.LastModified;
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
     // 页面加载时
     onMounted(async () => {
         await initLeftNavList();
@@ -125,12 +189,17 @@
         //initJsPlumb();
         //setClientWidth();
         initLf();
+        getFlowFromDB();
         //window.addEventListener('resize', setClientWidth);
     });
 
     function initLf() {
         // 画布配置
-        console.log(container.value)
+        //console.log(container.value)
+        state.ID = querys.ID;
+        state.FlowName = querys.FlowName;
+
+
         lf.value = new LogicFlow({
             background: {
                 //backgroundColor: '#f7f9ff',
@@ -318,7 +387,9 @@
     const {themeConfig} = storeToRefs(storesThemeConfig);
     const {copyText} = commonFunction();
     const state = reactive({
-        FlowName: '天地协同流程编排设计3.2.7',
+        FlowName: '',
+        ID: 0,
+        LastModified: '',
         leftNavList: [],
         dropdownNode: {x: '', y: ''},
         dropdownLine: {x: '', y: ''},
@@ -342,7 +413,7 @@
     };
     // 左侧导航-数据初始化
     const initLeftNavList = () => {
-        console.log(leftNavList)
+        //console.log(leftNavList)
         state.leftNavList = leftNavList;
 
     };
@@ -413,7 +484,7 @@
     const onToolClick = (fnName: String) => {
         switch (fnName) {
             case 'editProp':
-                const GraphConfigData =lf.value.getSelectElements(false);
+                const GraphConfigData = lf.value.getSelectElements(false);
                 //GraphConfigData.nodes[0];
                 drawerRef.value.open(GraphConfigData.nodes[0], lf.value);
                 break;
@@ -479,7 +550,8 @@
     // 顶部工具栏-提交
     const onToolSubmit = () => {
         // console.log(state.jsplumbData);
-        ElMessage.success('数据提交成功');
+        saveFlow();
+        ElMessage.success('数据保存成功');
     };
     // 顶部工具栏-复制
     const onToolCopy = () => {

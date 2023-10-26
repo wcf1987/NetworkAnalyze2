@@ -1,6 +1,7 @@
 <template>
     <div class="workflow-tool">
         <div class="pl15">{{ setToolTitle }}</div>
+        <div class="pl15">{{ setTimeTitle }}</div>
         <div class="workflow-tool-right">
             <div class="workflow-tool-icon" v-for="(v, k) in state.toolList" :key="k" :title="v.title"
                  @click="onToolClick(v.fnName)">
@@ -44,11 +45,18 @@
             name: '',
 
         },
+        lasttime:{
+            name:'',
+        }
     });
     // 设置 tool 标题
     const setToolTitle = computed(() => {
         let {globalTitle} = themeConfig.value;
-        return '流程编排工作流 : ' + props.dropdown;
+        return '流程编排工作流 : ' + props.dropdown ;
+    });
+        const setTimeTitle = computed(() => {
+
+        return '上次保存时间：'+props.lasttime;
     });
     // 顶部工具栏
     const onToolClick = (fnName: string) => {

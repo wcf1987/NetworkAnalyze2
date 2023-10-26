@@ -9,8 +9,9 @@
                 :class="{ 'min-h-360': state.tableData.data.length <= 0 }"
         >
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入流程编排" style="max-width: 180px"></el-input>
-                <el-button size="default" type="primary" class="ml10">
+                <el-input size="default" placeholder="请输入流程编排" style="max-width: 180px"
+                          v-model="state.tableData.search"></el-input>
+                <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
@@ -27,28 +28,55 @@
                 <el-row :gutter="15">
                     <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15"
                             v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
-                            <div class="flex-warp-item">
-                                <div class="flex-warp-item-box">
-                                    <div class="item-img">
-                                        <img :src="v.img"/>
+                        <div class="flex-warp-item">
+                            <div class="flex-warp-item-box">
+                                <div class="item-img">
+                                    <img :src="flowimg"/>
+                                </div>
+                                <div class="item-txt">
+                                    <div class="item-txt-title">
+                                        <div class="item-txt-msg mb10">
+                                                <span> {{ v.Name }}</span>
+
+                                            </div>
+
                                     </div>
-                                    <div class="item-txt">
-                                    <div class="item-txt-title">{{ v.title }}</div>
                                     <div class="item-txt-other">
                                         <div style="width: 100%">
-                                             <div class="item-txt-msg mb10">
-                                                <span>类型： {{ v.type }}</span>
+                                            <div class="item-txt-msg mb10">
+                                                <span> {{ v.Name }}</span>
 
                                             </div>
                                             <div class="item-txt-msg mb10">
-                                                <span>描述 {{ v.evaluate }}</span>
+                                                <span>类型： {{ v.Type }}</span>
 
                                             </div>
-                                            <div class="item-txt-msg item-txt-price">
-												<span class="font-price">
 
-													<span class="font">设计者:{{ v.author }}</span>
+
+                                            <div class="item-txt-msg mb10">
+												<span class="font-price">
+													<span class="font">最后修改时间: {{ v.LastModified }}</span>
 												</span>
+
+                                            </div>
+                                            <div class="item-txt-msg mb10">
+
+                                        <el-button type="success" size="small" circle @click.stop="onOpenEdit('edit', v)">
+                                            <el-icon>
+                                                <ele-Document/>
+                                            </el-icon>
+
+                                        </el-button>
+
+
+
+                                        <el-button type="danger" size="small" circle @click.stop="onRowDel(v)">
+                                            <el-icon>
+                                                <ele-Delete/>
+                                            </el-icon>
+
+                                        </el-button>
+
 
                                             </div>
                                         </div>
@@ -80,78 +108,143 @@
                 </el-pagination>
             </template>
         </el-card>
-        <UserDialog ref="userDialogRef" @refresh="getTableData()" />
+        <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
     </div>
 </template>
 
 <script setup lang="ts" name="pagesFiltering">
-    import {defineAsyncComponent, nextTick, onMounted, reactive, ref} from 'vue';
-    import {useRouter} from 'vue-router';
-    import {filtering, filterList} from './mock';
-const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/dialog.vue'));
-const userDialogRef = ref();
+    import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
+    import {useRoute, useRouter} from 'vue-router';
+    import flowdesignimg from '/@/assets/flowdesign.jpg';
+    import {ElMessage, ElMessageBox} from "element-plus";
+    import {flowApi} from "/@/api/sysmanage/flow";
+
+    const flowimg = ref(flowdesignimg);
+    const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/dialog.vue'));
+    const userDialogRef = ref();
     // 定义变量内容
     const dlRefs = ref<RefType[]>([]);
     const router = useRouter();
     const state = reactive({
-        filtering,
+
         tableData: {
-            data: filterList,
-            total: filterList.length,
+            data: [],
+            total: 0,
             loading: false,
             param: {
                 pageNum: 1,
                 pageSize: 10,
             },
+            search: '',
+            searchStr: '',
         },
     });
 
     // 页面加载时
     onMounted(() => {
-        initBtnToggle();
-        window.onresize = () => {
-            initBtnToggle();
-        };
+        getTableData();
     });
     const onOpenAdd = (type: string) => {
-	userDialogRef.value.openDialog(type);
-};
+        userDialogRef.value.openDialog(type);
+    }
     // 初始化 `收起、展开` 按钮
-    const initBtnToggle = () => {
-        nextTick(() => {
-            const els = dlRefs.value;
-            els.map((v: any, k: number) => {
-                v.scrollHeight < v.lastChild.scrollHeight ? (state.filtering[k].isShowMore = true) : (state.filtering[k].isShowMore = false);
-            });
-        });
-    };
-    // 过滤当前选中的数据
-    const onSelItem = (val: FilteringRowType, v: FilteringChilType) => {
-        val.children.map((v: FilteringChilType) => (v.active = false));
-        v.active = true;
-        let arr = [];
-        state.filtering.map((item: FilteringRowType) => {
-            item.children.map((chil: FilteringChilType) => {
-                if (chil.active) {
-                    arr.push({
-                        ...item,
-                        children: [{...chil}],
-                    });
-                }
-            });
-        });
+    const getTableData = () => {
         state.tableData.loading = true;
+        flowApi().searchFlow(
+            {
+                uid: 1,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.data = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+        flowApi().getFlowSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
         setTimeout(() => {
             state.tableData.loading = false;
-        }, 500);
+        }, 300);
     };
-    // 当前列表项点击
+    const onSearch = () => {
+        state.tableData.searchStr = state.tableData.search;
+        getTableData();
+    };
+    const onOpenEdit = (type: string, row: RowUserType) => {
+        userDialogRef.value.openDialog(type, row);
+    };
     const onTableItemClick = (v: FilterListType) => {
-            router.push({
-                path: '/flowmanage/flowdesign/flowdesigndetail2',
-                query: {id: v.id},
-            });
+        router.push({
+            path: '/flowmanage/flowdesign/flowdesigndetail2',
+            query: {ID: v.ID,FlowName:v.Name},
+        });
 
+    };
+    const onRowDel = (row: RowUserType) => {
+        ElMessageBox.confirm(`此操作将永久删除：“${row.Name}”，是否继续?`, '提示', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        })
+            .then(() => {
+                flowApi().delFlow(
+                    {
+                        ID: row.ID,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+                            getTableData();
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+
+            })
+            .catch(() => {
+            });
     };
     // 分页点击
     const onHandleSizeChange = (val: number) => {
