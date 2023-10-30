@@ -141,7 +141,7 @@ const onSubmit = () => {
                         ElMessage.success("添加成功");
                         closeDialog();
                          emit('refresh');
-                        emit('editdetail', state.ruleForm['ID']);
+                       // emit('editdetail', state.ruleForm['ID']);
                     }
 
         else

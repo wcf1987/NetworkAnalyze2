@@ -62,6 +62,10 @@
 			</el-pagination>
 		</el-card>
 		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
+		    <ImportDialog
+      v-model:showDialog="isShowImport" :download-fun="downLoadPlanEvent"  :import-fun="fieldsApi().uploadfile"   @import-success="getTableData()"
+    />
+
 	</div>
 </template>
 
@@ -73,10 +77,25 @@ import {useRouter} from "vue-router";
 import {messbodyApi} from "/@/api/sysmanage/messbody";
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/dialog.vue'));
+const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/importdialog.vue'));
 const router = useRouter();
 // 定义变量内容
 const userDialogRef = ref();
     const isHide=ref(true);
+
+  import { downLoadxls,downFile } from "/@/utils/util";
+
+  const page = reactive({
+    pageSize: 10,
+    currentPage: 1,
+    total: 0,
+  });
+  const isShowImport = ref(false);
+  const downLoadPlanEvent = () => {
+
+      downFile("DFI模板下载.xls");
+
+  };
 const state = reactive({
 	tableData: {
 		data: [],
@@ -145,6 +164,10 @@ const getTableData = () => {
 const onOpenAdd = (type: string) => {
 	userDialogRef.value.openDialog(type);
 };
+const onOpenImport = (type: string) => {
+	isShowImport.value = true;
+};
+
 // 打开修改用户弹窗
 const onOpenEdit = (type: string, row: RowUserType) => {
 

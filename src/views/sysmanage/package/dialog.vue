@@ -141,7 +141,7 @@
 
                         ElMessage.success("添加成功");
                         closeDialog();
-                        emit('editdetail', state.ruleForm['ID']);
+                       emit('refresh');
                     }
 
         else

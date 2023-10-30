@@ -232,7 +232,8 @@
     };
     // 页面加载时
     onMounted(() => {
-        state.tableData.id = querys.id;
+        state.id = querys.id;
+
         getTableData();
     });
 </script>

@@ -89,7 +89,6 @@
             Name: '', // 账户名称
             Type: '', // 用户昵称
 
-            describe: '', // 用户描述
         },
         pid: 0,
         dialog: {
@@ -154,6 +153,7 @@
         if (state.dialog.type == 'add') {
             state.ruleForm['AuthorID'] = 1;
             state.ruleForm['packID'] = state.pid;
+            console.log(state.ruleForm);
             packageApi().addPackageDetail(
                 state.ruleForm
             )
