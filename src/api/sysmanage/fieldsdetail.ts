@@ -1,4 +1,5 @@
 import request from '/@/utils/request';
+import requestfile from "/@/utils/requestfile";
 
 /**
  * （不建议写成 request.post(xxx)，因为这样 post 时，无法 params 与 data 同时传参）
@@ -25,7 +26,7 @@ export function fieldsdetailApi() {
                 data,
             });
         },
-		        updateFieldsDetail: (data: object) => {
+        updateFieldsDetail: (data: object) => {
             return request({
                 url: '/fieldsdetail/update',
                 method: 'post',
@@ -47,42 +48,16 @@ export function fieldsdetailApi() {
             });
         },
 
+        uploadfile: (data: object) => {
+            return requestfile({
+                url: '/fieldsdetail/uploadfile',
+                method: 'post',
+                data
 
 
-        getMessHeaderDetailSearchListSize: (data: object) => {
-            return request({
-                url: '/messheaderdetail/searchSize',
-                method: 'post',
-                data,
             });
         },
-        addMessHeaderDetail: (data: object) => {
-            return request({
-                url: '/messheaderdetail/add',
-                method: 'post',
-                data,
-            });
-        },
-		        updateMessHeaderDetail: (data: object) => {
-            return request({
-                url: '/messheaderdetail/update',
-                method: 'post',
-                data,
-            });
-        },
-        delMessHeaderDetail: (data: object) => {
-            return request({
-                url: '/messheaderdetail/delete',
-                method: 'post',
-                data,
-            });
-        },
-        searchMessHeaderDetail: (data: object) => {
-            return request({
-                url: '/messheaderdetail/search',
-                method: 'post',
-                data,
-            });
-        },
+
+
     };
 }

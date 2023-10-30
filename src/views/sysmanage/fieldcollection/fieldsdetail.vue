@@ -78,7 +78,9 @@
             </el-pagination>
         </el-card>
         <UserDialog ref="userDialogRef" @refresh="getTableData('2')"/>
-
+      <ImportDialog
+          v-model:showDialog="isShowImport" :download-fun="downLoadPlanEvent"  :import-fun="fieldsdetailApi().uploadfile" ref="importDialogRef"  @import-success="getTableData()"
+      />
     </div>
 </template>
 
@@ -90,6 +92,7 @@
     import {fieldsdetailApi} from "/@/api/sysmanage/fieldsdetail";
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/fieldsdetaildialog.vue'));
+    const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/importdetaildialog.vue'));
     const router = useRouter();
     const isHide = ref(false);
     const stateconfig = reactive({
@@ -98,6 +101,15 @@
         pageShow: false, leftPaneSize: 250 / (window.innerWidth - 220) * 100,
 
     });
+    import { downLoadxls,downFile } from "/@/utils/util";
+    const importDialogRef = ref();
+
+    const isShowImport = ref(false);
+    const downLoadPlanEvent = () => {
+
+      downFile("DUI模板下载.xls");
+
+    };
     const route = useRoute()
     const querys = route.query
     // 定义变量内容
@@ -171,19 +183,21 @@
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
-        userDialogRef.value.openDialog(type,state.tableData.id);
+        userDialogRef.value.openDialog(type,state.id);
     };
     // 打开修改用户弹窗
     const onOpenEdit = (type: string, row: RowUserType) => {
 
-         userDialogRef.value.openDialog(type, state.tableData.id,row);
+         userDialogRef.value.openDialog(type, state.id,row);
     };
     const onSearch = () => {
         state.tableData.searchStr=state.tableData.search;
        getTableData();
     };
 
-
+    const onOpenImport = (type: string) => {
+      importDialogRef.value.openDialog(type,state.id);
+    };
 
     // 删除用户
     const onRowDel = (row: RowUserType) => {

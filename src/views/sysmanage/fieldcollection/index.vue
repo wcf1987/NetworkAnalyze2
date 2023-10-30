@@ -74,7 +74,7 @@ import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import {useRouter} from "vue-router";
 	import {fieldsApi} from "/@/api/sysmanage/fields";
-import {messbodyApi} from "/@/api/sysmanage/messbody";
+
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/dialog.vue'));
 const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/importdialog.vue'));
@@ -85,11 +85,7 @@ const userDialogRef = ref();
 
   import { downLoadxls,downFile } from "/@/utils/util";
 
-  const page = reactive({
-    pageSize: 10,
-    currentPage: 1,
-    total: 0,
-  });
+
   const isShowImport = ref(false);
   const downLoadPlanEvent = () => {
 
