@@ -2,8 +2,8 @@
 	<div class="system-role-container layout-padding">
 		<div class="system-role-padding layout-padding-auto layout-padding-view">
 			<div class="system-user-search mb15">
-				<el-input v-model="state.tableData.param.search" size="default" placeholder="请输入角色名称" style="max-width: 180px"> </el-input>
-				<el-button size="default" type="primary" class="ml10">
+				<el-input v-model="state.tableData.search" size="default" placeholder="请输入角色名称" style="max-width: 180px" > </el-input>
+				<el-button size="default" type="primary" class="ml10"  @click="onSearch">
 					<el-icon>
 						<ele-Search />
 					</el-icon>
@@ -20,14 +20,14 @@
 				<el-table-column type="index" label="序号" width="60" />
 				<el-table-column prop="roleName" label="角色名称" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="roleSign" label="角色标识" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="sort" label="排序" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="sort" label="排序" show-overflow-tooltip v-if="false"></el-table-column>
 				<el-table-column prop="status" label="角色状态" show-overflow-tooltip>
 					<template #default="scope">
-						<el-tag type="success" v-if="scope.row.status">启用</el-tag>
+						<el-tag type="success" v-if="scope.row.status=='true'">启用</el-tag>
 						<el-tag type="info" v-else>禁用</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column prop="describe" label="角色描述" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="describes" label="角色描述" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
@@ -59,40 +59,75 @@
 <script setup lang="ts" name="systemRole">
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
+import {userManageApi} from "/@/api/sysadmin/usermanage";
+import {roleManageApi} from "/@/api/sysadmin/rolemanage";
 
 // 引入组件
 const RoleDialog = defineAsyncComponent(() => import('/@/views/systemadmin/rolemanage/dialog.vue'));
 
 // 定义变量内容
 const roleDialogRef = ref();
-const state = reactive<SysRoleState>({
+const state = reactive({
 	tableData: {
 		data: [],
 		total: 0,
 		loading: false,
 		param: {
-			search: '',
 			pageNum: 1,
 			pageSize: 10,
 		},
+			        search: '',
+            searchStr: '',
 	},
 });
 // 初始化表格数据
 const getTableData = () => {
 	state.tableData.loading = true;
-	const data = [];
-	for (let i = 0; i < 20; i++) {
-		data.push({
-			roleName: i === 0 ? '超级管理员' : '普通用户',
-			roleSign: i === 0 ? 'admin' : 'common',
-			describe: `测试角色${i + 1}`,
-			sort: i,
-			status: true,
-			createTime: new Date().toLocaleString(),
-		});
-	}
-	state.tableData.data = data;
-	state.tableData.total = state.tableData.data.length;
+
+	 roleManageApi().search(
+            {
+                uid: 1,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.data = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+        roleManageApi().getSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
 	setTimeout(() => {
 		state.tableData.loading = false;
 	}, 500);
@@ -105,6 +140,10 @@ const onOpenAddRole = (type: string) => {
 const onOpenEditRole = (type: string, row: Object) => {
 	roleDialogRef.value.openDialog(type, row);
 };
+    const onSearch = () => {
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
+    };
 // 删除角色
 const onRowDel = (row: RowRoleType) => {
 	ElMessageBox.confirm(`此操作将永久删除角色名称：“${row.roleName}”，是否继续?`, '提示', {
@@ -113,10 +152,32 @@ const onRowDel = (row: RowRoleType) => {
 		type: 'warning',
 	})
 		.then(() => {
-			getTableData();
-			ElMessage.success('删除成功');
-		})
-		.catch(() => {});
+			   roleManageApi().del(
+                    {
+                        id: row.id,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+                            getTableData();
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+
+            })
+            .catch(() => {
+            });
 };
 // 分页改变
 const onHandleSizeChange = (val: number) => {

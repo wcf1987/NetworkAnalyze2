@@ -9,8 +9,8 @@
                 :class="{ 'min-h-360': state.tableData.data.length <= 0 }"
         >
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入插件名称" style="max-width: 180px"></el-input>
-                <el-button size="default" type="primary" class="ml10">
+                <el-input size="default" placeholder="请输入插件名称" style="max-width: 180px"  v-model="state.tableData.search"></el-input>
+                <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
@@ -35,19 +35,19 @@
                                     </div>
                                     <div class="list-card-item_detail--operation">
                                         <el-tag
-                                                :color="v.isSetup ? '#00a870' : '#eee'"
+                                                :color="v.Status=='true' ? '#00a870' : '#eee'"
                                                 effect="dark"
                                                 class="mx-1 list-card-item_detail--operation--tag"
                                         >
-                                            {{ v.isSetup ? "已启用" : "已停用" }}
+                                            {{ v.Status=='true' ? "已启用" : "已停用" }}
                                         </el-tag>
-                                        <el-dropdown trigger="click" :disabled="!v.isSetup">
+                                        <el-dropdown trigger="click" >
                                             <el-icon clss="more2fill">
                                             <ele-MoreFilled class="text-[24px]"/>
                                             </el-icon>
 
                                             <template #dropdown>
-                                                <el-dropdown-menu :disabled="!v.isSetup">
+                                                <el-dropdown-menu >
                                                     <el-dropdown-item @click="onOpenEdit('edit', v)">
                                                         管理
                                                     </el-dropdown-item>
@@ -65,7 +65,7 @@
                                     {{ v.Name }}
                                 </p>
                                 <p class="list-card-item_detail--desc text-text_color_regular">
-                                    {{ v.describe }}
+                                    {{ v.Describes }}
                                 </p>
                             </div>
                         </div>
@@ -102,6 +102,8 @@
     import {useRouter} from 'vue-router';
     import {filtering, filterList} from './mock';
     import {ElMessage, ElMessageBox} from "element-plus";
+    import {userManageApi} from "/@/api/sysadmin/usermanage";
+    import {sysplugManageApi} from "/@/api/plugmanage/sysplugmanage";
 
     const UserDialog = defineAsyncComponent(() => import('/@/views/pluginmanage/sysplug/dialog.vue'));
     const userDialogRef = ref();
@@ -111,13 +113,15 @@
     const state = reactive({
         filtering,
         tableData: {
-            data: filterList,
-            total: filterList.length,
+            data: [],
+            total: 0,
             loading: false,
             param: {
                 pageNum: 1,
                 pageSize: 10,
             },
+            		        search: '',
+            searchStr: '',
         },
     });
     const cardClass = computed(() => [
@@ -135,6 +139,7 @@
         window.onresize = () => {
             initBtnToggle();
         };
+        getTableData();
     });
     const onOpenAdd = (type: string) => {
         userDialogRef.value.openDialog(type);
@@ -176,6 +181,58 @@
         });
 
     };
+    // 初始化表格数据
+const getTableData = () => {
+	state.tableData.loading = true;
+  sysplugManageApi().search(
+            {
+                uid: 1,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.data = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+        sysplugManageApi().getSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+
+	setTimeout(() => {
+		state.tableData.loading = false;
+	}, 500);
+};
     // 分页点击
     const onHandleSizeChange = (val: number) => {
         state.tableData.param.pageSize = val;
@@ -188,16 +245,38 @@
 	userDialogRef.value.openDialog(type, row);
 };
 const onRowDel = (row: RowUserType) => {
-	ElMessageBox.confirm(`此操作将永久删除名称：“${row.Name}”，是否继续?`, '提示', {
+	ElMessageBox.confirm(`此操作将永久删除系统插件：“${row.Name}”，是否继续?`, '提示', {
 		confirmButtonText: '确认',
 		cancelButtonText: '取消',
 		type: 'warning',
 	})
 		.then(() => {
-			getTableData();
-			ElMessage.success('删除成功');
-		})
-		.catch(() => {});
+		  sysplugManageApi().del(
+                    {
+                        ID: row.ID,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+                            getTableData();
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+
+            })
+            .catch(() => {
+            });
 };
 </script>
 

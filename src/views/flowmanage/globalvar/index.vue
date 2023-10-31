@@ -2,8 +2,8 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入全局变量名称" style="max-width: 180px"></el-input>
-                <el-button size="default" type="primary" class="ml10">
+                <el-input size="default" placeholder="请输入全局变量名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
+                <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
@@ -21,7 +21,8 @@
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Code" label="变量英文名" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template #default="scope">
@@ -59,13 +60,15 @@
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRouter} from "vue-router";
+    import {userManageApi} from "/@/api/sysadmin/usermanage";
+    import {globalVarApi} from "/@/api/flowmanage/globalvar";
 
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/globalvar/dialog.vue'));
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
-    const state = reactive<SysUserState>({
+    const state = reactive({
         tableData: {
             data: [],
             total: 0,
@@ -74,31 +77,58 @@
                 pageNum: 1,
                 pageSize: 10,
             },
+            		        search: '',
+            searchStr: '',
         },
     });
 
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
-        const data = [{
-            id: 1,
-            Name: '特殊标记',
-            Type: '字符串',
-			Code:'flagSpe',
-            describe: '记录全局特殊事件',
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 2,
-            Name: '时间记录',
-            Type: '日期',
-			Code:'timeLog',
-            describe: '测量运行转化时间',
-            createTime: new Date().toLocaleString(),
-        }];
+       globalVarApi().search(
+            {
+                uid: 1,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
 
+                    state.tableData.data = res.data;
 
-        state.tableData.data = data;
-        state.tableData.total = state.tableData.data.length;
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+        globalVarApi().getSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
         setTimeout(() => {
             state.tableData.loading = false;
         }, 500);
@@ -111,25 +141,43 @@
     const onOpenEdit = (type: string, row: RowUserType) => {
         userDialogRef.value.openDialog(type, row);
     };
-
-    const onOpenEditDetail = (type: string, row: RowUserType) => {
-        router.push({
-            path: '/sysmanage/package/packagedetail',
-            query: {id: row.ID},
-        });
+    const onSearch = () => {
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
     };
 
 
     // 删除用户
     const onRowDel = (row: RowUserType) => {
-        ElMessageBox.confirm(`此操作将永久删除名称：“${row.Name}”，是否继续?`, '提示', {
+        ElMessageBox.confirm(`此操作将永久删除：“${row.Name}”，是否继续?`, '提示', {
             confirmButtonText: '确认',
             cancelButtonText: '取消',
             type: 'warning',
         })
             .then(() => {
-                getTableData();
-                ElMessage.success('删除成功');
+                globalVarApi().del(
+                    {
+                        ID: row.ID,
+
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('删除成功');
+                            getTableData();
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+
             })
             .catch(() => {
             });
