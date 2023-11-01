@@ -54,17 +54,23 @@
                             <el-form-item label="源地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable
                                            class="w100">
-                                    <el-option label="无" value="无"></el-option>
-                                    <el-option label="网口A" value="网口A"></el-option>
-                                    <el-option label="网口B" value="网口B"></el-option>
+                                    <el-option
+                                            v-for="item in NetworkOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="串口信息" prop="type" v-if="state.properForm.interfacetype=='串口'">
                                 <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
                                            v-on:change="onChangeStartSerialChoose">
-                                    <el-option label="串口A" value="串口A"></el-option>
-                                    <el-option label="串口B" value="串口B"></el-option>
-                                    <el-option label="手动输入" value="-1"></el-option>
+                                    <el-option
+                                            v-for="item in SerialOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="本地串口号" prop="type"
@@ -81,20 +87,23 @@
                             <el-form-item label="本地地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
                                            class="w100" v-on:change="onChangeStartNetworkChoose">
-                                    <el-option label="网口A" value="网口A"></el-option>
-                                    <el-option label="网口B" value="网口B"></el-option>
-                                    <el-option label="手动输入" value="-1"></el-option>
+                         <el-option
+                                            v-for="item in NetworkLocalOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="本地地址" prop="type"
                                           v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
-                                <el-input v-model="state.properForm.ip" placeholder="请输入ip地址" clearable
+                                <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable
                                           :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
                             </el-form-item>
                             <el-form-item label="本地端口" prop="type"
                                           v-if="state.properForm.interfacetype=='网口' "
                                           :readonly=" state.properForm.localnetworkID!='-1'">
-                                <el-input v-model="state.properForm.port" placeholder="请输入端口" clearable
+                                <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable
                                           :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
                             </el-form-item>
 
@@ -110,10 +119,13 @@
                             </el-form-item>
                             <el-form-item label="目的串口" prop="type" v-if="state.properForm.interfacetype=='串口'">
                                 <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
-                                           v-on:change="onChangeStartSerialChoose">
-                                    <el-option label="串口A" value="串口A"></el-option>
-                                    <el-option label="串口B" value="串口B"></el-option>
-                                    <el-option label="手动输入" value="-1"></el-option>
+                                           v-on:change="onChangeEndSerialChoose">
+                                     <el-option
+                                            v-for="item in SerialOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="目的串口号" prop="type"
@@ -129,9 +141,12 @@
                             <el-form-item label="目的地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
                                            class="w100" v-on:change="onChangeEndNetworkChoose">
-                                    <el-option label="网口A" value="网口A"></el-option>
-                                    <el-option label="网口B" value="网口B"></el-option>
-                                    <el-option label="手动输入" value="-1"></el-option>
+                                     <el-option
+                                            v-for="item in NetworkLocalOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
                                 </el-select>
                             </el-form-item>
 
@@ -140,15 +155,15 @@
                                               v-if="state.properForm.interfacetype=='网口'">
                                     <el-col :span="11">
 
-                                        <el-input v-model="v.ip" placeholder="请输入ip地址" clearable
-                                                  ></el-input>
+                                        <el-input v-model="v.IP" placeholder="请输入ip地址" clearable
+                                        ></el-input>
                                     </el-col>
                                     <el-col :span="1" class="text-center">
                                         <span style="display:block;text-align: center" class="text-gray-500">:</span>
                                     </el-col>
                                     <el-col :span="4">
-                                        <el-input v-model="v.port" placeholder="请输入端口" clearable
-                                                  ></el-input>
+                                        <el-input v-model="v.Port" placeholder="请输入端口" clearable
+                                        ></el-input>
                                     </el-col>
                                     <el-col :span="1"/>
                                     <el-col :span="2">
@@ -178,10 +193,12 @@
                             <el-form-item label="头部选择">
                                 <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable
                                            class="w100">
-                                    <el-option label="封装A" value="封装A"></el-option>
-                                    <el-option label="封装B" value="封装B"></el-option>
-                                    <el-option label="应用A" value="应用A"></el-option>
-                                    <el-option label="应用B" value="应用B"></el-option>
+                                      <el-option
+                                            v-for="item in PackageOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
                                 </el-select>
                             </el-form-item>
 
@@ -192,10 +209,12 @@
                             <el-form-item label="头部选择">
                                 <el-select v-model="state.properForm.pacencapID" placeholder="请选择" clearable
                                            class="w100">
-                                    <el-option label="封装A" value="封装A"></el-option>
-                                    <el-option label="封装B" value="封装B"></el-option>
-                                    <el-option label="应用A" value="应用A"></el-option>
-                                    <el-option label="应用B" value="应用B"></el-option>
+                                     <el-option
+                                            v-for="item in PackageOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
                                 </el-select>
                             </el-form-item>
 
@@ -206,8 +225,13 @@
                             <el-form-item label="消息头">
                                 <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable
                                            class="w100">
-                                    <el-option label="消息头A" value="消息头A"></el-option>
-                                    <el-option label="消息头B" value="消息头B"></el-option>
+                                     <el-option
+                                            v-for="item in MessHeaderOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
+
 
                                 </el-select>
                             </el-form-item>
@@ -218,8 +242,12 @@
                             <el-form-item label="消息头">
                                 <el-select v-model="state.properForm.messheaderencapID" placeholder="请选择" clearable
                                            class="w100">
-                                    <el-option label="消息头A" value="消息头A"></el-option>
-                                    <el-option label="消息头B" value="消息头B"></el-option>
+                                   <el-option
+                                            v-for="item in MessHeaderOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
 
                                 </el-select>
                             </el-form-item>
@@ -230,8 +258,12 @@
                             <el-form-item label="消息体">
                                 <el-select v-model="state.properForm.messbodyparseID" placeholder="请选择" clearable
                                            class="w100">
-                                    <el-option label="消息体A" value="消息体A"></el-option>
-                                    <el-option label="消息体B" value="消息体B"></el-option>
+                                 <el-option
+                                            v-for="item in MessBodyOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
 
                                 </el-select>
                             </el-form-item>
@@ -240,10 +272,14 @@
                         </div>
                         <div class="customproper" v-if="state.showFlag['messbodyencap']">
                             <el-form-item label="消息体">
-                                <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable
+                                <el-select v-model="state.properForm.messbodyencapID" placeholder="请选择" clearable
                                            class="w100">
-                                    <el-option label="消息体A" value="消息体A"></el-option>
-                                    <el-option label="消息体B" value="消息体B"></el-option>
+                                   <el-option
+                                            v-for="item in MessBodyOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
 
                                 </el-select>
                             </el-form-item>
@@ -255,8 +291,12 @@
                         <div class="customproper" v-if="state.showFlag['messtraslate']">
                             <el-form-item label="转化规则模板">
                                 <el-select v-model="state.properForm.transid" placeholder="请选择" clearable class="w100">
-                                    <el-option label="消息转化规则A" value="消息转化规则A"></el-option>
-                                    <el-option label="消息转化规则B" value="消息转化规则B"></el-option>
+                                     <el-option
+                                            v-for="item in MessTraslateOptions"
+                                            :key="item.ID"
+                                            :label="item.Name"
+                                            :value="item.ID"
+                                    />
                                 </el-select>
                             </el-form-item>
 
@@ -338,6 +378,11 @@
     import {defineAsyncComponent, nextTick, reactive, ref} from 'vue';
     import {ElMessage} from 'element-plus';
     import * as echarts from 'echarts';
+    import {addressApi} from "/@/api/sysmanage/address";
+    import {packageApi} from "/@/api/sysmanage/package";
+    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
+    import {messbodyApi} from "/@/api/sysmanage/messbody";
+    import {messheaderApi} from "/@/api/sysmanage/messheader";
 
     const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
     const translateDialogRef = ref();
@@ -354,8 +399,13 @@
     const nodeFormRef = ref();
     const extendFormRef = ref();
     const chartsMonitorRef = ref();
-
-
+    const NetworkOptions = ref();
+    const NetworkLocalOptions = ref();
+    const SerialOptions = ref();
+    const PackageOptions=ref();
+    const MessHeaderOptions=ref();
+    const MessBodyOptions=ref();
+    const MessTraslateOptions=ref();
     const state = reactive({
         node: {},
         lf: '',
@@ -441,9 +491,178 @@
 
         state.lf = lf;
         state.showFlag[state.node["type"]] = true;
+        getNetwork();
+        getSerial();
+        getPackage();
+        getMessHeader();
+        getMessBody();
+        getMessTraslate();
         initChartsMonitor();
     };
+    const getNetwork = () => {
+        addressApi().searchNetworkInter(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
 
+                    NetworkOptions.value = res.data;
+
+
+                    NetworkOptions.value.unshift({ID: '-1', Name: '无'});
+
+                    NetworkLocalOptions.value=res.data;
+                    NetworkLocalOptions.value.push({ID: '-1', Name: '手动输入'});
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+    const getSerial = () => {
+        addressApi().searchSerialInter(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    SerialOptions.value = res.data;
+                    SerialOptions.value.push({ID: '-1', Name: '手动输入'});
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+    const getPackage = () => {
+        packageApi().searchPackage(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    PackageOptions.value = res.data;
+
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+     const getMessHeader = () => {
+        messheaderApi().searchMessHeader(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    MessHeaderOptions.value = res.data;
+
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+     const getMessBody = () => {
+        messbodyApi().searchMessBody(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    MessBodyOptions.value = res.data;
+
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+     const getMessTraslate = () => {
+        messtranslateApi().searchMessTranslate(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    MessTraslateOptions.value = res.data;
+
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
     const clearFlag = () => {
         state.showFlag.start = false;
         state.showFlag.end = false;
@@ -486,12 +705,19 @@
 
     // 开始节点中-网口类-本地地址菜单菜单联动
     const onChangeStartNetworkChoose = (value: any) => {
+        console.log(state.properForm.localnetworkID);
         if (state.properForm.localnetworkID == '-1') {
-            state.properForm.ip = "";
-            state.properForm.port = "";
+            state.properForm.IP = "";
+            state.properForm.Port = "";
         } else {
-            state.properForm.ip = "192.168.3.27";
-            state.properForm.port = "8080";
+
+            for(let i=0;i<NetworkLocalOptions.value.length;i++){
+                if(NetworkLocalOptions.value[i].ID==state.properForm.localnetworkID){
+                  state.properForm.IP = NetworkLocalOptions.value[i].IP;
+                    state.properForm.Port = NetworkLocalOptions.value[i].Port;
+                }
+            }
+
         }
 
 
@@ -500,9 +726,16 @@
     // 目的节点中-网口类-目的地址菜单菜单联动
     const onChangeEndNetworkChoose = (value: any) => {
         if (state.properForm.localnetworkID == '-1') {
-            state.properForm.IPlist = [{ip: '', port: ''}];
+            state.properForm.IPlist = [{IP: '', Port: ''}];
         } else {
-            state.properForm.IPlist = [{ip: '192.168.12.31', port: '9080'}];
+
+             for(let i=0;i<NetworkLocalOptions.value.length;i++){
+                if(NetworkLocalOptions.value[i].ID==state.properForm.localnetworkID){
+
+                    state.properForm.IPlist = [{IP: NetworkLocalOptions.value[i].IP, Port: NetworkLocalOptions.value[i].Port}];
+                }
+            }
+
 
         }
 
@@ -516,8 +749,32 @@
             state.properForm.SerialNO = "0";
 
         } else {
-            state.properForm.BAUD = "19200";
-            state.properForm.SerialNO = "COM1";
+            let i=0;
+            for(;i<SerialOptions.value.length;i++){
+                if(SerialOptions.value[i].ID==state.properForm.serialID){
+                  state.properForm.BAUD = SerialOptions.value[i].BAUD;
+                    state.properForm.SerialNO = SerialOptions.value[i].SerialNO;
+                }
+            }
+
+        }
+
+
+    };
+    const onChangeEndSerialChoose = (value: any) => {
+        if (state.properForm.serialID == '-1') {
+            state.properForm.BAUD = "";
+            state.properForm.SerialNO = "0";
+
+        } else {
+            let i=0;
+            for(;i<SerialOptions.value.length;i++){
+                if(SerialOptions.value[i].ID==state.properForm.serialID){
+                  state.properForm.BAUD = SerialOptions.value[i].BAUD;
+                    state.properForm.SerialNO = SerialOptions.value[i].SerialNO;
+                }
+            }
+
         }
 
 
@@ -527,14 +784,30 @@
         extendFormRef.value.resetFields();
     };
     const onExtendEdit = () => {
-        translateDialogRef.value.openDialog(state.node.id, state.properForm.transid);
+        let targetid=0;
+        for(let i=0;i<MessTraslateOptions.value.length;i++){
+                if(MessTraslateOptions.value[i].ID==state.properForm.transid){
+                  targetid = MessTraslateOptions.value[i].targetID;
+
+                }
+            }
+        translateDialogRef.value.openDialog(state.node.id,targetid, state.properForm.transid);
     };
     const onExtendEditMessheader = () => {
         messDialogRef.value.openDialog(state.node.id, state.properForm.messheaderencapID);
     };
     const viewNess = () => {
-        viewDialogRef.value.openDialog('view', state.properForm.messheaderparseID);
-    };
+        if( state.showFlag['messheaderparse']) {
+            viewDialogRef.value.openDialog('header', state.properForm.messheaderparseID);
+        }
+        if (state.showFlag['messbodyencap']) {
+            viewDialogRef.value.openDialog('body', state.properForm.messbodyencapID);
+        }
+        if(state.showFlag['messbodyparse']) {
+            viewDialogRef.value.openDialog('body', state.properForm.messbodyparseID);
+        }
+
+        };
     const onAddEndIP = () => {
         state.properForm.IPlist.push({ip: '', port: '0'});
     };

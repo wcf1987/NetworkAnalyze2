@@ -1,6 +1,6 @@
 <template>
     <div class="system-user-dialog-container">
-        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="800px" draggable="true">
+        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="800px" :draggable="true">
                    <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
                 <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"></el-input>

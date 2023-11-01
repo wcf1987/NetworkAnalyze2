@@ -1,10 +1,10 @@
 <template>
     <div class="system-user-dialog-container">
-        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="800px" draggable="true">
+        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="800px" :draggable="true">
                    <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"></el-input>
-                <el-button size="default" type="primary" class="ml10">
+                <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"  v-model="state.tableData.search"></el-input>
+                <el-button size="default" type="primary" class="ml10"  @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
@@ -22,8 +22,8 @@
                 <el-table-column prop="Transrule" label="转换规则" show-overflow-tooltip></el-table-column>
 
                 <el-table-column prop="DefaultValue" label="源字段" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="describe" label="用户描述" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
+                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip v-if="false"></el-table-column>
+                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column label="操作" width="60">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -57,6 +57,9 @@
 
 <script setup lang="ts" name="systemUserDialog">
     import {defineAsyncComponent, nextTick, reactive, ref} from 'vue';
+    import {useRoute} from "vue-router";
+    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
+    import {ElMessage} from "element-plus";
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
@@ -81,57 +84,71 @@
                 pageNum: 1,
                 pageSize: 10,
             },
+                 search: '',
+            searchStr: '',
         },
     });
-
+    const route = useRoute()
+    const querys = route.query
     // 打开弹窗
-    const openDialog = (type: string, transid) => {
+    const openDialog = (type: string,targetid, transid) => {
         state.tableData.loading = true;
-     const data = [{
-            id: 1,
-            Name: '版本号转换',
-            TargetName: 'version',
-            Optional:'默认值',
-            Transrule:'0x01',
-            DefaultValue: '0xf',
-            describe: 'IP数据包A头结构',
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 2,
-            Name: '服务类型转换',
-            TargetName: 'type',
-            Optional:'直接转换',
-            Transrule:'A.type',
-            DefaultValue: '0xeb',
-            describe: 'IP数据包A头结构',
+        state.tableData.id=transid;
+        state.tableData.targetid=targetid;
 
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 3,
-            Name: '电量计算',
-            TargetName: 'power',
-            Optional:'系统函数',
-            Transrule:'CalcPower(A.power)',
-            DefaultValue: '0xeb',
-            describe: 'IP数据包A头结构',
+   messtranslateApi().searchMessTranslateDetail(
+            {
+                uid: 1,
+                pid:  state.tableData.targetid,
+                transid: state.tableData.id,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+                ttype: 'body'
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+                    for (let i = 0; i < res.data.length; i++) {
+                    res.data[i].SourceData = JSON.parse(res.data[i].SourceData)
+                    res.data[i].Funcrule = JSON.parse(res.data[i].Funcrule)
+                }
+                    state.tableData.data = res.data;
 
-            createTime: new Date().toLocaleString(),
-        }, {
-            id: 4,
-            Name: '进度汇总',
-            TargetName: 'schedule',
-            Optional:'自定义转换计算',
-            Transrule:'(A.score+A.aditional)/100',
-            DefaultValue: '0xeb',
-            describe: 'IP数据包A头结构',
+                } else {
+                    ElMessage.error(res.message);
+                }
 
-            createTime: new Date().toLocaleString(),
-        },
+            }).catch(err => {
 
-        ];
+        }).finally(() => {
 
-      state.tableData.data = data;
-        state.tableData.total = state.tableData.data.length;
+        });
+        //const data = [];
+        messtranslateApi().getMessTranslateDetailSearchListSize(
+            {
+                uid: 1,
+                name: state.tableData.searchStr,
+                pid:  state.tableData.targetid,
+                transid: state.tableData.id,
+                ttype: 'body',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.total = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
         setTimeout(() => {
             state.tableData.loading = false;
         }, 500);
@@ -168,3 +185,29 @@
     });
 
 </script>
+
+<style scoped lang="scss">
+     :deep(.el-table) {
+        /* 替换默认展开收起图片 */
+        /* prettier-ignore */
+        .el-table__expand-icon {
+            width: 12PX;
+            height: 12PX;
+            //background: ele-Plus no-repeat;
+            //ele-Plus
+            background: url("/@/assets/public/add-bold.png") no-repeat;
+            background-size: 100% 100%;
+
+            .el-icon {
+                display: none;
+            }
+        }
+
+        .el-table__expand-icon--expanded {
+            transform: none;
+            background: url("/@/assets/public/minus-bold.png") no-repeat;
+            //ele-SemiSelect
+            background-size: 100% 100%;
+        }
+    }
+</style>
