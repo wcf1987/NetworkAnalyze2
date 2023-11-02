@@ -8,7 +8,11 @@
                             <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
-
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="引用名" prop="name">
+                            <el-input v-model="state.ruleForm.EName" placeholder="请输入名称" clearable></el-input>
+                        </el-form-item>
+                    </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="类型">

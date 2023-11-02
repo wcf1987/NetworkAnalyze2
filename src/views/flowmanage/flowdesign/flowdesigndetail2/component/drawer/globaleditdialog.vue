@@ -5,7 +5,7 @@
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="变量名称" prop="name">
-                            <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
+                            <el-input v-model="state.ruleForm.Name"  :readonly="true" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -323,9 +323,10 @@
 
     }
     // 打开弹窗
-    const openDialog = (type: string, row: RowUserType) => {
+    const openDialog = (type: string, row: RowUserType,name) => {
         if (type === 'edit') {
             state.ruleForm = row;
+            state.ruleForm.Name=name;
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
         } else {

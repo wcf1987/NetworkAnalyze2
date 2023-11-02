@@ -8,20 +8,26 @@
                 <el-input v-model="state.proper.name" placeholder="请输入名称" clearable></el-input>
             </el-form-item>
 
-            <el-form-item label="前序节点数据"  prop="id">
+            <el-form-item label="前序节点数据" prop="id">
 
-                <el-cascader v-model="state.proper.source" :options="sourceOptions" :props="props2" clearable
-                              collapse-tags @change="changeSourceInput"/>
+                <el-cascader v-model="state.properForm.fieldvar" :options=state.fd :props="props2" clearable
+                             collapse-tags @change="changeSourceInput"/>
+
+            </el-form-item>
+            <el-form-item label="全局变量" prop="id">
+
+                <el-cascader v-model="state.properForm.globalvar" :options=state.gd :props="props2" clearable
+                             collapse-tags @change="changeSourceInput"/>
 
             </el-form-item>
 
-            <el-form-item label="判断表达式"  prop="name">
+            <el-form-item label="判断表达式" prop="name">
 
                 <el-input
                         :autosize="{ minRows: 2, maxRows: 10 }"
                         type="textarea"
                         placeholder="请输入转换公式"
-                        v-model="state.properForm.rulestr" autocomplete="off" />
+                        v-model="state.properForm.rulestr" autocomplete="off"/>
             </el-form-item>
 
 
@@ -32,7 +38,7 @@
                 </el-button>
                 <el-button @click="onLineTextChange" type="primary">
                     <SvgIcon name="ele-Check"/>
-                    下一步
+                    保存
                 </el-button>
             </el-form-item>
         </el-form>
@@ -40,10 +46,11 @@
 </template>
 
 <script setup lang="ts" name="pagesWorkflowDrawerLine">
-    import {reactive,ref} from 'vue';
+    import {reactive} from 'vue';
+    import emitter from '/@/utils/mitt';
 
     // 定义子组件向父组件传值/事件
-    const emit = defineEmits(['change', 'close']);
+    const emit = defineEmits(['submit', 'close']);
 
     // 定义变量内容
     const state = reactive<EmptyObjectType>({
@@ -51,81 +58,33 @@
         proper: {
             name: '',
             id: '',
-			source:'',
+            source: '',
         },
         lf: '',
-		properForm:{
-
-		},
+        properForm: {},
     });
-    const sourceOptions = ref([
-        {
-            ename: "消息头A", name: '消息头A',
-            children: [
-                {
-                    ename: "version", name: '版本号'
 
-
-                },
-                {
-                    ename: "type", name: '服务类型'
-
-
-                },
-                {
-                    ename: "index", name: '序号'
-
-
-                },
-                {
-                    ename: "sum", name: '校验和'
-
-
-                },
-            ]
-        },
-        {
-            ename: "消息体B", name: '消息体B',
-            children: [
-                {
-                    ename: "LONG", name: '经度'
-
-
-                },
-                {
-                    ename: "LAT", name: '纬度'
-
-
-                },
-                {
-                    ename: "mile", name: '海里数'
-
-
-                },
-                {
-                    ename: "deep", name: '深度'
-
-
-                },
-            ]
-        },
-    ]);
-        const props2 = {
+    const props2 = {
         multiple: true,
         expandTrigger: 'hover',
-        value: 'ename',
-        label: 'name'
+        value: 'EName',
+        label: 'Name'
     };
-	const changeSourceInput = (fo) => {
+    const changeSourceInput = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
         for (i = 0; i < fo.length; i++) {
             tempstr = tempstr + fo[i].join('.') + '\n'
         }
-        state.properForm.rulestr =  tempstr
+        tempstr=tempstr.replaceAll(',','.')
+        state.properForm.rulestr = state.properForm.rulestr+tempstr
     }
     // 获取父组件数据
     const getParentData = (data: object, lf) => {
+        let incoming=lf.getNodeDataById(data.sourceNodeId);
+        state.fd=incoming.properties.fd;
+        state.gd=incoming.properties.gd;
+        state.properForm = data.properties;
         state.edge = data;
         if (data.text == null) {
             state.proper.name = '';
@@ -143,7 +102,8 @@
     const onLineTextChange = () => {
         const edgeModel = state.lf.getEdgeModelById(state.edge.id);
         edgeModel.updateText(state.proper.name);
-		edgeModel.setProperties(state.properForm);
+        edgeModel.setProperties(state.properForm);
+        emit('submit');
         emit('close');
     };
 

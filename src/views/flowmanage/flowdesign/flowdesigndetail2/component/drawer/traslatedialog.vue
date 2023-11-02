@@ -1,62 +1,76 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="800px" :draggable="true">
-                   <el-card shadow="hover" class="layout-padding-auto">
-            <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"  v-model="state.tableData.search"></el-input>
-                <el-button size="default" type="primary" class="ml10"  @click="onSearch">
-                    <el-icon>
-                        <ele-Search/>
-                    </el-icon>
-                    查询
-                </el-button>
+            <el-card shadow="hover" class="layout-padding-auto">
+                <div class="system-user-search mb15">
+                    <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"
+                              v-model="state.tableData.search"></el-input>
+                    <el-button size="default" type="primary" class="ml10" @click="onSearch">
+                        <el-icon>
+                            <ele-Search/>
+                        </el-icon>
+                        查询
+                    </el-button>
 
-            </div>
-            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
-                <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
+                </div>
+                <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading"
+                          style="width: 100%">
+                  <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
-                <el-table-column prop="Name" label="转换名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="TargetName" label="目的字段名" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Name" label="目的字段名" show-overflow-tooltip></el-table-column>
+
+                <el-table-column prop="TName" label="转换名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="TransID" label="转换ID" show-overflow-tooltip v-if="false"></el-table-column>
+                <el-table-column prop="FieldsID" label="字段外键" show-overflow-tooltip v-if="false"></el-table-column>
+                <el-table-column prop="OutType" label="类型" show-overflow-tooltip v-if="false"></el-table-column>
+
 
                 <el-table-column prop="Optional" label="转换模式" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Transrule" label="转换规则" show-overflow-tooltip></el-table-column>
 
                 <el-table-column prop="DefaultValue" label="源字段" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip v-if="false"></el-table-column>
+                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column label="操作" width="60">
-                    <template #default="scope">
-                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEdit('edit', scope.row)"
-                        >修改
-                        </el-button
-                        >
+
+                    <el-table-column label="操作" width="60">
+                        <template #default="scope">
+                            <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+                                       @click="onOpenEdit('edit', scope.row)" v-if="scope.row.OutType!='nest'"
+                            >修改
+                            </el-button
+                            >
 
 
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                    @size-change="onHandleSizeChange"
-                    @current-change="onHandleCurrentChange"
-                    class="mt15"
-                    :pager-count="5"
-                    :page-sizes="[10, 20, 30]"
-                    v-model:current-page="state.tableData.param.pageNum"
-                    background
-                    v-model:page-size="state.tableData.param.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="state.tableData.total"
-            >
-            </el-pagination>
-        </el-card>
-            <EditDialog ref="editDialogRef" @refresh="getTableData()"/>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                        @size-change="onHandleSizeChange"
+                        @current-change="onHandleCurrentChange"
+                        class="mt15"
+                        :pager-count="5"
+                        :page-sizes="[10, 20, 30]"
+                        v-model:current-page="state.tableData.param.pageNum"
+                        background
+                        v-model:page-size="state.tableData.param.pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="state.tableData.total"
+                >
+                </el-pagination>
+            </el-card>
+            <template #footer>
+				<span class="dialog-footer">
+					<el-button @click="onCancel" size="default">取 消</el-button>
+					<el-button type="primary" @click="onSubmit" size="default">保 存</el-button>
+				</span>
+            </template>
+            <EditDialog ref="editDialogRef" @refresh="getTableData()" @update="updateTable"/>
         </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts" name="systemUserDialog">
-    import {defineAsyncComponent, nextTick, reactive, ref} from 'vue';
+    import {defineAsyncComponent, reactive, ref} from 'vue';
     import {useRoute} from "vue-router";
     import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
     import {ElMessage} from "element-plus";
@@ -68,9 +82,8 @@
     // 定义变量内容
 
 
-
-   const state = reactive({
-               dialog: {
+    const state = reactive({
+        dialog: {
             isShowDialog: false,
             type: '',
             title: '',
@@ -78,94 +91,68 @@
         },
         tableData: {
             data: [],
+            dataAll:[],
             total: 0,
             loading: false,
             param: {
                 pageNum: 1,
                 pageSize: 10,
             },
-                 search: '',
+            search: '',
             searchStr: '',
         },
     });
     const route = useRoute()
     const querys = route.query
     // 打开弹窗
-    const openDialog = (type: string,targetid, transid) => {
+    const openDialog = (type: string, data,fd,gd) => {
         state.tableData.loading = true;
-        state.tableData.id=transid;
-        state.tableData.targetid=targetid;
-
-   messtranslateApi().searchMessTranslateDetail(
-            {
-                uid: 1,
-                pid:  state.tableData.targetid,
-                transid: state.tableData.id,
-                pageNum: state.tableData.param.pageNum,
-                pageSize: state.tableData.param.pageSize,
-                name: state.tableData.searchStr,
-                ttype: 'body'
-            })
-            .then(res => {
-                //console.log(res);
-                if (res.code == '200') {
-                    for (let i = 0; i < res.data.length; i++) {
-                    res.data[i].SourceData = JSON.parse(res.data[i].SourceData)
-                    res.data[i].Funcrule = JSON.parse(res.data[i].Funcrule)
-                }
-                    state.tableData.data = res.data;
-
-                } else {
-                    ElMessage.error(res.message);
-                }
-
-            }).catch(err => {
-
-        }).finally(() => {
-
-        });
-        //const data = [];
-        messtranslateApi().getMessTranslateDetailSearchListSize(
-            {
-                uid: 1,
-                name: state.tableData.searchStr,
-                pid:  state.tableData.targetid,
-                transid: state.tableData.id,
-                ttype: 'body',
-            })
-            .then(res => {
-                //console.log(res);
-                if (res.code == '200') {
-
-                    state.tableData.total = res.data;
-
-                } else {
-                    ElMessage.error(res.message);
-                }
-
-            }).catch(err => {
-
-        }).finally(() => {
-
-        });
+        state.tableData.dataAll = data;
+        state.dialog.title = '修改';
+        state.dialog.submitTxt = '修 改';
+        state.fd=fd;
+        state.gd=gd;
+        getTableData();
 
         setTimeout(() => {
             state.tableData.loading = false;
-        }, 500);
+        }, 100);
 
-            state.dialog.title = '查看';
-            state.dialog.submitTxt = '关 闭';
+
 
         state.dialog.isShowDialog = true;
 
     };
-        const onOpenEdit = (type: string, row: RowUserType) => {
-        editDialogRef.value.openDialog(type, row);
+    const onOpenEdit = (type: string, row: RowUserType) => {
+        editDialogRef.value.openDialog(type, row,state.fd,state.gd);
     };
     // 关闭弹窗
     const closeDialog = () => {
+
         state.dialog.isShowDialog = false;
     };
+    const onSearch = () => {
+        state.tableData.searchStr = state.tableData.search;
+        getTableData();
+    };
+    const updateTable=(row)=>{
+        for(let i=0;i<state.tableData.total ;i++){
+            if(state.tableData.dataAll[i].ID==row.ID){
+                state.tableData.dataAll.splice(i,1,row);
+            }
+        }
+        getTableData();
+
+    }
+    const getTableData = () => {
+        state.tableData.total =state.tableData.dataAll.length ;
+        let start=(state.tableData.param.pageNum-1)*state.tableData.param.pageSize;
+        let end=start+state.tableData.param.pageSize;
+        state.tableData.data=state.tableData.dataAll.slice(start,end);
+
+
+
+    }
     // 取消
     const onCancel = () => {
         closeDialog();
@@ -173,7 +160,7 @@
     // 提交
     const onSubmit = () => {
         closeDialog();
-        emit('refresh');
+        emit('refresh',state.tableData.dataAll);
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据
@@ -187,7 +174,7 @@
 </script>
 
 <style scoped lang="scss">
-     :deep(.el-table) {
+    :deep(.el-table) {
         /* 替换默认展开收起图片 */
         /* prettier-ignore */
         .el-table__expand-icon {

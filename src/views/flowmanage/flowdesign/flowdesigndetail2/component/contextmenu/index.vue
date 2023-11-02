@@ -48,8 +48,9 @@ const contextmenuRef = ref();
 const state = reactive({
 	isShow: false,
 	dropdownList: [
-		{ contextMenuClickId: 0, txt: '删除', icon: 'ele-Delete' },
-		{ contextMenuClickId: 1, txt: '编辑', icon: 'ele-Edit' },
+			{ contextMenuClickId: 0, txt: '编辑', icon: 'ele-Edit' },
+		{ contextMenuClickId: 1, txt: '删除', icon: 'ele-Delete' },
+
 	],
 	item: {
 		type: 'node',

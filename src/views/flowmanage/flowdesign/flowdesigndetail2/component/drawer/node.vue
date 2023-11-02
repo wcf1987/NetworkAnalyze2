@@ -87,7 +87,7 @@
                             <el-form-item label="本地地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
                                            class="w100" v-on:change="onChangeStartNetworkChoose">
-                         <el-option
+                                    <el-option
                                             v-for="item in NetworkLocalOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -120,7 +120,7 @@
                             <el-form-item label="目的串口" prop="type" v-if="state.properForm.interfacetype=='串口'">
                                 <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
                                            v-on:change="onChangeEndSerialChoose">
-                                     <el-option
+                                    <el-option
                                             v-for="item in SerialOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -141,7 +141,7 @@
                             <el-form-item label="目的地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
                                            class="w100" v-on:change="onChangeEndNetworkChoose">
-                                     <el-option
+                                    <el-option
                                             v-for="item in NetworkLocalOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -193,7 +193,7 @@
                             <el-form-item label="头部选择">
                                 <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable
                                            class="w100">
-                                      <el-option
+                                    <el-option
                                             v-for="item in PackageOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -209,7 +209,7 @@
                             <el-form-item label="头部选择">
                                 <el-select v-model="state.properForm.pacencapID" placeholder="请选择" clearable
                                            class="w100">
-                                     <el-option
+                                    <el-option
                                             v-for="item in PackageOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -225,7 +225,7 @@
                             <el-form-item label="消息头">
                                 <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable
                                            class="w100">
-                                     <el-option
+                                    <el-option
                                             v-for="item in MessHeaderOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -241,8 +241,8 @@
                         <div class="customproper" v-if="state.showFlag['messheaderencap']">
                             <el-form-item label="消息头">
                                 <el-select v-model="state.properForm.messheaderencapID" placeholder="请选择" clearable
-                                           class="w100">
-                                   <el-option
+                                           class="w100" v-on:change="onChangeMessheaderEncapChoose">
+                                    <el-option
                                             v-for="item in MessHeaderOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -258,7 +258,7 @@
                             <el-form-item label="消息体">
                                 <el-select v-model="state.properForm.messbodyparseID" placeholder="请选择" clearable
                                            class="w100">
-                                 <el-option
+                                    <el-option
                                             v-for="item in MessBodyOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -274,7 +274,7 @@
                             <el-form-item label="消息体">
                                 <el-select v-model="state.properForm.messbodyencapID" placeholder="请选择" clearable
                                            class="w100">
-                                   <el-option
+                                    <el-option
                                             v-for="item in MessBodyOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -290,8 +290,9 @@
 
                         <div class="customproper" v-if="state.showFlag['messtraslate']">
                             <el-form-item label="转化规则模板">
-                                <el-select v-model="state.properForm.transid" placeholder="请选择" clearable class="w100">
-                                     <el-option
+                                <el-select v-model="state.properForm.transid" v-on:change="onChangeMessTranslateChoose"
+                                           placeholder="请选择" clearable class="w100">
+                                    <el-option
                                             v-for="item in MessTraslateOptions"
                                             :key="item.ID"
                                             :label="item.Name"
@@ -309,6 +310,23 @@
                                 </el-input>
                             </el-form-item>
 
+                            <el-form-item label="源字段" prop="source">
+
+                                <el-cascader v-model="state.properForm.sourceData" :options="sourceoptions" :separator="'.'"
+                                             :props="props21"
+                                             @change="changeSourceInput21"
+                                             clearable
+                                             style="width: 500px; " collapse-tags/>
+                            </el-form-item>
+
+                            <el-form-item label="转换公式" prop="rulestr" clearable>
+                                <el-input
+                                        :autosize="{ minRows: 2, maxRows: 10 }"
+                                        type="textarea"
+                                        placeholder="请输入转换公式"
+                                        v-model="state.properForm.globalVarRule" autocomplete="off"/>
+                            </el-form-item>
+
 
                         </div>
 
@@ -323,13 +341,13 @@
                                 重置
                             </el-button>
 
-                            <el-button type="primary" class="mb15" @click="onExtendEdit"
+                            <el-button type="primary" class="mb15" @click="onExtendEditMessTranslate"
                                        :loading="state.loading.extend" v-if="state.showFlag['messtraslate']">
                                 <SvgIcon name="ele-EditPen"/>
                                 编辑模板
                             </el-button>
                             <el-button type="primary" class="mb15" @click="onExtendGlobalVar"
-                                       :loading="state.loading.extend" v-if="state.showFlag['spemark']">
+                                       :loading="state.loading.extend" v-if="state.showFlag['spemark'] && false">
                                 <SvgIcon name="ele-EditPen"/>
                                 编辑变量
                             </el-button>
@@ -367,10 +385,10 @@
                 </el-scrollbar>
             </el-tab-pane>
         </el-tabs>
-        <Translatedialog ref="translateDialogRef" @refresh="getTableData()"/>
-        <Messdialog ref="messDialogRef" @refresh="getTableData()"/>
-        <ViewDialog ref="viewDialogRef" @refresh="getTableData()"/>
-        <GlobalEditdialog ref="globalEditDialogRef" @refresh="getTableData()"/>
+        <Translatedialog ref="translateDialogRef" @refresh="messTranslateModify"/>
+        <Messdialog ref="messDialogRef" @refresh="onExtendSubmit()"/>
+        <ViewDialog ref="viewDialogRef" @refresh="onExtendSubmit()"/>
+        <GlobalEditdialog ref="globalEditDialogRef" @refresh="onExtendSubmit()"/>
     </div>
 </template>
 
@@ -383,6 +401,7 @@
     import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
     import {messbodyApi} from "/@/api/sysmanage/messbody";
     import {messheaderApi} from "/@/api/sysmanage/messheader";
+    import {messdetailApi} from "/@/api/sysmanage/messdetail";
 
     const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
     const translateDialogRef = ref();
@@ -402,10 +421,10 @@
     const NetworkOptions = ref();
     const NetworkLocalOptions = ref();
     const SerialOptions = ref();
-    const PackageOptions=ref();
-    const MessHeaderOptions=ref();
-    const MessBodyOptions=ref();
-    const MessTraslateOptions=ref();
+    const PackageOptions = ref();
+    const MessHeaderOptions = ref();
+    const MessBodyOptions = ref();
+    const MessTraslateOptions = ref();
     const state = reactive({
         node: {},
         lf: '',
@@ -430,7 +449,29 @@
             extend: false,
         },
     });
+    const sourceoptions = ref();
+    const globaloptions=ref();
+    const fieldsoptions=ref();
+import emitter from '/@/utils/mitt';
 
+    const props21 = {
+        multiple: true,
+        expandTrigger: 'hover',
+        value: 'EName',
+        label: 'Name',
+        emitPath:true
+    }
+    const changeSourceInput21 = (fo) => {
+        console.log(fo)
+        let i = 0, tempstr = ''
+        for (i = 0; i < fo.length; i++) {
+            tempstr = tempstr + fo[i] + '\n'
+        }
+        tempstr=tempstr.replaceAll(',','.');
+        state.properForm.globalVarRule = tempstr;
+
+
+    }
     // 获取父组件数据
     const getParentData = (data, lf) => {
         clearFlag();
@@ -487,7 +528,7 @@
         if (data.type == 'swich') {
             state.proper.typeC = '分支选择';
         }
-
+        state.properForm = data.properties;
 
         state.lf = lf;
         state.showFlag[state.node["type"]] = true;
@@ -497,6 +538,12 @@
         getMessHeader();
         getMessBody();
         getMessTraslate();
+        nextTick(() => {
+            setTimeout(() => {
+               getSourceData();
+            }, 500);
+        });
+
         initChartsMonitor();
     };
     const getNetwork = () => {
@@ -516,7 +563,7 @@
 
                     NetworkOptions.value.unshift({ID: '-1', Name: '无'});
 
-                    NetworkLocalOptions.value=res.data;
+                    NetworkLocalOptions.value = res.data;
                     NetworkLocalOptions.value.push({ID: '-1', Name: '手动输入'});
                 } else {
                     ElMessage.error(res.message);
@@ -570,7 +617,6 @@
                     PackageOptions.value = res.data;
 
 
-
                 } else {
                     ElMessage.error(res.message);
                 }
@@ -582,7 +628,7 @@
         });
 
     }
-     const getMessHeader = () => {
+    const getMessHeader = () => {
         messheaderApi().searchMessHeader(
             {
                 uid: 1,
@@ -597,7 +643,6 @@
                     MessHeaderOptions.value = res.data;
 
 
-
                 } else {
                     ElMessage.error(res.message);
                 }
@@ -609,7 +654,7 @@
         });
 
     }
-     const getMessBody = () => {
+    const getMessBody = () => {
         messbodyApi().searchMessBody(
             {
                 uid: 1,
@@ -624,7 +669,6 @@
                     MessBodyOptions.value = res.data;
 
 
-
                 } else {
                     ElMessage.error(res.message);
                 }
@@ -636,7 +680,7 @@
         });
 
     }
-     const getMessTraslate = () => {
+    const getMessTraslate = () => {
         messtranslateApi().searchMessTranslate(
             {
                 uid: 1,
@@ -651,7 +695,6 @@
                     MessTraslateOptions.value = res.data;
 
 
-
                 } else {
                     ElMessage.error(res.message);
                 }
@@ -663,6 +706,263 @@
         });
 
     }
+    const getMessTraslateDetail = (pid, transid, ttype) => {
+        messtranslateApi().searchMessTranslateDetail(
+            {
+                uid: 1,
+                pid: pid,
+                transid: transid,
+                pageNum: 1,
+                pageSize: 10000,
+                name: '',
+                ttype: ttype
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+                    for (let i = 0; i < res.data.length; i++) {
+                        res.data[i].SourceData = JSON.parse(res.data[i].SourceData)
+                        res.data[i].Funcrule = JSON.parse(res.data[i].Funcrule)
+                    }
+                    state.properForm.messtranslatedata = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+
+    }
+    const getSourceData = () => {
+        //sourceoptions.value = [];
+        getNodeSourceData();
+         nextTick(() => {
+            setTimeout(() => {
+             sourceoptions.value = fieldsoptions.value.concat(globaloptions.value);
+            let graph = state.lf.getGraphData();
+
+            let nodes = graph.nodes;
+            for (let i = 0; i < nodes.length; i++) {
+            if (nodes[i].type == 'swich') {
+                state.lf.setProperties(nodes[i].id,{fd:fieldsoptions.value,gd:globaloptions.value});
+            }
+        }
+            // emitter.emit('Fn', {fd:fieldsoptions.value,gd:globaloptions.value});
+            }, 500);
+        });
+
+
+    }
+    const getNodeSourceData = () => {
+        fieldsoptions.value = [];
+        let graph = state.lf.getGraphData();
+        let packagelist = [];
+        let messheaderlist = [];
+        let messbodylist = [];
+        let globalvarlist = [];
+        let nodes = graph.nodes;
+        for (let i = 0; i < nodes.length; i++) {
+            if (nodes[i].type == 'start') {
+
+            }
+            if (nodes[i].type == 'pacparse') {
+                if (nodes[i].properties.pacparseID != null && nodes[i].properties.pacparseID != -1) {
+                    packagelist.push(nodes[i].properties.pacparseID);
+                }
+            }
+            if (nodes[i].type == 'pacencap') {
+                if (nodes[i].properties.pacencapID != null && nodes[i].properties.pacencapID != -1) {
+                    packagelist.push(nodes[i].properties.pacencapID);
+                }
+            }
+
+            if (nodes[i].type == 'messheaderparse') {
+                if (nodes[i].properties.messheaderparseID != null && nodes[i].properties.messheaderparseID != -1) {
+                    messheaderlist.push(nodes[i].properties.messheaderparseID);
+                }
+            }
+            if (nodes[i].type == 'messheaderencap') {
+                if (nodes[i].properties.messheaderencapID != null && nodes[i].properties.messheaderencapID != -1) {
+                    messheaderlist.push(nodes[i].properties.messheaderencapID);
+                }
+            }
+
+
+            if (nodes[i].type == 'messbodyparse') {
+                if (nodes[i].properties.messbodyparseID != null && nodes[i].properties.messbodyparseID != -1) {
+                    messbodylist.push(nodes[i].properties.messbodyparseID);
+                }
+            }
+            if (nodes[i].type == 'messbodyencap') {
+                if (nodes[i].properties.messbodyencapID != null && nodes[i].properties.messbodyencapID != -1) {
+                    messbodylist.push(nodes[i].properties.messbodyencapID);
+                }
+            }
+            if (nodes[i].type == 'spemark') {
+                if (nodes[i].properties.globalVarName != null && nodes[i].properties.globalVarName != '' &&  nodes[i].properties.globalVarName !=state.properForm.globalVarName) {
+                    globalvarlist.push({EName:nodes[i].properties.globalVarName,Name:nodes[i].properties.globalVarName});
+                }
+            }
+
+
+        }
+        packagelist = Array.from(new Set(packagelist));
+        messheaderlist = Array.from(new Set(messheaderlist));
+        messbodylist = Array.from(new Set(messbodylist));
+        globalvarlist = Array.from(new Set(globalvarlist));
+        let lista, listb;
+        lista = packagelist;
+        listb = PackageOptions.value;
+        for (let i = 0; i < lista.length; i++) {
+            for (let k = 0; k < listb.length; k++) {
+                if (lista[i] == listb[k].ID) {
+                    let childs = getPackageDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
+
+                }
+            }
+        }
+
+        lista = messheaderlist;
+        listb = MessHeaderOptions.value;
+        for (let i = 0; i < lista.length; i++) {
+            for (let k = 0; k < listb.length; k++) {
+                if (lista[i] == listb[k].ID) {
+                    let childs = getMessHeaderDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
+
+                }
+            }
+        }
+
+        lista = messbodylist;
+        listb = MessBodyOptions.value;
+        for (let i = 0; i < lista.length; i++) {
+            for (let k = 0; k < listb.length; k++) {
+                if (lista[i] == listb[k].ID) {
+                    let childs = getMessBodyDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
+
+                }
+            }
+        }
+        globaloptions.value=[]
+        globaloptions.value.push(getGlobalVarOptions(globalvarlist));
+
+    }
+    const getPackageDetailOptions = (ename, name, pid) => {
+        console.log(ename, pid);
+        packageApi().searchPackageDetail(
+            {
+                uid: 1,
+                pid: pid,
+                pageNum: 1,
+                pageSize: 10000,
+                name: '',
+
+            })
+            .then(res => {
+                console.log(res);
+                if (res.code == '200') {
+                    fieldsoptions.value.push(
+                        {
+                            EName: ename,
+                            Name: name,
+                            children: res.data,
+                        }
+                    )
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+    }
+    const getMessHeaderDetailOptions = (ename, name, pid) => {
+        console.log(ename, pid);
+        messdetailApi().searchMessDetail(
+            {
+                uid: 1,
+                pid: pid,
+                pageNum: 1,
+                pageSize: 10000,
+                name: '',
+                ttype: 'header'
+
+            })
+            .then(res => {
+                console.log(res);
+                if (res.code == '200') {
+                    fieldsoptions.value.push(
+                        {
+                            EName: ename,
+                            Name: name,
+                            children: res.data,
+                        }
+                    )
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+    }
+    const getMessBodyDetailOptions = (ename, name, pid) => {
+        console.log(ename, pid);
+        messdetailApi().searchMessDetail(
+            {
+                uid: 1,
+                pid: pid,
+                pageNum: 1,
+                pageSize: 10000,
+                name: '',
+                ttype: 'body'
+
+            })
+            .then(res => {
+                console.log(res);
+                if (res.code == '200') {
+                    fieldsoptions.value.push(
+                        {
+                            EName: ename,
+                            Name: name,
+                            children: res.data,
+                        }
+                    )
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+    }
+    const getGlobalVarOptions = (list) => {
+
+
+                    return  {
+                            EName: 'globalVar',
+                            Name: '临时变量',
+                            children:list
+                        }
+
+
+    }
+
+
     const clearFlag = () => {
         state.showFlag.start = false;
         state.showFlag.end = false;
@@ -695,7 +995,7 @@
                 const nodeModel = state.lf.getNodeModelById(state.node.id);
                 nodeModel.updateText(state.proper.name);
                 state.tabsActive = '2';
-                emit('submit', state.node);
+                emit('submit');
                 //emit('close');
             } else {
                 return false;
@@ -711,9 +1011,9 @@
             state.properForm.Port = "";
         } else {
 
-            for(let i=0;i<NetworkLocalOptions.value.length;i++){
-                if(NetworkLocalOptions.value[i].ID==state.properForm.localnetworkID){
-                  state.properForm.IP = NetworkLocalOptions.value[i].IP;
+            for (let i = 0; i < NetworkLocalOptions.value.length; i++) {
+                if (NetworkLocalOptions.value[i].ID == state.properForm.localnetworkID) {
+                    state.properForm.IP = NetworkLocalOptions.value[i].IP;
                     state.properForm.Port = NetworkLocalOptions.value[i].Port;
                 }
             }
@@ -729,10 +1029,13 @@
             state.properForm.IPlist = [{IP: '', Port: ''}];
         } else {
 
-             for(let i=0;i<NetworkLocalOptions.value.length;i++){
-                if(NetworkLocalOptions.value[i].ID==state.properForm.localnetworkID){
+            for (let i = 0; i < NetworkLocalOptions.value.length; i++) {
+                if (NetworkLocalOptions.value[i].ID == state.properForm.localnetworkID) {
 
-                    state.properForm.IPlist = [{IP: NetworkLocalOptions.value[i].IP, Port: NetworkLocalOptions.value[i].Port}];
+                    state.properForm.IPlist = [{
+                        IP: NetworkLocalOptions.value[i].IP,
+                        Port: NetworkLocalOptions.value[i].Port
+                    }];
                 }
             }
 
@@ -749,10 +1052,10 @@
             state.properForm.SerialNO = "0";
 
         } else {
-            let i=0;
-            for(;i<SerialOptions.value.length;i++){
-                if(SerialOptions.value[i].ID==state.properForm.serialID){
-                  state.properForm.BAUD = SerialOptions.value[i].BAUD;
+            let i = 0;
+            for (; i < SerialOptions.value.length; i++) {
+                if (SerialOptions.value[i].ID == state.properForm.serialID) {
+                    state.properForm.BAUD = SerialOptions.value[i].BAUD;
                     state.properForm.SerialNO = SerialOptions.value[i].SerialNO;
                 }
             }
@@ -767,10 +1070,10 @@
             state.properForm.SerialNO = "0";
 
         } else {
-            let i=0;
-            for(;i<SerialOptions.value.length;i++){
-                if(SerialOptions.value[i].ID==state.properForm.serialID){
-                  state.properForm.BAUD = SerialOptions.value[i].BAUD;
+            let i = 0;
+            for (; i < SerialOptions.value.length; i++) {
+                if (SerialOptions.value[i].ID == state.properForm.serialID) {
+                    state.properForm.BAUD = SerialOptions.value[i].BAUD;
                     state.properForm.SerialNO = SerialOptions.value[i].SerialNO;
                 }
             }
@@ -783,33 +1086,43 @@
     const onExtendRefresh = () => {
         extendFormRef.value.resetFields();
     };
-    const onExtendEdit = () => {
-        let targetid=0;
-        for(let i=0;i<MessTraslateOptions.value.length;i++){
-                if(MessTraslateOptions.value[i].ID==state.properForm.transid){
-                  targetid = MessTraslateOptions.value[i].targetID;
+    const onChangeMessTranslateChoose = () => {
+        let targetid = 0;
+        for (let i = 0; i < MessTraslateOptions.value.length; i++) {
+            if (MessTraslateOptions.value[i].ID == state.properForm.transid) {
+                targetid = MessTraslateOptions.value[i].targetID;
 
-                }
             }
-        translateDialogRef.value.openDialog(state.node.id,targetid, state.properForm.transid);
+        }
+        getMessTraslateDetail(targetid, state.properForm.transid, 'body');
+    }
+    const onExtendEditMessTranslate = () => {
+        translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata,fieldsoptions.value,globaloptions.value);
+
     };
+    const onChangeMessheaderEncapChoose = () => {
+        getMessTraslateDetail(state.properForm.messheaderencapID, -1, 'header');
+    }
     const onExtendEditMessheader = () => {
-        messDialogRef.value.openDialog(state.node.id, state.properForm.messheaderencapID);
+        //messDialogRef.value.openDialog('header', state.properForm.messheaderencapID);
+        translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata);
+        // translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata);
+
     };
     const viewNess = () => {
-        if( state.showFlag['messheaderparse']) {
+        if (state.showFlag['messheaderparse']) {
             viewDialogRef.value.openDialog('header', state.properForm.messheaderparseID);
         }
         if (state.showFlag['messbodyencap']) {
             viewDialogRef.value.openDialog('body', state.properForm.messbodyencapID);
         }
-        if(state.showFlag['messbodyparse']) {
+        if (state.showFlag['messbodyparse']) {
             viewDialogRef.value.openDialog('body', state.properForm.messbodyparseID);
         }
 
-        };
+    };
     const onAddEndIP = () => {
-        state.properForm.IPlist.push({ip: '', port: '0'});
+        state.properForm.IPlist.push({IP: '', Port: '0'});
     };
     const onDelEndIP = (k: number) => {
         state.properForm.IPlist.splice(k, 1);
@@ -817,6 +1130,9 @@
     const onExtendGlobalVar = () => {
         globalEditDialogRef.value.openDialog('add', state.properForm.messheaderparseID);
     };
+    const messTranslateModify = (data) => {
+        state.properForm.messtranslatedata = data;
+    }
     // 扩展表单-保存
     const onExtendSubmit = () => {
         extendFormRef.value.validate((valid: boolean) => {
@@ -825,10 +1141,10 @@
                 const nodeModel = state.lf.getNodeModelById(state.node.id);
                 nodeModel.setProperties(state.properForm);
 
-
+                emit('submit');
                 setTimeout(() => {
                     state.loading.extend = false;
-                    ElMessage.success('保存成功');
+
                     emit('close');
                 }, 300);
             } else {

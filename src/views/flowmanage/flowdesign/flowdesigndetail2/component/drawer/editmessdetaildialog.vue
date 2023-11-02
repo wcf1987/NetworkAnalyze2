@@ -42,7 +42,7 @@
 
                         <el-form-item label="源字段" :label-width="formLabelWidth" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.Transrule" :options=state.fd :props="props1"
+                            <el-cascader v-model="state.ruleForm.Transrule" :options="sourceoptions" :props="props1"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
                         </el-form-item>
@@ -64,8 +64,8 @@
 
                         <el-form-item label="源字段" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.sourceData" :options=state.fd :props="props21"
-                                         @change="changeSourceInput24"
+                            <el-cascader v-model="state.ruleForm.sourceData" :options="sourceoptions" :props="props21"
+                                         @change="changeSourceInput21"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
 
@@ -94,7 +94,7 @@
 
                         <el-form-item label="源字段" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.sourceData" :options=state.fd :props="props21"
+                            <el-cascader v-model="state.ruleForm.sourceData" :options="sourceoptions" :props="props21"
                                          @change="changeSourceInput21"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
@@ -106,7 +106,7 @@
 
                         <el-form-item label="全局变量" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.globalData" :options=state.gd :props="props21"
+                            <el-cascader v-model="state.ruleForm.globalData" :options="globaloptions" :props="props23"
                                          @change="changeSourceInput23"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
@@ -127,7 +127,7 @@
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
                         <el-form-item label="用户描述">
-                            <el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述"
+                            <el-input v-model="state.ruleForm.describe" type="textarea" placeholder="请输入用户描述"
                                       maxlength="150"></el-input>
                         </el-form-item>
                     </el-col>
@@ -158,27 +158,89 @@
             {min: 1, max: 10, message: '名称长度为1 - 10位'},
         ],
     });
+     const sourceoptions = ref([
+        {
+            ename: "消息头A", name: '消息头A',
+            children: [
+                {
+                    ename: "version", name: '版本号'
 
 
+                },
+                {
+                    ename: "type", name: '服务类型'
+
+
+                },
+                {
+                    ename: "index", name: '序号'
+
+
+                },
+                {
+                    ename: "sum", name: '校验和'
+
+
+                },
+            ]
+        },
+        {
+            ename: "消息体B", name: '消息体B',
+            children: [
+                {
+                    ename: "LONG", name: '经度'
+
+
+                },
+                {
+                    ename: "LAT", name: '纬度'
+
+
+                },
+                {
+                    ename: "mile", name: '海里数'
+
+
+                },
+                {
+                    ename: "deep", name: '深度'
+
+
+                },
+            ]
+        },
+    ]);
+
+          const globaloptions = ref([
+        {
+                    ename: "global_var_A", name: 'VarA'},
+
+
+              {ename: "global_var_B", name: 'VarB'} ,
+
+
+
+
+    ]);
 
 
     const props1 = {
         multiple: false,
         expandTrigger: 'hover',
-        value: 'EName',
-        label: 'Name'
+        value: 'ename',
+        label: 'name'
     }
         const props23 = {
         multiple: false,
         expandTrigger: 'hover',
-         value: 'EName',
-        label: 'Name'
+        value: 'ename',
+        label: 'name'
     }
     const props21 = {
         multiple: true,
         expandTrigger: 'hover',
-         value: 'EName',
-        label: 'Name'
+        value: 'ename',
+        label: 'name'
     }
     const props22 = {
         expandTrigger: 'hover',
@@ -235,8 +297,7 @@
         for (i = 0; i < fo.length; i++) {
             tempstr = tempstr + fo[i]+'\n'
         }
-        tempstr=tempstr.replaceAll(',','.')
-        state.ruleForm.Transrule = state.ruleForm.Transrule+tempstr;
+        state.ruleForm.Transrule = state.ruleForm.funcrule+tempstr;
 
 
     }
@@ -246,18 +307,6 @@
         for (i = 0; i < fo.length; i++) {
             tempstr = tempstr + fo[i]+'\n'
         }
-               tempstr=tempstr.replaceAll(',','.')
-        state.ruleForm.Transrule = state.ruleForm.Transrule+tempstr;
-
-
-    }
-            const changeSourceInput24 = (fo) => {
-        console.log(fo)
-        let i = 0, tempstr = ''
-        for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i]+'\n'
-        }
-               tempstr=tempstr.replaceAll(',','.')
         state.ruleForm.Transrule = state.ruleForm.funcrule+tempstr;
 
 
@@ -280,9 +329,7 @@
 
     }
     // 打开弹窗
-    const openDialog = (type: string, row: RowUserType,fd,gd) => {
-        state.fd=fd;
-        state.gd=gd;
+    const openDialog = (type: string, row: RowUserType) => {
         if (type === 'edit') {
             state.ruleForm = row;
             state.dialog.title = '修改';

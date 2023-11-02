@@ -20,6 +20,7 @@
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="ArrayOr" label="是否数组" show-overflow-tooltip></el-table-column>

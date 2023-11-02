@@ -59,7 +59,7 @@
         <!-- 线右键菜单 -->
         <Contextmenu :dropdown="state.dropdownLine" ref="contextmenuLineRef" @current="onCurrentLineClick"/>
         <!-- 抽屉表单、线 -->
-        <Drawer ref="drawerRef" @label="setLineLabel" @node="setNodeContent"/>
+        <Drawer ref="drawerRef" @label="setLineLabel" @node="setNodeContent" @save="saveFlow"/>
 
         <!-- 顶部工具栏-帮助弹窗 -->
         <Help ref="helpRef"/>
@@ -132,11 +132,24 @@
             .then(res => {
                 //console.log(res);
                 if (res.code == '200') {
-                    let temps = decodeURIComponent(res.data.FlowJson)
+                    //let temps = decodeURIComponent(res.data.FlowJson)
+                    let temps = res.data.FlowJson
                     let xmlStrread = JSON.parse(temps)
                     console.log(xmlStrread);
-                    lf.value.render(xmlStrread)
-                    LfEvent()
+                    lf.value.render(xmlStrread);
+                    LfEvent();
+                    for(let i=0;i<xmlStrread.nodes.length;i++){
+                        let temp=xmlStrread.nodes[i];
+
+                        lf.value.setProperties(temp.id, temp.properties);
+                        lf.value.updateText(temp.id, temp.text.value);
+                    }
+                    for(let i=0;i<xmlStrread.edges.length;i++){
+                        let temp=xmlStrread.edges[i];
+
+                        lf.value.setProperties(temp.id, temp.properties);
+                        lf.value.updateText(temp.id, temp.text.value);
+                    }
                     // ElMessage.success("修改成功");
 
                 } else {
@@ -153,9 +166,11 @@
     }
     const saveFlow = () => {
         let flowGraphStr = lf.value.getGraphData();
+        console.log(flowGraphStr);
         let data = JSON.stringify(flowGraphStr)
         //const { href, filename } = setEncoded(type.toUpperCase(), name, data)
-        const encodedData = encodeURIComponent(data)
+        //const encodedData = encodeURIComponent(data)
+        const encodedData = data;
         // const encodeJson = JSON.stringify(script)
 
 
@@ -365,14 +380,14 @@
                 message: data.msg
             })
         })
-        lf.value.on('node:contextmenu', (data) => {
+        lf.value.on('node:contextmenu', ({data, e, position}) => {
             console.log('节点右键');
-            onContextmenu('node', data);
+            onContextmenu('node', data, e, position);
 
         })
-        lf.value.on('edge:contextmenu', (data) => {
+        lf.value.on('edge:contextmenu', ({data, e, position}) => {
             console.log('连接右键');
-            onContextmenu('edge', data);
+            onContextmenu('edge', data, e, position);
         })
     }
 
@@ -427,39 +442,41 @@
         state.jsPlumbNodeIndex = k;
     };
     // 右侧内容区-当前项右键菜单点击
-    const onContextmenu = (type, e) => {
+    const onContextmenu = (type, data, e, position) => {
         let loc = container.value.getBoundingClientRect();
         //console.log(loc);
 
         if (type == 'node') {
-            state.dropdownNode.x = loc.x + e.position.domOverlayPosition.x;
-            state.dropdownNode.y = loc.y + e.position.domOverlayPosition.y;
-            contextmenuNodeRef.value.openContextmenu('node', e.data);
+            let prope=lf.value.getProperties(data.id);
+            console.log(prope);
+            state.dropdownNode.x = loc.x + position.domOverlayPosition.x;
+            state.dropdownNode.y = loc.y + position.domOverlayPosition.y;
+            contextmenuNodeRef.value.openContextmenu('node',data);
         }
         if (type == 'edge') {
 
-            state.dropdownLine.x = loc.x + e.position.domOverlayPosition.x;
-            state.dropdownLine.y = loc.y + e.position.domOverlayPosition.y;
-            contextmenuLineRef.value.openContextmenu('edge', e.data);
+            state.dropdownLine.x = loc.x + position.domOverlayPosition.x;
+            state.dropdownLine.y = loc.y + position.domOverlayPosition.y;
+            contextmenuLineRef.value.openContextmenu('edge', data);
 
         }
     };
     // 右侧内容区-当前项右键菜单点击回调(节点)
     const onCurrentNodeClick = (contextMenuClickId, item: any) => {
-        if (contextMenuClickId == 0) {
+        if (contextMenuClickId == 1) {
             lf.value.deleteNode(item.id);
         }
-        if (contextMenuClickId == 1) {
+        if (contextMenuClickId == 0) {
             drawerRef.value.open(item, lf.value);
         }
     };
 
     // 右侧内容区-当前项右键菜单点击回调(线)
     const onCurrentLineClick = (contextMenuClickId, item: any) => {
-        if (contextMenuClickId == 0) {
+        if (contextMenuClickId == 1) {
             lf.value.deleteEdge(item.id);
         }
-        if (contextMenuClickId == 1) {
+        if (contextMenuClickId == 0) {
             const sourenode = lf.value.getNodeModelById(item.sourceNodeId)
             if (sourenode.type == 'swich') {
 
