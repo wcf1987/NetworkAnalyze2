@@ -39,7 +39,7 @@
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
                         <el-form-item label="菜单权限">
-                            <el-tree :data="state.menuData" :props="state.menuProps" show-checkbox
+                            <el-tree :data="state.menuData" :props="state.menuProps" @check="onCheckTree" node-key="name" ref="treeTableRef" show-checkbox
                                      class="menu-data-tree"/>
                         </el-form-item>
                     </el-col>
@@ -56,15 +56,16 @@
 </template>
 
 <script setup lang="ts" name="systemRoleDialog">
-    import {reactive, ref} from 'vue';
+    import {onMounted, reactive, ref} from 'vue';
     import {roleManageApi} from "/@/api/sysadmin/rolemanage";
     import {ElMessage} from "element-plus";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-
+    const treeTableRef=ref();
     // 定义变量内容
     const roleDialogFormRef = ref();
     const state = reactive({
+
         ruleForm: {
             roleName: '', // 角色名称
             roleSign: '', // 角色标识
@@ -75,7 +76,7 @@
         menuData: [] as TreeType[],
         menuProps: {
             children: 'children',
-            label: 'label',
+            label: 'menutext',
         },
         dialog: {
             isShowDialog: false,
@@ -88,10 +89,12 @@
     // 打开弹窗
     const openDialog = (type: string, row: RowRoleType) => {
         state.dialog.type = type;
+
         if (type === 'edit') {
             state.ruleForm = row;
             state.dialog.title = '修改角色';
             state.dialog.submitTxt = '修 改';
+            checkMenu();
         } else {
             state.dialog.title = '新增角色';
             state.dialog.submitTxt = '新 增';
@@ -101,7 +104,7 @@
             // });
         }
         state.dialog.isShowDialog = true;
-        getMenuData();
+       // getMenuData();
     };
     // 关闭弹窗
     const closeDialog = () => {
@@ -113,7 +116,9 @@
     };
     // 提交
     const onSubmit = () => {
+
         if (state.dialog.type == 'edit') {
+            state.ruleForm.menustr=JSON.stringify(state.treeSelArr);
             roleManageApi().update(
                 state.ruleForm
             )
@@ -135,7 +140,8 @@
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1
+            state.ruleForm['AuthorID'] = 1;
+            state.ruleForm.menustr=JSON.stringify(state.treeSelArr);
             roleManageApi().add(
                 state.ruleForm
             )
@@ -160,62 +166,50 @@
         }
 
     };
+    const checkMenu=()=>{
+       state.ruleForm.menustr= JSON.parse(state.ruleForm.menustr);
+       setTimeout(() => {
+          treeTableRef.value.setCheckedNodes(state.ruleForm.menustr);
+      }, 100)
+
+
+
+    }
+    const onCheckTree = () => {
+	state.treeSelArr = [];
+	state.treeSelArr = treeTableRef.value.getCheckedNodes();
+    console.log(state.treeSelArr);
+};
+        import {rolemenu} from '/@/router/roleroute';
+        import zhcn from '/@/i18n/lang/zh-cn'
     // 获取菜单结构数据
     const getMenuData = () => {
-        state.menuData = [{id: 1, label: '首页'},
-            {
-                id: 22, label: '系统对象管理', children: [
-                    {id: 23, label: '地址对象'},
-                    {id: 24, label: '封装应用头'},
-                    {id: 25, label: '消息头对象'},
-                    {id: 26, label: '消息体对象'},
-                    {id: 27, label: '消息转换列表'},
-                    {id: 28, label: '数据域集合'}]
-            },
-
-            {
-                id: 30, label: '流程编排管理', children: [
-                    {id: 31, label: '流程编排设计'},
-                    {id: 32, label: '全局变量管理'},
-                    {id: 33, label: '流程特殊节点'},
-                ]
-            },
-
-            {
-                id: 40, label: '应用场景管理', children: [
-                    {id: 41, label: '网关管理'},
-                    {id: 42, label: '流程分发管理'},
-                ]
-            },
-
-            {
-                id: 50, label: '插件管理', children: [
-                    {id: 51, label: '系统插件'},
-                    {id: 52, label: '函数插件'},
-                ]
-            },
-
-            {id: 60, label: '系统监控'},
-
-            {
-                id: 70, label: '系统管理', children: [
-                    {id: 71, label: '用户管理'},
-                    {id: 72, label: '角色管理'},
-                    {id: 73, label: '日志管理日志管理'},
-                ]
-            }
-            ];
-
-
-
-
+        //state.menuData = rolemenu;
+        state.menuData=getNewTree(rolemenu);
 
     }    ;
+   function getNewTree(obj)
+    {
+        obj.map(item => {
 
+
+            item.menutext=zhcn.router[item.name];
+            if (item.children && item.children.length > 0) {
+                //console.log('item.children', item.children);
+                getNewTree(item.children)
+            }
+        })
+        console.log('obj', obj);
+        return obj
+    }
     // 暴露变量
     defineExpose({
         openDialog,
     });
+   // 页面加载时
+onMounted(() => {
+	getMenuData();
+});
 </script>
 
 <style scoped lang="scss">

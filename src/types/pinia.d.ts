@@ -7,8 +7,11 @@ declare interface UserInfos<T = any> {
 	authBtnList: string[];
 	photo: string;
 	roles: string[];
+	roleSign:string;
+	userNickname:string;
 	time: number;
 	userName: string;
+
 	[key: string]: T;
 }
 declare interface UserInfosState {

@@ -10,7 +10,20 @@ import request from '/@/utils/request';
 export function userManageApi() {
 
     return {
-
+        signIn: (data: object) => {
+            return request({
+                url: '/user/signIn',
+                method: 'post',
+                data,
+            });
+        },
+        signOut: (data: object) => {
+            return request({
+                url: '/user/signOut',
+                method: 'post',
+                data,
+            });
+        },
         getSearchListSize: (data: object) => {
             return request({
                 url: '/user/searchSize',
@@ -25,7 +38,7 @@ export function userManageApi() {
                 data,
             });
         },
-		        update: (data: object) => {
+        update: (data: object) => {
             return request({
                 url: '/user/update',
                 method: 'post',
@@ -48,7 +61,6 @@ export function userManageApi() {
         },
 
 
-
         getPackageDetailSearchListSize: (data: object) => {
             return request({
                 url: '/packagedetail/searchSize',
@@ -63,7 +75,7 @@ export function userManageApi() {
                 data,
             });
         },
-		        updatePackageDetail: (data: object) => {
+        updatePackageDetail: (data: object) => {
             return request({
                 url: '/packagedetail/update',
                 method: 'post',

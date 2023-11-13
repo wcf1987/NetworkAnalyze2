@@ -12,6 +12,13 @@ import request from '/@/utils/request';
  */
 export function useMenuApi() {
 	return {
+		getMenuByRoleID: (params?: object) => {
+			return request({
+				url: '/role/getbyid',
+				method: 'post',
+                data,
+			});
+		},
 		getAdminMenu: (params?: object) => {
 			return request({
 				url: '/gitee/lyt-top/vue-next-admin-images/raw/master/menu/adminMenu.json',
