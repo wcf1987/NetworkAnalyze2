@@ -75,7 +75,6 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const route = useRoute();
 const router = useRouter();
-import {userManageApi} from "/@/api/sysadmin/usermanage";
 const state = reactive({
 	isShowPassword: false,
 	ruleForm: {
@@ -98,7 +97,11 @@ const onSignIn = async () => {
 	// 存储 token 到浏览器缓存
 	Session.set('token', Math.random().toString(36).substr(0));
 	// 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
-
+	Cookies.set('userName', 'test');
+    Cookies.set('password', '123456');
+		// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
+		// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
+		console.log('signin'+state.ruleForm.userName);
 		const isNoPower = await initBackEndControlRoutes(state.ruleForm.userName,state.ruleForm.password);
 		// 执行完 initBackEndControlRoutes，再执行 signInSuccess
 		signInSuccess(isNoPower);

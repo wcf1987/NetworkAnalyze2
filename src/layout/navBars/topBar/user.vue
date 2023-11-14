@@ -19,7 +19,7 @@
 		</div>
 		<el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
 			<span class="layout-navbars-breadcrumb-user-link">
-				<img :src="userInfos.photo" class="layout-navbars-breadcrumb-user-link-photo mr5" />
+				<img :src="face" class="layout-navbars-breadcrumb-user-link-photo mr5" />
 				{{ userInfos.userName === '' ? 'common' : userInfos.userName }}
 				<el-icon class="el-icon--right">
 					<ele-ArrowDown />
@@ -27,7 +27,6 @@
 			</span>
 			<template #dropdown>
 				<el-dropdown-menu>
-					<el-dropdown-item command="/personal">{{ $t('message.user.dropdown2') }}</el-dropdown-item>
 
 					<el-dropdown-item divided command="logOut">{{ $t('message.user.dropdown5') }}</el-dropdown-item>
 				</el-dropdown-menu>
@@ -53,7 +52,7 @@ import { Session, Local } from '/@/utils/storage';
 // 引入组件
 const UserNews = defineAsyncComponent(() => import('/@/layout/navBars/topBar/userNews.vue'));
 const Search = defineAsyncComponent(() => import('/@/layout/navBars/topBar/search.vue'));
-
+import face from '/@/assets/logo-mini.svg';
 // 定义变量内容
 const userNewsRef = ref();
 const userNewsBadgeRef = ref();

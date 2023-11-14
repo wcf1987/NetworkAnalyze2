@@ -1,10 +1,75 @@
+import {RouteRecordRaw} from 'vue-router';
 
-export const rolemenu=[
+/**
+ * 建议：路由 path 路径与文件夹名称相同，找文件可浏览器地址找，方便定位文件位置
+ *
+ * 路由meta对象参数说明
+ * meta: {
+ *      title:          菜单栏及 tagsView 栏、菜单搜索名称（国际化）
+ *      isLink：        是否超链接菜单，开启外链条件，`1、isLink: 链接地址不为空 2、isIframe:false`
+ *      isHide：        是否隐藏此路由
+ *      isKeepAlive：   是否缓存组件状态
+ *      isAffix：       是否固定在 tagsView 栏上
+ *      isIframe：      是否内嵌窗口，开启条件，`1、isIframe:true 2、isLink：链接地址不为空`
+ *      roles：         当前路由权限标识，取角色管理。控制路由显示、隐藏。超级管理员：admin 普通角色：common
+ *      icon：          菜单、tagsView 图标，阿里：加 `iconfont xxx`，fontawesome：加 `fa xxx`
+ * }
+ */
 
+// 扩展 RouteMeta 接口
+declare module 'vue-router' {
+    interface RouteMeta {
+        title?: string;
+        isLink?: string;
+        isHide?: boolean;
+        isKeepAlive?: boolean;
+        isAffix?: boolean;
+        isIframe?: boolean;
+        roles?: string[];
+        icon?: string;
+    }
+}
+
+/**
+ * 定义动态路由
+ * 前端添加路由，请在顶级节点的 `children 数组` 里添加
+ * @description 未开启 isRequestRoutes 为 true 时使用（前端控制路由），开启时第一个顶级 children 的路由将被替换成接口请求回来的路由数据
+ * @description 各字段请查看 `/@/views/system/menu/component/addMenu.vue 下的 ruleForm`
+ * @returns 返回路由菜单数据
+
+ */
+export const dynamicRoutes: {
+    redirect: string; path: string; component: () => any; children: ({ redirect: string; path: string; component: () => any; children: { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string }[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | {
+        redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string
+    } | {
+        redirect: string; path: string; component: () => any; children: ({ redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; children: { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string }[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string
+    } | {
+        redirect: string; path: string; component: () => any; children: ({
+            redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string
+        } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string
+    } | {
+        redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string
+    } | {
+        redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; children: { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string }[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string
+    } | {
+        redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string
+    } | {
+        redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string
+    } | { redirect: string; path: string; component: () => any; children: ({ path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string } | { path: string; component: () => any; meta: { isLink: string; isIframe: boolean; isKeepAlive: boolean; roles: string[]; icon: string; isAffix: boolean; title: string; isHide: boolean }; name: string })[]; meta: { isKeepAlive: boolean }; name: string
+}[] = [
+    {
+        path: '/',
+        name: '/',
+        component: () => import('/@/layout/index.vue'),
+        redirect: '/homepage',
+        meta: {
+            isKeepAlive: true,
+        },
+        children: [
                        {
                 path: '/homepage',
                 name: 'homepage',
-                component: 'home/homepage',
+                component: () => import('/@/views/home/homepage.vue'),
                 meta: {
                     title: 'message.router.homepage',
                     isLink: '',
@@ -20,7 +85,7 @@ export const rolemenu=[
 
                 path: '/sysmanage',
                 name: 'sysmanage',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/homepage',
                 meta: {
                     title: 'message.router.sysmanage',
@@ -38,7 +103,7 @@ export const rolemenu=[
                     {
                         path: '/sysmanage/address',
                         name: 'address',
-                        component: 'sysmanage/address/index',
+                        component: () => import('/@/views/sysmanage/address/index.vue'),
                         meta: {
                             title: 'message.router.address',
                             isLink: '',
@@ -54,7 +119,7 @@ export const rolemenu=[
                             {
                                 path: '/sysmanage/address/networkinterface',
                                 name: 'networkinterface',
-                                component: 'sysmanage/address/networkinterface/index',
+                                component: () => import('/@/views/sysmanage/address/networkinterface/index.vue'),
                                 meta: {
                                     title: 'message.router.networkinterface',
                                     isLink: '',
@@ -69,7 +134,7 @@ export const rolemenu=[
                             {
                                 path: '/sysmanage/address/serial',
                                 name: 'serial',
-                                component: 'sysmanage/address/serial/index',
+                                component: () => import('/@/views/sysmanage/address/serial/index.vue'),
                                 meta: {
                                     title: 'message.router.serial',
                                     isLink: '',
@@ -86,7 +151,7 @@ export const rolemenu=[
                     {
                         path: '/sysmanage/package',
                         name: 'package',
-                        component: 'sysmanage/package/index',
+                        component: () => import('/@/views/sysmanage/package/index.vue'),
                         meta: {
                             title: 'message.router.package',
                             isLink: '',
@@ -101,7 +166,7 @@ export const rolemenu=[
                             {
                                 path: '/sysmanage/package/packagedetail',
                                 name: 'packagedetail',
-                                component: 'sysmanage/package/packagedetail',
+                                component: () => import('/@/views/sysmanage/package/packagedetail.vue'),
                                 meta: {
                                     title: 'message.router.packagedetail',
                                     isLink: '',
@@ -119,7 +184,7 @@ export const rolemenu=[
                     /*{
                         path: '/system/app',
                         name: 'app',
-                        component: 'system/user/index',
+                        component: () => import('/@/views/system/user/index.vue'),
                         meta: {
                             title: 'message.router.app',
                             isLink: '',
@@ -135,7 +200,7 @@ export const rolemenu=[
 
                         path: '/sysmanage/messheader',
                         name: 'messheader',
-                        component: 'sysmanage/messheader/index',
+                        component: () => import('/@/views/sysmanage/messheader/index.vue'),
                         meta: {
                             title: 'message.router.messheader',
                             isLink: '',
@@ -150,7 +215,7 @@ export const rolemenu=[
                             {
                                 path: '/sysmanage/messheader/messheaderdetail',
                                 name: 'messheaderdetail',
-                                component: 'sysmanage/messheader/messheaderdetail',
+                                component: () => import('/@/views/sysmanage/messheader/messheaderdetail.vue'),
                                 meta: {
                                     title: 'message.router.messheaderdetail',
                                     isLink: '',
@@ -166,7 +231,7 @@ export const rolemenu=[
                     }, {
                         path: '/sysmanage/messbody',
                         name: 'messbody',
-                        component: 'sysmanage/messbody/index',
+                        component: () => import('/@/views/sysmanage/messbody/index.vue'),
                         meta: {
                             title: 'message.router.messbody',
                             isLink: '',
@@ -181,7 +246,7 @@ export const rolemenu=[
                             {
                                 path: '/sysmanage/messbody/messbodydetail',
                                 name: 'messbodydetail',
-                                component: 'sysmanage/messbody/messbodydetail',
+                                component: () => import('/@/views/sysmanage/messbody/messbodydetail.vue'),
                                 meta: {
                                     title: 'message.router.messbodydetail',
                                     isLink: '',
@@ -197,7 +262,7 @@ export const rolemenu=[
                     }, {
                         path: '/sysmanage/messtraslate',
                         name: 'messtraslate',
-                        component: 'sysmanage/messtraslate/index',
+                        component: () => import('/@/views/sysmanage/messtraslate/index.vue'),
                         meta: {
                             title: 'message.router.messtraslate',
                             isLink: '',
@@ -212,7 +277,7 @@ export const rolemenu=[
                             {
                                 path: '/sysmanage/messtraslate/messtraslatedetail',
                                 name: 'messtraslatedetail',
-                                component: 'sysmanage/messtraslate/messtraslatedetail',
+                                component: () => import('/@/views/sysmanage/messtraslate/messtraslatedetail.vue'),
                                 meta: {
                                     title: 'message.router.messtraslatedetail',
                                     isLink: '',
@@ -229,7 +294,7 @@ export const rolemenu=[
                     , {
                         path: '/sysmanage/field',
                         name: 'field',
-                        component: 'sysmanage/fieldcollection/index',
+                        component: () => import('/@/views/sysmanage/fieldcollection/index.vue'),
                         meta: {
                             title: 'message.router.field',
                             isLink: '',
@@ -243,7 +308,7 @@ export const rolemenu=[
                         children: [{
                             path: '/sysmanage/field/fieldcollection',
                             name: 'fieldcollection',
-                            component: 'sysmanage/fieldcollection/fieldsdetail',
+                            component: () => import('/@/views/sysmanage/fieldcollection/fieldsdetail.vue'),
                             meta: {
                                 title: 'message.router.fieldcollection',
                                 isLink: '',
@@ -264,7 +329,7 @@ export const rolemenu=[
 
                 path: '/flowmanage',
                 name: 'flowmanage',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/homepage',
                 meta: {
                     title: 'message.router.flowmanage',
@@ -282,7 +347,7 @@ export const rolemenu=[
                     {
                         path: '/flowmanage/flowdesign',
                         name: 'flowdesign',
-                        component: 'flowmanage/flowdesign/index',
+                        component: () => import('/@/views/flowmanage/flowdesign/index.vue'),
                         meta: {
                             title: 'message.router.flowdesign',
                             isLink: '',
@@ -298,7 +363,7 @@ export const rolemenu=[
                             {
                                 path: '/flowmanage/flowdesign/flowdesigndetail2',
                                 name: 'flowdesigndetail2',
-                                component: 'flowmanage/flowdesign/flowdesigndetail2/index',
+                                component: () => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/index.vue'),
                                 meta: {
                                     title: 'message.router.flowdesigndetail2',
                                     isLink: '',
@@ -315,7 +380,7 @@ export const rolemenu=[
                     {
                         path: '/flowmanage/globalvar',
                         name: 'globalvar',
-                        component: 'flowmanage/globalvar/index',
+                        component: () => import('/@/views/flowmanage/globalvar/index.vue'),
                         meta: {
                             title: 'message.router.globalvar',
                             isLink: '',
@@ -329,7 +394,7 @@ export const rolemenu=[
                     }, {
                         path: '/flowmanage/specialnode',
                         name: 'specialnode',
-                        component: 'flowmanage/specialnode/index',
+                        component: () => import('/@/views/flowmanage/specialnode/index.vue'),
                         meta: {
                             title: 'message.router.specialnode',
                             isLink: '',
@@ -348,7 +413,7 @@ export const rolemenu=[
 
                 path: '/distribution',
                 name: 'distribution',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/homepage',
                 meta: {
                     title: 'message.router.distribution',
@@ -366,7 +431,7 @@ export const rolemenu=[
                     {
                         path: '/distribution/gateway',
                         name: 'gateway',
-                        component: 'distribution/gateway/index',
+                        component: () => import('/@/views/distribution/gateway/index.vue'),
                         meta: {
                             title: 'message.router.gateway',
                             isLink: '',
@@ -381,7 +446,7 @@ export const rolemenu=[
                     {
                         path: '/distribution/flowdistribution',
                         name: 'flowdistribution',
-                        component: 'distribution/flowdistribution/index',
+                        component: () => import('/@/views/distribution/flowdistribution/index.vue'),
                         meta: {
                             title: 'message.router.flowdistribution',
                             isLink: '',
@@ -400,7 +465,7 @@ export const rolemenu=[
 
                 path: '/pluginmanage',
                 name: 'pluginmanage',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/system/menu',
                 meta: {
                     title: 'message.router.pluginmanage',
@@ -418,7 +483,7 @@ export const rolemenu=[
                     {
                         path: '/pluginmanage/sysplug',
                         name: 'sysplug',
-                        component: 'pluginmanage/sysplug/index',
+                        component: () => import('/@/views/pluginmanage/sysplug/index.vue'),
                         meta: {
                             title: 'message.router.sysplug',
                             isLink: '',
@@ -433,7 +498,7 @@ export const rolemenu=[
                     {
                         path: '/pluginmanage/funcplug',
                         name: 'funcplug',
-                        component: 'pluginmanage/funcplug/index',
+                        component: () => import('/@/views/pluginmanage/funcplug/index.vue'),
                         meta: {
                             title: 'message.router.funcplug',
                             isLink: '',
@@ -452,7 +517,7 @@ export const rolemenu=[
 
                 path: '/systemmonitor',
                 name: 'systemmonitor',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/system/menu',
                 meta: {
                     title: 'message.router.systemmonitor',
@@ -471,7 +536,7 @@ export const rolemenu=[
 
                 path: '/systemadmin',
                 name: 'systemadmin',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/system/menu',
                 meta: {
                     title: 'message.router.systemadmin',
@@ -489,7 +554,7 @@ export const rolemenu=[
                     {
                         path: '/systemadmin/usermanage',
                         name: 'usermanage',
-                        component: 'systemadmin/usermanage/index',
+                        component: () => import('/@/views/systemadmin/usermanage/index.vue'),
                         meta: {
                             title: 'message.router.usermanage',
                             isLink: '',
@@ -504,7 +569,7 @@ export const rolemenu=[
                     {
                         path: '/systemadmin/rolemanage',
                         name: 'rolemanage',
-                        component: 'systemadmin/rolemanage/index',
+                        component: () => import('/@/views/systemadmin/rolemanage/index.vue'),
                         meta: {
                             title: 'message.router.rolemanage',
                             isLink: '',
@@ -519,7 +584,7 @@ export const rolemenu=[
                     {
                         path: '/systemadmin/logmanage',
                         name: 'logmanage',
-                        component: 'systemadmin/logmanage/index',
+                        component: () => import('/@/views/systemadmin/logmanage/index.vue'),
                         meta: {
                             title: 'message.router.logmanage',
                             isLink: '',
@@ -537,7 +602,7 @@ export const rolemenu=[
             {
                 path: '/home',
                 name: 'home',
-                component: 'home/index',
+                component: () => import('/@/views/home/index.vue'),
                 meta: {
                     title: 'message.router.home',
                     isLink: '',
@@ -552,7 +617,7 @@ export const rolemenu=[
             {
                 path: '/system',
                 name: 'system',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/system/menu',
                 meta: {
                     title: 'message.router.system',
@@ -568,7 +633,7 @@ export const rolemenu=[
                     {
                         path: '/system/menu',
                         name: 'systemMenu',
-                        component: 'system/menu/index',
+                        component: () => import('/@/views/system/menu/index.vue'),
                         meta: {
                             title: 'message.router.systemMenu',
                             isLink: '',
@@ -583,7 +648,7 @@ export const rolemenu=[
                     {
                         path: '/system/role',
                         name: 'systemRole',
-                        component: 'system/role/index',
+                        component: () => import('/@/views/system/role/index.vue'),
                         meta: {
                             title: 'message.router.systemRole',
                             isLink: '',
@@ -598,7 +663,7 @@ export const rolemenu=[
                     {
                         path: '/system/user',
                         name: 'systemUser',
-                        component: 'system/user/index',
+                        component: () => import('/@/views/system/user/index.vue'),
                         meta: {
                             title: 'message.router.systemUser',
                             isLink: '',
@@ -613,7 +678,7 @@ export const rolemenu=[
                     {
                         path: '/system/dept',
                         name: 'systemDept',
-                        component: 'system/dept/index',
+                        component: () => import('/@/views/system/dept/index.vue'),
                         meta: {
                             title: 'message.router.systemDept',
                             isLink: '',
@@ -628,7 +693,7 @@ export const rolemenu=[
                     {
                         path: '/system/dic',
                         name: 'systemDic',
-                        component: 'system/dic/index',
+                        component: () => import('/@/views/system/dic/index.vue'),
                         meta: {
                             title: 'message.router.systemDic',
                             isLink: '',
@@ -645,7 +710,7 @@ export const rolemenu=[
             {
                 path: '/limits',
                 name: 'limits',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/limits/frontEnd',
                 meta: {
                     title: 'message.router.limits',
@@ -661,7 +726,7 @@ export const rolemenu=[
                     {
                         path: '/limits/frontEnd',
                         name: 'limitsFrontEnd',
-                        component:'layout/routerView/parent',
+                        component: () => import('/@/layout/routerView/parent.vue'),
                         redirect: '/limits/frontEnd/page',
                         meta: {
                             title: 'message.router.limitsFrontEnd',
@@ -677,7 +742,7 @@ export const rolemenu=[
                             {
                                 path: '/limits/frontEnd/page',
                                 name: 'limitsFrontEndPage',
-                                component: 'limits/frontEnd/page/index',
+                                component: () => import('/@/views/limits/frontEnd/page/index.vue'),
                                 meta: {
                                     title: 'message.router.limitsFrontEndPage',
                                     isLink: '',
@@ -692,7 +757,7 @@ export const rolemenu=[
                             {
                                 path: '/limits/frontEnd/btn',
                                 name: 'limitsFrontEndBtn',
-                                component: 'limits/frontEnd/btn/index',
+                                component: () => import('/@/views/limits/frontEnd/btn/index.vue'),
                                 meta: {
                                     title: 'message.router.limitsFrontEndBtn',
                                     isLink: '',
@@ -709,7 +774,7 @@ export const rolemenu=[
                     {
                         path: '/limits/backEnd',
                         name: 'limitsBackEnd',
-                        component:'layout/routerView/parent',
+                        component: () => import('/@/layout/routerView/parent.vue'),
                         meta: {
                             title: 'message.router.limitsBackEnd',
                             isLink: '',
@@ -724,7 +789,7 @@ export const rolemenu=[
                             {
                                 path: '/limits/backEnd/page',
                                 name: 'limitsBackEndEndPage',
-                                component: 'limits/backEnd/page/index',
+                                component: () => import('/@/views/limits/backEnd/page/index.vue'),
                                 meta: {
                                     title: 'message.router.limitsBackEndEndPage',
                                     isLink: '',
@@ -743,7 +808,7 @@ export const rolemenu=[
             {
                 path: '/menu',
                 name: 'menu',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/menu/menu1',
                 meta: {
                     title: 'message.router.menu',
@@ -759,7 +824,7 @@ export const rolemenu=[
                     {
                         path: '/menu/menu1',
                         name: 'menu1',
-                        component:'layout/routerView/parent',
+                        component: () => import('/@/layout/routerView/parent.vue'),
                         redirect: '/menu/menu1/menu11',
                         meta: {
                             title: 'message.router.menu1',
@@ -775,7 +840,7 @@ export const rolemenu=[
                             {
                                 path: '/menu/menu1/menu11',
                                 name: 'menu11',
-                                component: 'menu/menu1/menu11/index',
+                                component: () => import('/@/views/menu/menu1/menu11/index.vue'),
                                 meta: {
                                     title: 'message.router.menu11',
                                     isLink: '',
@@ -790,7 +855,7 @@ export const rolemenu=[
                             {
                                 path: '/menu/menu1/menu12',
                                 name: 'menu12',
-                                component:'layout/routerView/parent',
+                                component: () => import('/@/layout/routerView/parent.vue'),
                                 redirect: '/menu/menu1/menu12/menu121',
                                 meta: {
                                     title: 'message.router.menu12',
@@ -806,7 +871,7 @@ export const rolemenu=[
                                     {
                                         path: '/menu/menu1/menu12/menu121',
                                         name: 'menu121',
-                                        component: 'menu/menu1/menu12/menu121/index',
+                                        component: () => import('/@/views/menu/menu1/menu12/menu121/index.vue'),
                                         meta: {
                                             title: 'message.router.menu121',
                                             isLink: '',
@@ -821,7 +886,7 @@ export const rolemenu=[
                                     {
                                         path: '/menu/menu1/menu12/menu122',
                                         name: 'menu122',
-                                        component: 'menu/menu1/menu12/menu122/index',
+                                        component: () => import('/@/views/menu/menu1/menu12/menu122/index.vue'),
                                         meta: {
                                             title: 'message.router.menu122',
                                             isLink: '',
@@ -838,7 +903,7 @@ export const rolemenu=[
                             {
                                 path: '/menu/menu1/menu13',
                                 name: 'menu13',
-                                component: 'menu/menu1/menu13/index',
+                                component: () => import('/@/views/menu/menu1/menu13/index.vue'),
                                 meta: {
                                     title: 'message.router.menu13',
                                     isLink: '',
@@ -855,7 +920,7 @@ export const rolemenu=[
                     {
                         path: '/menu/menu2',
                         name: 'menu2',
-                        component: 'menu/menu2/index',
+                        component: () => import('/@/views/menu/menu2/index.vue'),
                         meta: {
                             title: 'message.router.menu2',
                             isLink: '',
@@ -872,7 +937,7 @@ export const rolemenu=[
             {
                 path: '/fun',
                 name: 'funIndex',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/fun/tagsView',
                 meta: {
                     title: 'message.router.funIndex',
@@ -888,7 +953,7 @@ export const rolemenu=[
                     {
                         path: '/fun/tagsView',
                         name: 'funTagsView',
-                        component: 'fun/tagsView/index',
+                        component: () => import('/@/views/fun/tagsView/index.vue'),
                         meta: {
                             title: 'message.router.funTagsView',
                             isLink: '',
@@ -903,7 +968,7 @@ export const rolemenu=[
                     {
                         path: '/fun/countup',
                         name: 'funCountup',
-                        component: 'fun/countup/index',
+                        component: () => import('/@/views/fun/countup/index.vue'),
                         meta: {
                             title: 'message.router.funCountup',
                             isLink: '',
@@ -918,7 +983,7 @@ export const rolemenu=[
                     {
                         path: '/fun/wangEditor',
                         name: 'funWangEditor',
-                        component: 'fun/wangEditor/index',
+                        component: () => import('/@/views/fun/wangEditor/index.vue'),
                         meta: {
                             title: 'message.router.funWangEditor',
                             isLink: '',
@@ -933,7 +998,7 @@ export const rolemenu=[
                     {
                         path: '/fun/cropper',
                         name: 'funCropper',
-                        component: 'fun/cropper/index',
+                        component: () => import('/@/views/fun/cropper/index.vue'),
                         meta: {
                             title: 'message.router.funCropper',
                             isLink: '',
@@ -948,7 +1013,7 @@ export const rolemenu=[
                     {
                         path: '/fun/qrcode',
                         name: 'funQrcode',
-                        component: 'fun/qrcode/index',
+                        component: () => import('/@/views/fun/qrcode/index.vue'),
                         meta: {
                             title: 'message.router.funQrcode',
                             isLink: '',
@@ -963,7 +1028,7 @@ export const rolemenu=[
                     {
                         path: '/fun/echartsMap',
                         name: 'funEchartsMap',
-                        component: 'fun/echartsMap/index',
+                        component: () => import('/@/views/fun/echartsMap/index.vue'),
                         meta: {
                             title: 'message.router.funEchartsMap',
                             isLink: '',
@@ -978,7 +1043,7 @@ export const rolemenu=[
                     {
                         path: '/fun/printJs',
                         name: 'funPrintJs',
-                        component: 'fun/printJs/index',
+                        component: () => import('/@/views/fun/printJs/index.vue'),
                         meta: {
                             title: 'message.router.funPrintJs',
                             isLink: '',
@@ -993,7 +1058,7 @@ export const rolemenu=[
                     {
                         path: '/fun/clipboard',
                         name: 'funClipboard',
-                        component: 'fun/clipboard/index',
+                        component: () => import('/@/views/fun/clipboard/index.vue'),
                         meta: {
                             title: 'message.router.funClipboard',
                             isLink: '',
@@ -1008,7 +1073,7 @@ export const rolemenu=[
                     {
                         path: '/fun/gridLayout',
                         name: 'funGridLayout',
-                        component: 'fun/gridLayout/index',
+                        component: () => import('/@/views/fun/gridLayout/index.vue'),
                         meta: {
                             title: 'message.router.funGridLayout',
                             isLink: '',
@@ -1023,7 +1088,7 @@ export const rolemenu=[
                     {
                         path: '/fun/splitpanes',
                         name: 'funSplitpanes',
-                        component: 'fun/splitpanes/index',
+                        component: () => import('/@/views/fun/splitpanes/index.vue'),
                         meta: {
                             title: 'message.router.funSplitpanes',
                             isLink: '',
@@ -1040,7 +1105,7 @@ export const rolemenu=[
             {
                 path: '/pages',
                 name: 'pagesIndex',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/pages/filtering',
                 meta: {
                     title: 'message.router.pagesIndex',
@@ -1056,7 +1121,7 @@ export const rolemenu=[
                     {
                         path: '/pages/filtering',
                         name: 'pagesFiltering',
-                        component: 'pages/filtering/index',
+                        component: () => import('/@/views/pages/filtering/index.vue'),
                         meta: {
                             title: 'message.router.pagesFiltering',
                             isLink: '',
@@ -1077,7 +1142,7 @@ export const rolemenu=[
                             {
                                 path: '/pages/filtering/details',
                                 name: 'pagesFilteringDetails',
-                                component: 'pages/filtering/details',
+                                component: () => import('/@/views/pages/filtering/details.vue'),
                                 meta: {
                                     title: 'message.router.pagesFilteringDetails',
                                     isLink: '',
@@ -1094,7 +1159,7 @@ export const rolemenu=[
                     {
                         path: '/pages/filtering/details1',
                         name: 'pagesFilteringDetails1',
-                        component: 'pages/filtering/details1',
+                        component: () => import('/@/views/pages/filtering/details1.vue'),
                         meta: {
                             title: 'message.router.pagesFilteringDetails1',
                             isLink: '',
@@ -1109,7 +1174,7 @@ export const rolemenu=[
                     {
                         path: '/pages/iocnfont',
                         name: 'pagesIocnfont',
-                        component: 'pages/iocnfont/index',
+                        component: () => import('/@/views/pages/iocnfont/index.vue'),
                         meta: {
                             title: 'message.router.pagesIocnfont',
                             isLink: '',
@@ -1124,7 +1189,7 @@ export const rolemenu=[
                     {
                         path: '/pages/element',
                         name: 'pagesElement',
-                        component: 'pages/element/index',
+                        component: () => import('/@/views/pages/element/index.vue'),
                         meta: {
                             title: 'message.router.pagesElement',
                             isLink: '',
@@ -1139,7 +1204,7 @@ export const rolemenu=[
                     {
                         path: '/pages/awesome',
                         name: 'pagesAwesome',
-                        component: 'pages/awesome/index',
+                        component: () => import('/@/views/pages/awesome/index.vue'),
                         meta: {
                             title: 'message.router.pagesAwesome',
                             isLink: '',
@@ -1154,7 +1219,7 @@ export const rolemenu=[
                     {
                         path: '/pages/formAdapt',
                         name: 'pagesFormAdapt',
-                        component: 'pages/formAdapt/index',
+                        component: () => import('/@/views/pages/formAdapt/index.vue'),
                         meta: {
                             title: 'message.router.pagesFormAdapt',
                             isLink: '',
@@ -1169,7 +1234,7 @@ export const rolemenu=[
                     {
                         path: '/pages/tableRules',
                         name: 'pagesTableRules',
-                        component: 'pages/tableRules/index',
+                        component: () => import('/@/views/pages/tableRules/index.vue'),
                         meta: {
                             title: 'message.router.pagesTableRules',
                             isLink: '',
@@ -1184,7 +1249,7 @@ export const rolemenu=[
                     {
                         path: '/pages/formI18n',
                         name: 'pagesFormI18n',
-                        component: 'pages/formI18n/index',
+                        component: () => import('/@/views/pages/formI18n/index.vue'),
                         meta: {
                             title: 'message.router.pagesFormI18n',
                             isLink: '',
@@ -1199,7 +1264,7 @@ export const rolemenu=[
                     {
                         path: '/pages/formRules',
                         name: 'pagesFormRules',
-                        component: 'pages/formRules/index',
+                        component: () => import('/@/views/pages/formRules/index.vue'),
                         meta: {
                             title: 'message.router.pagesFormRules',
                             isLink: '',
@@ -1214,7 +1279,7 @@ export const rolemenu=[
                     {
                         path: '/pages/listAdapt',
                         name: 'pagesListAdapt',
-                        component: 'pages/listAdapt/index',
+                        component: () => import('/@/views/pages/listAdapt/index.vue'),
                         meta: {
                             title: 'message.router.pagesListAdapt',
                             isLink: '',
@@ -1229,7 +1294,7 @@ export const rolemenu=[
                     {
                         path: '/pages/waterfall',
                         name: 'pagesWaterfall',
-                        component: 'pages/waterfall/index',
+                        component: () => import('/@/views/pages/waterfall/index.vue'),
                         meta: {
                             title: 'message.router.pagesWaterfall',
                             isLink: '',
@@ -1244,7 +1309,7 @@ export const rolemenu=[
                     {
                         path: '/pages/steps',
                         name: 'pagesSteps',
-                        component: 'pages/steps/index',
+                        component: () => import('/@/views/pages/steps/index.vue'),
                         meta: {
                             title: 'message.router.pagesSteps',
                             isLink: '',
@@ -1259,7 +1324,7 @@ export const rolemenu=[
                     {
                         path: '/pages/preview',
                         name: 'pagesPreview',
-                        component: 'pages/preview/index',
+                        component: () => import('/@/views/pages/preview/index.vue'),
                         meta: {
                             title: 'message.router.pagesPreview',
                             isLink: '',
@@ -1274,7 +1339,7 @@ export const rolemenu=[
                     {
                         path: '/pages/waves',
                         name: 'pagesWaves',
-                        component: 'pages/waves/index',
+                        component: () => import('/@/views/pages/waves/index.vue'),
                         meta: {
                             title: 'message.router.pagesWaves',
                             isLink: '',
@@ -1289,7 +1354,7 @@ export const rolemenu=[
                     {
                         path: '/pages/tree',
                         name: 'pagesTree',
-                        component: 'pages/tree/index',
+                        component: () => import('/@/views/pages/tree/index.vue'),
                         meta: {
                             title: 'message.router.pagesTree',
                             isLink: '',
@@ -1304,7 +1369,7 @@ export const rolemenu=[
                     {
                         path: '/pages/drag',
                         name: 'pagesDrag',
-                        component: 'pages/drag/index',
+                        component: () => import('/@/views/pages/drag/index.vue'),
                         meta: {
                             title: 'message.router.pagesDrag',
                             isLink: '',
@@ -1319,7 +1384,7 @@ export const rolemenu=[
                     {
                         path: '/pages/lazyImg',
                         name: 'pagesLazyImg',
-                        component: 'pages/lazyImg/index',
+                        component: () => import('/@/views/pages/lazyImg/index.vue'),
                         meta: {
                             title: 'message.router.pagesLazyImg',
                             isLink: '',
@@ -1334,7 +1399,7 @@ export const rolemenu=[
                     {
                         path: '/pages/dynamicForm',
                         name: 'pagesDynamicForm',
-                        component: 'pages/dynamicForm/index',
+                        component: () => import('/@/views/pages/dynamicForm/index.vue'),
                         meta: {
                             title: 'message.router.pagesDynamicForm',
                             isLink: '',
@@ -1349,7 +1414,7 @@ export const rolemenu=[
                     {
                         path: '/pages/workflow',
                         name: 'pagesWorkflow',
-                        component: 'pages/workflow/index',
+                        component: () => import('/@/views/pages/workflow/index.vue'),
                         meta: {
                             title: 'message.router.pagesWorkflow',
                             isLink: '',
@@ -1366,7 +1431,7 @@ export const rolemenu=[
             {
                 path: '/make',
                 name: 'makeIndex',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/make/selector',
                 meta: {
                     title: 'message.router.makeIndex',
@@ -1382,7 +1447,7 @@ export const rolemenu=[
                     {
                         path: '/make/selector',
                         name: 'makeSelector',
-                        component: 'make/selector/index',
+                        component: () => import('/@/views/make/selector/index.vue'),
                         meta: {
                             title: 'message.router.makeSelector',
                             isLink: '',
@@ -1397,7 +1462,7 @@ export const rolemenu=[
                     {
                         path: '/make/noticeBar',
                         name: 'makeNoticeBar',
-                        component: 'make/noticeBar/index',
+                        component: () => import('/@/views/make/noticeBar/index.vue'),
                         meta: {
                             title: 'message.router.makeNoticeBar',
                             isLink: '',
@@ -1412,7 +1477,7 @@ export const rolemenu=[
                     {
                         path: '/make/svgDemo',
                         name: 'makeSvgDemo',
-                        component: 'make/svgDemo/index',
+                        component: () => import('/@/views/make/svgDemo/index.vue'),
                         meta: {
                             title: 'message.router.makeSvgDemo',
                             isLink: '',
@@ -1427,7 +1492,7 @@ export const rolemenu=[
                     {
                         path: '/make/tableDemo',
                         name: 'makeTableDemo',
-                        component: 'make/tableDemo/index',
+                        component: () => import('/@/views/make/tableDemo/index.vue'),
                         meta: {
                             title: 'message.router.makeTableDemo',
                             isLink: '',
@@ -1444,7 +1509,7 @@ export const rolemenu=[
             {
                 path: '/params',
                 name: 'paramsIndex',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/params/common',
                 meta: {
                     title: 'message.router.paramsIndex',
@@ -1460,7 +1525,7 @@ export const rolemenu=[
                     {
                         path: '/params/common',
                         name: 'paramsCommon',
-                        component: 'params/common/index',
+                        component: () => import('/@/views/params/common/index.vue'),
                         meta: {
                             title: 'message.router.paramsCommon',
                             isLink: '',
@@ -1475,7 +1540,7 @@ export const rolemenu=[
                     {
                         path: '/params/common/details',
                         name: 'paramsCommonDetails',
-                        component: 'params/common/details',
+                        component: () => import('/@/views/params/common/details.vue'),
                         meta: {
                             title: 'message.router.paramsCommonDetails',
                             isLink: '',
@@ -1490,7 +1555,7 @@ export const rolemenu=[
                     {
                         path: '/params/dynamic',
                         name: 'paramsDynamic',
-                        component: 'params/dynamic/index',
+                        component: () => import('/@/views/params/dynamic/index.vue'),
                         meta: {
                             title: 'message.router.paramsDynamic',
                             isLink: '',
@@ -1509,7 +1574,7 @@ export const rolemenu=[
                     {
                         path: '/params/dynamic/details/:t/:id/:tagsViewName',
                         name: 'paramsDynamicDetails',
-                        component: 'params/dynamic/details',
+                        component: () => import('/@/views/params/dynamic/details.vue'),
                         meta: {
                             title: 'message.router.paramsDynamicDetails',
                             isLink: '',
@@ -1526,7 +1591,7 @@ export const rolemenu=[
             {
                 path: '/visualizing',
                 name: 'visualizingIndex',
-                component:'layout/routerView/parent',
+                component: () => import('/@/layout/routerView/parent.vue'),
                 redirect: '/visualizing/visualizingLinkDemo1',
                 meta: {
                     title: 'message.router.visualizingIndex',
@@ -1540,14 +1605,14 @@ export const rolemenu=[
                 },
                 /**
                  * 打开内置全屏
-                 * component 都为 `() => import('/@/layout/routerView/link')`
+                 * component 都为 `() => import('/@/layout/routerView/link.vue')`
                  * isLink 链接为内置的路由地址，地址为 staticRoutes 中定义
                  */
                 children: [
                     {
                         path: '/visualizing/visualizingLinkDemo1',
                         name: 'visualizingLinkDemo1',
-                        component:'layout/routerView/link',
+                        component: () => import('/@/layout/routerView/link.vue'),
                         meta: {
                             title: 'message.router.visualizingLinkDemo1',
                             isLink: '/visualizingDemo1',
@@ -1562,7 +1627,7 @@ export const rolemenu=[
                     {
                         path: '/visualizing/visualizingLinkDemo2',
                         name: 'visualizingLinkDemo2',
-                        component:'layout/routerView/link',
+                        component: () => import('/@/layout/routerView/link.vue'),
                         meta: {
                             title: 'message.router.visualizingLinkDemo2',
                             isLink: '/visualizingDemo2',
@@ -1579,7 +1644,7 @@ export const rolemenu=[
             {
                 path: '/chart',
                 name: 'chartIndex',
-                component: 'chart/index',
+                component: () => import('/@/views/chart/index.vue'),
                 meta: {
                     title: 'message.router.chartIndex',
                     isLink: '',
@@ -1594,7 +1659,7 @@ export const rolemenu=[
             {
                 path: '/personal',
                 name: 'personal',
-                component: 'personal/index',
+                component: () => import('/@/views/personal/index.vue'),
                 meta: {
                     title: 'message.router.personal',
                     isLink: '',
@@ -1609,7 +1674,7 @@ export const rolemenu=[
             {
                 path: '/tools',
                 name: 'tools',
-                component: 'tools/index',
+                component: () => import('/@/views/tools/index.vue'),
                 meta: {
                     title: 'message.router.tools',
                     isLink: '',
@@ -1624,7 +1689,7 @@ export const rolemenu=[
             {
                 path: '/link',
                 name: 'layoutLinkView',
-                component:'layout/routerView/link',
+                component: () => import('/@/layout/routerView/link.vue'),
                 meta: {
                     title: 'message.router.layoutLinkView',
                     isLink: 'https://element-plus.gitee.io/#/zh-CN/component/installation',
@@ -1639,7 +1704,7 @@ export const rolemenu=[
             {
                 path: '/iframesOne',
                 name: 'layoutIframeViewOne',
-                component:'layout/routerView/iframes',
+                component: () => import('/@/layout/routerView/iframes.vue'),
                 meta: {
                     title: 'message.router.layoutIframeViewOne',
                     isLink: 'https://nodejs.org/zh-cn/',
@@ -1654,7 +1719,7 @@ export const rolemenu=[
             {
                 path: '/iframesTwo',
                 name: 'layoutIframeViewTwo',
-                component:'layout/routerView/iframes',
+                component: () => import('/@/layout/routerView/iframes.vue'),
                 meta: {
                     title: 'message.router.layoutIframeViewTwo',
                     isLink: 'https://undraw.co/illustrations',
@@ -1666,5 +1731,68 @@ export const rolemenu=[
                     icon: 'iconfont icon-neiqianshujuchucun',
                 },
             },
-        ]
+        ],
+    },
+];
 
+/**
+ * 定义404、401界面
+ * @link 参考：https://next.router.vuejs.org/zh/guide/essentials/history-mode.html#netlify
+ */
+export const notFoundAndNoPower = [
+    {
+        path: '/:path(.*)*',
+        name: 'notFound',
+        component: () => import('/@/views/error/404.vue'),
+        meta: {
+            title: 'message.staticRoutes.notFound',
+            isHide: true,
+        },
+    },
+    {
+        path: '/401',
+        name: 'noPower',
+        component: () => import('/@/views/error/401.vue'),
+        meta: {
+            title: 'message.staticRoutes.noPower',
+            isHide: true,
+        },
+    },
+];
+
+/**
+ * 定义静态路由（默认路由）
+ * 此路由不要动，前端添加路由的话，请在 `dynamicRoutes 数组` 中添加
+ * @description 前端控制直接改 dynamicRoutes 中的路由，后端控制不需要修改，请求接口路由数据时，会覆盖 dynamicRoutes 第一个顶级 children 的内容（全屏，不包含 layout 中的路由出口）
+ * @returns 返回路由菜单数据
+ */
+export const staticRoutes: Array<RouteRecordRaw> = [
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import('/@/views/login/index.vue'),
+        meta: {
+            title: '登录',
+        },
+    },
+    /**
+     * 提示：写在这里的为全屏界面，不建议写在这里
+     * 请写在 `dynamicRoutes` 路由数组中
+     */
+    {
+        path: '/visualizingDemo1',
+        name: 'visualizingDemo1',
+        component: () => import('/@/views/visualizing/demo1.vue'),
+        meta: {
+            title: 'message.router.visualizingLinkDemo1',
+        },
+    },
+    {
+        path: '/visualizingDemo2',
+        name: 'visualizingDemo2',
+        component: () => import('/@/views/visualizing/demo2.vue'),
+        meta: {
+            title: 'message.router.visualizingLinkDemo2',
+        },
+    },
+];

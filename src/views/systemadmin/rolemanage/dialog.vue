@@ -39,7 +39,8 @@
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
                         <el-form-item label="菜单权限">
-                            <el-tree :data="state.menuData" :props="state.menuProps" @check="onCheckTree" node-key="name" ref="treeTableRef" show-checkbox
+                            <el-tree :data="state.menuData" :props="state.menuProps" @check="onCheckTree"
+                                     node-key="name" ref="treeTableRef" show-checkbox
                                      class="menu-data-tree"/>
                         </el-form-item>
                     </el-col>
@@ -59,9 +60,11 @@
     import {onMounted, reactive, ref} from 'vue';
     import {roleManageApi} from "/@/api/sysadmin/rolemanage";
     import {ElMessage} from "element-plus";
+    import {rolemenu} from '/@/router/roleroute';
+    import zhcn from '/@/i18n/lang/zh-cn'
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
-    const treeTableRef=ref();
+    const treeTableRef = ref();
     // 定义变量内容
     const roleDialogFormRef = ref();
     const state = reactive({
@@ -104,7 +107,7 @@
             // });
         }
         state.dialog.isShowDialog = true;
-       // getMenuData();
+        // getMenuData();
     };
     // 关闭弹窗
     const closeDialog = () => {
@@ -118,7 +121,7 @@
     const onSubmit = () => {
 
         if (state.dialog.type == 'edit') {
-            state.ruleForm.menustr=JSON.stringify(state.treeSelArr);
+            state.ruleForm.menustr = JSON.stringify(state.treeSelArr);
             roleManageApi().update(
                 state.ruleForm
             )
@@ -141,7 +144,7 @@
         }
         if (state.dialog.type == 'add') {
             state.ruleForm['AuthorID'] = 1;
-            state.ruleForm.menustr=JSON.stringify(state.treeSelArr);
+            state.ruleForm.menustr = JSON.stringify(state.treeSelArr);
             roleManageApi().add(
                 state.ruleForm
             )
@@ -166,50 +169,48 @@
         }
 
     };
-    const checkMenu=()=>{
-       state.ruleForm.menustr= JSON.parse(state.ruleForm.menustr);
-       setTimeout(() => {
-          treeTableRef.value.setCheckedNodes(state.ruleForm.menustr);
-      }, 100)
-
+    const checkMenu = () => {
+        state.ruleForm.menustr = JSON.parse(state.ruleForm.menustr);
+        setTimeout(() => {
+            treeTableRef.value.setCheckedNodes(state.ruleForm.menustr);
+        }, 100)
 
 
     }
     const onCheckTree = () => {
-	state.treeSelArr = [];
-	state.treeSelArr = treeTableRef.value.getCheckedNodes();
-    console.log(state.treeSelArr);
-};
-        import {rolemenu} from '/@/router/roleroute';
-        import zhcn from '/@/i18n/lang/zh-cn'
+        state.treeSelArr = [];
+        state.treeSelArr = treeTableRef.value.getCheckedNodes();
+        console.log(state.treeSelArr);
+    };
     // 获取菜单结构数据
     const getMenuData = () => {
         //state.menuData = rolemenu;
-        state.menuData=getNewTree(rolemenu);
+        state.menuData = getNewTree(rolemenu);
 
-    }    ;
-   function getNewTree(obj)
-    {
+    };
+
+    function getNewTree(obj) {
         obj.map(item => {
 
 
-            item.menutext=zhcn.router[item.name];
+            item.menutext = zhcn.router[item.name];
             if (item.children && item.children.length > 0) {
                 //console.log('item.children', item.children);
                 getNewTree(item.children)
             }
         })
-        console.log('obj', obj);
+        //console.log('obj', obj);
         return obj
     }
+
     // 暴露变量
     defineExpose({
         openDialog,
     });
-   // 页面加载时
-onMounted(() => {
-	getMenuData();
-});
+    // 页面加载时
+    onMounted(() => {
+        getMenuData();
+    });
 </script>
 
 <style scoped lang="scss">
