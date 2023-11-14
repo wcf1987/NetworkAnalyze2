@@ -4,14 +4,14 @@
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="名称" prop="name">
+                        <el-form-item label="名称" prop="Name">
                             <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型">
+                        <el-form-item label="类型" prop="Type">
                             <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
                                 <el-option
                                         v-for="item in PackageHeaderOptions"
@@ -25,7 +25,7 @@
 
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="用户描述">
+                        <el-form-item label="用户描述" prop="Describes">
                             <el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述"
                                       maxlength="150"></el-input>
                         </el-form-item>
@@ -47,6 +47,7 @@
     import {PackageHeader} from '/@/utils/common';
     import {packageApi} from "/@/api/sysmanage/package";
     import {ElMessage} from "element-plus";
+    import {useUserInfo} from "/@/stores/userInfo";
 
     const PackageHeaderOptions = ref(PackageHeader);
     // 定义子组件向父组件传值/事件
@@ -85,9 +86,12 @@
     const openDialog = (type: string, row: RowUserType) => {
         state.dialog.type = type;
         if (type === 'edit') {
-            state.ruleForm = row;
+
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+            });
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
@@ -95,6 +99,8 @@
             nextTick(() => {
                 userDialogFormRef.value.resetFields();
             });
+
+
         }
         state.dialog.isShowDialog = true;
         //getMenuData();
@@ -109,63 +115,56 @@
     };
     // 提交
     const onSubmit = () => {
-        if (state.dialog.type == 'edit') {
-            packageApi().updatePackage(
-                state.ruleForm
-            )
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+            if (state.dialog.type == 'edit') {
+                packageApi().updatePackage(
+                    state.ruleForm
+                )
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
 
-                        ElMessage.success("修改成功");
-                        closeDialog();
-                        emit('refresh');
-                    } else {
-                        ElMessage.error(res.message);
-                    }
+                            ElMessage.success("修改成功");
+                            closeDialog();
+                            emit('refresh');
+                        } else {
+                            ElMessage.error(res.message);
+                        }
 
-                }).catch(err => {
+                    }).catch(err => {
 
-            }).finally(() => {
+                }).finally(() => {
 
-            });
-        }
-        if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1
-            packageApi().addPackage(
-                state.ruleForm
-            )
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+                });
+            }
+            if (state.dialog.type == 'add') {
+                const stores = useUserInfo();
+                state.ruleForm['AuthorID'] = stores.userInfos.id
+                packageApi().addPackage(
+                    state.ruleForm
+                )
+                    .then(res => {
+                            //console.log(res);
+                            if (res.code == '200') {
 
-                        ElMessage.success("添加成功");
-                        closeDialog();
-                       emit('refresh');
-                    }
+                                ElMessage.success("添加成功");
+                                closeDialog();
+                                emit('refresh');
+                            } else {
+                                ElMessage.error(res.message);
+                            }
 
-        else
-            {
-                ElMessage.error(res.message);
+                        }
+                    )
+                    .catch(err => {
+
+                    }).finally(() => {
+
+                });
             }
 
+
+            // if (state.dialog.type === 'add') { }
         }
-    )
-    .catch(err => {
-
-    }).finally(() => {
-
-    });
-    }
-
-
-
-
-
-
-
-    // if (state.dialog.type === 'add') { }
-    }
     ;
     // 初始化部门数据
 

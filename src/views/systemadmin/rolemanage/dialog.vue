@@ -4,12 +4,12 @@
             <el-form ref="roleDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="角色名称">
+                        <el-form-item label="角色名称" prop="roleName">
                             <el-input v-model="state.ruleForm.roleName" placeholder="请输入角色名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="角色标识">
+                        <el-form-item label="角色标识" prop="roleSign">
                             <template #label>
                                 <el-tooltip effect="dark" content="用于 `router/route.ts` meta.roles"
                                             placement="top-start">
@@ -20,25 +20,25 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
-                        <el-form-item label="排序">
+                        <el-form-item label="排序" prop="sort">
                             <el-input-number v-model="state.ruleForm.sort" :min="0" :max="999" controls-position="right"
                                              placeholder="请输入排序" class="w100"/>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="角色状态">
+                        <el-form-item label="角色状态" prop="status">
                             <el-switch v-model="state.ruleForm.status" active-value="true" inactive-value="false"
                                        inline-prompt active-text="启" inactive-text="禁"></el-switch>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="角色描述">
+                        <el-form-item label="角色描述" prop="describes">
                             <el-input v-model="state.ruleForm.describes" type="textarea" placeholder="请输入角色描述"
                                       maxlength="150"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="菜单权限">
+                        <el-form-item label="菜单权限" prop="menuData">
                             <el-tree :data="state.menuData" :props="state.menuProps" @check="onCheckTree"
                                      node-key="name" ref="treeTableRef" show-checkbox
                                      class="menu-data-tree"/>
@@ -57,11 +57,12 @@
 </template>
 
 <script setup lang="ts" name="systemRoleDialog">
-    import {onMounted, reactive, ref} from 'vue';
+    import {nextTick, onMounted, reactive, ref} from 'vue';
     import {roleManageApi} from "/@/api/sysadmin/rolemanage";
     import {ElMessage} from "element-plus";
     import {rolemenu} from '/@/router/roleroute';
     import zhcn from '/@/i18n/lang/zh-cn'
+    import {useUserInfo} from "/@/stores/userInfo";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
     const treeTableRef = ref();
@@ -92,21 +93,25 @@
     // 打开弹窗
     const openDialog = (type: string, row: RowRoleType) => {
         state.dialog.type = type;
-
+        state.dialog.isShowDialog = true;
         if (type === 'edit') {
-            state.ruleForm = row;
+
             state.dialog.title = '修改角色';
             state.dialog.submitTxt = '修 改';
-            checkMenu();
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+                checkMenu();
+            });
+
         } else {
             state.dialog.title = '新增角色';
             state.dialog.submitTxt = '新 增';
             // 清空表单，此项需加表单验证才能使用
-            // nextTick(() => {
-            // 	roleDialogFormRef.value.resetFields();
-            // });
+             nextTick(() => {
+            	roleDialogFormRef.value.resetFields();
+            });
         }
-        state.dialog.isShowDialog = true;
+
         // getMenuData();
     };
     // 关闭弹窗
@@ -143,7 +148,8 @@
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1;
+            const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
             state.ruleForm.menustr = JSON.stringify(state.treeSelArr);
             roleManageApi().add(
                 state.ruleForm

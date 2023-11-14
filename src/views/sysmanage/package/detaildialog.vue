@@ -4,18 +4,18 @@
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="名称" prop="name">
+                        <el-form-item label="名称" prop="Name">
                             <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="引用名" prop="name">
+                        <el-form-item label="引用名" prop="EName">
                             <el-input v-model="state.ruleForm.EName" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型">
+                        <el-form-item label="类型" prop="Type">
                             <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
                                 <el-option
                                         v-for="item in typeOptions"
@@ -29,13 +29,13 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="位数">
+                        <el-form-item label="位数" prop="Length">
                             <el-input v-model="state.ruleForm.Length" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="是否数组">
+                        <el-form-item label="是否数组" prop="ArrayOr">
                             <el-select v-model="state.ruleForm.ArrayOr" placeholder="请选择" clearable class="w100">
                                 <el-option label="是" value="是"></el-option>
                                 <el-option label="否" value="否"></el-option>
@@ -46,13 +46,13 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="默认值">
+                        <el-form-item label="默认值" prop="DefaultValue">
                             <el-input v-model="state.ruleForm.DefaultValue" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="用户描述">
+                        <el-form-item label="用户描述" prop="Describes">
                             <el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述"
                                       maxlength="150"></el-input>
                         </el-form-item>
@@ -74,6 +74,7 @@
     import {FieldType} from '/@/utils/common';
     import {packageApi} from "/@/api/sysmanage/package";
     import {ElMessage} from "element-plus";
+    import {useUserInfo} from "/@/stores/userInfo";
 
     const typeOptions = ref(FieldType);
     // 定义子组件向父组件传值/事件
@@ -107,11 +108,14 @@
     const openDialog = (type: string, pid, row: RowUserType) => {
         state.dialog.type = type;
         state.pid = pid;
-
+state.dialog.isShowDialog = true;
         if (type === 'edit') {
-            state.ruleForm = row;
+
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+            });
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
@@ -120,7 +124,7 @@
                 userDialogFormRef.value.resetFields();
             });
         }
-        state.dialog.isShowDialog = true;
+
         //getMenuData();
     };
     // 关闭弹窗
@@ -155,7 +159,8 @@
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1;
+            const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
             state.ruleForm['packID'] = state.pid;
             console.log(state.ruleForm);
             packageApi().addPackageDetail(

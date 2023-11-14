@@ -4,50 +4,50 @@
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="名称" prop="name">
+                        <el-form-item label="名称" prop="Name">
                             <el-input v-model="state.ruleForm.Name" placeholder="请输入地址名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型">
+                        <el-form-item label="类型" prop="Type">
                             <el-input v-model="state.ruleForm.Type" placeholder="串口" clearable
                                       :readonly=true></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="串口号">
+                        <el-form-item label="串口号" prop="SerialNO">
                             <el-input v-model="state.ruleForm.SerialNO" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="波特率">
+                        <el-form-item label="波特率" prop="BAUD">
                             <el-input v-model="state.ruleForm.BAUD" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="数据位">
+                        <el-form-item label="数据位" prop="DataBit">
                             <el-input v-model="state.ruleForm.DataBit" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="停止位">
+                        <el-form-item label="停止位" prop="StopBit">
                             <el-input v-model="state.ruleForm.StopBit" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="流控">
+                        <el-form-item label="流控" prop="FlowControl">
                             <el-input v-model="state.ruleForm.FlowControl" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="用户描述">
+                        <el-form-item label="用户描述" prop="Describes">
                             <el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述"
                                       maxlength="150"></el-input>
                         </el-form-item>
@@ -66,8 +66,9 @@
 
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
-	import {addressApi} from "/@/api/sysmanage/address";
-	import {ElMessage} from "element-plus";
+    import {addressApi} from "/@/api/sysmanage/address";
+    import {ElMessage} from "element-plus";
+    import {useUserInfo} from "/@/stores/userInfo";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
 
@@ -102,20 +103,26 @@
     // 打开弹窗
     const openDialog = (type: string, row: RowUserType) => {
         state.dialog.type = type;
+        state.dialog.isShowDialog = true;
         if (type === 'edit') {
-            state.ruleForm = row;
+
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+                //state.ruleForm = row;
+            });
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
-            state.ruleForm.Type="串口";
+
             // 清空表单，此项需加表单验证才能使用
-            nextTick(() => {
-                userDialogFormRef.value.resetFields();
-            });
+
+            userDialogFormRef.value.resetFields();
+
+
         }
-        state.dialog.isShowDialog = true;
+
         //getMenuData();
     };
     // 关闭弹窗
@@ -128,51 +135,53 @@
     };
     // 提交
     const onSubmit = () => {
-    	if(state.dialog.type=='edit'){
-		addressApi().updateSerialInter(
-            state.ruleForm
-	)
-            .then(res => {
-                //console.log(res);
-                if (res.code == '200') {
+        if (state.dialog.type == 'edit') {
+            addressApi().updateSerialInter(
+                state.ruleForm
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
 
-                    ElMessage.success("修改成功");
-                            closeDialog();
-        emit('refresh');
+                        ElMessage.success("修改成功");
+                        closeDialog();
+                        emit('refresh');
 
-                } else {
-                    ElMessage.error(res.message);
-                }
+                    } else {
+                        ElMessage.error(res.message);
+                    }
 
-            }).catch(err => {
+                }).catch(err => {
 
-        }).finally(() => {
+            }).finally(() => {
 
-        });
-	}
-	if(state.dialog.type=='add'){
-		state.ruleForm['AuthorID']=1
-	addressApi().addSerialInter(
-            state.ruleForm
-	)
-            .then(res => {
-                //console.log(res);
-                if (res.code == '200') {
+            });
+        }
+        if (state.dialog.type == 'add') {
+            const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
+            state.ruleForm.Type = "串口";
+            addressApi().addSerialInter(
+                state.ruleForm
+            )
+                .then(res => {
+                    //console.log(res);
+                    if (res.code == '200') {
 
-                    ElMessage.success("添加成功");
-                            closeDialog();
-        emit('refresh');
+                        ElMessage.success("添加成功");
+                        closeDialog();
+                        emit('refresh');
 
-                } else {
-                    ElMessage.error(res.message);
-                }
+                    } else {
+                        ElMessage.error(res.message);
+                    }
 
-            }).catch(err => {
+                }).catch(err => {
 
-        }).finally(() => {
+            }).finally(() => {
 
-        });
-	}
+            });
+        }
 
         // if (state.dialog.type === 'add') { }
     };

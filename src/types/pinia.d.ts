@@ -4,7 +4,7 @@
 
 // 用户信息
 declare interface UserInfos<T = any> {
-
+	id:string,
 	photo: string;
 	roleSign:string;
 	userNickname:string;

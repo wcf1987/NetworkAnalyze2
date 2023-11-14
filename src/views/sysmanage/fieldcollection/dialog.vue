@@ -24,7 +24,7 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="名称" prop="name">
+                        <el-form-item label="名称" prop="Name">
                             <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable
                                       :readonly="isReadOnly"></el-input>
                         </el-form-item>
@@ -38,7 +38,7 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="注释" prop="describe">
+                        <el-form-item label="注释" prop="Describes">
                             <el-input v-model="state.ruleForm.Describes" placeholder="请输入注释" clearable
                                       :readonly="isReadOnly"></el-input>
                         </el-form-item>
@@ -67,9 +67,9 @@
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
     import {FieldType} from '/@/utils/common';
-    import {messbodyApi} from "/@/api/sysmanage/messbody";
     import {ElMessage} from "element-plus";
     import {fieldsApi} from "/@/api/sysmanage/fields";
+    import {useUserInfo} from "/@/stores/userInfo";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
     const options = ref(FieldType);
@@ -105,17 +105,24 @@
     // 打开弹窗
     const openDialog = (type: string, row: RowUserType) => {
         state.dialog.type = type;
+          state.dialog.isShowDialog = true;
         if (type === 'edit') {
-            state.ruleForm = row;
+
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
             isReadOnly.value = false;
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+            });
         }
         if (type == "view") {
-            state.ruleForm = row;
+
             state.dialog.title = '查看';
             state.dialog.submitTxt = '查 看';
             isReadOnly.value = true;
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+            });
         }
         if (type == "add") {
             state.dialog.title = '新增';
@@ -126,7 +133,7 @@
                 userDialogFormRef.value.resetFields();
             });
         }
-        state.dialog.isShowDialog = true;
+
 
     };
     // 关闭弹窗
@@ -161,7 +168,8 @@
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1
+            const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
             fieldsApi().addFields(
                 state.ruleForm
             )

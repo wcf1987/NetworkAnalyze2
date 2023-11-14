@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 export const useUserInfo = defineStore('userInfo', {
     state: (): UserInfosState => ({
         userInfos: {
+            id:'',
             userName: '',
             photo: '',
             time: 0,
@@ -25,9 +26,10 @@ export const useUserInfo = defineStore('userInfo', {
             if (Session.get('userInfo')) {
                 this.userInfos = Session.get('userInfo');
             } else {
+                if(name!=null && pass !=null){
                 await this.getApiUserInfo(name,pass);
                 const userInfos = Session.get('userInfo');
-                this.userInfos = userInfos;
+                this.userInfos = userInfos;}
             }
         },
         // 模拟接口数据
@@ -60,6 +62,7 @@ export const useUserInfo = defineStore('userInfo', {
                     console.log(menus);
 
                     const userInfos = {
+                        id:res.data.id,
                         userName: res.data.userName,
                         photo: 'face.png',
                         time: new Date().getTime(),

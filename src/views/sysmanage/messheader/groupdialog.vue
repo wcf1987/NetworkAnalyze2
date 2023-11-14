@@ -20,7 +20,7 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="插入">
+                        <el-form-item label="插入" prop="SortID">
 
 
                             <el-cascader v-model="state.ruleForm.SortID" :options="locOptions" :props="props1"
@@ -56,6 +56,7 @@
     import {FieldType} from '/@/utils/common';
     import {messdetailApi} from "/@/api/sysmanage/messdetail";
     import {ElMessage} from "element-plus";
+    import {useUserInfo} from "/@/stores/userInfo";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
     const options = ref(FieldType);
@@ -97,11 +98,15 @@
     const openDialog = (type: string, pid, row: RowUserType) => {
         state.dialog.type = type;
         state.pid = pid;
+        state.dialog.isShowDialog = true;
         if (type === 'edit') {
-            state.ruleForm = row;
+
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
             isReadOnly.value = false;
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+            });
         }
 
         if (type == "add") {
@@ -114,7 +119,7 @@
             });
         }
         getMenuOptions();
-        state.dialog.isShowDialog = true;
+
     };
     const getMenuOptions = () => {
 
@@ -180,7 +185,10 @@
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1;
+
+            const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
+
             state.ruleForm['PID'] = state.pid;
             state.ruleForm['TType'] = 'header';
             state.ruleForm['OutType'] = 'nest';

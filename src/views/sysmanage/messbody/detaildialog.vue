@@ -6,7 +6,7 @@
 
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="数据标识">
+                        <el-form-item label="数据标识" prop="Flag">
                             <el-select v-model="state.ruleForm.Flag" value-key="id" placeholder="请选择" clearable
                                        class="w100">
                                 <el-option
@@ -47,7 +47,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型" :readonly="isReadOnly">
+                        <el-form-item label="类型" :readonly="isReadOnly" prop="Type">
 
                             <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable
                                        class="w100">
@@ -87,7 +87,7 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="插入">
+                        <el-form-item label="插入" prop="OrderID">
 
 
                             <el-cascader v-model="state.ruleForm.OrderID" :options="locOptions" :props="props1"
@@ -123,6 +123,7 @@
     import {DataFlag, FieldType} from '/@/utils/common';
     import {messdetailApi} from "/@/api/sysmanage/messdetail";
     import {ElMessage} from "element-plus";
+    import {useUserInfo} from "/@/stores/userInfo";
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
@@ -150,7 +151,7 @@
         ruleForm: {
             Name: '', // 账户名称
             Type: '', // 用户昵称
-           },
+        },
         pid: 0,
         nestid: 0,
         dialog: {
@@ -166,18 +167,24 @@
     const openDialog = (type: string, pid, row: RowUserType) => {
         state.dialog.type = type;
         state.pid = pid;
-
+        state.dialog.isShowDialog = true;
         if (type === 'edit') {
-            state.ruleForm = row;
+
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
             isReadOnly.value = false;
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+            });
         }
         if (type == "view") {
-            state.ruleForm = row;
+
             state.dialog.title = '查看';
             state.dialog.submitTxt = '查 看';
             isReadOnly.value = true;
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+            });
         }
         if (type == "add") {
             state.dialog.title = '新增';
@@ -189,7 +196,7 @@
             });
         }
         getMenuOptions();
-        state.dialog.isShowDialog = true;
+
     };
 
     //获取位置信息
@@ -260,7 +267,10 @@
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1;
+            const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
+
+
             state.ruleForm['PID'] = state.pid;
             state.ruleForm['TType'] = 'body';
             state.ruleForm['OutType'] = 'custom';

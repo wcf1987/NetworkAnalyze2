@@ -4,14 +4,14 @@
             <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="名称" prop="name">
+                        <el-form-item label="名称" prop="Name">
                             <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型">
+                        <el-form-item label="类型"  prop="Type">
                             <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
                                 <el-option label="统计类" value="统计类"></el-option>
                                 <el-option label="计算类" value="计算类"></el-option>
@@ -42,7 +42,7 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="是否启用">
+                        <el-form-item label="是否启用" prop="Status">
                             <el-select v-model="state.ruleForm.Status" placeholder="请选择" clearable class="w100">
                                 <el-option label="已启用" value="true"></el-option>
                                 <el-option label="已禁用" value="false"></el-option>
@@ -52,7 +52,7 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="用户描述">
+                        <el-form-item label="用户描述" prop="Describes">
                             <el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述"
                                       maxlength="150"></el-input>
                         </el-form-item>
@@ -73,6 +73,7 @@
     import {nextTick, reactive, ref} from 'vue';
         import {ElMessage} from "element-plus";
     import {sysplugManageApi} from "/@/api/plugmanage/sysplugmanage";
+    import {useUserInfo} from "/@/stores/userInfo";
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
@@ -108,10 +109,15 @@
     // 打开弹窗
     const openDialog = (type: string, row: RowUserType) => {
         state.dialog.type = type;
+             state.dialog.isShowDialog = true;
         if (type === 'edit') {
-            state.ruleForm = row;
+
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
+             nextTick(() => {
+                Object.assign(state.ruleForm, row);
+
+            });
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
@@ -120,7 +126,7 @@
                 userDialogFormRef.value.resetFields();
             });
         }
-        state.dialog.isShowDialog = true;
+
         getMenuData();
     };
     // 关闭弹窗
@@ -155,7 +161,8 @@
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1
+                        const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
             sysplugManageApi().add(
                 state.ruleForm
             )

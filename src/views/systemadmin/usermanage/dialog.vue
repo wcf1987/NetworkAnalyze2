@@ -4,17 +4,17 @@
 			<el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="账户名称">
+						<el-form-item label="账户名称"  prop="userName">
 							<el-input :readonly="isEdit" v-model="state.ruleForm.userName" placeholder="请输入账户名称" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="用户昵称">
+						<el-form-item label="用户昵称" prop="userNickname">
 							<el-input v-model="state.ruleForm.userNickname" placeholder="请输入用户昵称" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="关联角色">
+						<el-form-item label="关联角色" prop="roleSign">
 							<el-select v-model="state.ruleForm.roleSign" placeholder="请选择" clearable class="w100">
 								    <el-option
                                         v-for="item in RoleOptions"
@@ -27,12 +27,12 @@
 					</el-col>
 
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="手机号">
+						<el-form-item label="手机号" prop="phone">
 							<el-input v-model="state.ruleForm.phone" placeholder="请输入手机号" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="邮箱">
+						<el-form-item label="邮箱" prop="email">
 							<el-input v-model="state.ruleForm.email" placeholder="请输入" clearable></el-input>
 						</el-form-item>
 					</el-col>
@@ -45,7 +45,7 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="账户密码">
+						<el-form-item label="账户密码" prop="password">
 							<el-input v-model="state.ruleForm.password" placeholder="请输入" type="password" clearable></el-input>
 						</el-form-item>
 					</el-col>
@@ -55,12 +55,12 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="用户状态">
+						<el-form-item label="用户状态" prop="status">
 							<el-switch v-model="state.ruleForm.status" active-value="true"   inactive-value="false" inline-prompt active-text="启" inactive-text="禁"></el-switch>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-						<el-form-item label="用户描述">
+						<el-form-item label="用户描述" prop="describes">
 							<el-input v-model="state.ruleForm.describes" type="textarea" placeholder="请输入用户描述" maxlength="150"></el-input>
 						</el-form-item>
 					</el-col>
@@ -77,12 +77,13 @@
 </template>
 
 <script setup lang="ts" name="systemUserDialog">
-import { reactive, ref } from 'vue';
+import { nextTick,reactive, ref } from 'vue';
     import {ElMessage} from "element-plus";
 
 import {userManageApi} from "/@/api/sysadmin/usermanage";
 import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {roleManageApi} from "/@/api/sysadmin/rolemanage";
+import {useUserInfo} from "/@/stores/userInfo";
 const RoleOptions=ref();
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
@@ -142,21 +143,26 @@ const getMenuData = () => {
 const isEdit=ref(false);
 const openDialog = (type: string, row: RowUserType) => {
 	state.dialog.type = type;
+		state.dialog.isShowDialog = true;
 	if (type === 'edit') {
 		isEdit.value=true;
-		state.ruleForm = row;
+
 		state.dialog.title = '修改用户';
 		state.dialog.submitTxt = '修 改';
+		 nextTick(() => {
+                Object.assign(state.ruleForm, row);
+
+            });
 	} else {
 		isEdit.value=false;
 		state.dialog.title = '新增用户';
 		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
-		// nextTick(() => {
-		// 	userDialogFormRef.value.resetFields();
-		// });
+		 nextTick(() => {
+		 	userDialogFormRef.value.resetFields();
+		 });
 	}
-	state.dialog.isShowDialog = true;
+
 	getMenuData();
 };
 // 关闭弹窗
@@ -191,7 +197,8 @@ const onSubmit = () => {
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1
+                        const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
             userManageApi().add(
                 state.ruleForm
             )

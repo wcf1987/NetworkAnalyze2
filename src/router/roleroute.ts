@@ -227,11 +227,11 @@ export const rolemenu=[
                         ],
                     }
                     , {
-                        path: '/sysmanage/field',
-                        name: 'field',
+                        path: '/sysmanage/fieldcollection',
+                        name: 'fieldcollection',
                         component: 'sysmanage/fieldcollection/index',
                         meta: {
-                            title: 'message.router.field',
+                            title: 'message.router.fieldcollection',
                             isLink: '',
                             isHide: false,
                             isKeepAlive: true,
@@ -241,11 +241,11 @@ export const rolemenu=[
                             icon: 'iconfont icon--chaifenhang',
                         },
                         children: [{
-                            path: '/sysmanage/field/fieldcollection',
-                            name: 'fieldcollection',
-                            component: 'sysmanage/fieldcollection/fieldsdetail',
+                            path: '/sysmanage/fieldcollection/fieldsdetail',
+                            name: 'fieldsdetail',
+                             component: 'sysmanage/fieldcollection/detail',
                             meta: {
-                                title: 'message.router.fieldcollection',
+                                title: 'message.router.fieldsdetail',
                                 isLink: '',
                                 isHide: true,
                                 isKeepAlive: false,

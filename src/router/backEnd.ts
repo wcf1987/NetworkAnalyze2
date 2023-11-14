@@ -39,6 +39,8 @@ export async function 	initBackEndControlRoutes(name,pass) {
 	if (window.nextLoading === undefined) NextLoading.start();
 	// 无 token 停止执行下一步
 	if (!Session.get('token')) return false;
+
+
 	// 触发初始化用户信息 pinia
 	// https://gitee.com/lyt-top/vue-next-admin/issues/I5F1HP
 	//name=	'test';
@@ -48,8 +50,9 @@ export async function 	initBackEndControlRoutes(name,pass) {
 	await t.setUserInfos(name,pass);
 	//console.log(t.userInfos)
 	const user= Session.get('userInfo');
-	if(user.menustr==null){
-		return false;
+	if(user==null){
+		Session.set('token',null)
+		return Promise.resolve(true);
 	}
 	// 获取路由菜单数据
 	const menustr = user.menustr;

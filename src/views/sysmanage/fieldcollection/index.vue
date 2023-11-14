@@ -175,7 +175,7 @@ const onOpenEdit = (type: string, row: RowUserType) => {
     };
 const onOpenEditDetail = (type: string, row: RowUserType) => {
 	router.push({
-			path: '/sysmanage/field/fieldcollection',
+			path: '/sysmanage/fieldcollection/fieldsdetail',
 			query: { id: row.ID },
 		});
 };

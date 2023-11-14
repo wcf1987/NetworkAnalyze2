@@ -118,6 +118,7 @@ router.beforeEach(async (to, from, next) => {
 					next({ path: to.path, query: to.query });
 
 			} else {
+				console.log({ path: to.path, query: to.query });
 				next();
 			}
 		}

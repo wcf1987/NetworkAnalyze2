@@ -251,7 +251,7 @@
 
 
     }
-        const changeSourceInput12 = (fo) => {
+    const changeSourceInput12 = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
         for (i = 0; i < fo.length; i++) {
@@ -295,6 +295,7 @@
             state.sourceid = sourceid;
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
+
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
@@ -316,8 +317,8 @@
     };
     // 提交
     const onSubmit = () => {
-        state.ruleForm['SourceData']=JSON.stringify(state.ruleForm.SourceData);
-state.ruleForm['Funcrule']=JSON.stringify(state.ruleForm.Funcrule);
+        state.ruleForm['SourceData'] = JSON.stringify(state.ruleForm.SourceData);
+        state.ruleForm['Funcrule'] = JSON.stringify(state.ruleForm.Funcrule);
 
         messtranslateApi().updateMessTranslateDetail(
             state.ruleForm

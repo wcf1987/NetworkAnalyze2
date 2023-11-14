@@ -65,8 +65,8 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
-                        <el-form-item label="NestID"  v-if="false">
-                            <el-input v-model="state.ruleFormOri.NestID" placeholder="请输入名称" clearable ></el-input>
+                        <el-form-item label="NestID" v-if="false">
+                            <el-input v-model="state.ruleFormOri.NestID" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -188,6 +188,7 @@
     import {fieldsdetailApi} from "/@/api/sysmanage/fieldsdetail";
     import {ElMessage} from "element-plus";
     import {messdetailApi} from "/@/api/sysmanage/messdetail";
+    import {useUserInfo} from "/@/stores/userInfo";
 
     const locOptions = ref();
     const options = ref(FieldType);
@@ -292,38 +293,47 @@
         state.dialog.title = '导入字段';
         state.dialog.submitTxt = '确 定';
         isReadOnly.value = true;
+        state.dialog.isShowDialog = true;
         if (type === 'edit') {
-            state.ruleFormOri = row;
-            state.ruleFormOri.sourceDFI = row.DFIID;
-            changeDFI(row.DFIID);
-            state.ruleFormOri.sourceDUI = row.OutID;
-            setTimeout(() => {
-                changeDUI(row.OutID);
-            }, 300);
+
+
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+                state.ruleFormOri.sourceDFI = row.DFIID;
+                changeDFI(row.DFIID);
+                state.ruleFormOri.sourceDUI = row.OutID;
+                setTimeout(() => {
+                    changeDUI(row.OutID);
+                }, 300);
+            });
+
 
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
 
+
         }
         if (type == "view") {
-            state.ruleForm = row;
+
             state.dialog.title = '查看';
             state.dialog.submitTxt = '查 看';
-
+            nextTick(() => {
+                Object.assign(state.ruleForm, row);
+            });
         }
         if (type == "add") {
             state.dialog.title = '导入';
             state.dialog.submitTxt = '导 入';
-
+            nextTick(() => {
+                userDialogFormRef.value.resetFields();
+            });
 
         }
 
         // 清空表单，此项需加表单验证才能使用
-        nextTick(() => {
-            userDialogFormRef.value.resetFields();
-        });
+
         getMenuOptions();
-        state.dialog.isShowDialog = true;
+
     };
 
     const getMenuOptions = () => {
@@ -416,7 +426,9 @@
             });
         }
         if (state.dialog.type == 'add') {
-            state.ruleForm['AuthorID'] = 1;
+            const stores = useUserInfo();
+            state.ruleForm['AuthorID'] = stores.userInfos.id
+
             state.ruleForm['PID'] = state.pid;
             state.ruleForm['TType'] = 'header';
             state.ruleForm['OutType'] = 'fields';
