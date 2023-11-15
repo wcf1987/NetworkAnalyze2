@@ -1,16 +1,16 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="转换名称" prop="name">
+                        <el-form-item label="转换名称" prop="TName">
                             <el-input v-model="state.ruleForm.TName" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="目的字段">
+                        <el-form-item label="目的字段" prop="Name">
                             <el-input v-model="state.ruleForm.Name" placeholder="" clearable
                                       readonly='true'></el-input>
                         </el-form-item>
@@ -18,7 +18,7 @@
 
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
-                        <el-form-item label="转换模式">
+                        <el-form-item label="转换模式" prop="Optional">
                             <el-select v-model="state.ruleForm.Optional" placeholder="请选择" clearable class="w100">
                                 <el-option label="默认值" value="默认值"></el-option>
                                 <el-option label="直接转换" value="直接转换"></el-option>
@@ -30,8 +30,8 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
-                            v-if="state.ruleForm.Optional=='默认值'">
-                        <el-form-item label="默认值">
+                            v-if="state.ruleForm.Optional=='默认值'" >
+                        <el-form-item label="默认值" prop="Transrule">
                             <el-input v-model="state.ruleForm.Transrule" placeholder="" clearable></el-input>
                         </el-form-item>
                     </el-col>
@@ -40,7 +40,7 @@
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='直接转换'">
 
-                        <el-form-item label="源字段" :label-width="formLabelWidth" prop="source">
+                        <el-form-item label="源字段" :label-width="formLabelWidth" prop="SourceData">
 
 
                             <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions" :props="props1"
@@ -57,7 +57,7 @@
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='系统函数'">
-                        <el-form-item label="转换函数" prop="funcrule">
+                        <el-form-item label="转换函数" prop="Funcrule">
 
                             <el-cascader v-model="state.ruleForm.Funcrule" :options="funcoptions" :props="props22"
                                          clearable @change="changeSourceInput22"
@@ -68,7 +68,7 @@
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='系统函数'">
 
-                        <el-form-item label="源字段" prop="source">
+                        <el-form-item label="源字段" prop="SourceData">
 
                             <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions" :props="props21"
                                          @change="changeSourceInput21"
@@ -81,7 +81,7 @@
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
                             v-if="state.ruleForm.Optional=='系统函数'">
 
-                        <el-form-item label="转换公式" prop="rulestr" clearable>
+                        <el-form-item label="转换公式" prop="Transrule" clearable>
                             <el-input
                                     :autosize="{ minRows: 2, maxRows: 10 }"
                                     type="textarea"
@@ -93,7 +93,7 @@
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='自定义转换计算'">
-                        <el-form-item label="转换函数" prop="funcrule">
+                        <el-form-item label="转换函数" prop="Funcrule">
 
                             <el-cascader v-model="state.ruleForm.Funcrule" :options="funcoptions" :props="props32"
                                          clearable @change="changeSourceInput32"
@@ -104,7 +104,7 @@
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='自定义转换计算'">
 
-                        <el-form-item label="源字段" prop="source">
+                        <el-form-item label="源字段" prop="SourceData">
 
                             <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions" :props="props21"
                                          @change="changeSourceInput21"
@@ -117,7 +117,7 @@
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
                             v-if="state.ruleForm.Optional=='自定义转换计算'">
 
-                        <el-form-item label="转换公式" prop="rulestr" clearable>
+                        <el-form-item label="转换公式" prop="Transrule" clearable>
                             <el-input
                                     :autosize="{ minRows: 2, maxRows: 10 }"
                                     type="textarea"
@@ -155,13 +155,7 @@
     const sourceoptions = ref();
     // 定义变量内容
     const userDialogFormRef = ref();
-    const rules = reactive({
-// 普通的校验规则
-        name: [
-            {required: true, message: '名称不能为空'},
-            {min: 1, max: 10, message: '名称长度为1 - 10位'},
-        ],
-    });
+
 
     const getMenuOptions = () => {
 
@@ -233,6 +227,10 @@
             SourceData: '',
             Funcrule: '',
             Describes: '', // 用户描述
+        },
+                baseRules: {
+            TName: [{required: true, message: '请输入转换名称', trigger: 'blur'}],
+            Optional: [{required: true, message: '请选择转换模式', trigger: 'change'}],
         },
         dialog: {
             isShowDialog: false,
@@ -317,6 +315,13 @@
     };
     // 提交
     const onSubmit = () => {
+                 userDialogFormRef.value.validate((valid) => {
+           // console.log('123123');
+            // 不通过校验
+            if (!valid) {
+
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
         state.ruleForm['SourceData'] = JSON.stringify(state.ruleForm.SourceData);
         state.ruleForm['Funcrule'] = JSON.stringify(state.ruleForm.Funcrule);
 
@@ -342,7 +347,8 @@
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据
-
+        });
+};
 
     // 暴露变量
     defineExpose({

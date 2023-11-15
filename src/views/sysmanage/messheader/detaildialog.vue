@@ -1,7 +1,7 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable=true>
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default" label-width="90px">
                 <el-row :gutter="35">
 
 
@@ -124,6 +124,7 @@
     import {messdetailApi} from "/@/api/sysmanage/messdetail";
     import {ElMessage} from "element-plus";
     import {useUserInfo} from "/@/stores/userInfo";
+    import {checkCodeName, checkInterNum} from "/@/utils/rules";
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
@@ -140,17 +141,22 @@
     }
     // 定义变量内容
     const userDialogFormRef = ref();
-    const rules = reactive({
-// 普通的校验规则
-        name: [
-            {required: true, message: '名称不能为空'},
-            {min: 1, max: 10, message: '名称长度为1 - 10位'},
-        ],
-    });
+
     const state = reactive({
         ruleForm: {
             Name: '', // 账户名称
             Type: '', // 用户昵称
+        },
+                baseRules: {
+             Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
+                     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+                     EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur',validator: checkCodeName}],
+                     ShortName: [{required: true, message: '请输入简称', trigger: 'blur'}],
+                     Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+                     TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
+                     Length: [{required: true, message: '位数必须为正整数', trigger: 'blur',validator: checkInterNum}],
+
+
         },
         pid: 0,
         nestid: 0,
@@ -245,6 +251,13 @@
 
     // 提交
     const onSubmit = () => {
+                 userDialogFormRef.value.validate((valid) => {
+           // console.log('123123');
+            // 不通过校验
+            if (!valid) {
+
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
         if (state.dialog.type == 'edit') {
             messdetailApi().updateMessDetail(
                 state.ruleForm
@@ -300,7 +313,8 @@
 
     };
     // 初始化部门数据
-
+        });
+};
 
     // 暴露变量
     defineExpose({

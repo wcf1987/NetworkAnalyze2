@@ -1,7 +1,7 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable=true>
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default" label-width="90px">
                 <el-row :gutter="35">
 
 
@@ -76,6 +76,10 @@
         },
         pid: 0,
         nestid: 0,
+                baseRules: {
+            Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+            Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+        },
         dialog: {
             isShowDialog: false,
             type: '',
@@ -163,6 +167,13 @@
     };
     // 提交
     const onSubmit = () => {
+                 userDialogFormRef.value.validate((valid) => {
+           // console.log('123123');
+            // 不通过校验
+            if (!valid) {
+
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
         if (state.dialog.type == 'edit') {
             messdetailApi().updateMessDetail(
                 state.ruleForm
@@ -219,7 +230,8 @@
     };
     // 初始化部门数据
 
-
+        });
+};
     // 暴露变量
     defineExpose({
         openDialog,

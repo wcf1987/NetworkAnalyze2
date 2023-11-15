@@ -1,12 +1,13 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable=true>
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default"
+                     label-width="90px">
                 <el-row :gutter="35">
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 
-                        <el-form-item label="导入字段" prop="source">
+                        <el-form-item label="导入字段" prop="sourceDFI">
 
                             <el-select v-model="state.ruleFormOri.sourceDFI" value-key="ID" @change="changeDFI"
                                        placeholder="请先选择DFI" clearable class="w100">
@@ -21,7 +22,7 @@
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 
-                        <el-form-item label="二次查询" prop="source">
+                        <el-form-item label="二次查询" prop="sourceDUI">
 
 
                             <el-select v-model="state.ruleFormOri.sourceDUI" value-key="id" @change="changeDUI"
@@ -37,7 +38,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="数据标识">
+                        <el-form-item label="数据标识" prop="Flag">
                             <el-select v-model="state.ruleFormOri.Flag" value-key="id" placeholder="请选择" clearable
                                        class="w100">
                                 <el-option
@@ -278,6 +279,11 @@
             TableSaveName: '',
             Describe: '',
         },
+        baseRules: {
+            Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
+            sourceDUI:[{required: true, message: '请选择DUI', trigger: 'blur'}],
+            sourceDFI:[{required: true, message: '请选择DFI', trigger: 'blur'}],
+        },
         dialog: {
             isShowDialog: false,
             type: '',
@@ -395,72 +401,81 @@
     };
     // 提交
     const onSubmit = () => {
-        if (state.dialog.type == 'edit') {
-            state.ruleForm['AuthorID'] = 1;
-            state.ruleForm['PID'] = state.pid;
-            state.ruleForm['TType'] = 'header';
-            state.ruleForm['OutType'] = 'fields';
-            state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
-            state.ruleForm['SortID'] = state.ruleFormOri.SortID;
-            state.ruleForm['NestID'] = state.ruleFormOri.NestID;
-            state.ruleForm['Flag'] = state.ruleFormOri.Flag;
-            state.ruleForm['ID'] = state.ruleFormOri.ID;
-            messdetailApi().updateMessDetail(
-                state.ruleForm
-            )
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+        userDialogFormRef.value.validate((valid) => {
+            // console.log('123123');
+            // 不通过校验
+            if (!valid) {
 
-                        ElMessage.success("修改成功");
-                        closeDialog();
-                        emit('refresh');
-                    } else {
-                        ElMessage.error(res.message);
-                    }
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
+                if (state.dialog.type == 'edit') {
+                    state.ruleForm['AuthorID'] = 1;
+                    state.ruleForm['PID'] = state.pid;
+                    state.ruleForm['TType'] = 'header';
+                    state.ruleForm['OutType'] = 'fields';
+                    state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
+                    state.ruleForm['SortID'] = state.ruleFormOri.SortID;
+                    state.ruleForm['NestID'] = state.ruleFormOri.NestID;
+                    state.ruleForm['Flag'] = state.ruleFormOri.Flag;
+                    state.ruleForm['ID'] = state.ruleFormOri.ID;
+                    messdetailApi().updateMessDetail(
+                        state.ruleForm
+                    )
+                        .then(res => {
+                            //console.log(res);
+                            if (res.code == '200') {
 
-                }).catch(err => {
+                                ElMessage.success("修改成功");
+                                closeDialog();
+                                emit('refresh');
+                            } else {
+                                ElMessage.error(res.message);
+                            }
 
-            }).finally(() => {
+                        }).catch(err => {
 
-            });
-        }
-        if (state.dialog.type == 'add') {
-            const stores = useUserInfo();
-            state.ruleForm['AuthorID'] = stores.userInfos.id
+                    }).finally(() => {
 
-            state.ruleForm['PID'] = state.pid;
-            state.ruleForm['TType'] = 'header';
-            state.ruleForm['OutType'] = 'fields';
-            state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
-            state.ruleForm['SortID'] = state.ruleFormOri.SortID;
-            state.ruleForm['Flag'] = state.ruleFormOri.Flag;
-            messdetailApi().addMessDetail(
-                state.ruleForm
-            )
-                .then(res => {
-                        //console.log(res);
-                        if (res.code == '200') {
+                    });
+                }
+                if (state.dialog.type == 'add') {
+                    const stores = useUserInfo();
+                    state.ruleForm['AuthorID'] = stores.userInfos.id
 
-                            ElMessage.success("添加成功");
+                    state.ruleForm['PID'] = state.pid;
+                    state.ruleForm['TType'] = 'header';
+                    state.ruleForm['OutType'] = 'fields';
+                    state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
+                    state.ruleForm['SortID'] = state.ruleFormOri.SortID;
+                    state.ruleForm['Flag'] = state.ruleFormOri.Flag;
+                    messdetailApi().addMessDetail(
+                        state.ruleForm
+                    )
+                        .then(res => {
+                                //console.log(res);
+                                if (res.code == '200') {
 
-                            closeDialog();
-                            emit('refresh');
-                        } else {
-                            ElMessage.error(res.message);
-                        }
+                                    ElMessage.success("添加成功");
 
-                    }
-                )
-                .catch(err => {
+                                    closeDialog();
+                                    emit('refresh');
+                                } else {
+                                    ElMessage.error(res.message);
+                                }
 
-                }).finally(() => {
+                            }
+                        )
+                        .catch(err => {
 
-            });
-        }
+                        }).finally(() => {
+
+                    });
+                }
+            }
+            ;
+            // 初始化部门数据
+        });
     };
-    // 初始化部门数据
-
 
     // 暴露变量
     defineExpose({

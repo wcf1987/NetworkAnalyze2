@@ -368,3 +368,14 @@ export function verifyCarNum(val: string) {
 	// true：车牌号正确
 	else return true;
 }
+/**
+ * 登录账号 (字母开头，允许5-16字节，允许字母数字下划线)
+ * @param val 当前值字符串
+ * @returns 返回 true: 登录账号正确
+ */
+export function verifyCodeName(val: string) {
+	// false: 登录账号不正确
+	if (!/^[a-zA-Z][a-zA-Z0-9_]{1,10}$/.test(val)) return false;
+	// true: 登录账号正确
+	else return true;
+}

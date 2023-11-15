@@ -1,7 +1,8 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default"
+                     label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="名称" prop="Name">
@@ -69,6 +70,7 @@
     import {addressApi} from "/@/api/sysmanage/address";
     import {ElMessage} from "element-plus";
     import {useUserInfo} from "/@/stores/userInfo";
+    import {checkInterNum, checkIP, checkPort} from "/@/utils/rules";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
 
@@ -91,6 +93,15 @@
             StopBit: '',
             FlowControl: '',
             describe: '', // 用户描述
+        },
+        baseRules: {
+            Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+            Protocol: [{required: true, message: '请选择协议', trigger: 'change'}],
+            SerialNO: [{required: true, message: '请输入串口号', trigger: 'change'}],
+            BAUD: [{required: true, message: '请输入数字', trigger: 'change', validator: checkInterNum}],
+             DataBit: [{required: true, message: '请输入数字', trigger: 'change', validator: checkInterNum}],
+     StopBit: [{required: true, message: '请输入数字', trigger: 'change', validator: checkInterNum}],
+     FlowControl: [{required: true, message: '请输入数字', trigger: 'change', validator: checkInterNum}]
         },
         dialog: {
             isShowDialog: false,
@@ -135,61 +146,69 @@
     };
     // 提交
     const onSubmit = () => {
-        if (state.dialog.type == 'edit') {
-            addressApi().updateSerialInter(
-                state.ruleForm
-            )
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+        userDialogFormRef.value.validate((valid) => {
+            // console.log('123123');
+            // 不通过校验
+            if (!valid) {
 
-                        ElMessage.success("修改成功");
-                        closeDialog();
-                        emit('refresh');
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
+                if (state.dialog.type == 'edit') {
+                    addressApi().updateSerialInter(
+                        state.ruleForm
+                    )
+                        .then(res => {
+                            //console.log(res);
+                            if (res.code == '200') {
 
-                    } else {
-                        ElMessage.error(res.message);
-                    }
+                                ElMessage.success("修改成功");
+                                closeDialog();
+                                emit('refresh');
 
-                }).catch(err => {
+                            } else {
+                                ElMessage.error(res.message);
+                            }
 
-            }).finally(() => {
+                        }).catch(err => {
 
-            });
-        }
-        if (state.dialog.type == 'add') {
-            const stores = useUserInfo();
-            state.ruleForm['AuthorID'] = stores.userInfos.id
-            state.ruleForm.Type = "串口";
-            addressApi().addSerialInter(
-                state.ruleForm
-            )
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+                    }).finally(() => {
 
-                        ElMessage.success("添加成功");
-                        closeDialog();
-                        emit('refresh');
+                    });
+                }
+                if (state.dialog.type == 'add') {
+                    const stores = useUserInfo();
+                    state.ruleForm['AuthorID'] = stores.userInfos.id
+                    state.ruleForm.Type = "串口";
+                    addressApi().addSerialInter(
+                        state.ruleForm
+                    )
+                        .then(res => {
+                            //console.log(res);
+                            if (res.code == '200') {
 
-                    } else {
-                        ElMessage.error(res.message);
-                    }
+                                ElMessage.success("添加成功");
+                                closeDialog();
+                                emit('refresh');
 
-                }).catch(err => {
+                            } else {
+                                ElMessage.error(res.message);
+                            }
 
-            }).finally(() => {
+                        }).catch(err => {
 
-            });
-        }
+                    }).finally(() => {
 
-        // if (state.dialog.type === 'add') { }
-    };
-    // 初始化部门数据
+                    });
+                }
+            }
+            // if (state.dialog.type === 'add') { }
+              });
+};
+        // 初始化部门数据
 
 
-    // 暴露变量
-    defineExpose({
-        openDialog,
-    });
+        // 暴露变量
+        defineExpose({
+            openDialog,
+        });
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="名称" prop="Name">
@@ -65,6 +65,10 @@
             FlowControl: '',
             describe: '', // 用户描述
         },
+                baseRules: {
+            Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+            Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+        },
         dialog: {
             isShowDialog: false,
             type: '',
@@ -106,6 +110,13 @@
         import {useUserInfo} from "/@/stores/userInfo";
     // 提交
     const onSubmit = () => {
+                 userDialogFormRef.value.validate((valid) => {
+           // console.log('123123');
+            // 不通过校验
+            if (!valid) {
+
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
         if (state.dialog.type == 'edit') {
             flowApi().updateFlow(
                 state.ruleForm
@@ -156,7 +167,8 @@
     };
     // 初始化部门数据
 
-
+        });
+};
     // 暴露变量
     defineExpose({
         openDialog,

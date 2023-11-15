@@ -1,7 +1,7 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" :rules="state.baseRules" label-width="90px">
                 <el-row :gutter="35">
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"  v-if="false">
@@ -119,6 +119,7 @@
     import {packageApi} from "/@/api/sysmanage/package";
     import {ElMessage} from "element-plus";
     import {useUserInfo} from "/@/stores/userInfo";
+    import {checkCodeName, checkInterNum} from "/@/utils/rules";
 const options = ref(FieldType);
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
@@ -142,6 +143,16 @@ const options = ref(FieldType);
             StopBit: '',
             FlowControl: '',
             describe: '', // 用户描述
+        },
+                baseRules: {
+            DUINO: [{required: true, message: '请输入DUI', trigger: 'blur'}],
+                    Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+                     EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur',validator: checkCodeName}],
+                     ShortName: [{required: true, message: '请输入简称', trigger: 'blur'}],
+                     Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+                     TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
+                     Length: [{required: true, message: '位数必须为正整数', trigger: 'blur',validator: checkInterNum}],
+
         },
         pid: 0,
         dialog: {
@@ -220,6 +231,13 @@ const options = ref(FieldType);
     };
     // 提交
     const onSubmit = () => {
+                 userDialogFormRef.value.validate((valid) => {
+           // console.log('123123');
+            // 不通过校验
+            if (!valid) {
+
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
         if (state.dialog.type == 'edit') {
             fieldsdetailApi().updateFieldsDetail(
                 state.ruleForm
@@ -271,7 +289,8 @@ const options = ref(FieldType);
 
     };
     // 初始化部门数据
-
+        });
+};
 
     // 暴露变量
     defineExpose({

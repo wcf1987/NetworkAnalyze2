@@ -1,7 +1,8 @@
 <template>
     <div class="system-role-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
-            <el-form ref="roleDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="roleDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default"
+                     label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="角色名称" prop="roleName">
@@ -77,6 +78,12 @@
             status: true, // 角色状态
             describe: '', // 角色描述
         },
+        baseRules: {
+            roleName: [{required: true, message: '请输入角色名称', trigger: 'blur'}],
+            roleSign: [{required: true, message: '请输入校色标识', trigger: 'change'}],
+
+            status: [{required: true, message: '请选择状态', trigger: 'change'}],
+        },
         menuData: [] as TreeType[],
         menuProps: {
             children: 'children',
@@ -107,8 +114,8 @@
             state.dialog.title = '新增角色';
             state.dialog.submitTxt = '新 增';
             // 清空表单，此项需加表单验证才能使用
-             nextTick(() => {
-            	roleDialogFormRef.value.resetFields();
+            nextTick(() => {
+                roleDialogFormRef.value.resetFields();
             });
         }
 
@@ -124,56 +131,65 @@
     };
     // 提交
     const onSubmit = () => {
+        roleDialogFormRef.value.validate((valid) => {
+            // console.log('123123');
+            // 不通过校验
+            if (!valid) {
 
-        if (state.dialog.type == 'edit') {
-            state.ruleForm.menustr = JSON.stringify(state.treeSelArr);
-            roleManageApi().update(
-                state.ruleForm
-            )
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
+                if (state.dialog.type == 'edit') {
+                    state.ruleForm.menustr = JSON.stringify(state.treeSelArr);
+                    roleManageApi().update(
+                        state.ruleForm
+                    )
+                        .then(res => {
+                            //console.log(res);
+                            if (res.code == '200') {
 
-                        ElMessage.success("修改成功");
-                        closeDialog();
-                        emit('refresh');
-                    } else {
-                        ElMessage.error(res.message);
-                    }
+                                ElMessage.success("修改成功");
+                                closeDialog();
+                                emit('refresh');
+                            } else {
+                                ElMessage.error(res.message);
+                            }
 
-                }).catch(err => {
+                        }).catch(err => {
 
-            }).finally(() => {
+                    }).finally(() => {
 
-            });
-        }
-        if (state.dialog.type == 'add') {
-            const stores = useUserInfo();
-            state.ruleForm['AuthorID'] = stores.userInfos.id
-            state.ruleForm.menustr = JSON.stringify(state.treeSelArr);
-            roleManageApi().add(
-                state.ruleForm
-            )
-                .then(res => {
-                        //console.log(res);
-                        if (res.code == '200') {
+                    });
+                }
+                if (state.dialog.type == 'add') {
+                    const stores = useUserInfo();
+                    state.ruleForm['AuthorID'] = stores.userInfos.id
+                    state.ruleForm.menustr = JSON.stringify(state.treeSelArr);
+                    roleManageApi().add(
+                        state.ruleForm
+                    )
+                        .then(res => {
+                                //console.log(res);
+                                if (res.code == '200') {
 
-                            ElMessage.success("添加成功");
-                            closeDialog();
-                            emit('refresh');
-                        } else {
-                            ElMessage.error(res.message);
-                        }
+                                    ElMessage.success("添加成功");
+                                    closeDialog();
+                                    emit('refresh');
+                                } else {
+                                    ElMessage.error(res.message);
+                                }
 
-                    }
-                )
-                .catch(err => {
+                            }
+                        )
+                        .catch(err => {
 
-                }).finally(() => {
+                        }).finally(() => {
 
-            });
-        }
+                    });
+                }
 
+            }
+            ;
+        });
     };
     const checkMenu = () => {
         state.ruleForm.menustr = JSON.parse(state.ruleForm.menustr);

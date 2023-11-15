@@ -1,7 +1,7 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default" label-width="90px">
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="名称" prop="Name">
@@ -75,6 +75,7 @@
     import {packageApi} from "/@/api/sysmanage/package";
     import {ElMessage} from "element-plus";
     import {useUserInfo} from "/@/stores/userInfo";
+    import {checkCodeName, checkInterNum} from "/@/utils/rules";
 
     const typeOptions = ref(FieldType);
     // 定义子组件向父组件传值/事件
@@ -93,6 +94,15 @@
         ruleForm: {
             Name: '', // 账户名称
             Type: '', // 用户昵称
+
+        },
+        baseRules: {
+            Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+            EName: [{required: true, message: '请填写合法的引用名（字母开头，允许2-10位）', trigger: 'change', validator: checkCodeName}],
+            Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+            Length: [{required: true, message: '请输入数字', trigger: 'change', validator: checkInterNum}],
+             ArrayOr: [{required: true, message: '请选择是否数组', trigger: 'change'}],
+
 
         },
         pid: 0,
@@ -137,6 +147,13 @@ state.dialog.isShowDialog = true;
     };
     // 提交
     const onSubmit = () => {
+         userDialogFormRef.value.validate((valid) => {
+           // console.log('123123');
+            // 不通过校验
+            if (!valid) {
+
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
         if (state.dialog.type == 'edit') {
             packageApi().updatePackageDetail(
                 state.ruleForm
@@ -191,7 +208,8 @@ state.dialog.isShowDialog = true;
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据
-
+        });
+};
 
     // 暴露变量
     defineExpose({

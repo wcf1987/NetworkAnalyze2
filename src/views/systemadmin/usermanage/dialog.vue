@@ -1,7 +1,7 @@
 <template>
 	<div class="system-user-dialog-container">
 		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
-			<el-form ref="userDialogFormRef" :model="state.ruleForm" size="default" label-width="90px">
+			<el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="账户名称"  prop="userName">
@@ -104,6 +104,15 @@ const state = reactive({
 		status: true, // 用户状态
 		describe: '', // 用户描述
 	},
+	        baseRules: {
+            Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+            Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+				userName: [{required: true, message: '请输入用户名', trigger: 'change'}],
+				userNickname: [{required: true, message: '请输入用户昵称', trigger: 'change'}],
+				roleSign: [{required: true, message: '请选择角色', trigger: 'change'}],
+				password: [{required: true, message: '请输入密码', trigger: 'change'}],
+				status: [{required: true, message: '请选择状态', trigger: 'change'}],
+        },
 	deptData: [] as DeptTreeType[], // 部门数据
 	dialog: {
 		isShowDialog: false,
@@ -175,6 +184,13 @@ const onCancel = () => {
 };
 // 提交
 const onSubmit = () => {
+	         userDialogFormRef.value.validate((valid) => {
+           // console.log('123123');
+            // 不通过校验
+            if (!valid) {
+
+                return ElMessage.error('请确保数据格式填写正确！');
+            } else {
  if (state.dialog.type == 'edit') {
             userManageApi().update(
                 state.ruleForm
@@ -231,7 +247,8 @@ const onSubmit = () => {
 
 
 };
-
+        });
+};
 
 // 暴露变量
 defineExpose({
