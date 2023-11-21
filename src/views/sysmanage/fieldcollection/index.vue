@@ -17,9 +17,15 @@
 				</el-button>
 				<el-button size="default" type="success" class="ml10" @click="onOpenImport('add')">
                     <el-icon>
-                        <ele-UploadFilled/>
+                        <ele-Upload/>
                     </el-icon>
                     导入
+                </el-button>
+				<el-button size="default" type="success" class="ml10" @click="onOpenImportAll('add')">
+                    <el-icon>
+                        <ele-UploadFilled/>
+                    </el-icon>
+                    导入DFI+DUI
                 </el-button>
 			</div>
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
@@ -65,6 +71,9 @@
 		    <ImportDialog
       v-model:showDialog="isShowImport" :download-fun="downLoadPlanEvent"  :import-fun="fieldsApi().uploadfile"   @import-success="getTableData()"
     />
+		<ImportDialogAll
+      v-model:showDialog="isShowImportAll" :download-fun="downLoadPlanEventAll"  :import-fun="fieldsApi().uploadfileall"   @import-success="getTableData()"
+    />
 
 	</div>
 </template>
@@ -78,6 +87,7 @@ import {useRouter} from "vue-router";
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/dialog.vue'));
 const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/importdialog.vue'));
+const ImportDialogAll = defineAsyncComponent(() => import('/@/views/sysmanage/fieldcollection/importdialogall.vue'));
 const router = useRouter();
 // 定义变量内容
 const userDialogRef = ref();
@@ -87,9 +97,15 @@ const userDialogRef = ref();
 
 
   const isShowImport = ref(false);
+  const isShowImportAll = ref(false);
   const downLoadPlanEvent = () => {
 
       downFile("DFI模板下载.xls");
+
+  };
+    const downLoadPlanEventAll = () => {
+
+      downFile("DFI+DUI模板下载.xls");
 
   };
 const state = reactive({
@@ -163,7 +179,9 @@ const onOpenAdd = (type: string) => {
 const onOpenImport = (type: string) => {
 	isShowImport.value = true;
 };
-
+const onOpenImportAll = (type: string) => {
+	isShowImportAll.value = true;
+};
 // 打开修改用户弹窗
 const onOpenEdit = (type: string, row: RowUserType) => {
 

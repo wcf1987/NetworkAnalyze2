@@ -66,6 +66,17 @@ export function fieldsApi() {
 
             });
         },
+                uploadfileall: (data: object) => {
+            return requestfile({
+                url: '/fields/uploadfileall',
+                method: 'post',
+                data
+
+
+
+
+            });
+        },
         analysefile: (data: object) => {
             return requestfile({
                 url: '/fields/analysefile',

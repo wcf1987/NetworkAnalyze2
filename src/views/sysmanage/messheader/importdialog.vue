@@ -1,7 +1,7 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable=true>
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default"
+            <el-form ref="userDialogFormRef" :model="state.ruleFormOri" :rules="state.baseRules" size="default"
                      label-width="90px">
                 <el-row :gutter="35">
 
@@ -301,13 +301,18 @@
         isReadOnly.value = true;
         state.dialog.isShowDialog = true;
         if (type === 'edit') {
-
+            console.log(row);
 
             nextTick(() => {
                 Object.assign(state.ruleForm, row);
+
                 state.ruleFormOri.sourceDFI = row.DFIID;
                 changeDFI(row.DFIID);
                 state.ruleFormOri.sourceDUI = row.OutID;
+                state.ruleFormOri.ID = row.ID;
+                state.ruleFormOri.Flag = row.Flag;
+                state.ruleFormOri.SortID= row.SortID;
+                state.ruleFormOri.NestID= row.NestID;
                 setTimeout(() => {
                     changeDUI(row.OutID);
                 }, 300);

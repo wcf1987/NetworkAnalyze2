@@ -12,7 +12,7 @@
                 :close-on-click-modal="true"
                 :destroy-on-close="true"
                 :show-close="true"
-                title="导入"
+                title="导入DFI+DUI模板"
                 width="35%"
                 @close="handleCancel"
         >
@@ -28,7 +28,6 @@
                     :show-file-list="true"
                     :auto-upload="false"
                     :on-change="filechange"
-                    :data="extraInfo"
             >
                 <!-- :on-change="handleChange"
                 :on-remove="handleRemove" -->
@@ -72,9 +71,9 @@
     </div>
 </template>
 
-<script setup  lang="ts" >
+<script setup>
     import {ElMessage} from 'element-plus';
-    import {computed, nextTick, reactive, ref, toRefs} from 'vue';
+    import {computed, ref, toRefs} from 'vue';
 
     const props = defineProps({
         showDialog: {
@@ -90,21 +89,12 @@
             type: Function,
         },
     })
-    let extraInfo={};
     const {downloadFun, importFun} = toRefs(props)
-    const state=reactive({
-      pid:0,
-    })
     const emit = defineEmits(['update:showDialog', 'import-success'])
     const showDialog = computed({
         get: () => props.showDialog,
         set: (val) => emit('update:showDialog', val),
     })
-    const openDialog = (type, pid) => {
-      emit('update:showDialog', true)
-
-      state.pid=pid;
-    };
 
     const fileList = ref([])
     let fileupload = '';
@@ -125,8 +115,7 @@
     const uploadFiles = () => {
         const formData = new FormData();
         const filet = fileupload;
-      formData.append('pid',state.pid);
-        formData.append('file', filet.raw);
+        formData.append('file', filet.raw)
         console.log(filet.raw)
         //传函数写法二
         importFun
@@ -139,8 +128,8 @@
                     emit('update:showDialog', false)
                     emit('import-success', successListData.value)
                 } else {
-                    isShowFail.value = true
-                    errorListData.value=res.data;
+                    isShowFail.value = true;
+                    errorListData.value = res.data;
                 }
             })
             .catch((res) => {
@@ -166,9 +155,6 @@
         isShowFail.value = false
         errorListData.value = []
     }
-    defineExpose({
-      openDialog,
-    });
 </script>
 <style lang="scss" scoped>
     .fail-dialog {

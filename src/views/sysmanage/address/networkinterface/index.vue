@@ -184,7 +184,7 @@
         //state.tableData.total = state.tableData.data.length;
         setTimeout(() => {
             state.tableData.loading = false;
-        }, 500);
+        }, 100);
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {

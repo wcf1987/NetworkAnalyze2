@@ -129,7 +129,11 @@
 
             // 清空表单，此项需加表单验证才能使用
 
-            userDialogFormRef.value.resetFields();
+             nextTick(() => {
+                userDialogFormRef.value.resetFields();
+                //state.ruleForm = row;
+            });
+            state.ruleForm.Type = "串口";
 
 
         }

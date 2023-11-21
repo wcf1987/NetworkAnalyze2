@@ -185,7 +185,7 @@
 
         setTimeout(() => {
             state.tableData.loading = false;
-        }, 500);
+        }, 200);
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {

@@ -12,7 +12,7 @@
                 :close-on-click-modal="true"
                 :destroy-on-close="true"
                 :show-close="true"
-                title="导入"
+                title="导入DFI模板"
                 width="35%"
                 @close="handleCancel"
         >
@@ -129,6 +129,7 @@
                     emit('import-success', successListData.value)
                 } else {
                     isShowFail.value = true
+                    errorListData.value=res.data;
                 }
             })
             .catch((res) => {

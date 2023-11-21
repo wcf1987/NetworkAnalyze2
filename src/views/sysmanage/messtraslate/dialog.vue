@@ -12,7 +12,7 @@
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="源消息体" prop="sourceID">
-                            <el-select v-model="state.ruleForm.sourceID" placeholder="请选择" clearable class="w100">
+                            <el-select v-model="state.ruleForm.sourceID" :disabled=isEdit placeholder="请选择" clearable class="w100">
                                 <el-option
                                         v-for="item in MessBodyOptions"
                                         :key="item.ID"
@@ -25,7 +25,7 @@
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="目的消息体" prop="targetID">
-                            <el-select v-model="state.ruleForm.targetID" placeholder="请选择" clearable class="w100">
+                            <el-select v-model="state.ruleForm.targetID" :disabled=isEdit placeholder="请选择" clearable class="w100">
                                 <el-option
                                         v-for="item in MessBodyOptions"
                                         :key="item.ID"
@@ -63,6 +63,7 @@
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
     const MessBodyOptions = ref();
+    const isEdit=ref(true);
     // 定义变量内容
     const userDialogFormRef = ref();
     const rules = reactive({
@@ -97,13 +98,14 @@
         state.dialog.type = type;
         state.dialog.isShowDialog = true;
         if (type === 'edit') {
-
+            isEdit.value=true;
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
             nextTick(() => {
                 Object.assign(state.ruleForm, row);
             });
         } else {
+            isEdit.value=false;
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
             // 清空表单，此项需加表单验证才能使用

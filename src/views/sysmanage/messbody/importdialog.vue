@@ -1,7 +1,7 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable=true>
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default"
+            <el-form ref="userDialogFormRef" :model="state.ruleFormOri" :rules="state.baseRules" size="default"
                      label-width="90px">
                 <el-row :gutter="35">
 
@@ -301,13 +301,18 @@
         isReadOnly.value = true;
         state.dialog.isShowDialog = true;
         if (type === 'edit') {
-
+            console.log(row);
 
             nextTick(() => {
                 Object.assign(state.ruleForm, row);
+
                 state.ruleFormOri.sourceDFI = row.DFIID;
                 changeDFI(row.DFIID);
                 state.ruleFormOri.sourceDUI = row.OutID;
+                state.ruleFormOri.ID = row.ID;
+                state.ruleFormOri.Flag = row.Flag;
+                state.ruleFormOri.SortID= row.SortID;
+                state.ruleFormOri.NestID= row.NestID;
                 setTimeout(() => {
                     changeDUI(row.OutID);
                 }, 300);
@@ -373,7 +378,7 @@
                 pageNum: 1,
                 pageSize: 1000,
                 name: '',
-                ttype: 'header'
+                ttype: 'body'
             })
             .then(res => {
                 //console.log(res);
@@ -411,7 +416,7 @@
                 if (state.dialog.type == 'edit') {
                     state.ruleForm['AuthorID'] = 1;
                     state.ruleForm['PID'] = state.pid;
-                    state.ruleForm['TType'] = 'header';
+                    state.ruleForm['TType'] = 'body';
                     state.ruleForm['OutType'] = 'fields';
                     state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
                     state.ruleForm['SortID'] = state.ruleFormOri.SortID;
