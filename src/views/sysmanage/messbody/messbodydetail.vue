@@ -119,7 +119,6 @@
             data: [],
             total: 0,
 
-            deep: '',
             loading: false,
             param: {
                 pageNum: 1,

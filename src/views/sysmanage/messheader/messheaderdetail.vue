@@ -118,8 +118,7 @@
             id: '',
             data: [],
             total: 0,
-            id: '',
-            deep: '',
+
             loading: false,
             param: {
                 pageNum: 1,

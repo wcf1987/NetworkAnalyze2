@@ -110,7 +110,7 @@
         },
         tableData: {
             data: [],
-            id: '',
+
             deep: '',
             total: 0,
             loading: false,
