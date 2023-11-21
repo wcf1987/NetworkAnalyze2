@@ -51,7 +51,7 @@ export async function 	initBackEndControlRoutes(name,pass) {
 	//console.log(t.userInfos)
 	const user= Session.get('userInfo');
 	if(user==null){
-		Session.set('token',null)
+		Session.set('token',false)
 		return Promise.resolve(true);
 	}
 	// 获取路由菜单数据
