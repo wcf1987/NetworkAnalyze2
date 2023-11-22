@@ -9,6 +9,7 @@ import other from '/@/utils/other';
 import ElementPlus from 'element-plus';
 import '/@/theme/index.scss';
 import VueGridLayout from 'vue-grid-layout';
+import axios from "axios";
 
 const app = createApp(App);
 

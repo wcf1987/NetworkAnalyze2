@@ -556,10 +556,11 @@
     // 顶部工具栏-下载
     const onToolDownload = () => {
         const {globalTitle} = themeConfig.value;
-        const href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(state.jsplumbData, null, '\t'));
+        let flowGraphStr = lf.value.getGraphData();
+        const href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(flowGraphStr, null, '\t'));
         const aLink = document.createElement('a');
         aLink.setAttribute('href', href);
-        aLink.setAttribute('download', `${globalTitle}工作流.json`);
+        aLink.setAttribute('download', `流程脚本.json`);
         aLink.click();
         aLink.remove();
         ElMessage.success('下载成功');

@@ -2,11 +2,12 @@ import axios, { AxiosInstance } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Session } from '/@/utils/storage';
 import qs from 'qs';
-
+axios.defaults.withCredentials = true;
 // 配置新建一个 axios 实例
 const service: AxiosInstance = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 	timeout: 50000,
+	//withCredentials: true,
 	headers: { 'Content-Type': 'application/json' },
 	paramsSerializer: {
 		serialize(params) {
@@ -17,6 +18,7 @@ const service: AxiosInstance = axios.create({
 const servicefile: AxiosInstance = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 	timeout: 50000,
+//withCredentials: true,
 	headers: { 'Content-Type': 'multipart/form-data' },
 	paramsSerializer: {
 		serialize(params) {

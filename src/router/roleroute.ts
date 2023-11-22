@@ -448,25 +448,7 @@ export const rolemenu=[
                 ]
 
             },
-            {
 
-                path: '/systemmonitor',
-                name: 'systemmonitor',
-                component:'layout/routerView/parent',
-                redirect: '/system/menu',
-                meta: {
-                    title: 'message.router.systemmonitor',
-                    isLink: '',
-                    isHide: false,
-                    isKeepAlive: true,
-                    isAffix: false,
-                    isIframe: false,
-                    roles: ['admin', 'common'],
-                    icon: 'iconfont icon-gerenzhongxin',
-                },
-                children: []
-
-            },
             {
 
                 path: '/systemadmin',

@@ -36,9 +36,9 @@
                                 <div class="item-txt">
                                     <div class="item-txt-title">
                                         <div class="item-txt-msg mb10">
-                                                <span> {{ v.Name }}</span>
+                                            <span> {{ v.Name }}</span>
 
-                                            </div>
+                                        </div>
 
                                     </div>
                                     <div class="item-txt-other">
@@ -60,24 +60,48 @@
 
                                             </div>
                                             <div class="item-txt-msg mb10">
+                                                <el-tooltip
+                                                        class="box-item"
+                                                        effect="light"
+                                                        content="编辑流程"
+                                                        placement="bottom-start"
+                                                >
+                                                    <el-button type="success" size="small" circle
+                                                               @click.stop="onOpenEdit('edit', v)">
+                                                        <el-icon>
+                                                            <ele-Document/>
+                                                        </el-icon>
 
-                                        <el-button type="success" size="small" circle @click.stop="onOpenEdit('edit', v)">
-                                            <el-icon>
-                                                <ele-Document/>
-                                            </el-icon>
+                                                    </el-button>
+                                                </el-tooltip>
+                                                <el-tooltip
+                                                        class="box-item"
+                                                        effect="light"
+                                                        content="删除流程"
+                                                        placement="bottom-start"
+                                                >
+                                                    <el-button type="danger" size="small" circle
+                                                               @click.stop="onRowDel(v)">
+                                                        <el-icon>
+                                                            <ele-Delete/>
+                                                        </el-icon>
 
-                                        </el-button>
+                                                    </el-button>
+                                                </el-tooltip>
+                                                <el-tooltip
+                                                        class="box-item"
+                                                        effect="light"
+                                                        content="下载脚本"
+                                                        placement="bottom-start"
+                                                >
+                                                    <el-button type="primary" size="small" circle
+                                                               @click.stop="onRowDownload(v)">
+                                                        <el-icon>
+                                                            <ele-Download/>
+                                                        </el-icon>
 
-
-
-                                        <el-button type="danger" size="small" circle @click.stop="onRowDel(v)">
-                                            <el-icon>
-                                                <ele-Delete/>
-                                            </el-icon>
-
-                                        </el-button>
-
-
+                                                    </el-button>
+                                                </el-tooltip>
                                             </div>
                                         </div>
                                     </div>
@@ -114,7 +138,7 @@
 
 <script setup lang="ts" name="pagesFiltering">
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
-    import {useRoute, useRouter} from 'vue-router';
+    import {useRouter} from 'vue-router';
     import flowdesignimg from '/@/assets/flowdesign.jpg';
     import {ElMessage, ElMessageBox} from "element-plus";
     import {flowApi} from "/@/api/flowmanage/flow";
@@ -208,7 +232,7 @@
     const onTableItemClick = (v: FilterListType) => {
         router.push({
             path: '/flowmanage/flowdesign/flowdesigndetail2',
-            query: {ID: v.ID,FlowName:v.Name},
+            query: {ID: v.ID, FlowName: v.Name},
         });
 
     };
@@ -254,6 +278,39 @@
     const onHandleCurrentChange = (val: number) => {
         state.tableData.param.pageNum = val;
     };
+    const onRowDownload = (row: RowUserType) => {
+        downloadProcess(row, 'txt', '流程脚本');
+    }
+
+    async function downloadProcess(row, type, name = '流程脚本') {
+        let data = row.FlowJson
+        const {href, filename} = setEncoded('json', name, data)
+        //      console.log(data)
+        downloadFile(href, filename)
+
+
+    }
+
+    function downloadFile(href, filename) {
+        if (href && filename) {
+            const a = document.createElement('a')
+            a.download = filename //指定下载的文件名
+            a.href = href //  URL对象
+            a.click() // 模拟点击
+            URL.revokeObjectURL(a.href) // 释放URL 对象
+        }
+    }
+
+    function setEncoded(type, filename, data) {
+        const encodedData = data;
+        return {
+            filename: `${filename}.${type.toLowerCase()}`,
+            href: `data:application/${
+                type === 'txt' ? 'text/xml' : 'bpmn20-xml'
+            };charset=UTF-8,${encodedData}`,
+            data: data
+        }
+    }
 </script>
 
 <style scoped lang="scss">
