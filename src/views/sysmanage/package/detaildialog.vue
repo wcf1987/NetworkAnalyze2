@@ -5,7 +5,7 @@
                 <el-row :gutter="35">
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="名称" prop="Name">
-                            <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable></el-input>
+                            <el-input v-model="state.ruleForm.Name" @input="nameChange" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -98,7 +98,7 @@
         },
         baseRules: {
             Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-            EName: [{required: true, message: '请填写合法的引用名（字母开头，允许2-10位）', trigger: 'change', validator: checkCodeName}],
+            //EName: [{required: true, message: '请填写合法的引用名（字母开头，允许2-10位）', trigger: 'change', validator: checkCodeName}],
             Type: [{required: true, message: '请选择类型', trigger: 'change'}],
             Length: [{required: true, message: '请输入数字', trigger: 'change', validator: checkInterNum}],
              ArrayOr: [{required: true, message: '请选择是否数组', trigger: 'change'}],
@@ -145,6 +145,9 @@ state.dialog.isShowDialog = true;
     const onCancel = () => {
         closeDialog();
     };
+    const nameChange=(value)=>{
+        state.ruleForm.EName=state.ruleForm.Name;
+    }
     // 提交
     const onSubmit = () => {
          userDialogFormRef.value.validate((valid) => {

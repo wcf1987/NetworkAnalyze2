@@ -1,6 +1,6 @@
 <template>
     <div class="system-user-dialog-container">
-        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable=true>
+        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable="true">
             <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default" label-width="90px">
                 <el-row :gutter="35">
 
@@ -30,13 +30,13 @@
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="名称" prop="Name">
-                            <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable
+                            <el-input v-model="state.ruleForm.Name" @input="nameChange" placeholder="请输入名称" clearable
                                       :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="引用名" prop="EName">
-                            <el-input v-model="state.ruleForm.EName" placeholder="请输入引用名" clearable
+                        <el-form-item label="引用名" prop="EName" >
+                            <el-input v-model="state.ruleForm.EName"  placeholder="请输入引用名" clearable
                                       :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
@@ -150,8 +150,9 @@
                 baseRules: {
              Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
                      Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-                     EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur',validator: checkCodeName}],
-                     ShortName: [{required: true, message: '请输入简称', trigger: 'blur'}],
+                     //EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur',validator: checkCodeName}],
+                    EName: [{required: true, message: '请输入引用名', trigger: 'blur'}],
+
                      Type: [{required: true, message: '请选择类型', trigger: 'change'}],
                      TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
                      Length: [{required: true, message: '位数必须为正整数', trigger: 'blur',validator: checkInterNum}],
@@ -239,6 +240,9 @@
     const closeDialog = () => {
         state.dialog.isShowDialog = false;
     };
+    const nameChange=(value)=>{
+        state.ruleForm.EName=state.ruleForm.Name;
+    }
     // 取消
     const onCancel = () => {
         closeDialog();
