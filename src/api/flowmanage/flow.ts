@@ -53,6 +53,13 @@ export function flowApi() {
                 data,
             });
         },
+        copy: (data: object) => {
+            return request({
+                url: '/flow/copy',
+                method: 'post',
+                data,
+            });
+        },
         getFlowByID: (data: object) => {
             return request({
                     url: '/flow/getbyid',

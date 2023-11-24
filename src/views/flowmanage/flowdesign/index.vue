@@ -102,6 +102,20 @@
 
                                                     </el-button>
                                                 </el-tooltip>
+                                                <el-tooltip
+                                                        class="box-item"
+                                                        effect="light"
+                                                        content="复制"
+                                                        placement="bottom-start"
+                                                >
+                                                    <el-button type="warning" size="small" circle
+                                                               @click.stop="onRowCopy(v)">
+                                                        <el-icon>
+                                                            <ele-CopyDocument/>
+                                                        </el-icon>
+
+                                                    </el-button>
+                                                </el-tooltip>
                                             </div>
                                         </div>
                                     </div>
@@ -142,6 +156,7 @@
     import flowdesignimg from '/@/assets/flowdesign.jpg';
     import {ElMessage, ElMessageBox} from "element-plus";
     import {flowApi} from "/@/api/flowmanage/flow";
+    import {useUserInfo} from "/@/stores/userInfo";
 
     const flowimg = ref(flowdesignimg);
     const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/dialog.vue'));
@@ -281,7 +296,32 @@
     const onRowDownload = (row: RowUserType) => {
         downloadProcess(row, 'txt', '流程脚本');
     }
+    const onRowCopy = (row: RowUserType) => {
+        const stores = useUserInfo();
 
+          flowApi().copy(
+            {
+                AuthorID : stores.userInfos.id,
+                ID: row.ID,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    ElMessage.success('复制成功');
+                    getTableData();
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
     async function downloadProcess(row, type, name = '流程脚本') {
         let data = row.FlowJson
         const {href, filename} = setEncoded('json', name, data)

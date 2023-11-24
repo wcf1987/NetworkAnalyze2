@@ -35,7 +35,8 @@
                                     >
                                         <template #reference>
                                             <div class="workflow-left-item-icon">
-                                                <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0 :size=16></SvgIcon>
+                                                <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
+                                                         :size=16></SvgIcon>
                                                 <div class="font10 pl5 name">{{ v.name }}</div>
                                             </div>
                                         </template>
@@ -63,6 +64,16 @@
 
         <!-- 顶部工具栏-帮助弹窗 -->
         <Help ref="helpRef"/>
+        <el-upload
+
+                class="upload-demo"
+                action="/"
+
+                :on-progress="uploadfile"
+        >
+            <el-button type="primary" ref="uploadbutton" v-show="false"></el-button>
+
+        </el-upload>
     </div>
 </template>
 
@@ -106,7 +117,7 @@
     const route = useRoute()
     const querys = route.query
     // 引入组件
-
+    const uploadbutton=ref();
     const Tool = defineAsyncComponent(() => import('./component/tool/index.vue'));
     const Contextmenu = defineAsyncComponent(() => import('./component/contextmenu/index.vue'));
     const Drawer = defineAsyncComponent(() => import('./component/drawer/index.vue'));
@@ -136,20 +147,7 @@
                     let temps = res.data.FlowJson
                     let xmlStrread = JSON.parse(temps)
                     console.log(xmlStrread);
-                    lf.value.render(xmlStrread);
-                    LfEvent();
-                    for(let i=0;i<xmlStrread.nodes.length;i++){
-                        let temp=xmlStrread.nodes[i];
-
-                        lf.value.setProperties(temp.id, temp.properties);
-                        lf.value.updateText(temp.id, temp.text.value);
-                    }
-                    for(let i=0;i<xmlStrread.edges.length;i++){
-                        let temp=xmlStrread.edges[i];
-
-                        lf.value.setProperties(temp.id, temp.properties);
-                        lf.value.updateText(temp.id, temp.text.value);
-                    }
+                    createFlowFromStr(xmlStrread);
                     // ElMessage.success("修改成功");
 
                 } else {
@@ -163,6 +161,22 @@
         });
 
 
+    }
+    const createFlowFromStr = (flowstr) => {
+        lf.value.render(flowstr);
+        LfEvent();
+        for (let i = 0; i < flowstr.nodes.length; i++) {
+            let temp = flowstr.nodes[i];
+
+            lf.value.setProperties(temp.id, temp.properties);
+            lf.value.updateText(temp.id, temp.text.value);
+        }
+        for (let i = 0; i < flowstr.edges.length; i++) {
+            let temp = flowstr.edges[i];
+
+            lf.value.setProperties(temp.id, temp.properties);
+            lf.value.updateText(temp.id, temp.text.value);
+        }
     }
     const saveFlow = () => {
         let flowGraphStr = lf.value.getGraphData();
@@ -447,11 +461,11 @@
         //console.log(loc);
 
         if (type == 'node') {
-            let prope=lf.value.getProperties(data.id);
+            let prope = lf.value.getProperties(data.id);
             console.log(prope);
             state.dropdownNode.x = loc.x + position.domOverlayPosition.x;
             state.dropdownNode.y = loc.y + position.domOverlayPosition.y;
-            contextmenuNodeRef.value.openContextmenu('node',data);
+            contextmenuNodeRef.value.openContextmenu('node', data);
         }
         if (type == 'edge') {
 
@@ -533,13 +547,16 @@
             case 'download':
                 onToolDownload();
                 break;
+            case 'upload':
+                onToolUpload();
+                break;
             case 'submit':
                 onToolSubmit();
                 break;
             case 'copy':
                 onToolCopy();
                 break;
-            case 'del':
+            case 'clearMap':
                 onToolDel();
                 break;
             case 'fullscreen':
@@ -565,6 +582,27 @@
         aLink.remove();
         ElMessage.success('下载成功');
     };
+    //上传
+    const onToolUpload = () => {
+        uploadbutton.value?.$.vnode.el?.click();
+
+    };
+    const uploadfile = (res, file, fileList) => {
+        const name = file.name.split('.')[1];
+        if (name != 'json' && name != 'json') {
+            ElMessage.error("只能上传后缀为json的文件");
+            return;
+        }
+        let reader = new FileReader();
+        reader.readAsText(file.raw)
+        reader.onload = (e) => {
+            // 读取文件内容
+            const fileString = e.target.result;
+            let xmlStrread = JSON.parse(fileString)
+            createFlowFromStr(xmlStrread);
+            ElMessage.success('上传成功');
+        }
+    };
     // 顶部工具栏-提交
     const onToolSubmit = () => {
         // console.log(state.jsplumbData);
@@ -582,7 +620,7 @@
             cancelButtonText: '取消',
         })
             .then(() => {
-
+                lf.value.clearData();
                 nextTick(() => {
 
                     ElMessage.success('清空画布成功');

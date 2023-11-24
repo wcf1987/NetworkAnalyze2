@@ -33,6 +33,7 @@
             {icon: 'ele-CaretRight', title: '下一步', fnName: 'redo'},
 
             {icon: 'ele-Download', title: '下载', fnName: 'download'},
+            {icon: 'ele-Upload', title: '上传', fnName: 'upload'},
             {icon: 'ele-Check', title: '保存', fnName: 'submit'},
             {icon: 'ele-Delete', title: '清空画布', fnName: 'clearMap'},
             {icon: 'ele-DataLine', title: '查看缩略图', fnName: 'showMiniMap'},
