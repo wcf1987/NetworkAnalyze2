@@ -82,6 +82,7 @@
     // 获取父组件数据
     const getParentData = (data: object, lf) => {
         let incoming=lf.getNodeDataById(data.sourceNodeId);
+        console.log(incoming);
         state.fd=incoming.properties.fd;
         state.gd=incoming.properties.gd;
         state.properForm = data.properties;

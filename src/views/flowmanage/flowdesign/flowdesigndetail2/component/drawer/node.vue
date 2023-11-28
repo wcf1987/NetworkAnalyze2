@@ -51,7 +51,7 @@
                                     <el-option label="串口" value="串口"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="源地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
+                            <el-form-item label="源地址" prop="sourecenetworkID" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable
                                            class="w100">
                                     <el-option
@@ -62,7 +62,14 @@
                                     />
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="串口信息" prop="type" v-if="state.properForm.interfacetype=='串口'">
+
+                          <el-form-item label="输入源地址" prop="sourecenetworkIP" v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2">
+                            <el-input v-model="state.properForm.sourecenetworkIP" placeholder="请输入源地址ip地址" clearable v-on:change="onChangeStartSNIP"
+                                      ></el-input>
+                          </el-form-item>
+
+
+                            <el-form-item label="串口信息" prop="serialID" v-if="state.properForm.interfacetype=='串口'">
                                 <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
                                            v-on:change="onChangeStartSerialChoose">
                                     <el-option
@@ -73,18 +80,18 @@
                                     />
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="本地串口号" prop="type"
+                            <el-form-item label="本地串口号" prop="SerialNO"
                                           v-if="state.properForm.interfacetype=='串口'">
                                 <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
                                           :readonly=" state.properForm.serialID!='-1'"></el-input>
                             </el-form-item>
-                            <el-form-item label="本地波特率" prop="type"
+                            <el-form-item label="本地波特率" prop="BAUD"
                                           v-if="state.properForm.interfacetype=='串口' ">
                                 <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
                                           :readonly=" state.properForm.serialID!='-1'"></el-input>
                             </el-form-item>
 
-                            <el-form-item label="本地地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
+                            <el-form-item label="本地地址" prop="localnetworkID" v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
                                            class="w100" v-on:change="onChangeStartNetworkChoose">
                                     <el-option
@@ -95,12 +102,12 @@
                                     />
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="本地地址" prop="type"
+                            <el-form-item label="本地地址" prop="IP"
                                           v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
                                 <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable
                                           :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
                             </el-form-item>
-                            <el-form-item label="本地端口" prop="type"
+                            <el-form-item label="本地端口" prop="Port"
                                           v-if="state.properForm.interfacetype=='网口' "
                                           :readonly=" state.properForm.localnetworkID!='-1'">
                                 <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable
@@ -561,7 +568,7 @@ import emitter from '/@/utils/mitt';
                     NetworkOptions.value = res.data;
 
 
-                    NetworkOptions.value.unshift({ID: '-1', Name: '无'});
+                    NetworkOptions.value.unshift({ID: '-2', Name: '无'});
 
                     NetworkLocalOptions.value = res.data;
                     NetworkLocalOptions.value.push({ID: '-1', Name: '手动输入'});
@@ -749,6 +756,8 @@ import emitter from '/@/utils/mitt';
             let nodes = graph.nodes;
             for (let i = 0; i < nodes.length; i++) {
             if (nodes[i].type == 'swich') {
+              console.log('swich');
+
                 state.lf.setProperties(nodes[i].id,{fd:fieldsoptions.value,gd:globaloptions.value});
             }
         }
@@ -1022,7 +1031,23 @@ import emitter from '/@/utils/mitt';
 
 
     };
+    const onChangeStartSNIP = (value: any) => {
+      //console.log(state.properForm.localnetworkID);
+      if (state.properForm.sourecenetworkID == '-1') {
+        state.properForm.sourecenetworkIP = "";
 
+      } else {
+        for (let i = 0; i < NetworkOptions.value.length; i++) {
+          if (NetworkOptions.value[i].ID == state.properForm.sourecenetworkID) {
+            state.properForm.sourecenetworkIP = NetworkOptions.value[i].IP;
+
+          }
+        }
+
+      }
+
+
+    };
     // 目的节点中-网口类-目的地址菜单菜单联动
     const onChangeEndNetworkChoose = (value: any) => {
         if (state.properForm.localnetworkID == '-1') {

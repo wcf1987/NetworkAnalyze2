@@ -39,7 +39,7 @@
                                    @click="onRowDel(scope.row)">删除
                         </el-button>
                       <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                 @click="onDistri(scope.row)">下发
+                                 @click="onRowDownload(scope.row)">下发
                       </el-button>
                     </template>
                 </el-table-column>
@@ -157,6 +157,36 @@
       state.tableData.searchStr=state.tableData.search;
       getTableData();
     };
+    const onRowDownload = (row: RowUserType) => {
+      downloadProcess(row, 'txt', '流程下发脚本');
+    }
+    async function downloadProcess(row, type, name = '流程下发脚本') {
+      let data = row.FlowOutStr
+      const {href, filename} = setEncoded('json', name, data)
+      //      console.log(data)
+      downloadFile(href, filename)
+
+
+    }
+    function setEncoded(type, filename, data) {
+      const encodedData = data;
+      return {
+        filename: `${filename}.${type.toLowerCase()}`,
+        href: `data:application/${
+            type === 'txt' ? 'text/xml' : 'bpmn20-xml'
+        };charset=UTF-8,${encodedData}`,
+        data: data
+      }
+    }
+    function downloadFile(href, filename) {
+      if (href && filename) {
+        const a = document.createElement('a')
+        a.download = filename //指定下载的文件名
+        a.href = href //  URL对象
+        a.click() // 模拟点击
+        URL.revokeObjectURL(a.href) // 释放URL 对象
+      }
+    }
     const onOpenEditDetailByID = (id) => {
         router.push({
             path: '/sysmanage/package/packagedetail',

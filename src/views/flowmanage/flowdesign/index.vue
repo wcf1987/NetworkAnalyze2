@@ -137,7 +137,7 @@
                         background
                         @size-change="onHandleSizeChange"
                         @current-change="onHandleCurrentChange"
-                        :page-sizes="[10, 20, 30]"
+                        :page-sizes="[12, 20, 30]"
                         :current-page="state.tableData.param.pageNum"
                         :page-size="state.tableData.param.pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
@@ -172,7 +172,7 @@
             loading: false,
             param: {
                 pageNum: 1,
-                pageSize: 10,
+                pageSize: 12,
             },
             search: '',
             searchStr: '',
@@ -247,7 +247,7 @@
     const onTableItemClick = (v: FilterListType) => {
         router.push({
             path: '/flowmanage/flowdesign/flowdesigndetail2',
-            query: {ID: v.ID, FlowName: v.Name},
+            query: {ID: v.ID, FlowName: v.Name,Type:v.Type},
         });
 
     };
@@ -288,10 +288,12 @@
     // 分页点击
     const onHandleSizeChange = (val: number) => {
         state.tableData.param.pageSize = val;
+      getTableData();
     };
     // 分页点击
     const onHandleCurrentChange = (val: number) => {
         state.tableData.param.pageNum = val;
+      getTableData();
     };
     const onRowDownload = (row: RowUserType) => {
         downloadProcess(row, 'txt', '流程脚本');
