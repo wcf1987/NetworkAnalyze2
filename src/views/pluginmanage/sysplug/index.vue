@@ -181,6 +181,10 @@
         });
 
     };
+        const onSearch = () => {
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
+    };
     // 初始化表格数据
 const getTableData = () => {
 	state.tableData.loading = true;

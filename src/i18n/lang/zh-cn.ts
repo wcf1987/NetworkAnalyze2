@@ -1,7 +1,7 @@
 // 定义内容
 export default {
     router: {
-        home: '首页',
+        home: '首页1',
         homepage: '首页',
         sysmanage: '系统对象管理',
         address: '地址对象',

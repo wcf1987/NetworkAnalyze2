@@ -28,8 +28,69 @@
 		<el-row :gutter="15" class="home-card-two mb15">
 			<el-col :xs="24" :sm="14" :md="14" :lg="16" :xl="16">
 				<div class="home-card-item">
-					<div style="height: 100%" ref="homeLineRef"></div>
+					<div class="flex-warp-item-box">
+							<div class="flex-title">当前系统资源消耗</div>
+							<div class="flex-content">
+								<div class="task">
+									<div class="task-item task-first-item">
+										<div class="task-item-value task-first">总体负载</div>
+										<div class="task-item-label">25%</div>
+									</div>
+									<div class="task-item">
+										<div class="task-item-box task1">
+											<div class="task-item-value">CPU</div>
+											<div class="task-item-label">12%</div>
+										</div>
+									</div>
+									<div class="task-item">
+										<div class="task-item-box task2">
+											<div class="task-item-value">内存</div>
+											<div class="task-item-label">32%</div>
+										</div>
+									</div>
+									<div class="task-item">
+										<div class="task-item-box task3">
+											<div class="task-item-value">硬盘</div>
+											<div class="task-item-label">5%</div>
+										</div>
+									</div>
+									<div class="task-item">
+										<div class="task-item-box task4">
+											<div class="task-item-value">网络</div>
+											<div class="task-item-label">13%</div>
+										</div>
+									</div>
+								</div>
+								<div class="progress">
+									<div class="progress-item">
+										<span>CPU使用率</span>
+										<div class="progress-box">
+											<el-progress :percentage="70" color="#43bdf0"></el-progress>
+										</div>
+									</div>
+									<div class="progress-item">
+										<span>内存使用率</span>
+										<div class="progress-box">
+											<el-progress :percentage="36" color="#43bdf0"></el-progress>
+										</div>
+									</div>
+									<div class="progress-item">
+										<span>硬盘使用率</span>
+										<div class="progress-box">
+											<el-progress :percentage="91" color="#43bdf0"></el-progress>
+										</div>
+									</div>
+									<div class="progress-item">
+										<span>网络使用率</span>
+										<div class="progress-box">
+											<el-progress :percentage="12" color="#43bdf0"></el-progress>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 				</div>
+
 			</el-col>
 			<el-col :xs="24" :sm="10" :md="10" :lg="8" :xl="8" class="home-media">
 				<div class="home-card-item">
@@ -78,6 +139,9 @@ import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
 import {useRouter} from "vue-router";
+import {gatewayApi} from "/@/api/distribution/gateway";
+import {ElMessage} from "element-plus";
+import {homeApi} from "/@/api/login/home";
 
 // 定义变量内容
 const homeLineRef = ref();
@@ -518,8 +582,30 @@ const initEchartsResize = () => {
 };
 // 页面加载时
 onMounted(() => {
+	initData();
 	initEchartsResize();
 });
+const initData=()=>{
+	 homeApi().getData(
+          {
+
+          })
+          .then(res => {
+            //console.log(res);
+            if (res.code == '200') {
+
+              //state.tableData.data = res.data;
+
+            } else {
+              ElMessage.error(res.message);
+            }
+
+          }).catch(err => {
+
+      }).finally(() => {
+
+      });
+}
 // 由于页面缓存原因，keep-alive
 onActivated(() => {
 	initEchartsResizeFun();
@@ -539,9 +625,10 @@ watch(
 			state.charts.theme = isIsDark ? 'dark' : '';
 			state.charts.bgColor = isIsDark ? 'transparent' : '';
 			state.charts.color = isIsDark ? '#dadada' : '#303133';
-			setTimeout(() => {
-				initLineChart();
-			}, 500);
+			//setTimeout(() => {
+			//	initLineChart();
+		//	}, 500);
+
 			setTimeout(() => {
 				initPieChart();
 			}, 700);
@@ -605,6 +692,156 @@ $homeNavLengh: 8;
 			}
 		}
 	}
+	.flex-warp-item-box {
+						width: 100%;
+						height: 100%;
+						background: var(--el-color-white);
+						border: 1px solid var(--el-border-color-lighter);
+						border-radius: 4px;
+						display: flex;
+						flex-direction: column;
+						padding: 15px;
+						transition: all ease 0.3s;
+						&:hover {
+							box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+							transition: all ease 0.3s;
+						}
+						.flex-title {
+							margin-bottom: 15px;
+							display: flex;
+							font-size: 15px;
+							font-weight:bold;
+							color: #303133;
+							justify-content: space-between;
+							.flex-title-small {
+								font-size: 15px;
+							}
+						}
+						.flex-content {
+							flex: 1;
+							font-size: 16px;
+						}
+						.flex-content-overflow {
+							overflow: hidden;
+						}
+					}
+	.flex-content {
+						display: flex;
+						flex-direction: column;
+						.task {
+							display: flex;
+							height: 45px;
+							.task-item {
+								flex: 1;
+								color: var(--el-color-white);
+								display: flex;
+								justify-content: center;
+								.task-item-box {
+									position: relative;
+									width: 70px;
+									height: 70px;
+									overflow: hidden;
+									border-radius: 100%;
+									z-index: 0;
+									display: flex;
+									align-items: center;
+									flex-direction: column;
+									justify-content: center;
+									box-shadow: 0 10px 12px 0 rgba(0, 0, 0, 0.3);
+									&::before {
+										content: '';
+										position: absolute;
+										z-index: -2;
+										left: -50%;
+										top: -50%;
+										width: 200%;
+										height: 200%;
+										background-repeat: no-repeat;
+										background-size: 50% 50%, 50% 50%;
+										background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+										background-image: linear-gradient(#19d4ae, #19d4ae), linear-gradient(#5ab1ef, #5ab1ef), linear-gradient(#fa6e86, #fa6e86),
+											linear-gradient(#ffb980, #ffb980);
+										animation: rotate 2s linear infinite;
+									}
+									&::after {
+										content: '';
+										position: absolute;
+										z-index: -1;
+										left: 1px;
+										top: 1px;
+										width: calc(100% - 2px);
+										height: calc(100% - 2px);
+										border-radius: 100%;
+									}
+									.task-item-value {
+										text-align: center;
+										font-size: 20px;
+										font-weight: bold;
+									}
+									.task-item-label {
+										text-align: center;
+									}
+								}
+								.task1 {
+									&::after {
+										background: #5492be;
+									}
+								}
+								.task2 {
+									&::after {
+										background: #43a177;
+									}
+								}
+								.task3 {
+									&::after {
+										background: #a76077;
+									}
+								}
+								.task4 {
+									&::after {
+										background: #4337a7;
+									}
+								}
+							}
+							.task-first-item {
+								flex-direction: column;
+								text-align: center;
+								color: var(--el-color-primary);
+								.task-first {
+									font-size: 20px;
+								}
+							}
+						}
+						.progress {
+							color: var(--el-text-color-primary);
+							display: flex;
+							flex-direction: column;
+							flex: 1;
+							justify-content: space-between;
+							margin-top: 15px;
+							.progress-item {
+								height: 33.33%;
+								display: flex;
+								align-items: center;
+								.progress-box {
+									flex: 1;
+									width: 100%;
+									margin-left: 10px;
+									:deep(.el-progress__text) {
+										color: var(--el-text-color-primary);
+										font-size: 16px !important;
+										text-align: right;
+									}
+									:deep(.el-progress-bar__outer) {
+										background-color: rgba(0, 0, 0, 0.1) !important;
+									}
+									:deep(.el-progress-bar) {
+										margin-right: -22px !important;
+									}
+								}
+							}
+						}
+					}
 	.home-card-two,
 	.home-card-three {
 		.home-card-item {

@@ -93,7 +93,7 @@ export function formatTwoStageRoutes(arr: any) {
 // 路由加载前
 router.beforeEach(async (to, from, next) => {
 	NProgress.configure({ showSpinner: false });
-	console.log({ path: to.path, query: to.query });
+	//console.log({ path: to.path, query: to.query });
 	if (to.meta.title) NProgress.start();
 	const token = Session.get('token');
 	if ((to.path === '/login' && !token) ||(to.path === '/login' && token=='')  ) {

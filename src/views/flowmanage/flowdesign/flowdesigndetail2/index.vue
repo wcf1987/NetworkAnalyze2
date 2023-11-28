@@ -26,21 +26,14 @@
                                      :data-name="v.name" :data-icon="v.icon" :data-id="v.id"
                                      @mousedown="dragNode(v)">
 
-                                    <el-popover
-                                            placement="top-start"
-                                            :title="v.name"
-                                            :width="200"
-                                            trigger="hover"
-                                            :content="v.descrip"
-                                    >
-                                        <template #reference>
+
                                             <div class="workflow-left-item-icon">
                                                 <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
                                                          :size=16></SvgIcon>
                                                 <div class="font10 pl5 name">{{ v.name }}</div>
                                             </div>
-                                        </template>
-                                    </el-popover>
+
+
                                 </div>
 
                             </div>

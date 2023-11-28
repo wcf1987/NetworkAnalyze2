@@ -29,7 +29,7 @@
                     新增嵌套结构
                 </el-button>
                 <el-button size="default" type="warning" class="mr10" @click="this.$router.back()"
-                           v-if="state.tableData.deep!=0">
+                           v-if="false">
                     <el-icon>
                         <ele-ArrowLeftBold/>
                     </el-icon>
