@@ -73,11 +73,21 @@
     const changeSourceInput = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
-        for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i].join('.') + '\n'
+        //for (i = 0; i < fo.length; i++) {
+        //if(fo.l)
+          //}
+        if(fo.length>0){
+        tempstr =  fo[fo.length-1].join('.') + '\n'
         }
+
+
         tempstr=tempstr.replaceAll(',','.')
-        state.properForm.rulestr = state.properForm.rulestr+tempstr
+        state.properForm.rulestr = state.properForm.rulestr+tempstr;
+
+
+
+
+
     }
     // 获取父组件数据
     const getParentData = (data: object, lf) => {

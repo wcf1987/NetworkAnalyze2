@@ -2,7 +2,8 @@
     <div>
         <el-drawer :title="`${state.nodeData.type === 'bezier' ? '连接' : '节点'}操作`" v-model="state.isOpen" size="500px">
             <el-scrollbar>
-                <Lines v-if="state.nodeData.type === 'bezier'" @submit="onSubmit" @close="close" ref="lineRef" :Amsg="Amsg"/>
+                <Lines v-if="state.nodeData.type === 'bezier'" @submit="onSubmit" @close="close" ref="lineRef"
+                       :Amsg="Amsg"/>
                 <Nodes v-else @submit="onSubmit" @close="close" ref="nodeRef" @fn="getmsg"/>
             </el-scrollbar>
         </el-drawer>
@@ -18,7 +19,7 @@
     // 引入组件
     const Lines = defineAsyncComponent(() => import('./line.vue'));
     const Nodes = defineAsyncComponent(() => import('./node.vue'));
-	//import Nodes from './node.vue';
+    //import Nodes from './node.vue';
     // 定义变量内容
     const lineRef = ref();
     const nodeRef = ref();
@@ -32,12 +33,12 @@
 
     // 打开抽屉
     const open = (item, lf) => {
-    	state.isOpen = true;
+        state.isOpen = true;
         state.nodeData = item;
         nextTick(() => {
             setTimeout(() => {
                 if (item.type === 'bezier') lineRef.value.getParentData(item, lf);
-        else nodeRef.value.getParentData(item, lf);
+                else nodeRef.value.getParentData(item, lf);
             }, 500);
         });
 

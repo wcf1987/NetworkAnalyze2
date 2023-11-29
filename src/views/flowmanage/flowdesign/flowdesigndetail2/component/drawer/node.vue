@@ -51,8 +51,10 @@
                                     <el-option label="串口" value="串口"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="源地址" prop="sourecenetworkID" v-if="state.properForm.interfacetype=='网口'">
+                            <el-form-item label="源地址" prop="sourecenetworkID"
+                                          v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable
+                                           v-on:change="onChangeStartSNIP"
                                            class="w100">
                                     <el-option
                                             v-for="item in NetworkOptions"
@@ -63,10 +65,12 @@
                                 </el-select>
                             </el-form-item>
 
-                          <el-form-item label="输入源地址" prop="sourecenetworkIP" v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2">
-                            <el-input v-model="state.properForm.sourecenetworkIP" placeholder="请输入源地址ip地址" clearable v-on:change="onChangeStartSNIP"
-                                      ></el-input>
-                          </el-form-item>
+                            <el-form-item label="输入源地址" prop="sourecenetworkIP"
+                                          v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''">
+                                <el-input v-model="state.properForm.sourecenetworkIP" placeholder="请输入源地址ip地址" clearable
+                                          :readonly=" state.properForm.sourecenetworkID!='-1'"
+                                ></el-input>
+                            </el-form-item>
 
 
                             <el-form-item label="串口信息" prop="serialID" v-if="state.properForm.interfacetype=='串口'">
@@ -91,7 +95,8 @@
                                           :readonly=" state.properForm.serialID!='-1'"></el-input>
                             </el-form-item>
 
-                            <el-form-item label="本地地址" prop="localnetworkID" v-if="state.properForm.interfacetype=='网口'">
+                            <el-form-item label="本地地址" prop="localnetworkID"
+                                          v-if="state.properForm.interfacetype=='网口'">
                                 <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
                                            class="w100" v-on:change="onChangeStartNetworkChoose">
                                     <el-option
@@ -319,7 +324,8 @@
 
                             <el-form-item label="源字段" prop="source">
 
-                                <el-cascader v-model="state.properForm.sourceData" :options="sourceoptions" :separator="'.'"
+                                <el-cascader v-model="state.properForm.sourceData" :options="sourceoptions"
+                                             :separator="'.'"
                                              :props="props21"
                                              @change="changeSourceInput21"
                                              clearable
@@ -457,25 +463,27 @@
         },
     });
     const sourceoptions = ref();
-    const globaloptions=ref();
-    const fieldsoptions=ref();
-import emitter from '/@/utils/mitt';
+    const globaloptions = ref();
+    const fieldsoptions = ref();
 
     const props21 = {
         multiple: true,
         expandTrigger: 'hover',
         value: 'EName',
         label: 'Name',
-        emitPath:true
+        emitPath: true
     }
     const changeSourceInput21 = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
-        for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i] + '\n'
+
+        if(fo.length>0){
+            tempstr =  fo[fo.length-1].join('.') + '\n'
         }
-        tempstr=tempstr.replaceAll(',','.');
-        state.properForm.globalVarRule = tempstr;
+
+
+        tempstr = tempstr.replaceAll(',', '.');
+        state.properForm.globalVarRule =state.properForm.globalVarRule + tempstr;
 
 
     }
@@ -485,42 +493,107 @@ import emitter from '/@/utils/mitt';
         state.tabsActive = '1';
         state.node = data;
         state.proper.name = data.text.value;
+        state.properForm = data.properties;
+
+        state.lf = lf;
+        state.showFlag[state.node["type"]] = true;
+
         if (data.type == 'start') {
             state.proper.typeC = '开始节点';
-            state.properForm = data.properties;
+            getNetwork();
+            getSerial();
+
         }
         if (data.type == 'end') {
             state.proper.typeC = '目的节点';
+            getNetwork();
+            getSerial();
+
         }
         if (data.type == 'calc') {
             state.proper.typeC = '计算节点';
         }
-        if (data.type == 'messparse') {
-            state.proper.typeC = '消息解析';
-        }
+
         if (data.type == 'messtraslate') {
             state.proper.typeC = '消息转化';
+            getNetwork();
+            getSerial();
+            getPackage();
+            getMessHeader();
+            getMessBody();
+            getMessTraslate();
+            nextTick(() => {
+                setTimeout(() => {
+                    getSourceData();
+                }, 500);
+            });
         }
         if (data.type == 'pacencap') {
             state.proper.typeC = '封装/应用头添加';
+            getNetwork();
+            getSerial();
+            getPackage();
+            getMessHeader();
+            getMessBody();
+            getMessTraslate();
+            nextTick(() => {
+                setTimeout(() => {
+                    getSourceData();
+                }, 500);
+            });
         }
         if (data.type == 'pacparse') {
             state.proper.typeC = '封装/应用头解析';
+
+            getPackage();
+
         }
         if (data.type == 'messheaderparse') {
             state.proper.typeC = '消息头解析';
+
+            getMessHeader();
+
         }
         if (data.type == 'messheaderencap') {
             state.proper.typeC = '消息头添加';
+            getNetwork();
+            getSerial();
+            getPackage();
+            getMessHeader();
+            getMessBody();
+            getMessTraslate();
+            nextTick(() => {
+                setTimeout(() => {
+                    getSourceData();
+                }, 500);
+            });
         }
         if (data.type == 'messbodyparse') {
             state.proper.typeC = '消息体解析';
+            getNetwork();
+
+            getMessBody();
+
         }
         if (data.type == 'messbodyencap') {
             state.proper.typeC = '消息体添加';
+
+            getMessBody();
+
         }
         if (data.type == 'spemark') {
             state.proper.typeC = '临时变量';
+            getNetwork();
+            getSerial();
+            getPackage();
+            getMessHeader();
+            getMessBody();
+            getMessTraslate();
+            nextTick(() => {
+                setTimeout(() => {
+                    getSourceData();
+                }, 500);
+            });
         }
 
         if (data.type == 'statistics') {
@@ -534,22 +607,19 @@ import emitter from '/@/utils/mitt';
         }
         if (data.type == 'swich') {
             state.proper.typeC = '分支选择';
+            getNetwork();
+            getSerial();
+            getPackage();
+            getMessHeader();
+            getMessBody();
+            getMessTraslate();
+            nextTick(() => {
+                setTimeout(() => {
+                    getSourceData();
+                }, 500);
+            });
         }
-        state.properForm = data.properties;
 
-        state.lf = lf;
-        state.showFlag[state.node["type"]] = true;
-        getNetwork();
-        getSerial();
-        getPackage();
-        getMessHeader();
-        getMessBody();
-        getMessTraslate();
-        nextTick(() => {
-            setTimeout(() => {
-               getSourceData();
-            }, 500);
-        });
 
         initChartsMonitor();
     };
@@ -748,20 +818,20 @@ import emitter from '/@/utils/mitt';
     const getSourceData = () => {
         //sourceoptions.value = [];
         getNodeSourceData();
-         nextTick(() => {
+        nextTick(() => {
             setTimeout(() => {
-             sourceoptions.value = fieldsoptions.value.concat(globaloptions.value);
-            let graph = state.lf.getGraphData();
+                sourceoptions.value = fieldsoptions.value.concat(globaloptions.value);
+                let graph = state.lf.getGraphData();
 
-            let nodes = graph.nodes;
-            for (let i = 0; i < nodes.length; i++) {
-            if (nodes[i].type == 'swich') {
-              console.log('swich');
+                let nodes = graph.nodes;
+                for (let i = 0; i < nodes.length; i++) {
+                    if (nodes[i].type == 'swich') {
+                        console.log('swich');
 
-                state.lf.setProperties(nodes[i].id,{fd:fieldsoptions.value,gd:globaloptions.value});
-            }
-        }
-            // emitter.emit('Fn', {fd:fieldsoptions.value,gd:globaloptions.value});
+                        state.lf.setProperties(nodes[i].id, {fd: fieldsoptions.value, gd: globaloptions.value});
+                    }
+                }
+                // emitter.emit('Fn', {fd:fieldsoptions.value,gd:globaloptions.value});
             }, 500);
         });
 
@@ -813,8 +883,11 @@ import emitter from '/@/utils/mitt';
                 }
             }
             if (nodes[i].type == 'spemark') {
-                if (nodes[i].properties.globalVarName != null && nodes[i].properties.globalVarName != '' &&  nodes[i].properties.globalVarName !=state.properForm.globalVarName) {
-                    globalvarlist.push({EName:nodes[i].properties.globalVarName,Name:nodes[i].properties.globalVarName});
+                if (nodes[i].properties.globalVarName != null && nodes[i].properties.globalVarName != '' && nodes[i].properties.globalVarName != state.properForm.globalVarName) {
+                    globalvarlist.push({
+                        EName: nodes[i].properties.globalVarName,
+                        Name: nodes[i].properties.globalVarName
+                    });
                 }
             }
 
@@ -857,7 +930,7 @@ import emitter from '/@/utils/mitt';
                 }
             }
         }
-        globaloptions.value=[]
+        globaloptions.value = []
         globaloptions.value.push(getGlobalVarOptions(globalvarlist));
 
     }
@@ -962,11 +1035,11 @@ import emitter from '/@/utils/mitt';
     const getGlobalVarOptions = (list) => {
 
 
-                    return  {
-                            EName: 'globalVar',
-                            Name: '临时变量',
-                            children:list
-                        }
+        return {
+            EName: 'globalVar',
+            Name: '临时变量',
+            children: list
+        }
 
 
     }
@@ -1031,20 +1104,21 @@ import emitter from '/@/utils/mitt';
 
 
     };
+    //开始节点，源地址选择联动
     const onChangeStartSNIP = (value: any) => {
-      //console.log(state.properForm.localnetworkID);
-      if (state.properForm.sourecenetworkID == '-1') {
-        state.properForm.sourecenetworkIP = "";
+        //console.log(state.properForm.localnetworkID);
+        if (state.properForm.sourecenetworkID == '-1') {
+            state.properForm.sourecenetworkIP = "";
 
-      } else {
-        for (let i = 0; i < NetworkOptions.value.length; i++) {
-          if (NetworkOptions.value[i].ID == state.properForm.sourecenetworkID) {
-            state.properForm.sourecenetworkIP = NetworkOptions.value[i].IP;
+        } else {
+            for (let i = 0; i < NetworkOptions.value.length; i++) {
+                if (NetworkOptions.value[i].ID == state.properForm.sourecenetworkID) {
+                    state.properForm.sourecenetworkIP = NetworkOptions.value[i].IP;
 
-          }
+                }
+            }
+
         }
-
-      }
 
 
     };
@@ -1122,7 +1196,7 @@ import emitter from '/@/utils/mitt';
         getMessTraslateDetail(targetid, state.properForm.transid, 'body');
     }
     const onExtendEditMessTranslate = () => {
-        translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata,fieldsoptions.value,globaloptions.value);
+        translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata, fieldsoptions.value, globaloptions.value);
 
     };
     const onChangeMessheaderEncapChoose = () => {
@@ -1130,7 +1204,8 @@ import emitter from '/@/utils/mitt';
     }
     const onExtendEditMessheader = () => {
         //messDialogRef.value.openDialog('header', state.properForm.messheaderencapID);
-        translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata);
+        console.log(fieldsoptions.value);
+        translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata, fieldsoptions.value, globaloptions.value);
         // translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata);
 
     };

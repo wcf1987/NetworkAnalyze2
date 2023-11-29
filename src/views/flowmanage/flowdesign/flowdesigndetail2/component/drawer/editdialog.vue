@@ -64,7 +64,7 @@
 
                         <el-form-item label="源字段" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.sourceData" :options=state.fd :props="props21"
+                            <el-cascader v-model="state.ruleForm.SourceData" :options=state.fd :props="props21"
                                          @change="changeSourceInput24"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
@@ -86,27 +86,24 @@
                     </el-col>
 
 
-
-
-
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='自定义转换计算'">
 
                         <el-form-item label="源字段" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.sourceData" :options=state.fd :props="props21"
+                            <el-cascader v-model="state.ruleForm.SourceData" :options=state.fd :props="props21"
                                          @change="changeSourceInput21"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
                         </el-form-item>
                     </el-col>
 
-                                        <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='自定义转换计算'">
 
                         <el-form-item label="全局变量" prop="source">
 
-                            <el-cascader v-model="state.ruleForm.globalData" :options=state.gd :props="props21"
+                            <el-cascader v-model="state.ruleForm.GlobalData" :options=state.gd :props="props21"
                                          @change="changeSourceInput23"
                                          clearable
                                          style="width: 300px; " collapse-tags/>
@@ -147,7 +144,7 @@
     import {nextTick, reactive, ref} from 'vue';
 
     // 定义子组件向父组件传值/事件
-    const emit = defineEmits(['refresh','update']);
+    const emit = defineEmits(['refresh', 'update']);
 
     // 定义变量内容
     const userDialogFormRef = ref();
@@ -160,24 +157,22 @@
     });
 
 
-
-
     const props1 = {
         multiple: false,
         expandTrigger: 'hover',
         value: 'EName',
         label: 'Name'
     }
-        const props23 = {
+    const props23 = {
         multiple: false,
         expandTrigger: 'hover',
-         value: 'EName',
+        value: 'EName',
         label: 'Name'
     }
     const props21 = {
         multiple: true,
         expandTrigger: 'hover',
-         value: 'EName',
+        value: 'EName',
         label: 'Name'
     }
     const props22 = {
@@ -186,7 +181,7 @@
         value: 'name',
         label: 'name'
     }
-        const props32= {
+    const props32 = {
         multiple: true,
         expandTrigger: 'hover',
 
@@ -208,7 +203,7 @@
             Type: '', // 用户昵称
             Optional: '',
             Transrule: '',
-            sourceData: '',
+            SourceData: '',
             funcrule: '',
             describe: '', // 用户描述
         },
@@ -232,57 +227,59 @@
     const changeSourceInput21 = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
-        for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i]+'\n'
+        if (fo.length > 0) {
+            tempstr = fo[fo.length - 1].join('.') + '\n'
         }
-        tempstr=tempstr.replaceAll(',','.')
-        state.ruleForm.Transrule = state.ruleForm.Transrule+tempstr;
+
+
+        tempstr = tempstr.replaceAll(',', '.')
+        state.ruleForm.Transrule = state.ruleForm.Transrule + tempstr;
 
 
     }
-        const changeSourceInput23 = (fo) => {
+    const changeSourceInput23 = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
-        for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i]+'\n'
+        if (fo.length > 0) {
+            tempstr = fo[fo.length - 1].join('.') + '\n'
         }
-               tempstr=tempstr.replaceAll(',','.')
-        state.ruleForm.Transrule = state.ruleForm.Transrule+tempstr;
+        tempstr = tempstr.replaceAll(',', '.')
+        state.ruleForm.Transrule = state.ruleForm.Transrule + tempstr;
 
 
     }
-            const changeSourceInput24 = (fo) => {
+    const changeSourceInput24 = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
-        for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i]+'\n'
+        if (fo.length > 0) {
+            tempstr = fo[fo.length - 1].join('.') + '\n'
         }
-               tempstr=tempstr.replaceAll(',','.')
-        state.ruleForm.Transrule = state.ruleForm.funcrule+tempstr;
+        tempstr = tempstr.replaceAll(',', '.')
+        state.ruleForm.Transrule = state.ruleForm.Transrule + tempstr;
 
 
     }
     const changeSourceInput22 = (fo) => {
         console.log(fo)
 
-        state.ruleForm.Transrule =  fo[0];
+        state.ruleForm.Transrule = state.ruleForm.Transrule+fo[0];
 
 
     }
-        const changeSourceInput32 = (fo) => {
+    const changeSourceInput32 = (fo) => {
         console.log(fo)
         let i = 0, tempstr = ''
         for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i]+'\n'
+            tempstr = tempstr + fo[i] + '\n'
         }
         state.ruleForm.Transrule = tempstr;
 
 
     }
     // 打开弹窗
-    const openDialog = (type: string, row: RowUserType,fd,gd) => {
-        state.fd=fd;
-        state.gd=gd;
+    const openDialog = (type: string, row: RowUserType, fd, gd) => {
+        state.fd = fd;
+        state.gd = gd;
         if (type === 'edit') {
             state.ruleForm = row;
             state.dialog.title = '修改';
@@ -308,7 +305,7 @@
     };
     // 提交
     const onSubmit = () => {
-        emit('update',state.ruleForm);
+        emit('update', state.ruleForm);
         closeDialog();
         emit('refresh');
         // if (state.dialog.type === 'add') { }
