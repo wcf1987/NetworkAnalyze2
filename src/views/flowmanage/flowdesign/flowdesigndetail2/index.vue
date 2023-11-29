@@ -1048,7 +1048,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            background: url("./assets/svgicon/delete.png") no-repeat;
+          //  background: url("./assets/svgicon/delete.png") no-repeat;
             background-size: 20px;
         }
 

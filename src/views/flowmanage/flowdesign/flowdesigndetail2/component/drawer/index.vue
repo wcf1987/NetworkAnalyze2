@@ -3,8 +3,8 @@
         <el-drawer :title="`${state.nodeData.type === 'bezier' ? '连接' : '节点'}操作`" v-model="state.isOpen" size="500px">
             <el-scrollbar>
                 <Lines v-if="state.nodeData.type === 'bezier'" @submit="onSubmit" @close="close" ref="lineRef"
-                       :Amsg="Amsg"/>
-                <Nodes v-else @submit="onSubmit" @close="close" ref="nodeRef" @fn="getmsg"/>
+                       />
+                <Nodes v-else @submit="onSubmit" @close="close" ref="nodeRef" />
             </el-scrollbar>
         </el-drawer>
     </div>
