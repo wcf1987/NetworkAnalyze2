@@ -47,41 +47,13 @@ export function flowdistributionApi() {
             });
         },
 
+        dispatch: (data: object) => {
+            return request({
+                url: '/flowdistribution/dispatch',
+                method: 'post',
+                data,
+            });
+        },
 
-        getPackageDetailSearchListSize: (data: object) => {
-            return request({
-                url: '/packagedetail/searchSize',
-                method: 'post',
-                data,
-            });
-        },
-        addPackageDetail: (data: object) => {
-            return request({
-                url: '/packagedetail/add',
-                method: 'post',
-                data,
-            });
-        },
-        updatePackageDetail: (data: object) => {
-            return request({
-                url: '/packagedetail/update',
-                method: 'post',
-                data,
-            });
-        },
-        delPackageDetail: (data: object) => {
-            return request({
-                url: '/packagedetail/delete',
-                method: 'post',
-                data,
-            });
-        },
-        searchPackageDetail: (data: object) => {
-            return request({
-                url: '/packagedetail/search',
-                method: 'post',
-                data,
-            });
-        },
     };
 }
