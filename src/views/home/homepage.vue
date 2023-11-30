@@ -594,6 +594,8 @@ const initData = () => {
 
           state.pie=res.data.pie;
           state.bar=res.data.bar;
+          initPieChart();
+          initBarChart();
 
         } else {
           ElMessage.error(res.message);
@@ -628,12 +630,8 @@ watch(
         //	initLineChart();
         //	}, 500);
 
-        setTimeout(() => {
-          initPieChart();
-        }, 700);
-        setTimeout(() => {
-          initBarChart();
-        }, 1000);
+        //setTimeout(() => {          initPieChart();        }, 700);
+        //setTimeout(() => {          initBarChart();        }, 1000);
       });
     },
     {

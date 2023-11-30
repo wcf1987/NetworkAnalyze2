@@ -127,7 +127,7 @@ export default {
         dropdownLarge: '大型',
         dropdownDefault: '默认',
         dropdownSmall: '小型',
-        dropdown1: '首页',
+        dropdown1: '首页1',
         dropdown2: '个人中心',
         dropdown3: '404',
         dropdown4: '401',
