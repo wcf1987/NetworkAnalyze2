@@ -2,7 +2,8 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入网口名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
+                <el-input size="default" placeholder="请输入网口名称" style="max-width: 180px"
+                          v-model="state.tableData.search"></el-input>
                 <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
@@ -15,8 +16,16 @@
                     </el-icon>
                     新增网口对象
                 </el-button>
+                <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')">
+                    <el-icon>
+                        <ele-DeleteFilled/>
+                    </el-icon>
+                    批量删除
+                </el-button>
             </div>
-            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
+            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%"
+                      @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="30"/>
                 <el-table-column type="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
@@ -62,10 +71,11 @@
 
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/address/networkinterface/dialog.vue'));
-    const searchboxRef=ref();
+    const searchboxRef = ref();
     // 定义变量内容
     const userDialogRef = ref();
     const state = reactive({
+
         tableData: {
             data: [],
             total: 0,
@@ -74,8 +84,9 @@
                 pageNum: 1,
                 pageSize: 10,
             },
-            search:'',
-            searchStr:'',
+            search: '',
+            searchStr: '',
+            ids: [],
         },
     });
     // 初始化表格数据
@@ -128,12 +139,12 @@
 
         }*/
 
-            addressApi().searchNetworkInter(
+        addressApi().searchNetworkInter(
             {
                 uid: 1,
                 pageNum: state.tableData.param.pageNum,
                 pageSize: state.tableData.param.pageSize,
-                name:state.tableData.searchStr,
+                name: state.tableData.searchStr,
             })
             .then(res => {
                 //console.log(res);
@@ -154,10 +165,10 @@
         addressApi().getNetworkSearchListSize(
             {
                 uid: 1,
-                name:state.tableData.searchStr,
+                name: state.tableData.searchStr,
             })
             .then(res => {
-            	//console.log(res);
+                //console.log(res);
                 if (res.code == '200') {
 
                     state.tableData.total = res.data;
@@ -173,13 +184,6 @@
         });
 
 
-
-
-
-
-
-
-
         //state.tableData.data = data;
         //state.tableData.total = state.tableData.data.length;
         setTimeout(() => {
@@ -188,11 +192,52 @@
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
-            userDialogRef.value.openDialog(type);
+        userDialogRef.value.openDialog(type);
+    };
+    //多选监听
+    const handleSelectionChange = (val) => {
+        state.tableData.ids = val.map(v => v.ID)
+        //this.$message.warning("选择了"+this.ids.length+"条数据");
+        console.log("选择了"+state.tableData.ids.length+"条数据")
+    };
+    //批量删除
+    const onDeleteIDS = (type: string) => {
+        ElMessageBox.confirm(`此操作将批量删除网口：“${state.tableData.ids.length}”条，是否继续?`, '提示', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        })
+
+
+            .then(() => {
+                addressApi().delNetworkIDS(                                          state.tableData.ids
+
+                    )
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('成功批量删除'+res.data+'条');
+                            getTableData();
+
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+            })
+            .catch(() => {
+            });
     };
     const onSearch = () => {
-        state.tableData.searchStr=state.tableData.search;
-       getTableData();
+        state.tableData.searchStr = state.tableData.search;
+        getTableData();
     };
     // 打开修改用户弹窗
     const onOpenEdit = (type: string, row: RowUserType) => {
@@ -213,30 +258,29 @@
         })
 
 
-
             .then(() => {
-                      addressApi().delNetworkInter(
-            {
-                ID:row.ID,
+                addressApi().delNetworkInter(
+                    {
+                        ID: row.ID,
 
-            })
-            .then(res => {
-                //console.log(res);
-                if (res.code == '200') {
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
 
-                      ElMessage.success('删除成功');
-                      getTableData();
+                            ElMessage.success('删除成功');
+                            getTableData();
 
 
-                } else {
-                    ElMessage.error(res.message);
-                }
+                        } else {
+                            ElMessage.error(res.message);
+                        }
 
-            }).catch(err => {
+                    }).catch(err => {
 
-        }).finally(() => {
+                }).finally(() => {
 
-        });
+                });
 
             })
             .catch(() => {

@@ -10,6 +10,13 @@ import request from '/@/utils/request';
 export function packageApi() {
 
     return {
+                 delIDS: (data: object) => {
+            return request({
+                url: '/package/delids',
+                method: 'post',
+                data,
+            });
+        },
         getPackageList: (data: object) => {
             return request({
                 url: '/package/list',
@@ -61,7 +68,13 @@ export function packageApi() {
         },
 
 
-
+                 delDetailIDS: (data: object) => {
+            return request({
+                url: '/packagedetail/delids',
+                method: 'post',
+                data,
+            });
+        },
         getPackageDetailSearchListSize: (data: object) => {
             return request({
                 url: '/packagedetail/searchSize',

@@ -10,7 +10,13 @@ import request from '/@/utils/request';
 export function functionplugManageApi() {
 
     return {
-
+                 delIDS: (data: object) => {
+            return request({
+                url: '/functionplug/delids',
+                method: 'post',
+                data,
+            });
+        },
         getSearchListSize: (data: object) => {
             return request({
                 url: '/functionplug/searchSize',

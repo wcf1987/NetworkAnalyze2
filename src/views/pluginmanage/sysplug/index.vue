@@ -22,6 +22,7 @@
                     </el-icon>
                     新增系统插件
                 </el-button>
+
             </div>
             <div class="flex-warp mt15 mb15" v-if="state.tableData.data.length > 0">
                 <el-row :gutter="15">

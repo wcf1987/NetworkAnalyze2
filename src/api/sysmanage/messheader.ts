@@ -10,7 +10,13 @@ import request from '/@/utils/request';
 export function messheaderApi() {
 
     return {
-
+         delIDS: (data: object) => {
+            return request({
+                url: '/messheader/delids',
+                method: 'post',
+                data,
+            });
+        },
         getMessHeaderSearchListSize: (data: object) => {
             return request({
                 url: '/messheader/searchSize',
@@ -47,7 +53,13 @@ export function messheaderApi() {
             });
         },
 
-
+                 delDetailIDS: (data: object) => {
+            return request({
+                url: '/messheaderdetail/delids',
+                method: 'post',
+                data,
+            });
+        },
 
         getMessHeaderDetailSearchListSize: (data: object) => {
             return request({

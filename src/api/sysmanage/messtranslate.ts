@@ -10,7 +10,13 @@ import request from '/@/utils/request';
 export function messtranslateApi() {
 
     return {
-
+         delIDS: (data: object) => {
+            return request({
+                url: '/messtranslate/delids',
+                method: 'post',
+                data,
+            });
+        },
         getMessTranslateSearchListSize: (data: object) => {
             return request({
                 url: '/messtranslate/searchSize',
@@ -47,7 +53,13 @@ export function messtranslateApi() {
             });
         },
 
-
+                 delDetailIDS: (data: object) => {
+            return request({
+                url: '/messtranslatedetail/delids',
+                method: 'post',
+                data,
+            });
+        },
 
         getMessTranslateDetailSearchListSize: (data: object) => {
             return request({

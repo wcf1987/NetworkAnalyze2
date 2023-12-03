@@ -10,7 +10,13 @@ import request from '/@/utils/request';
 export function gatewayApi() {
 
     return {
-
+                 delIDS: (data: object) => {
+            return request({
+                url: '/gateway/delids',
+                method: 'post',
+                data,
+            });
+        },
         getGatewaySearchListSize: (data: object) => {
             return request({
                 url: '/gateway/searchSize',

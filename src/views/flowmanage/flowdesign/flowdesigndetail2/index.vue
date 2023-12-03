@@ -191,6 +191,7 @@
                     nodet.properties.interfacetype = '网口'
                     nodet.properties.sourecenetworkID = tt.sourecenetworkID;
                     nodet.properties.sourecenetworkIP = tt.sourecenetworkIP;
+                    nodet.properties.sourecenetworkPort = tt.sourecenetworkPort;
                     nodet.properties.localnetworkID = tt.localnetworkID;
                     nodet.properties.IP = tt.sourecenetworkIP;
                     nodet.properties.Port = tt.sourecenetworkIP;

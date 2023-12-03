@@ -10,6 +10,13 @@ import request from '/@/utils/request';
 export function addressApi() {
 
     return {
+        delNetworkIDS: (data: object) => {
+            return request({
+                url: '/networkinter/delids',
+                method: 'post',
+                data,
+            });
+        },
         getNetworkList: (data: object) => {
             return request({
                 url: '/networkinter/list',
@@ -61,7 +68,13 @@ export function addressApi() {
         },
 
 
-
+          deSerialIDS: (data: object) => {
+            return request({
+                url: '/serialinter/delids',
+                method: 'post',
+                data,
+            });
+        },
         getSerialSearchListSize: (data: object) => {
             return request({
                 url: '/serialinter/searchSize',

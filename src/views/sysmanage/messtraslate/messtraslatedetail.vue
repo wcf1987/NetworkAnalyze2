@@ -16,8 +16,10 @@
                     </el-icon>
                     查询数据源定义
                 </el-button>
+
             </div>
-            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%">
+            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%" >
+
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="Name" label="目的字段名" show-overflow-tooltip></el-table-column>
@@ -95,6 +97,7 @@
             },
             search: '',
             searchStr: '',
+                ids:[],
         },
     });
     const onSearch = () => {
@@ -180,7 +183,47 @@
         console.log(state.tableData);
         viewDialogRef.value.openDialog(type, state.tableData.sourceid);
     };
+    //多选监听
+    const handleSelectionChange = (val) => {
+        state.tableData.ids = val.map(v => v.ID)
+        //this.$message.warning("选择了"+this.ids.length+"条数据");
+        console.log("选择了"+state.tableData.ids.length+"条数据")
+    };
+    //批量删除
+    const onDeleteIDS = (type: string) => {
+        ElMessageBox.confirm(`此操作将批量删除网口：“${state.tableData.ids.length}”条，是否继续?`, '提示', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        })
 
+
+            .then(() => {
+                messtranslateApi().delDetailIDS(                                          state.tableData.ids
+
+                    )
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('成功批量删除'+res.data+'条');
+                            getTableData();
+
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+            })
+            .catch(() => {
+            });
+    };
     // 删除用户
     const onRowDel = (row: RowUserType) => {
         ElMessageBox.confirm(`此操作将永久删除：“${row.Name}”，是否继续?`, '提示', {

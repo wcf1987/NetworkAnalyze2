@@ -11,7 +11,13 @@ import requestfile from '/@/utils/requestfile';
 export function fieldsApi() {
 
     return {
-
+ delIDS: (data: object) => {
+            return request({
+                url: '/fields/delids',
+                method: 'post',
+                data,
+            });
+        },
         getFieldsSearchListSize: (data: object) => {
             return request({
                 url: '/fields/searchSize',

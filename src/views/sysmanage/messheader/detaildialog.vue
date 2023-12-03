@@ -1,7 +1,8 @@
 <template>
     <div class="system-user-dialog-container">
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px" :draggable=true>
-            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default" label-width="90px">
+            <el-form ref="userDialogFormRef" :model="state.ruleForm" :rules="state.baseRules" size="default"
+                     label-width="90px">
                 <el-row :gutter="35">
 
 
@@ -47,10 +48,10 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型" :readonly="isReadOnly" prop="Type">
+                        <el-form-item label="类型" :readonly="state.bitOnly" prop="Type">
 
                             <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable
-                                       class="w100">
+                                       class="w100" :disabled=state.bitOnly>
                                 <el-option
                                         v-for="item in options"
                                         :key="item.id"
@@ -147,14 +148,14 @@
             Name: '', // 账户名称
             Type: '', // 用户昵称
         },
-                baseRules: {
-             Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
-                     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-                     EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur',validator: checkCodeName}],
-                     ShortName: [{required: true, message: '请输入简称', trigger: 'blur'}],
-                     Type: [{required: true, message: '请选择类型', trigger: 'change'}],
-                     TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
-                     Length: [{required: true, message: '位数必须为正整数', trigger: 'blur',validator: checkInterNum}],
+        baseRules: {
+            Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
+            Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+            EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur', validator: checkCodeName}],
+            ShortName: [{required: true, message: '请输入简称', trigger: 'blur'}],
+            Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+            TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
+            Length: [{required: true, message: '位数必须为正整数', trigger: 'blur', validator: checkInterNum}],
 
 
         },
@@ -166,14 +167,17 @@
             title: '',
             submitTxt: '',
         },
+        bitOnly: false,
     });
 
     const isReadOnly = ref(false);
     // 打开弹窗
-    const openDialog = (type: string, pid, row: RowUserType) => {
+    const openDialog = (type: string, pid, row: RowUserType, bitype) => {
         state.dialog.type = type;
         state.pid = pid;
         state.dialog.isShowDialog = true;
+        //console.log(state.bitOnly);
+
         if (type === 'edit') {
 
             state.dialog.title = '修改';
@@ -199,8 +203,14 @@
             // 清空表单，此项需加表单验证才能使用
             nextTick(() => {
                 userDialogFormRef.value.resetFields();
+
             });
+
         }
+         if (bitype == "S" || bitype == "K" || bitype == "Z") {
+                state.bitOnly = true;
+                state.ruleForm.Type = 'bit'
+            }
         getMenuOptions();
 
     };
@@ -251,70 +261,71 @@
 
     // 提交
     const onSubmit = () => {
-                 userDialogFormRef.value.validate((valid) => {
-           // console.log('123123');
+        userDialogFormRef.value.validate((valid) => {
+            // console.log('123123');
             // 不通过校验
             if (!valid) {
 
                 return ElMessage.error('请确保数据格式填写正确！');
             } else {
-        if (state.dialog.type == 'edit') {
-            messdetailApi().updateMessDetail(
-                state.ruleForm
-            )
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+                if (state.dialog.type == 'edit') {
+                    messdetailApi().updateMessDetail(
+                        state.ruleForm
+                    )
+                        .then(res => {
+                            //console.log(res);
+                            if (res.code == '200') {
 
-                        ElMessage.success("修改成功");
-                        closeDialog();
-                        emit('refresh');
-                    } else {
-                        ElMessage.error(res.message);
-                    }
+                                ElMessage.success("修改成功");
+                                closeDialog();
+                                emit('refresh');
+                            } else {
+                                ElMessage.error(res.message);
+                            }
 
-                }).catch(err => {
+                        }).catch(err => {
 
-            }).finally(() => {
+                    }).finally(() => {
 
-            });
-        }
-        if (state.dialog.type == 'add') {
-            const stores = useUserInfo();
-            state.ruleForm['AuthorID'] = stores.userInfos.id
+                    });
+                }
+                if (state.dialog.type == 'add') {
+                    const stores = useUserInfo();
+                    state.ruleForm['AuthorID'] = stores.userInfos.id
 
 
-            state.ruleForm['PID'] = state.pid;
-            state.ruleForm['TType'] = 'header';
-            state.ruleForm['OutType'] = 'custom';
-            messdetailApi().addMessDetail(
-                state.ruleForm
-            )
-                .then(res => {
-                        //console.log(res);
-                        if (res.code == '200') {
+                    state.ruleForm['PID'] = state.pid;
+                    state.ruleForm['TType'] = 'header';
+                    state.ruleForm['OutType'] = 'custom';
+                    messdetailApi().addMessDetail(
+                        state.ruleForm
+                    )
+                        .then(res => {
+                                //console.log(res);
+                                if (res.code == '200') {
 
-                            ElMessage.success("添加成功");
+                                    ElMessage.success("添加成功");
 
-                            closeDialog();
-                            emit('refresh');
-                        } else {
-                            ElMessage.error(res.message);
-                        }
+                                    closeDialog();
+                                    emit('refresh');
+                                } else {
+                                    ElMessage.error(res.message);
+                                }
 
-                    }
-                )
-                .catch(err => {
+                            }
+                        )
+                        .catch(err => {
 
-                }).finally(() => {
+                        }).finally(() => {
 
-            });
-        }
+                    });
+                }
 
-    };
-    // 初始化部门数据
+            }
+            ;
+            // 初始化部门数据
         });
-};
+    };
 
     // 暴露变量
     defineExpose({

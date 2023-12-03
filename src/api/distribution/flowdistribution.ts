@@ -10,7 +10,13 @@ import request from '/@/utils/request';
 export function flowdistributionApi() {
 
     return {
-
+                 delIDS: (data: object) => {
+            return request({
+                url: '/flowdistribution/delids',
+                method: 'post',
+                data,
+            });
+        },
         getFlowDistributionSearchListSize: (data: object) => {
             return request({
                 url: '/flowdistribution/searchSize',

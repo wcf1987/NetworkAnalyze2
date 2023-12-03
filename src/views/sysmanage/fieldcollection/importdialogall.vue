@@ -128,8 +128,12 @@
                     emit('update:showDialog', false)
                     emit('import-success', successListData.value)
                 } else {
-                    isShowFail.value = true;
-                    errorListData.value = res.data;
+                      if(res.data==null){
+                         ElMessage.error('文件结构有误');
+                    }else {
+                    isShowFail.value = true
+                    errorListData.value=res.data;
+                    }
                 }
             })
             .catch((res) => {

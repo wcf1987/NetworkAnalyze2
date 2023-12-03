@@ -10,7 +10,13 @@ import request from '/@/utils/request';
 export function specialApi() {
 
     return {
-
+                 delIDS: (data: object) => {
+            return request({
+                url: '/special/delids',
+                method: 'post',
+                data,
+            });
+        },
         getSearchListSize: (data: object) => {
             return request({
                 url: '/special/searchSize',

@@ -84,7 +84,7 @@ export const leftNavList = [
             },
             {
                 icon: messtraslateicon,
-                name: '消息转化',
+                name: '消息转换',
                 type: 'messtraslate',
                 id: '16',
                 descrip: '按设定好规则转化消息体',

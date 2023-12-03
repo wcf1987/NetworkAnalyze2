@@ -49,7 +49,7 @@
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="类型" :readonly="isReadOnly" prop="Type">
 
-                            <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable
+                            <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable :disabled=state.bitOnly
                                        class="w100">
                                 <el-option
                                         v-for="item in options"
@@ -167,11 +167,12 @@
             title: '',
             submitTxt: '',
         },
+        bitOnly:false,
     });
 
     const isReadOnly = ref(false);
     // 打开弹窗
-    const openDialog = (type: string, pid, row: RowUserType) => {
+    const openDialog = (type: string, pid, row: RowUserType, bitype) => {
         state.dialog.type = type;
         state.pid = pid;
         state.dialog.isShowDialog = true;
@@ -202,6 +203,10 @@
                 userDialogFormRef.value.resetFields();
             });
         }
+                 if (bitype == "S" || bitype == "K" || bitype == "Z") {
+                state.bitOnly = true;
+                state.ruleForm.Type = 'bit'
+            }
         getMenuOptions();
 
     };

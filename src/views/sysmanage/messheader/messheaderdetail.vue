@@ -35,8 +35,15 @@
                     </el-icon>
                     返回上一级
                 </el-button>
+                        <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')">
+                    <el-icon>
+                        <ele-DeleteFilled/>
+                    </el-icon>
+                    批量删除
+                </el-button>
             </div>
-            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%">
+            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
+                 <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
@@ -100,6 +107,7 @@
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRoute, useRouter} from "vue-router";
     import {messdetailApi} from '/@/api/sysmanage/messdetail';
+    import {messheaderApi} from "/@/api/sysmanage/messheader";
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/detaildialog.vue'));
     const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/importdialog.vue'));
@@ -117,6 +125,7 @@
         tableData: {
             id: '',
             data: [],
+            type:'',
             total: 0,
 
             loading: false,
@@ -126,6 +135,7 @@
             },
             search: '',
             searchStr: '',
+                ids:[],
         },
     });
 
@@ -188,7 +198,8 @@
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
-        userDialogRef.value.openDialog(type,state.tableData.id);
+        //console.log(state);
+        userDialogRef.value.openDialog(type,state.tableData.id,null,state.tableData.type);
     };
     const onOpenGroup = (type: string) => {
         groupDialogRef.value.openDialog(type,state.tableData.id);
@@ -200,11 +211,52 @@
         state.tableData.searchStr = state.tableData.search;
         getTableData();
     };
+        //多选监听
+    const handleSelectionChange = (val) => {
+        state.tableData.ids = val.map(v => v.ID)
+        //this.$message.warning("选择了"+this.ids.length+"条数据");
+        console.log("选择了"+state.tableData.ids.length+"条数据")
+    };
+    //批量删除
+    const onDeleteIDS = (type: string) => {
+        ElMessageBox.confirm(`此操作将批量删除网口：“${state.tableData.ids.length}”条，是否继续?`, '提示', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        })
+
+
+            .then(() => {
+                messdetailApi().delIDS(                                          state.tableData.ids
+
+                    )
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('成功批量删除'+res.data+'条');
+                            getTableData();
+
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+            })
+            .catch(() => {
+            });
+    };
     // 打开修改用户弹窗
     const onOpenEdit = (type: string, row) => {
         if (row.OutType == 'custom') {
 
-            userDialogRef.value.openDialog(type, state.tableData.id,row);
+            userDialogRef.value.openDialog(type, state.tableData.id,row,state.tableData.type);
         }
         if (row.OutType == 'fields') {
 
@@ -277,8 +329,9 @@
     };
     // 页面加载时
     onMounted(() => {
-
+        //console.log(querys);
         state.tableData.id = querys.id;
+        state.tableData.type = querys.type;
         getTableData();
     });
 </script>

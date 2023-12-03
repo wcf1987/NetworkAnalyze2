@@ -26,7 +26,9 @@ export const PackageHeader = [
 ];
 export const MessHeader = [
     {id: 1, label: '固定长度', value: '固定长度'},
-    {id: 2, label: '可变长度', value: '可变长度'},
+    {id: 2, label: 'S', value: 'S'},
+     {id: 3, label: 'K', value: 'K'},
+     {id: 4, label: 'Z', value: 'Z'},
 
 ];
 export const DataFlag = [

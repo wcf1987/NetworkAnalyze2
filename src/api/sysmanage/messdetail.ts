@@ -10,7 +10,13 @@ import request from '/@/utils/request';
 export function messdetailApi() {
 
     return {
-
+         delIDS: (data: object) => {
+            return request({
+                url: '/messdetail/delids',
+                method: 'post',
+                data,
+            });
+        },
         getMessDetailSearchListSize: (data: object) => {
             return request({
                 url: '/messdetail/searchSize',

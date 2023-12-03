@@ -10,7 +10,7 @@ class MesstraslateNode extends IconNode.view {
 class MesstraslateNodeModel extends IconNode.model{
     initNodeData(data) {
     super.initNodeData(data);
-    this.text.value = "消息转化"; // 不允许文本被拖动
+    this.text.value = "消息转换"; // 不允许文本被拖动
 
   }
 }

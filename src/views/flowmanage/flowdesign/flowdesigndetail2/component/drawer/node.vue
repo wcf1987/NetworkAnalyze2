@@ -71,7 +71,12 @@
                                           :readonly=" state.properForm.sourecenetworkID!='-1'"
                                 ></el-input>
                             </el-form-item>
-
+                            <el-form-item label="源地址端口" prop="sourecenetworkPort"
+                                          v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''"
+                                        >
+                                <el-input v-model="state.properForm.sourecenetworkPort" placeholder="请输入源地址端口" clearable
+                                          :readonly=" state.properForm.sourecenetworkID!='-1'"></el-input>
+                            </el-form-item>
 
                             <el-form-item label="串口信息" prop="serialID" v-if="state.properForm.interfacetype=='串口'">
                                 <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
@@ -301,7 +306,7 @@
 
 
                         <div class="customproper" v-if="state.showFlag['messtraslate']">
-                            <el-form-item label="转化规则模板">
+                            <el-form-item label="转换规则模板">
                                 <el-select v-model="state.properForm.transid" v-on:change="onChangeMessTranslateChoose"
                                            placeholder="请选择" clearable class="w100">
                                     <el-option
@@ -390,7 +395,7 @@
             </el-tab-pane>
 
             <!-- 图表可视化 -->
-            <el-tab-pane label="图表可视化" name="3">
+            <el-tab-pane label="图表可视化" name="3" v-if="false">
                 <el-scrollbar>
                     <div class="flex-content-right">
                         <div style="height: 200px; width: 320px" ref="chartsMonitorRef"></div>
@@ -477,13 +482,13 @@
         console.log(fo)
         let i = 0, tempstr = ''
 
-        if(fo.length>0){
-            tempstr =  fo[fo.length-1].join('.') + '\n'
+        if (fo.length > 0) {
+            tempstr = fo[fo.length - 1].join('.') + '\n'
         }
 
 
         tempstr = tempstr.replaceAll(',', '.');
-        state.properForm.globalVarRule =state.properForm.globalVarRule + tempstr;
+        state.properForm.globalVarRule = state.properForm.globalVarRule + tempstr;
 
 
     }
@@ -515,7 +520,7 @@
         }
 
         if (data.type == 'messtraslate') {
-            state.proper.typeC = '消息转化';
+            state.proper.typeC = '消息转换';
             getNetwork();
             getSerial();
             getPackage();
@@ -1114,7 +1119,7 @@
             for (let i = 0; i < NetworkOptions.value.length; i++) {
                 if (NetworkOptions.value[i].ID == state.properForm.sourecenetworkID) {
                     state.properForm.sourecenetworkIP = NetworkOptions.value[i].IP;
-
+                    state.properForm.sourecenetworkPort = NetworkOptions.value[i].Port;
                 }
             }
 

@@ -15,8 +15,15 @@
                     </el-icon>
                     新增串口对象
                 </el-button>
+                       <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')">
+                    <el-icon>
+                        <ele-DeleteFilled/>
+                    </el-icon>
+                    批量删除
+                </el-button>
             </div>
-            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
+            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
+                  <el-table-column type="selection" width="30"/>
                 <el-table-column type="ID" label="序号" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
@@ -77,6 +84,7 @@ import {addressApi} from '/@/api/sysmanage/address';
             },
                search:'',
             searchStr:'',
+            ids:[],
         },
     });
 
@@ -143,6 +151,47 @@ import {addressApi} from '/@/api/sysmanage/address';
     // 打开修改用户弹窗
     const onOpenEdit = (type: string, row: RowUserType) => {
         userDialogRef.value.openDialog(type, row);
+    };
+     //多选监听
+    const handleSelectionChange = (val) => {
+        state.tableData.ids = val.map(v => v.ID)
+        //this.$message.warning("选择了"+this.ids.length+"条数据");
+        console.log("选择了"+state.tableData.ids.length+"条数据")
+    };
+    //批量删除
+    const onDeleteIDS = (type: string) => {
+        ElMessageBox.confirm(`此操作将批量删除网口：“${state.tableData.ids.length}”条，是否继续?`, '提示', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        })
+
+
+            .then(() => {
+                addressApi().deSerialIDS(                                          state.tableData.ids
+
+                    )
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('成功批量删除'+res.data+'条');
+                            getTableData();
+
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+            })
+            .catch(() => {
+            });
     };
     const onSearch = () => {
         state.tableData.searchStr=state.tableData.search;

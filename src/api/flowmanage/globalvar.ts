@@ -10,7 +10,13 @@ import request from '/@/utils/request';
 export function globalVarApi() {
 
     return {
-
+                 delIDS: (data: object) => {
+            return request({
+                url: '/globalvar/delids',
+                method: 'post',
+                data,
+            });
+        },
         getSearchListSize: (data: object) => {
             return request({
                 url: '/globalvar/searchSize',

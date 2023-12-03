@@ -11,7 +11,27 @@ import requestfile from "/@/utils/requestfile";
 export function fieldsdetailApi() {
 
     return {
-
+         delIDS: (data: object) => {
+            return request({
+                url: '/fieldsdetail/delids',
+                method: 'post',
+                data,
+            });
+        },
+        statistics: (data: object) => {
+            return request({
+                url: '/fieldsdetail/statistics',
+                method: 'post',
+                data,
+            });
+        },
+                statisticsSize: (data: object) => {
+            return request({
+                url: '/fieldsdetail/statisticsSize',
+                method: 'post',
+                data,
+            });
+        },
         getFieldsDetailSearchListSize: (data: object) => {
             return request({
                 url: '/fieldsdetail/searchSize',
