@@ -50,7 +50,7 @@
                         <el-form-item label="类型" :readonly="isReadOnly" prop="Type">
 
                             <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable :disabled=state.bitOnly
-                                       class="w100">
+                                       @change="changeType"  class="w100">
                                 <el-option
                                         v-for="item in options"
                                         :key="item.id"
@@ -169,7 +169,17 @@
         },
         bitOnly:false,
     });
+   //联动类型选择，更改位数
+     const changeType = (fo) => {
+        //console.log(fo)
+        // console.log(options.value);
+        for(let temp of options.value){
+            if(temp.value==fo){
+                state.ruleForm.Length=temp.length;
+            }
+        }
 
+    };
     const isReadOnly = ref(false);
     // 打开弹窗
     const openDialog = (type: string, pid, row: RowUserType, bitype) => {

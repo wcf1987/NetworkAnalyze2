@@ -24,6 +24,12 @@ export function logApi() {
                 data,
             });
         },
-
+       delIDS: (data: object) => {
+            return request({
+                url: '/log/delids',
+                method: 'post',
+                data,
+            });
+        },
     };
 }

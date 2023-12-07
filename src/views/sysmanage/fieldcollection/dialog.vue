@@ -70,6 +70,7 @@
     import {ElMessage} from "element-plus";
     import {fieldsApi} from "/@/api/sysmanage/fields";
     import {useUserInfo} from "/@/stores/userInfo";
+    import {checkInterNum} from "/@/utils/rules";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
     const options = ref(FieldType);
@@ -96,7 +97,7 @@
         },
                 baseRules: {
             Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-            IDNO: [{required: true, message: '请选择类型', trigger: 'change'}],
+            IDNO: [{required: true, message: '请输入正整数DFI标识号', trigger: 'blur',validator: checkInterNum}],
         },
         dialog: {
             isShowDialog: false,

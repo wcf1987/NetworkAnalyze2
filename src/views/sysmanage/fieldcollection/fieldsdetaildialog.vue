@@ -53,9 +53,9 @@
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="类型" :readonly="isReadOnly" prop="Type">
+                        <el-form-item label="类型" :readonly="isReadOnly" prop="Type" >
 
-                            <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable
+                            <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable @change="changeType"
                                        class="w100">
                                 <el-option
                                         v-for="item in options"
@@ -145,10 +145,10 @@ const options = ref(FieldType);
             describe: '', // 用户描述
         },
                 baseRules: {
-            DUINO: [{required: true, message: '请输入DUI', trigger: 'blur'}],
+            DUINO: [{required: true, message: '请输入正整数DUI', trigger: 'blur',validator: checkInterNum}],
                     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
                      EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur',validator: checkCodeName}],
-                     ShortName: [{required: true, message: '请输入简称', trigger: 'blur'}],
+
                      Type: [{required: true, message: '请选择类型', trigger: 'change'}],
                      TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
                      Length: [{required: true, message: '位数必须为正整数', trigger: 'blur',validator: checkInterNum}],
@@ -228,6 +228,16 @@ const options = ref(FieldType);
     // 取消
     const onCancel = () => {
         closeDialog();
+    };
+     const changeType = (fo) => {
+      //  console.log(fo)
+        // console.log(options.value);
+        for(let temp of options.value){
+            if(temp.value==fo){
+                state.ruleForm.Length=temp.length;
+            }
+        }
+
     };
     // 提交
     const onSubmit = () => {

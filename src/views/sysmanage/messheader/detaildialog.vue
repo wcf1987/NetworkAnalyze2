@@ -31,7 +31,7 @@
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="名称" prop="Name">
-                            <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable
+                            <el-input v-model="state.ruleForm.Name" placeholder="请输入名称" clearable  @input="nameChange"
                                       :readonly="isReadOnly"></el-input>
                         </el-form-item>
                     </el-col>
@@ -51,7 +51,7 @@
                         <el-form-item label="类型" :readonly="state.bitOnly" prop="Type">
 
                             <el-select v-model="state.ruleForm.Type" value-key="id" placeholder="请选择" clearable
-                                       class="w100" :disabled=state.bitOnly>
+                                       class="w100" :disabled=state.bitOnly  @change="changeType">
                                 <el-option
                                         v-for="item in options"
                                         :key="item.id"
@@ -152,7 +152,7 @@
             Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
             Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
             EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur', validator: checkCodeName}],
-            ShortName: [{required: true, message: '请输入简称', trigger: 'blur'}],
+
             Type: [{required: true, message: '请选择类型', trigger: 'change'}],
             TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
             Length: [{required: true, message: '位数必须为正整数', trigger: 'blur', validator: checkInterNum}],
@@ -169,7 +169,9 @@
         },
         bitOnly: false,
     });
-
+   const nameChange=(value)=>{
+        state.ruleForm.EName=state.ruleForm.Name;
+    }
     const isReadOnly = ref(false);
     // 打开弹窗
     const openDialog = (type: string, pid, row: RowUserType, bitype) => {
@@ -243,8 +245,17 @@
 
         });
     }
+   //联动类型选择，更改位数
+     const changeType = (fo) => {
+       // console.log(fo)
+        // console.log(options.value);
+        for(let temp of options.value){
+            if(temp.value==fo){
+                state.ruleForm.Length=temp.length;
+            }
+        }
 
-
+    };
     // 关闭弹窗
     const closeDialog = () => {
         state.dialog.isShowDialog = false;

@@ -16,7 +16,7 @@
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="类型" prop="Type">
-                            <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
+                            <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100"  @change="changeType">
                                 <el-option
                                         v-for="item in typeOptions"
                                         :key="item.id"
@@ -148,6 +148,17 @@ state.dialog.isShowDialog = true;
     const nameChange=(value)=>{
         state.ruleForm.EName=state.ruleForm.Name;
     }
+       //联动类型选择，更改位数
+     const changeType = (fo) => {
+       // console.log(fo)
+        // console.log(typeOptions.value);
+        for(let temp of typeOptions.value){
+            if(temp.value==fo){
+                state.ruleForm.Length=temp.length;
+            }
+        }
+
+    };
     // 提交
     const onSubmit = () => {
          userDialogFormRef.value.validate((valid) => {
