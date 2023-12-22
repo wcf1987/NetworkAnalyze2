@@ -19,6 +19,17 @@ export const NetworkProtocol = [
 
 
 ];
+export const FunctionType = [
+    {id: '三角函数', label: '三角函数', value: '三角函数'},
+    {id: '字符串计算', label: '字符串计算', value: '字符串计算'},
+    {id: '日期计算', label: '日期计算', value: '日期计算'},
+    {id: '类型转换', label: '类型转换', value: '类型转换'},
+    {id: '列表函数', label: '列表函数', value: '列表函数'},
+    {id: '字典函数', label: '字典函数', value: '字典函数'},
+
+
+
+];
 export const PackageHeader = [
     {id: 1, label: '应用头', value: '应用头'},
     {id: 2, label: '封装头', value: '封装头'},
