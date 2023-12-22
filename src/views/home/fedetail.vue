@@ -51,7 +51,7 @@ const state = reactive({
     loading: false,
     param: {
       pageNum: 1,
-      pageSize: 5,
+      pageSize: 4,
     },
     order: 'asc',
     search: '',

@@ -78,7 +78,7 @@
         baseRules: {
             Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
             Type: [{required: true, message: '请选择类型', trigger: 'change'}],
-            Code: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur', validator: checkCodeName}],
+            Code: [{required: true, message: '请输入引用名', trigger: 'blur'}],
 
         },
         dialog: {

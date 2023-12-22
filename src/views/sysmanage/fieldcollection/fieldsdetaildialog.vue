@@ -147,7 +147,7 @@ const options = ref(FieldType);
                 baseRules: {
             DUINO: [{required: true, message: '请输入正整数DUI', trigger: 'blur',validator: checkInterNum}],
                     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-                     EName: [{required: true, message: '合法的引用名为字母开头，2-10位', trigger: 'blur',validator: checkCodeName}],
+                     EName: [{required: true, message: '请输入引用名', trigger: 'blur'}],
 
                      Type: [{required: true, message: '请选择类型', trigger: 'change'}],
                      TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
