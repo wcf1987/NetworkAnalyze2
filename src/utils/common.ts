@@ -20,13 +20,13 @@ export const NetworkProtocol = [
 
 ];
 export const FunctionType = [
-    {id: '三角函数', label: '三角函数', value: '三角函数'},
-    {id: '字符串计算', label: '字符串计算', value: '字符串计算'},
-    {id: '日期计算', label: '日期计算', value: '日期计算'},
-    {id: '类型转换', label: '类型转换', value: '类型转换'},
-    {id: '列表函数', label: '列表函数', value: '列表函数'},
-    {id: '字典函数', label: '字典函数', value: '字典函数'},
-
+    {id: '三角函数', label: '三角函数', value: '三角函数',children:[]},
+    {id: '字符串计算', label: '字符串计算', value: '字符串计算',children:[]},
+    {id: '日期计算', label: '日期计算', value: '日期计算',children:[]},
+    {id: '类型转换', label: '类型转换', value: '类型转换',children:[]},
+    {id: '列表函数', label: '列表函数', value: '列表函数',children:[]},
+    {id: '字典函数', label: '字典函数', value: '字典函数',children:[]},
+{id: '自定义函数', label: '自定义函数', value: '自定义函数',children:[]},
 
 
 ];

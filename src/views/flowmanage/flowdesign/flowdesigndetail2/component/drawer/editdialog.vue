@@ -141,7 +141,10 @@
 </template>
 
 <script setup lang="ts" name="systemUserDialog">
-    import {nextTick, reactive, ref} from 'vue';
+    import {nextTick, onMounted, reactive, ref} from 'vue';
+    import {FunctionType} from "/@/utils/common";
+    import {functionplugManageApi} from "/@/api/plugmanage/functionplugmanage";
+    import {ElMessage} from "element-plus";
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh', 'update']);
@@ -178,15 +181,16 @@
     const props22 = {
         expandTrigger: 'hover',
         emitPath: 'false',
-        value: 'name',
-        label: 'name'
+        value: 'value',
+        label: 'label'
     }
     const props32 = {
         multiple: true,
+        emitPath: 'false',
         expandTrigger: 'hover',
 
-        value: 'name',
-        label: 'name'
+        value: 'value',
+        label: 'label'
     }
     const funcoptions = ref([
         {name: 'Calc()'},
@@ -196,6 +200,45 @@
         {name: 'Add()'},
         {name: 'Encode()'},
     ])
+        const getOptionData = () => {
+        funcoptions.value=FunctionType.slice()
+
+        functionplugManageApi().search(
+            {
+
+
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+                    for (let k of res.data){
+
+                        for (let i of funcoptions.value){
+                            if (k['Type']==i['label']){
+                                i['children'].push({id:k['ID'],label:k['Name'],value:k['Name']})
+                            }
+                    //funcoptions.value = res.data
+                   }
+                    }
+                    console.log(funcoptions)
+                    //locOptions.value.push({ID:-1,Name:'最后'});
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+
+
     const state = reactive({
         ruleForm: {
             Name: '', // 账户名称
@@ -261,8 +304,10 @@
     }
     const changeSourceInput22 = (fo) => {
         console.log(fo)
-
-        state.ruleForm.Transrule = state.ruleForm.Transrule+fo[0];
+        if(fo==null || fo[1]==null){
+            return
+        }
+        state.ruleForm.Transrule = state.ruleForm.Transrule+fo[1];
 
 
     }
@@ -312,7 +357,10 @@
     };
     // 初始化部门数据
 
-
+   // 页面加载时
+    onMounted(() => {
+        getOptionData();
+    });
     // 暴露变量
     defineExpose({
         openDialog,

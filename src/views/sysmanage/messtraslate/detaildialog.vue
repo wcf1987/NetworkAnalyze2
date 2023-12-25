@@ -151,17 +151,13 @@
     import {ElMessage} from "element-plus";
     import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
     import {functionplugManageApi} from "/@/api/plugmanage/functionplugmanage";
+    import {FunctionType} from '/@/utils/common';
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
     const sourceoptions = ref();
     // 定义变量内容
     const userDialogFormRef = ref();
-    const functionlist = ref(
-        [
-            {Name: ''}
 
-        ]
-    )
     const funcoptions = ref([
         {name: 'Calc()'},
         {name: 'Substr()'},
@@ -171,6 +167,8 @@
         {name: 'Encode()'},
     ])
     const getOptionData = () => {
+        funcoptions.value=FunctionType.slice()
+
         functionplugManageApi().search(
             {
 
@@ -183,8 +181,16 @@
             .then(res => {
                 //console.log(res);
                 if (res.code == '200') {
-                    funcoptions.value = res.data
+                    for (let k of res.data){
 
+                        for (let i of funcoptions.value){
+                            if (k['Type']==i['label']){
+                                i['children'].push({id:k['ID'],label:k['Name'],value:k['Name']})
+                            }
+                    //funcoptions.value = res.data
+                   }
+                    }
+                    console.log(funcoptions)
                     //locOptions.value.push({ID:-1,Name:'最后'});
                 } else {
                     ElMessage.error(res.message);
@@ -241,15 +247,16 @@
     const props22 = {
         expandTrigger: 'hover',
         emitPath: 'false',
-        value: 'name',
-        label: 'name'
+        value: 'value',
+        label: 'label'
     }
     const props32 = {
         multiple: true,
+        emitPath: 'false',
         expandTrigger: 'hover',
 
-        value: 'Name',
-        label: 'Name'
+        value: 'value',
+        label: 'label'
     }
 
     const state = reactive({
@@ -307,7 +314,7 @@
     const changeSourceInput22 = (fo) => {
         console.log(fo)
 
-        state.ruleForm.Transrule = fo[0];
+        state.ruleForm.Transrule = fo[1];
 
 
     }
@@ -315,7 +322,7 @@
         console.log(fo)
         let i = 0, tempstr = ''
         for (i = 0; i < fo.length; i++) {
-            tempstr = tempstr + fo[i] + '\n'
+            tempstr = tempstr + fo[i][1] + '\n'
         }
         state.ruleForm.Transrule = tempstr;
 
@@ -328,7 +335,7 @@
             state.sourceid = sourceid;
             state.dialog.title = '修改';
             state.dialog.submitTxt = '修 改';
-
+            console.log('修改');
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
