@@ -151,7 +151,8 @@
                 pageNum: state.tableData.param.pageNum,
                 pageSize: state.tableData.param.pageSize,
                 name: state.tableData.searchStr,
-                ttype: 'body'
+                ttype: 'body',
+                   nestid: 0,
             })
             .then(res => {
                 //console.log(res);
@@ -175,6 +176,7 @@
                 name: state.tableData.searchStr,
                 pid: state.tableData.id,
                 ttype: 'body',
+                   nestid: 0,
             })
             .then(res => {
                 //console.log(res);

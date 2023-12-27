@@ -99,7 +99,7 @@
     }
     const isReadOnly = ref(false);
     // 打开弹窗
-    const openDialog = (type: string, pid, row: RowUserType) => {
+    const openDialog = (type: string, pid, row: RowUserType,nestid) => {
         state.dialog.type = type;
         state.pid = pid;
         state.dialog.isShowDialog = true;
@@ -117,6 +117,7 @@
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
             isReadOnly.value = false;
+            state.nestid=nestid;
             // 清空表单，此项需加表单验证才能使用
             nextTick(() => {
                 userDialogFormRef.value.resetFields();
@@ -134,7 +135,8 @@
                 pageNum: 1,
                 pageSize: 1000,
                 name: '',
-                ttype: 'body'
+                ttype: 'body',
+                   nestid: 0,
             })
             .then(res => {
                 //console.log(res);
@@ -199,10 +201,11 @@
 
             const stores = useUserInfo();
             state.ruleForm['AuthorID'] = stores.userInfos.id
-
+            state.ruleForm['NestID']=state.nestid;
             state.ruleForm['PID'] = state.pid;
             state.ruleForm['TType'] = 'body';
             state.ruleForm['OutType'] = 'nest';
+            console.log(state.ruleForm)
             messdetailApi().addMessDetail(
                 state.ruleForm
             )

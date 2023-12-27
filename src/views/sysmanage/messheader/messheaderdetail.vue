@@ -28,22 +28,24 @@
                     </el-icon>
                     新增嵌套结构
                 </el-button>
-                <el-button size="default" type="warning" class="mr10" @click="this.$router.back()"
-                           v-if="false">
-                    <el-icon>
-                        <ele-ArrowLeftBold/>
-                    </el-icon>
-                    返回上一级
-                </el-button>
-                        <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')">
+
+                <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')">
                     <el-icon>
                         <ele-DeleteFilled/>
                     </el-icon>
                     批量删除
                 </el-button>
+                <el-button size="default" type="warning" class="mr10" @click="backUP()" v-if="state.tableData.nestid!=0"
+                >
+                    <el-icon>
+                        <ele-ArrowLeftBold/>
+                    </el-icon>
+                    返回上一级
+                </el-button>
             </div>
-            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
-                 <el-table-column type="selection" width="30"/>
+            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%"
+                      @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60"/>
                 <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
@@ -64,7 +66,7 @@
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="isHide"></el-table-column>
 
 
-                <el-table-column label="操作" width="100">
+                <el-table-column label="操作" width="150">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                    @click="onOpenEdit('edit', scope.row)"
@@ -73,7 +75,7 @@
                         >
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                    @click="onOpenEditGroup('edit', scope.row)"
-                                   v-if="scope.row.Nest=='2'">编辑嵌套
+                                   v-if="scope.row.OutType=='nest'">编辑
                         </el-button
                         >
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -107,7 +109,6 @@
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRoute, useRouter} from "vue-router";
     import {messdetailApi} from '/@/api/sysmanage/messdetail';
-    import {messheaderApi} from "/@/api/sysmanage/messheader";
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/detaildialog.vue'));
     const ImportDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/importdialog.vue'));
@@ -125,7 +126,7 @@
         tableData: {
             id: '',
             data: [],
-            type:'',
+            type: '',
             total: 0,
 
             loading: false,
@@ -133,12 +134,39 @@
                 pageNum: 1,
                 pageSize: 10,
             },
+            history: [],
+            nestid: 0,
             search: '',
             searchStr: '',
-                ids:[],
+            ids: [],
         },
     });
+    //编辑嵌套结构
+    const onOpenEditGroup = (type: string, row: RowUserType) => {
+        state.tableData.history.push({
+            nestid: state.tableData.nestid,
+            pageNum: state.tableData.param.pageNum,
+            pageSize:state.tableData.param.pageSize,
+            searchStr: state.tableData.searchStr
+        })
+        state.tableData.nestid = row.ID;
+        state.tableData.param.pageNum = 1;
+        state.tableData.param.pageSize = 10;
+        state.tableData.searchStr = '';
+        state.tableData.search = '';
+        getTableData();
 
+    };
+    //返回上一级
+    const backUP = () => {
+        let temphis = state.tableData.history.pop()
+        state.tableData.nestid = temphis.nestid;
+        state.tableData.param.pageNum = temphis.pageNum;
+        state.tableData.param.pageSize = temphis.pageSize;
+        state.tableData.searchStr = temphis.searchStr;
+        state.tableData.search = state.tableData.searchStr;
+        getTableData();
+    }
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
@@ -150,7 +178,8 @@
                 pageNum: state.tableData.param.pageNum,
                 pageSize: state.tableData.param.pageSize,
                 name: state.tableData.searchStr,
-                ttype: 'header'
+                ttype: 'header',
+                nestid: state.tableData.nestid,
             })
             .then(res => {
                 //console.log(res);
@@ -173,7 +202,9 @@
                 uid: 1,
                 name: state.tableData.searchStr,
                 pid: state.tableData.id,
+                nestid: state.tableData.nestid,
                 ttype: 'header',
+                  nestid: state.tableData.nestid,
             })
             .then(res => {
                 //console.log(res);
@@ -196,26 +227,26 @@
             state.tableData.loading = false;
         }, 200);
     };
-    // 打开新增用户弹窗
+    // 打开新增弹窗
     const onOpenAdd = (type: string) => {
         //console.log(state);
-        userDialogRef.value.openDialog(type,state.tableData.id,null,state.tableData.type);
+        userDialogRef.value.openDialog(type, state.tableData.id, null, state.tableData.type,state.tableData.nestid);
     };
     const onOpenGroup = (type: string) => {
-        groupDialogRef.value.openDialog(type,state.tableData.id);
+        groupDialogRef.value.openDialog(type, state.tableData.id,null,state.tableData.nestid);
     };
     const onOpenImport = (type: string) => {
-        importDialogRef.value.openDialog(type,state.tableData.id);
+        importDialogRef.value.openDialog(type, state.tableData.id,null,state.tableData.nestid);
     };
     const onSearch = () => {
         state.tableData.searchStr = state.tableData.search;
         getTableData();
     };
-        //多选监听
+    //多选监听
     const handleSelectionChange = (val) => {
         state.tableData.ids = val.map(v => v.ID)
         //this.$message.warning("选择了"+this.ids.length+"条数据");
-        console.log("选择了"+state.tableData.ids.length+"条数据")
+        console.log("选择了" + state.tableData.ids.length + "条数据")
     };
     //批量删除
     const onDeleteIDS = (type: string) => {
@@ -227,14 +258,13 @@
 
 
             .then(() => {
-                messdetailApi().delIDS(                                          state.tableData.ids
-
-                    )
+                messdetailApi().delIDS(state.tableData.ids
+                )
                     .then(res => {
                         //console.log(res);
                         if (res.code == '200') {
 
-                            ElMessage.success('成功批量删除'+res.data+'条');
+                            ElMessage.success('成功批量删除' + res.data + '条');
                             getTableData();
 
 
@@ -256,15 +286,15 @@
     const onOpenEdit = (type: string, row) => {
         if (row.OutType == 'custom') {
 
-            userDialogRef.value.openDialog(type, state.tableData.id,row,state.tableData.type);
+            userDialogRef.value.openDialog(type, state.tableData.id, row, state.tableData.type);
         }
         if (row.OutType == 'fields') {
 
-           importDialogRef.value.openDialog(type,state.tableData.id,row);
+            importDialogRef.value.openDialog(type, state.tableData.id, row);
         }
         if (row.OutType == 'nest') {
 
-           groupDialogRef.value.openDialog(type,state.tableData.id,row);
+            groupDialogRef.value.openDialog(type, state.tableData.id, row);
         }
 
     };
@@ -275,12 +305,7 @@
             query: {id: row.ID},
         });
     };
-    const onOpenEditGroup = (type: string, row: RowUserType) => {
-        router.push({
-            path: '/sysmanage/messheader/messheaderdetail',
-            query: {id: row.ID, deep: parseInt(state.tableData.deep) + 1},
-        });
-    };
+
 
     // 删除用户
     const onRowDel = (row: RowUserType) => {

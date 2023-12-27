@@ -168,7 +168,8 @@
                 pageNum: state.tableData.param.pageNum,
                 pageSize: state.tableData.param.pageSize,
                 name: state.tableData.searchStr,
-                ttype: state.dialog.type
+                ttype: state.dialog.type,
+                   nestid: 0,
             })
             .then(res => {
                 //console.log(res);
@@ -192,6 +193,7 @@
                 name: state.tableData.searchStr,
                 pid: state.dialog.pid,
                 ttype:state.dialog.type,
+                   nestid: 0,
             })
             .then(res => {
                 //console.log(res);

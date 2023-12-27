@@ -980,8 +980,8 @@
                 pageNum: 1,
                 pageSize: 10000,
                 name: '',
-                ttype: 'header'
-
+                ttype: 'header',
+   nestid: 0,
             })
             .then(res => {
                 console.log(res);
@@ -1013,8 +1013,8 @@
                 pageNum: 1,
                 pageSize: 10000,
                 name: '',
-                ttype: 'body'
-
+                ttype: 'body',
+   nestid: 0,
             })
             .then(res => {
                 console.log(res);

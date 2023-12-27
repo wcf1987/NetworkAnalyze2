@@ -279,6 +279,7 @@
             TableSaveName: '',
             Describe: '',
         },
+        nestid:0,
         baseRules: {
             Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
             sourceDUI:[{required: true, message: '请选择DUI', trigger: 'blur'}],
@@ -293,7 +294,7 @@
     });
     const isReadOnly = ref(false);
     // 打开弹窗
-    const openDialog = (type: string, pid, row: RowUserType) => {
+    const openDialog = (type: string, pid, row: RowUserType,nestid) => {
         state.dialog.type = type;
         state.pid = pid;
         state.dialog.title = '导入字段';
@@ -336,6 +337,9 @@
         if (type == "add") {
             state.dialog.title = '导入';
             state.dialog.submitTxt = '导 入';
+            state.nestid=nestid;
+            state.ruleFormOri.SortID= null;
+            state.ruleForm={};
             nextTick(() => {
                 userDialogFormRef.value.resetFields();
             });
@@ -379,7 +383,8 @@
                 pageNum: 1,
                 pageSize: 1000,
                 name: '',
-                ttype: 'body'
+                ttype: 'body',
+                   nestid: 0,
             })
             .then(res => {
                 //console.log(res);
@@ -447,7 +452,7 @@
                 if (state.dialog.type == 'add') {
                     const stores = useUserInfo();
                     state.ruleForm['AuthorID'] = stores.userInfos.id
-
+                    state.ruleForm['NestID']=state.nestid;
                     state.ruleForm['PID'] = state.pid;
                     state.ruleForm['TType'] = 'body';
                     state.ruleForm['OutType'] = 'fields';

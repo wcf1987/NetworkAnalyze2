@@ -214,7 +214,8 @@
                 pageNum: 1,
                 pageSize: 1000,
                 name: '',
-                ttype: 'body'
+                ttype: 'body',
+                   nestid: 0,
             })
             .then(res => {
                 //console.log(res);
