@@ -88,10 +88,10 @@
                     </el-col>
 
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                        <el-form-item label="插入" prop="OrderID">
+                        <el-form-item label="插入" prop="SortID">
 
 
-                            <el-cascader v-model="state.ruleForm.OrderID" :options="locOptions" :props="props1"
+                            <el-cascader v-model="state.ruleForm.SortID" :options="locOptions" :props="props1"
                                          @change="changeLoc"
                                          clearable collapse-tags class="w100" placeholder="插入到选择位置之前">
 
@@ -204,6 +204,7 @@
             state.dialog.submitTxt = '新 增';
             isReadOnly.value = false;
             state.nestid=nestid;
+          state.ruleForm.SortID=null;
             // 清空表单，此项需加表单验证才能使用
             nextTick(() => {
                 userDialogFormRef.value.resetFields();
