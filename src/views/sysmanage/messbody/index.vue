@@ -22,6 +22,12 @@
                     </el-icon>
                     批量删除
                 </el-button>
+                <el-button size="default" type="warning" class="ml10" @click="onCopyIDS('copy')">
+                    <el-icon>
+                        <ele-CopyDocument/>
+                    </el-icon>
+                    复制
+                </el-button>
             </div>
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="30"/>
