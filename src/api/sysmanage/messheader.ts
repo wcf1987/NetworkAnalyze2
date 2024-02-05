@@ -17,6 +17,13 @@ export function messheaderApi() {
                 data,
             });
         },
+         copyIDS: (data: object) => {
+            return request({
+                url: '/messheader/copyids',
+                method: 'post',
+                data,
+            });
+        },
         getMessHeaderSearchListSize: (data: object) => {
             return request({
                 url: '/messheader/searchSize',

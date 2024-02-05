@@ -15,22 +15,24 @@
                 </div>
                 <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading"
                           style="width: 100%">
-                  <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                <el-table-column type="index" label="序号" width="60"/>
-                <el-table-column prop="Name" label="目的字段名" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
+                    <el-table-column prop="parentindex" label="序号" width="60"/>
+                    <el-table-column prop="Name" label="目的字段名" show-overflow-tooltip></el-table-column>
 
-                <el-table-column prop="TName" label="转换名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="TransID" label="转换ID" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="FieldsID" label="字段外键" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="OutType" label="类型" show-overflow-tooltip v-if="false"></el-table-column>
+                    <el-table-column prop="TName" label="转换名称" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="TransID" label="转换ID" show-overflow-tooltip v-if="false"></el-table-column>
+                    <el-table-column prop="FieldsID" label="字段外键" show-overflow-tooltip v-if="false"></el-table-column>
+                    <el-table-column prop="OutType" label="类型" show-overflow-tooltip v-if="false"></el-table-column>
 
 
-                <el-table-column prop="Optional" label="转换模式" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Transrule" label="转换规则" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="Optional" label="转换模式" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="Transrule" label="转换规则" show-overflow-tooltip></el-table-column>
 
-                <el-table-column prop="DefaultValue" label="源字段" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
+                    <el-table-column prop="DefaultValue" label="源字段" show-overflow-tooltip
+                                     v-if="false"></el-table-column>
+                    <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip
+                                     v-if="false"></el-table-column>
 
                     <el-table-column label="操作" width="60">
                         <template #default="scope">
@@ -72,8 +74,6 @@
 <script setup lang="ts" name="systemUserDialog">
     import {defineAsyncComponent, reactive, ref} from 'vue';
     import {useRoute} from "vue-router";
-    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
-    import {ElMessage} from "element-plus";
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
@@ -91,7 +91,7 @@
         },
         tableData: {
             data: [],
-            dataAll:[],
+            dataAll: [],
             total: 0,
             loading: false,
             param: {
@@ -105,13 +105,18 @@
     const route = useRoute()
     const querys = route.query
     // 打开弹窗
-    const openDialog = (type: string, data,fd,gd) => {
+    const openDialog = (type: string, data, fd, gd) => {
         state.tableData.loading = true;
         state.tableData.dataAll = data;
+        let id = 0;
+        for (let i of state.tableData.dataAll) {
+            i.parentindex = id + 1;
+            id = id + 1;
+        }
         state.dialog.title = '修改';
         state.dialog.submitTxt = '修 改';
-        state.fd=fd;
-        state.gd=gd;
+        state.fd = fd;
+        state.gd = gd;
         getTableData();
 
         setTimeout(() => {
@@ -119,12 +124,11 @@
         }, 100);
 
 
-
         state.dialog.isShowDialog = true;
 
     };
     const onOpenEdit = (type: string, row: RowUserType) => {
-        editDialogRef.value.openDialog(type, row,state.fd,state.gd);
+        editDialogRef.value.openDialog(type, row, state.fd, state.gd);
     };
     // 关闭弹窗
     const closeDialog = () => {
@@ -135,21 +139,20 @@
         state.tableData.searchStr = state.tableData.search;
         getTableData();
     };
-    const updateTable=(row)=>{
-        for(let i=0;i<state.tableData.total ;i++){
-            if(state.tableData.dataAll[i].ID==row.ID){
-                state.tableData.dataAll.splice(i,1,row);
+    const updateTable = (row) => {
+        for (let i = 0; i < state.tableData.total; i++) {
+            if (state.tableData.dataAll[i].ID == row.ID) {
+                state.tableData.dataAll.splice(i, 1, row);
             }
         }
         getTableData();
 
     }
     const getTableData = () => {
-        state.tableData.total =state.tableData.dataAll.length ;
-        let start=(state.tableData.param.pageNum-1)*state.tableData.param.pageSize;
-        let end=start+state.tableData.param.pageSize;
-        state.tableData.data=state.tableData.dataAll.slice(start,end);
-
+        state.tableData.total = state.tableData.dataAll.length;
+        let start = (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize;
+        let end = start + state.tableData.param.pageSize;
+        state.tableData.data = state.tableData.dataAll.slice(start, end);
 
 
     }
@@ -160,11 +163,19 @@
     // 提交
     const onSubmit = () => {
         closeDialog();
-        emit('refresh',state.tableData.dataAll);
+        emit('refresh', state.tableData.dataAll);
         // if (state.dialog.type === 'add') { }
     };
     // 初始化部门数据
-
+    const onHandleSizeChange = (val: number) => {
+        state.tableData.param.pageSize = val;
+        getTableData();
+    };
+    // 分页改变
+    const onHandleCurrentChange = (val: number) => {
+        state.tableData.param.pageNum = val;
+        getTableData();
+    };
 
     // 暴露变量
     defineExpose({

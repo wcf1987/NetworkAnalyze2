@@ -17,6 +17,13 @@ export function messbodyApi() {
                 data,
             });
         },
+           copyIDS: (data: object) => {
+            return request({
+                url: '/messbody/copyids',
+                method: 'post',
+                data,
+            });
+        },
         getMessBodySearchListSize: (data: object) => {
             return request({
                 url: '/messbody/searchSize',

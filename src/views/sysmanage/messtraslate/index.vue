@@ -26,7 +26,7 @@
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
                  <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                <el-table-column type="index" label="序号" width="60"/>
+                <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="sourceID" label="源消息体ID" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column prop="targetID" label="目的消息体ID" show-overflow-tooltip v-if="false"></el-table-column>
@@ -119,7 +119,10 @@
                 ids:[],
         },
     });
-
+    const  calcIndex=(index)=>{
+        index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
+        return index
+    }
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;

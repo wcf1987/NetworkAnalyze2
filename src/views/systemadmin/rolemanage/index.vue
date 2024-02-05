@@ -17,7 +17,7 @@
 				</el-button>
 			</div>
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
-				<el-table-column type="index" label="序号" width="60" />
+				<el-table-column type="index" label="序号" width="60" :index="calcIndex" />
 				<el-table-column prop="roleName" label="角色名称" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="roleSign" label="角色标识" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="sort" label="排序" show-overflow-tooltip v-if="false"></el-table-column>
@@ -80,6 +80,10 @@ const state = reactive({
             searchStr: '',
 	},
 });
+    const  calcIndex=(index)=>{
+        index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
+        return index
+    }
 // 初始化表格数据
 const getTableData = () => {
 	state.tableData.loading = true;

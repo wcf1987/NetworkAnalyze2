@@ -40,6 +40,7 @@ export const MessHeader = [
     {id: 2, label: 'S', value: 'S'},
      {id: 3, label: 'K', value: 'K'},
      {id: 4, label: 'Z', value: 'Z'},
+    {id: 5, label: '应用层协议头', value: '应用层协议头'},
 
 ];
 export const DataFlag = [

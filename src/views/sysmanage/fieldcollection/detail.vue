@@ -34,7 +34,7 @@
                 @sort-change="sort_change" @selection-change="handleSelectionChange">
          <el-table-column type="selection" width="30"/>
         <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-        <el-table-column label="序号" type="index" width="60"/>
+        <el-table-column label="序号" type="index" width="60" :index="calcIndex"/>
 
         <el-table-column prop="DFIID" label="DFIID" show-overflow-tooltip v-if="isHide"/>
         <el-table-column prop="DFINO" label="DFI标识号" show-overflow-tooltip/>
@@ -140,7 +140,10 @@ const state = reactive({
         ids:[],
   },
 });
-
+    const  calcIndex=(index)=>{
+        index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
+        return index
+    }
 // 初始化表格数据
 const getTableData = () => {
   state.tableData.loading = true;

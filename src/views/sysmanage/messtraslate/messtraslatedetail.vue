@@ -21,7 +21,7 @@
             <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%" >
 
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                <el-table-column type="index" label="序号" width="60"/>
+                                <el-table-column prop="parentindex" label="序号" width="60" />
                 <el-table-column prop="Name" label="目的字段名" show-overflow-tooltip></el-table-column>
 
                 <el-table-column prop="TName" label="转换名称" show-overflow-tooltip></el-table-column>
@@ -100,6 +100,10 @@
                 ids:[],
         },
     });
+        const  calcIndex=(index)=>{
+        index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
+        return index
+    }
     const onSearch = () => {
         state.tableData.searchStr = state.tableData.search;
         getTableData();
@@ -125,6 +129,11 @@
                     res.data[i].Funcrule = JSON.parse(res.data[i].Funcrule)
                 }
                     state.tableData.data = res.data;
+                    let id=0;
+                    for(let i of state.tableData.data){
+                        i.parentindex=id+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1;
+                        id=id+1;
+                    }
 
                 } else {
                     ElMessage.error(res.message);

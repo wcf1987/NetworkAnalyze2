@@ -26,7 +26,7 @@
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                <el-table-column type="index" label="序号" width="60"/>
+                <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Type" label="格式" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
@@ -92,7 +92,10 @@
                 ids:[],
         },
     });
-
+    const  calcIndex=(index)=>{
+        index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
+        return index
+    }
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
@@ -158,13 +161,13 @@
        getTableData();
     };
     const onOpenEditDetail = (type: string, row: RowUserType) => {
-        onOpenEditDetailByID(row.ID,row.Type);
+        onOpenEditDetailByID(row.ID,row.Type,row.Describes);
 
     };
-    const onOpenEditDetailByID = (id,type) => {
+    const onOpenEditDetailByID = (id,type,desc) => {
         router.push({
             path: '/sysmanage/messbody/messbodydetail',
-            query: {id: id, type:type},
+            query: {id: id, type:type,desc:desc},
         });
     };
     //多选监听
@@ -229,6 +232,40 @@
 
                             ElMessage.success('删除成功');
                             	getTableData();
+
+                        } else {
+                            ElMessage.error(res.message);
+                        }
+
+                    }).catch(err => {
+
+                }).finally(() => {
+
+                });
+
+            })
+            .catch(() => {
+            });
+    };
+      //批量拷贝
+    const onCopyIDS = (type: string) => {
+        ElMessageBox.confirm(`此操作将批量复制：${state.tableData.ids.length}条，是否继续?`, '提示', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning',
+        })
+
+
+            .then(() => {
+                messbodyApi().copyIDS(state.tableData.ids
+                )
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
+
+                            ElMessage.success('成功批量复制' + res.data + '条');
+                            getTableData();
+
 
                         } else {
                             ElMessage.error(res.message);

@@ -42,12 +42,13 @@
                     </el-icon>
                     返回上一级
                 </el-button>
+                <el-text class="ml10">{{ state.tableData.desc }}</el-text>
             </div>
             <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%"
                       @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                <el-table-column type="index" label="序号" width="60"/>
+                <el-table-column prop="parentindex" label="序号" width="60"/>
                 <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
                 <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
@@ -139,14 +140,19 @@
             search: '',
             searchStr: '',
             ids: [],
+            desc: '',
         },
     });
+    const calcIndex = (index) => {
+        index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
+        return index
+    }
     //编辑嵌套结构
     const onOpenEditGroup = (type: string, row: RowUserType) => {
         state.tableData.history.push({
             nestid: state.tableData.nestid,
             pageNum: state.tableData.param.pageNum,
-            pageSize:state.tableData.param.pageSize,
+            pageSize: state.tableData.param.pageSize,
             searchStr: state.tableData.searchStr
         })
         state.tableData.nestid = row.ID;
@@ -186,7 +192,11 @@
                 if (res.code == '200') {
 
                     state.tableData.data = res.data;
-
+                    let id = 0;
+                    for (let i of state.tableData.data) {
+                        i.parentindex = id + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1;
+                        id = id + 1;
+                    }
                 } else {
                     ElMessage.error(res.message);
                 }
@@ -204,7 +214,7 @@
                 pid: state.tableData.id,
                 nestid: state.tableData.nestid,
                 ttype: 'body',
-                  nestid: state.tableData.nestid,
+                nestid: state.tableData.nestid,
             })
             .then(res => {
                 //console.log(res);
@@ -230,13 +240,13 @@
     // 打开新增弹窗
     const onOpenAdd = (type: string) => {
         //console.log(state);
-        userDialogRef.value.openDialog(type, state.tableData.id, null, state.tableData.type,state.tableData.nestid);
+        userDialogRef.value.openDialog(type, state.tableData.id, null, state.tableData.type, state.tableData.nestid);
     };
     const onOpenGroup = (type: string) => {
-        groupDialogRef.value.openDialog(type, state.tableData.id,null,state.tableData.nestid);
+        groupDialogRef.value.openDialog(type, state.tableData.id, null, state.tableData.nestid);
     };
     const onOpenImport = (type: string) => {
-        importDialogRef.value.openDialog(type, state.tableData.id,null,state.tableData.nestid);
+        importDialogRef.value.openDialog(type, state.tableData.id, null, state.tableData.nestid);
     };
     const onSearch = () => {
         state.tableData.searchStr = state.tableData.search;
@@ -357,6 +367,7 @@
         //console.log(querys);
         state.tableData.id = querys.id;
         state.tableData.type = querys.type;
+        state.tableData.desc = querys.desc;
         getTableData();
     });
 </script>
