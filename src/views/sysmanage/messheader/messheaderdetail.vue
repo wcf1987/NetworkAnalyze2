@@ -214,7 +214,7 @@
                 pid: state.tableData.id,
                 nestid: state.tableData.nestid,
                 ttype: 'header',
-                  nestid: state.tableData.nestid,
+
             })
             .then(res => {
                 //console.log(res);

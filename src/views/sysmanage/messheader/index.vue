@@ -249,7 +249,7 @@
     const onOpenEditDetailByID = (id, type, desc) => {
         router.push({
             path: '/sysmanage/messheader/messheaderdetail',
-            query: {id: id, type: type, desc, desc},
+            query: {id: id, type: type, desc: desc},
         });
     };
 
