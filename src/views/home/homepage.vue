@@ -1,6 +1,30 @@
 <template>
     <div class="home-container layout-pd">
         <el-row :gutter="15" class="home-card-one mb15">
+            <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                <div class="home-card-item">
+
+                    <div class="home-card-item-title">快捷导航工具</div>
+                    <div class="home-monitor">
+                        <div class="flex-warp">
+                            <div class="flex-warp-item" v-for="(v, k) in state.homeThree" :key="k">
+                                <div class="flex-warp-item-box" :class="`home-animation${k}`">
+                                    <div class="flex-margin">
+                                        <SvgIcon :name="v.icon" :style="{ color: v.iconColor }" />
+                                        <span class="pl5" v-on:click="jumppage(v.value)">{{ v.label }}</span>
+
+
+                                        <div class="mt10" v-if="false">{{ v.value }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </el-col>
+        </el-row>
+        <el-row :gutter="15" class="home-card-one mb15">
             <el-col
                     :xs="24"
                     :sm="12"
@@ -104,28 +128,8 @@
             </el-col>
         </el-row>
         <el-row :gutter="15" class="home-card-three">
-            <el-col :xs="24" :sm="10" :md="10" :lg="8" :xl="8">
-                <div class="home-card-item">
-                    <div class="home-card-item-title">快捷导航工具</div>
-                    <div class="home-monitor">
-                        <div class="flex-warp">
-                            <div class="flex-warp-item" v-for="(v, k) in state.homeThree" :key="k">
-                                <div class="flex-warp-item-box" :class="`home-animation${k}`">
-                                    <div class="flex-margin">
-                                        <i :class="v.icon" :style="{ color: v.iconColor }"></i>
 
-                                        <span class="pl5" v-on:click="jumppage(v.value)">{{ v.label }}</span>
-
-
-                                        <div class="mt10" v-if="false">{{ v.value }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </el-col>
-            <el-col :xs="24" :sm="14" :md="14" :lg="16" :xl="16" class="home-media">
+            <el-col :xs="24" :sm="14" :md="24" :lg="26" :xl="24" class="home-media">
                 <div class="home-card-item">
                     <div style="height: 100%" ref="homeBarRef"></div>
                 </div>
@@ -253,13 +257,43 @@
                 icon: 'iconfont icon-putong',
                 label: '流程编排设计',
                 value: '/flowmanage/flowdesign',
-                iconColor: '#FBD4A0',
+                iconColor: '#48fbb9',
             },
             {
                 icon: 'iconfont icon-diqiu1',
-                label: '变量管理',
+                label: '全局变量管理',
                 value: '/flowmanage/globalvar',
-                iconColor: '#FBD4A0',
+                iconColor: '#8afb30',
+            },
+            {
+                icon: 'iconfont icon-zujian',
+                label: '特殊流程节点',
+                value: '/flowmanage/specialnode',
+                iconColor: '#effb95',
+            },
+            {
+                icon: 'ele-Cpu',
+                label: '网关管理',
+                value: '/distribution/gateway',
+                iconColor: '#68f6fb',
+            },
+            {
+                icon: 'ele-Connection',
+                label: '流程分发',
+                value: '/distribution/flowdistribution',
+                iconColor: '#3c4dfb',
+            },
+            {
+                icon: 'iconfont icon-fuwenbenkuang',
+                label: '系统插件',
+                value: '/pluginmanage/sysplug',
+                iconColor: '#fb9361',
+            },
+            {
+                icon: 'iconfont icon-siweidaotu',
+                label: '函数插件',
+                value: '/pluginmanage/funcplug',
+                iconColor: '#fb7d91',
             },
         ],
         myCharts: [] as EmptyArrayType,
@@ -690,6 +724,39 @@
         }
 
         .home-card-one {
+              .home-card-item {
+                width: 100%;
+                height: 180px;
+                border-radius: 4px;
+                transition: all ease 0.3s;
+                padding: 20px;
+                overflow: hidden;
+                background: var(--el-color-white);
+                color: var(--el-text-color-primary);
+                border: 1px solid var(--next-border-color-light);
+
+                &:hover {
+                    box-shadow: 0 2px 12px var(--next-color-dark-hover);
+                    transition: all ease 0.3s;
+                }
+
+                &-icon {
+                    width: 70px;
+                    height: 70px;
+                    border-radius: 100%;
+                    flex-shrink: 1;
+
+                    i {
+                        color: var(--el-text-color-placeholder);
+                    }
+                }
+
+                &-title {
+                    font-size: 15px;
+                    font-weight: bold;
+                    height: 30px;
+                }
+            }
             @for $i from 0 through 3 {
                 .home-one-animation#{$i} {
                     opacity: 0;

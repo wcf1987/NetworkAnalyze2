@@ -159,7 +159,7 @@
     }
     const createFlowFromStr = (flowstr) => {
         lf.value.render(flowstr);
-        LfEvent();
+        //LfEvent();
         for (let i = 0; i < flowstr.nodes.length; i++) {
             let temp = flowstr.nodes[i];
 
@@ -594,9 +594,18 @@
 
     function LfEvent() {
         lf.value.on('node:click', ({data}) => {
+            drawerRef.value.open(data, lf.value);
             console.log('node:click', data)
         })
         lf.value.on('edge:click', ({data}) => {
+             const sourenode = lf.value.getNodeModelById(data.sourceNodeId)
+            if (sourenode.type == 'swich') {
+
+                drawerRef.value.open(data, lf.value);
+            } else {
+                ElMessage.success('只有条件分支后续连接可以编辑');
+            }
+
         })
         lf.value.on('element:click', () => {
             //hideAddPanel()

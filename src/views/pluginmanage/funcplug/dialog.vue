@@ -132,12 +132,19 @@
 
             });
         } else {
+            if(state.dialog.title=='修改'){
+                nextTick(() => {
+                userDialogFormRef.value.resetFields();
+            });
+            }
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
             // 清空表单，此项需加表单验证才能使用
-            nextTick(() => {
-                userDialogFormRef.value.resetFields();
-            });
+
+            state.ruleForm.Version = '1.0'
+            state.ruleForm.InputPar = 'byte *inbuffer,int inlen'
+            state.ruleForm.OutputPar = 'byte *outbuffer,int outlen'
+            state.ruleForm.Plugfile = 'libplug.so'
         }
 
         //getMenuData();
@@ -191,8 +198,12 @@
                                 if (res.code == '200') {
 
                                     ElMessage.success("添加成功");
+                                    nextTick(() => {
+                                        userDialogFormRef.value.resetFields();
+                                    });
                                     closeDialog();
                                     emit('refresh');
+
                                 } else {
                                     ElMessage.error(res.message);
                                 }

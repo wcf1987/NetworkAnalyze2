@@ -167,8 +167,9 @@
         {name: 'Encode()'},
     ])
     const getOptionData = () => {
-        funcoptions.value=FunctionType.slice()
-
+        funcoptions.value= JSON.parse(JSON.stringify(FunctionType));
+       // funcoptions.value=FunctionType.slice()
+        console.log(funcoptions.value)
         functionplugManageApi().search(
             {
 
