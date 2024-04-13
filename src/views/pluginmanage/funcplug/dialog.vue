@@ -145,6 +145,7 @@
             state.ruleForm.InputPar = 'byte *inbuffer,int inlen'
             state.ruleForm.OutputPar = 'byte *outbuffer,int outlen'
             state.ruleForm.Plugfile = 'libplug.so'
+            state.ruleForm.Status = 'true'
         }
 
         //getMenuData();
