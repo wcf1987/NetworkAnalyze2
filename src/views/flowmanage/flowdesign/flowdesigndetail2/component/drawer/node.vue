@@ -509,6 +509,7 @@
             getSerial();
 
         }
+
         if (data.type == 'end') {
             state.proper.typeC = '目的节点';
             getNetwork();
@@ -610,6 +611,16 @@
         if (data.type == 'timer') {
             state.proper.typeC = '定时器';
         }
+      if (data.type == 'conver') {
+        state.proper.typeC = '内置转换节点';
+
+
+      }
+      if (data.type == 'inpac') {
+        state.proper.typeC = '内置封装';
+
+
+      }
         if (data.type == 'swich') {
             state.proper.typeC = '分支选择';
             getNetwork();

@@ -15,7 +15,8 @@ import timemarkicon from '/@/assets/svgicon/timemark.svg';
 import timericon from '/@/assets/svgicon/timer.svg';
 import statisticsicon from '/@/assets/svgicon/statistics.svg';
 import calcicon from '/@/assets/svgicon/calc.svg';
-
+import conver from '/@/assets/svgicon/conver.svg';
+import inpac from '/@/assets/svgicon/inpac.svg';
 export const leftNavList = [
     {
         title: '基础节点',
@@ -150,6 +151,40 @@ export const leftNavList = [
                 id: '33',
                descrip: '特定计算节点',
             },
+        ],
+    },
+    {
+        title: '内置转换方式',
+        isOpen: true,
+
+        icon: 'iconfont icon-shuju',
+        id: '4',
+        children: [
+            {
+                icon: conver,
+                name: '方式1',
+                type: 'conver',
+                id: '41',
+                descrip: '转换方式1',
+            },
+
+        ],
+    },
+    {
+        title: '内置封装',
+        isOpen: true,
+
+        icon: 'iconfont icon-shuju',
+        id: '5',
+        children: [
+            {
+                icon: inpac,
+                name: '封装1',
+                type: 'inpac',
+                id: '51',
+                descrip: '封装1',
+            },
+
         ],
     },
 ];
