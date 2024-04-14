@@ -1,18 +1,18 @@
 
 import IconCircleNode from './IconCircleNode'
 
-import starticon from '/@/assets/svgicon/start.svg';
+import desticon from '/@/assets/svgicon/dest.svg';
 // 左上角ICON为消息的节点
-class StartNode extends IconCircleNode.view  {
+class DestNode extends IconCircleNode.view  {
   getImageHref () {
-    return starticon;
+    return desticon;
   }
 
 }
-class StartNodeModel extends IconCircleNode.model{
+class DestNodeModel extends IconCircleNode.model{
     initNodeData(data) {
     super.initNodeData(data);
-    this.text.value = "开始节点"; // 不允许文本被拖动
+    this.text.value = "结束节点"; // 不允许文本被拖动
     this.properties={
         interfacetype:'无',
         serialID:'',
@@ -25,7 +25,7 @@ class StartNodeModel extends IconCircleNode.model{
 }
 
 export default {
-  type: 'start',
-  view: StartNode,
-  model: StartNodeModel
+  type: 'dest',
+  view: DestNode,
+  model: DestNodeModel
 }

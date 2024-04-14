@@ -107,10 +107,11 @@ import {
   TimemarkNode,
   TimerNode,
   ConversionNode,
-    InpacNode,
+    InpacNode,DestNode,
 } from './logicflowpanel/registerNode/index.js'
 import {useRoute} from "vue-router";
 import timericon from "/@/assets/svgicon/timer.svg";
+import {builtNodeApi} from "/@/api/flowmanage/builtnode";
 
 const route = useRoute()
 const querys = route.query
@@ -406,10 +407,26 @@ const saveScript = (grajson) => {
   console.log(grajson);
   return grajson;
 }
+const checkGraph=(grajson)=>{
+  let nodes = grajson.nodes;
+  for (let i = 0; i < nodes.length; i++) {
+    console.log(lf.value.getNodeEdges(nodes[i].id))
+      if(lf.value.getNodeEdges(nodes[i].id).length==0  ) {
+        ElMessage.error('请删除或调整无连接节点');
+        return -1
+      }
+  }
+return 0
+
+
+}
 const saveFlow = () => {
   let flowGraphStr = lf.value.getGraphData();
   let s2 = JSON.parse(JSON.stringify(flowGraphStr));
   console.log(flowGraphStr);
+  if (checkGraph(s2)==-1){
+      return;
+  }
   let scripts = saveScript(s2);
 
   let data = JSON.stringify(flowGraphStr)
@@ -433,6 +450,7 @@ const saveFlow = () => {
 
           // ElMessage.success("修改成功");
           state.LastModified = res.data.LastModified;
+          ElMessage.success('数据保存成功');
         } else {
           ElMessage.error(res.message);
         }
@@ -585,6 +603,7 @@ function registerNode() {
   lf.value.register(TimemarkNode);
   lf.value.register(ConversionNode);
   lf.value.register(InpacNode);
+  lf.value.register(DestNode);
   render()
 }
 
@@ -693,31 +712,64 @@ const initLeftNavList = () => {
   } else {
     state.leftNavList = leftNavList;
     //console.log(state.leftNavList);
-    let convlist = state.leftNavList[3];
+    builtNodeApi().search(
+        {
+          uid: 1,
+          pageNum: 1,
+          pageSize: 1000,
+          name: '',
+        })
+        .then(res => {
+          //console.log(res);
+          if (res.code == '200') {
 
-    convlist.children = new Array(13);
-    for (let i = 0; i < 13; i++)
-    {
-      convlist.children[i]={
-        icon: conver,
-        name: '方式'+(i+1),
-        type: 'conver',
-        id: 40+i,
-        descrip: '转换方式'+(i+1),
-      }
-    }
-    convlist = state.leftNavList[4];
-    convlist.children = new Array(2);
-    for (let i = 0; i < 2; i++)
-    {
-      convlist.children[i]={
-        icon: inpac,
-        name: '方式'+(i+1),
-        type: 'inpac',
-        id: 50+i,
-        descrip: '内置封装'+(i+1),
-      }
-    }
+            let convlist = state.leftNavList[3];
+
+            convlist.children = new Array();
+            for (let i = 0,k=0; k < res.data.length; k++)
+            {
+              if(res.data[k].Type=='内置转换节点'){
+                convlist.children[i]={
+                  icon: conver,
+                  name: res.data[k].Name,
+                  type: 'conver',
+                  id: res.data[k].ID,
+                  descrip: res.data[k].Desc,
+                }
+                i++
+              }
+
+            }
+            convlist = state.leftNavList[4];
+            convlist.children = new Array();
+
+            for (let i = 0,k=0; k < res.data.length; k++)
+            {
+              if(res.data[k].Type=='内置封装节点'){
+                convlist.children[i]={
+                  icon: inpac,
+                  name: res.data[k].Name,
+                  type: 'conver',
+                  id: res.data[k].ID,
+                  descrip: res.data[k].Desc,
+                }
+                i++
+              }
+
+            }
+
+
+
+          } else {
+            ElMessage.error(res.message);
+          }
+
+        }).catch(err => {
+
+    }).finally(() => {
+
+    });
+
 
   }
 };
@@ -882,7 +934,7 @@ const uploadfile = (res, file, fileList) => {
 const onToolSubmit = () => {
   // console.log(state.jsplumbData);
   saveFlow();
-  ElMessage.success('数据保存成功');
+
 };
 // 顶部工具栏-复制
 const onToolCopy = () => {

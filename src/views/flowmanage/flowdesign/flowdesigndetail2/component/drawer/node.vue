@@ -509,6 +509,11 @@
             getSerial();
 
         }
+      if (data.type == 'dest') {
+        state.proper.typeC = '结束节点';
+
+
+      }
 
         if (data.type == 'end') {
             state.proper.typeC = '目的节点';

@@ -25,7 +25,7 @@ export default {
         gateway:'网关管理',
         flowdistribution:'流程分发管理',
 
-
+        builtnode:'内置节点管理',
         globalvar: '全局变量管理',
         specialnode: '流程特殊节点',
         pluginmanage: '插件管理',

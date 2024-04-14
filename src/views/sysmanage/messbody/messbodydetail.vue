@@ -42,7 +42,14 @@
                     </el-icon>
                     返回上一级
                 </el-button>
-                <el-text class="ml10">{{ state.tableData.desc }}</el-text>
+              <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="'类型：'+state.tableData.type+'\n描述：'+state.tableData.desc"
+                  placement="top"
+              >
+                <el-tag type="info" effect="dark" round  class="eltagr">名称:{{ state.tableData.name  }}</el-tag>
+              </el-tooltip>
             </div>
             <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%"
                       @selection-change="handleSelectionChange">
@@ -365,6 +372,7 @@
     onMounted(() => {
         //console.log(querys);
         state.tableData.id = querys.id;
+      state.tableData.name=querys.name;
         state.tableData.type = querys.type;
         state.tableData.desc = querys.desc;
         getTableData();
@@ -373,6 +381,13 @@
 
 <style scoped lang="scss">
     .system-user-container {
+      .system-user-search{
+        display: flex;
+        .el-tag{
+          margin-left: auto;
+          margin-right: 10px;
+        }
+      }
         :deep(.el-card__body) {
             display: flex;
             flex-direction: column;

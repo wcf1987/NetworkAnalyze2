@@ -313,6 +313,21 @@ export const rolemenu=[
                         ],
                     },
                     {
+                        path: '/flowmanage/builtnode',
+                        name: 'builtnode',
+                        component: 'flowmanage/builtnode/index',
+                        meta: {
+                            title: 'message.router.builtnode',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'iconfont icon-diqiu1',
+                        },
+                    },
+                    {
                         path: '/flowmanage/globalvar',
                         name: 'globalvar',
                         component: 'flowmanage/globalvar/index',

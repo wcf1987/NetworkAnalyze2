@@ -28,7 +28,7 @@ import TimerNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflo
 import ConversionNode
     from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/ConversionNode";
 import InpacNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/InpacNode";
-
+import DestNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/DestNode";
 export {
     StartNode,
     EndNode,
@@ -47,5 +47,6 @@ export {
     TimemarkNode,
     TimerNode,
     ConversionNode,
-    InpacNode
+    InpacNode,
+    DestNode,
 }

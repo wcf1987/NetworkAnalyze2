@@ -2,42 +2,34 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入消息头名称" style="max-width: 180px"
-                          v-model="state.tableData.search"></el-input>
+                <el-input size="default" placeholder="请输入内置节点名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
                 <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
                     </el-icon>
                     查询
                 </el-button>
-                <el-button size="default" type="success" class="ml10" @click="onOpenAdd('add')">
+                <el-button size="default" type="success" class="ml10" @click="onOpenAdd('add')" v-if="false">
                     <el-icon>
                         <ele-FolderAdd/>
                     </el-icon>
-                    新增消息头对象
+                    新增内置节点
                 </el-button>
-                <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')">
+                        <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')" v-if="false">
                     <el-icon>
                         <ele-DeleteFilled/>
                     </el-icon>
                     批量删除
                 </el-button>
-                <el-button size="default" type="warning" class="ml10" @click="onCopyIDS('copy')">
-                    <el-icon>
-                        <ele-CopyDocument/>
-                    </el-icon>
-                    复制
-                </el-button>
             </div>
-            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%"
-                      @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="30"/>
+            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
+                 <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
-                <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Type" label="格式" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
+                <el-table-column prop="Name" label="内置节点名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Type" label="内置节点类型" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Describes" label="内置节点描述" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -45,13 +37,9 @@
                         >修改
                         </el-button
                         >
+
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEditDetail('edit', scope.row)"
-                        >编辑详细
-                        </el-button
-                        >
-                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onRowDel(scope.row)">删除
+                                   @click="onRowDel(scope.row)" v-if="false">删除
                         </el-button>
                     </template>
                 </el-table-column>
@@ -70,7 +58,7 @@
             >
             </el-pagination>
         </el-card>
-        <UserDialog ref="userDialogRef" @refresh="getTableData()" @editdetail="onOpenEditDetailByID"/>
+        <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
     </div>
 </template>
 
@@ -78,9 +66,11 @@
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRouter} from "vue-router";
-    import {messheaderApi} from '/@/api/sysmanage/messheader';
+    import {userManageApi} from "/@/api/sysadmin/usermanage";
+    import {builtNodeApi} from "/@/api/flowmanage/builtnode";
+
     // 引入组件
-    const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messheader/dialog.vue'));
+    const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/builtnode/dialog.vue'));
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
@@ -93,20 +83,19 @@
                 pageNum: 1,
                 pageSize: 10,
             },
-            search: '',
+            		        search: '',
             searchStr: '',
-            ids: [],
+                ids:[],
         },
     });
-    const calcIndex = (index) => {
-        index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
+    const  calcIndex=(index)=>{
+        index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
         return index
     }
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
-
-        messheaderApi().searchMessHeader(
+      builtNodeApi().search(
             {
                 uid: 1,
                 pageNum: state.tableData.param.pageNum,
@@ -129,7 +118,7 @@
 
         });
         //const data = [];
-        messheaderApi().getMessHeaderSearchListSize(
+      builtNodeApi().getSearchListSize(
             {
                 uid: 1,
                 name: state.tableData.searchStr,
@@ -152,7 +141,7 @@
 
         setTimeout(() => {
             state.tableData.loading = false;
-        }, 100);
+        }, 500);
     };
     // 打开新增用户弹窗
     const onOpenAdd = (type: string) => {
@@ -162,25 +151,19 @@
     const onOpenEdit = (type: string, row: RowUserType) => {
         userDialogRef.value.openDialog(type, row);
     };
-
     const onSearch = () => {
-        state.tableData.searchStr = state.tableData.search;
-        getTableData();
-    };
-
-    const onOpenEditDetail = (type: string, row: RowUserType) => {
-        onOpenEditDetailByID(row.ID,row.Name, row.Type, row.Describes);
-
+        state.tableData.searchStr=state.tableData.search;
+       getTableData();
     };
     //多选监听
     const handleSelectionChange = (val) => {
         state.tableData.ids = val.map(v => v.ID)
         //this.$message.warning("选择了"+this.ids.length+"条数据");
-        console.log("选择了" + state.tableData.ids.length + "条数据")
+        console.log("选择了"+state.tableData.ids.length+"条数据")
     };
     //批量删除
     const onDeleteIDS = (type: string) => {
-        ElMessageBox.confirm(`此操作将批量删除网口：“${state.tableData.ids.length}”条，是否继续?`, '提示', {
+        ElMessageBox.confirm(`此操作将批量删除内置节点：“${state.tableData.ids.length}”条，是否继续?`, '提示', {
             confirmButtonText: '确认',
             cancelButtonText: '取消',
             type: 'warning',
@@ -188,13 +171,14 @@
 
 
             .then(() => {
-                messheaderApi().delIDS(state.tableData.ids
-                )
+              builtNodeApi().delIDS(                                          state.tableData.ids
+
+                    )
                     .then(res => {
                         //console.log(res);
                         if (res.code == '200') {
 
-                            ElMessage.success('成功批量删除' + res.data + '条');
+                            ElMessage.success('成功批量删除'+res.data+'条');
                             getTableData();
 
 
@@ -211,46 +195,6 @@
             })
             .catch(() => {
             });
-    };
-    //批量拷贝
-    const onCopyIDS = (type: string) => {
-        ElMessageBox.confirm(`此操作将批量复制：${state.tableData.ids.length}条，是否继续?`, '提示', {
-            confirmButtonText: '确认',
-            cancelButtonText: '取消',
-            type: 'warning',
-        })
-
-
-            .then(() => {
-                messheaderApi().copyIDS(state.tableData.ids
-                )
-                    .then(res => {
-                        //console.log(res);
-                        if (res.code == '200') {
-
-                            ElMessage.success('成功批量复制' + res.data + '条');
-                            getTableData();
-
-
-                        } else {
-                            ElMessage.error(res.message);
-                        }
-
-                    }).catch(err => {
-
-                }).finally(() => {
-
-                });
-
-            })
-            .catch(() => {
-            });
-    };
-    const onOpenEditDetailByID = (id,name, type, desc) => {
-        router.push({
-            path: '/sysmanage/messheader/messheaderdetail',
-            query: {id: id, name:name,type: type, desc: desc},
-        });
     };
 
     // 删除用户
@@ -261,7 +205,7 @@
             type: 'warning',
         })
             .then(() => {
-                messheaderApi().delMessHeader(
+              builtNodeApi().del(
                     {
                         ID: row.ID,
 

@@ -15,8 +15,9 @@ import timemarkicon from '/@/assets/svgicon/timemark.svg';
 import timericon from '/@/assets/svgicon/timer.svg';
 import statisticsicon from '/@/assets/svgicon/statistics.svg';
 import calcicon from '/@/assets/svgicon/calc.svg';
-import conver from '/@/assets/svgicon/conver.svg';
-import inpac from '/@/assets/svgicon/inpac.svg';
+import convericon from '/@/assets/svgicon/conver.svg';
+import inpacicon from '/@/assets/svgicon/inpac.svg';
+import desticon from '/@/assets/svgicon/dest.svg';
 export const leftNavList = [
     {
         title: '基础节点',
@@ -30,6 +31,14 @@ export const leftNavList = [
                 id: '11',
                 type: 'start',
                 descrip: '流程的第一个节点',
+
+            },
+            {
+                icon: desticon,
+                name: '结束节点',
+                id: '11_1',
+                type: 'dest',
+                descrip: '流程的结束节点',
 
             },
             {
@@ -161,7 +170,7 @@ export const leftNavList = [
         id: '4',
         children: [
             {
-                icon: conver,
+                icon: convericon,
                 name: '方式1',
                 type: 'conver',
                 id: '41',
@@ -178,7 +187,7 @@ export const leftNavList = [
         id: '5',
         children: [
             {
-                icon: inpac,
+                icon: inpacicon,
                 name: '封装1',
                 type: 'inpac',
                 id: '51',

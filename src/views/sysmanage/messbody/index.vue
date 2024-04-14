@@ -167,13 +167,13 @@
        getTableData();
     };
     const onOpenEditDetail = (type: string, row: RowUserType) => {
-        onOpenEditDetailByID(row.ID,row.Type,row.Describes);
+        onOpenEditDetailByID(row.ID,row.Name,row.Type,row.Describes);
 
     };
-    const onOpenEditDetailByID = (id,type,desc) => {
+    const onOpenEditDetailByID = (id,name,type,desc) => {
         router.push({
             path: '/sysmanage/messbody/messbodydetail',
-            query: {id: id, type:type,desc:desc},
+            query: {id: id,name:name, type:type,desc:desc},
         });
     };
     //多选监听

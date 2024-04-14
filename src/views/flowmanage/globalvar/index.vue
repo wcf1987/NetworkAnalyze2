@@ -21,8 +21,10 @@
                     </el-icon>
                     批量删除
                 </el-button>
+
             </div>
-            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
+
+            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange" v-if="state.view=='list'">
                  <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
@@ -76,6 +78,8 @@
     // 定义变量内容
     const userDialogRef = ref();
     const state = reactive({
+      view:'list',
+      viewStr:'切换瀑布流显示',
         tableData: {
             data: [],
             total: 0,
@@ -155,6 +159,21 @@
     const onSearch = () => {
         state.tableData.searchStr=state.tableData.search;
        getTableData();
+    };
+    const onChangeView = () => {
+      if(state.view=='list'){
+        state.view='waterfall';
+        state.viewStr='切换列表显示';
+        state.tableData.param.pageSize = 12;
+        getTableData();
+      }else{
+        state.view='list';
+
+        state.viewStr='切换瀑布流显示';
+        state.tableData.param.pageSize = 10;
+        getTableData();
+      }
+
     };
     //多选监听
     const handleSelectionChange = (val) => {
@@ -251,6 +270,13 @@
 
 <style scoped lang="scss">
     .system-user-container {
+      .system-user-search{
+        display: flex;
+        .eltagr{
+          margin-left: auto;
+          margin-right: 10px;
+        }
+      }
         :deep(.el-card__body) {
             display: flex;
             flex-direction: column;

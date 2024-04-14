@@ -153,11 +153,11 @@
 <script setup lang="ts" name="pagesFiltering">
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {useRouter} from 'vue-router';
-    import flowdesignimg from '/@/assets/flowdesign.jpg';
+
     import {ElMessage, ElMessageBox} from "element-plus";
     import {flowApi} from "/@/api/flowmanage/flow";
     import {useUserInfo} from "/@/stores/userInfo";
-
+    import flowdesignimg from '/@/assets/flowdesign.jpg';
     const flowimg = ref(flowdesignimg);
     const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/dialog.vue'));
     const userDialogRef = ref();
