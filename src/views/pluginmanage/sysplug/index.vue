@@ -34,7 +34,7 @@
                                     <div :class="cardLogoClass">
                                         <ele-Collection/>
                                     </div>
-                                    <div class="list-card-item_detail--operation">
+                                    <div class="list-card-item_detail--operation" v-if="false">
                                         <el-tag
                                                 :color="v.Status=='true' ? '#00a870' : '#eee'"
                                                 effect="dark"
@@ -59,7 +59,37 @@
                                             </template>
                                         </el-dropdown>
                                     </div>
+                                  <div class="item-txt-msg mb10">
+                                    <el-tooltip
+                                        class="box-item"
+                                        effect="light"
+                                        content="编辑"
+                                        placement="bottom-start"
+                                    >
+                                      <el-button type="success" size="large" circle
+                                                 @click.stop="onOpenEdit('edit', v)">
+                                        <el-icon>
+                                          <ele-Document/>
+                                        </el-icon>
 
+                                      </el-button>
+                                    </el-tooltip>
+                                    <el-tooltip
+                                        class="box-item"
+                                        effect="light"
+                                        content="删除"
+                                        placement="bottom-start"
+                                    >
+                                      <el-button type="danger" size="large" circle
+                                                 @click.stop="onRowDel(v)">
+                                        <el-icon>
+                                          <ele-Delete/>
+                                        </el-icon>
+
+                                      </el-button>
+                                    </el-tooltip>
+
+                                  </div>
 
                                 </el-row>
                                 <p class="list-card-item_detail--name text-text_color_primary">
@@ -68,6 +98,7 @@
                                 <p class="list-card-item_detail--desc text-text_color_regular">
                                     {{ v.Describes }}
                                 </p>
+
                             </div>
                         </div>
                     </el-col>

@@ -1,7 +1,7 @@
 <template>
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
-            <div class="system-user-search mb15">
+            <div class="system-user-search mb15 ">
                 <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
                 <el-button size="default" type="primary" class="ml10"  @click="onSearch">
                     <el-icon>
@@ -21,7 +21,15 @@
                     </el-icon>
                     批量删除
                 </el-button>
-                 <el-text class="ml10">{{ state.tableData.desc  }}</el-text>
+              <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="'类型：'+state.tableData.type+'\n描述：'+state.tableData.desc"
+                  placement="top"
+              >
+                <el-tag type="info" effect="dark" round  class="eltagr">名称:{{ state.tableData.name  }}</el-tag>
+              </el-tooltip>
+
             </div>
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
                <el-table-column type="selection" width="30"/>
@@ -263,6 +271,8 @@ import {packageApi} from '/@/api/sysmanage/package';
     // 页面加载时
     onMounted(() => {
         state.tableData.id = querys.id;
+        state.tableData.name=querys.name;
+        state.tableData.type=querys.type;
         state.tableData.desc = querys.desc;
 
         getTableData();
@@ -271,6 +281,13 @@ import {packageApi} from '/@/api/sysmanage/package';
 
 <style scoped lang="scss">
     .system-user-container {
+      .system-user-search{
+        display: flex;
+        .el-tag{
+          margin-left: auto;
+          margin-right: 10px;
+        }
+      }
         :deep(.el-card__body) {
             display: flex;
             flex-direction: column;

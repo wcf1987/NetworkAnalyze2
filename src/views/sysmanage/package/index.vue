@@ -302,13 +302,13 @@
 
     };
     const onOpenEditDetail = (type: string, row: RowUserType) => {
-        onOpenEditDetailByID(row.ID,row.Describes);
+        onOpenEditDetailByID(row.ID,row.Name,row.Type,row.Describes);
 
     };
-    const onOpenEditDetailByID = (id,desc) => {
+    const onOpenEditDetailByID = (id,name,type,desc) => {
         router.push({
             path: '/sysmanage/package/packagedetail',
-            query: {id: id,desc:desc},
+            query: {id: id,name:name,type:type,desc:desc},
         });
     };
 
@@ -529,4 +529,5 @@
         }
       }
     }
+
 </style>

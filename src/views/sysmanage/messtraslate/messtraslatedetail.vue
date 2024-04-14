@@ -21,7 +21,7 @@
             <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%" >
 
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                                <el-table-column prop="parentindex" label="序号" width="60" />
+                                <el-table-column prop="parentindex" label="序号" width="80" />
                 <el-table-column prop="Name" label="目的字段名" show-overflow-tooltip></el-table-column>
 
                 <el-table-column prop="TName" label="转换名称" show-overflow-tooltip></el-table-column>
