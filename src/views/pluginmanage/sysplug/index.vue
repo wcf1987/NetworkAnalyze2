@@ -66,7 +66,7 @@
                                         content="编辑"
                                         placement="bottom-start"
                                     >
-                                      <el-button type="success" size="large" circle
+                                      <el-button type="success" size="small" circle
                                                  @click.stop="onOpenEdit('edit', v)">
                                         <el-icon>
                                           <ele-Document/>
@@ -80,7 +80,7 @@
                                         content="删除"
                                         placement="bottom-start"
                                     >
-                                      <el-button type="danger" size="large" circle
+                                      <el-button type="danger" size="small" circle
                                                  @click.stop="onRowDel(v)">
                                         <el-icon>
                                           <ele-Delete/>
@@ -93,10 +93,12 @@
 
                                 </el-row>
                                 <p class="list-card-item_detail--name text-text_color_primary">
-                                    {{ v.Name }}
+                                      <el-tag type="info" effect="dark" round  >系统插件名称:{{ v.Name  }} </el-tag>
+
                                 </p>
                                 <p class="list-card-item_detail--desc text-text_color_regular">
-                                    {{ v.Describes }}
+                                                <el-tag type="info" effect="dark" round  >描述： {{ v.Describes }}</el-tag>
+
                                 </p>
 
                             </div>

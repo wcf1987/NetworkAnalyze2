@@ -86,7 +86,7 @@ import {useTagsViewRoutes} from '/@/stores/tagsViewRoutes';
 import commonFunction from '/@/utils/commonFunction';
 import {leftNavList} from './js/mock';
 import {leftNavListSimple} from './js/mocksimple';
-
+import {leftNavListSpecial} from './js/mockspecial';
 import {jsplumbConnect, jsplumbDefaults, jsplumbMakeSource, jsplumbMakeTarget} from './js/config';
 // 定义变量内容
 import {
@@ -710,7 +710,13 @@ const initLeftNavList = () => {
     state.leftNavList = leftNavListSimple;
 
   } else {
-    state.leftNavList = leftNavList;
+    if(state.Type=='指定流程'){
+      state.leftNavList = leftNavListSpecial;
+    }
+    if(state.Type=='混合编排'){
+      state.leftNavList = leftNavList;
+    }
+
     //console.log(state.leftNavList);
     builtNodeApi().search(
         {

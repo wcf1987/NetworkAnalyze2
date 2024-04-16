@@ -23,12 +23,7 @@
                     批量删除
                 </el-button>
 
-              <el-button size="default" type="warning" class="ml10" @click="onChangeView()">
-                <el-icon>
-                  <ele-Memo/>
-                </el-icon>
-                <div>{{state.viewStr }}</div>
-              </el-button>
+
             </div>
 
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange" v-if="state.view=='list'">

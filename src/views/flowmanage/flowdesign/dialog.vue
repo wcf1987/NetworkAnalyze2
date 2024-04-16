@@ -15,6 +15,7 @@
                             <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
                                 <el-option label="透明传输" value="透明传输"></el-option>
                                 <el-option label="混合编排" value="混合编排"></el-option>
+                                <el-option label="指定流程" value="指定流程"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>

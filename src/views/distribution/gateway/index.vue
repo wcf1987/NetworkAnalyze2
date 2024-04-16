@@ -157,8 +157,8 @@
     // 定义变量内容
     const userDialogRef = ref();
     const state = reactive({
-      view:'list',
-      viewStr:'切换瀑布流显示',
+      view:'waterfall',
+      viewStr:'切换列表显示',
         tableData: {
             data: [],
             total: 0,
@@ -243,13 +243,11 @@
       if(state.view=='list'){
         state.view='waterfall';
         state.viewStr='切换列表显示';
-        state.tableData.param.pageSize = 12;
         getTableData();
       }else{
         state.view='list';
 
         state.viewStr='切换瀑布流显示';
-        state.tableData.param.pageSize = 10;
         getTableData();
       }
 
