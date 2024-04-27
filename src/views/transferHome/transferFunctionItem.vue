@@ -12,6 +12,7 @@ import Image10 from './assets/image10.png';
 import Image11 from './assets/image11.png';
 import Image12 from './assets/image12.png';
 import { Random } from 'mockjs';
+import { useThemeConfig } from '/@/stores/themeConfig';
 
 const props = defineProps({
 	name: {
@@ -26,10 +27,22 @@ const props = defineProps({
 	},
 });
 const Images = [Image1, Image10, Image11, Image12, Image2, Image3, Image4, Image5, Image6, Image7, Image8, Image9];
+const storesThemeConfig = useThemeConfig();
+const isIsDark = storesThemeConfig.$state.themeConfig.isIsDark;
 </script>
 <template>
 	<div class="transgerFunctionItemWrapper">
-		<div class="title">{{ props.name.split(',').join(' → ') }}</div>
+		<div
+			:style="{
+				color: isIsDark ? '#ccc' : '#000',
+				backgroundImage: isIsDark
+					? 'linear-gradient(270deg, rgb(175, 179, 186) 0%, rgba(175, 179, 186, 0) 100%)'
+					: 'linear-gradient(270deg, rgba(245, 247, 250, 0) 0%, rgb(245, 247, 250) 100%)',
+			}"
+			class="title"
+		>
+			{{ props.name.split(',').join(' → ') }}
+		</div>
 		<div class="content">
 			<div class="transferFunctionItem" :style="{ backgroundImage: `url(${Images[Random.integer(0, 11)]})` }" v-for="item in $props.children">
 				<div class="template-description">{{ item.description }}</div>
@@ -48,7 +61,6 @@ const Images = [Image1, Image10, Image11, Image12, Image2, Image3, Image4, Image
 	flex-direction: column;
 	margin-bottom: 8px;
 	.title {
-		background-image: linear-gradient(270deg, rgba(245, 247, 250, 0) 0%, rgb(245, 247, 250) 100%);
 		height: 38px;
 		line-height: 38px;
 		padding: 0 16px;

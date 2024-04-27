@@ -23,6 +23,6 @@ const fakedata = reactive(
 	padding: 16px;
 	flex-grow: 1;
 	width: 100%;
-	background-color: #fff;
+	// background-color: #fff;
 }
 </style>
