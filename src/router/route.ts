@@ -1,4 +1,4 @@
-import {RouteRecordRaw} from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
 /**
  * 建议：路由 path 路径与文件夹名称相同，找文件可浏览器地址找，方便定位文件位置
@@ -18,16 +18,16 @@ import {RouteRecordRaw} from 'vue-router';
 
 // 扩展 RouteMeta 接口
 declare module 'vue-router' {
-    interface RouteMeta {
-        title?: string;
-        isLink?: string;
-        isHide?: boolean;
-        isKeepAlive?: boolean;
-        isAffix?: boolean;
-        isIframe?: boolean;
-        roles?: string[];
-        icon?: string;
-    }
+	interface RouteMeta {
+		title?: string;
+		isLink?: string;
+		isHide?: boolean;
+		isKeepAlive?: boolean;
+		isAffix?: boolean;
+		isIframe?: boolean;
+		roles?: string[];
+		icon?: string;
+	}
 }
 
 /**
@@ -38,18 +38,25 @@ declare module 'vue-router' {
  * @returns 返回路由菜单数据
 
  */
-export const dynamicRoutes=
-   [
-    {
-        path: '/',
-        name: '/',
-        component: () => import('/@/layout/index.vue'),
-        redirect: '/homepage',
-        meta: {
-            isKeepAlive: true,
-        },
-
-    }
+export const dynamicRoutes = [
+	{
+		path: '/',
+		name: '/',
+		component: () => import('/@/layout/index.vue'),
+		redirect: '/homepage',
+		meta: {
+			isKeepAlive: true,
+		},
+	},
+	{
+		path: '/index',
+		name: '/index',
+		component: () => import('/@/views/transferHome/index.vue'),
+		// redirect: '/homepage',
+		meta: {
+			isKeepAlive: true,
+		},
+	},
 ];
 
 /**
@@ -57,24 +64,24 @@ export const dynamicRoutes=
  * @link 参考：https://next.router.vuejs.org/zh/guide/essentials/history-mode.html#netlify
  */
 export const notFoundAndNoPower = [
-    {
-        path: '/:path(.*)*',
-        name: 'notFound',
-        component: () => import('/@/views/error/404.vue'),
-        meta: {
-            title: 'message.staticRoutes.notFound',
-            isHide: true,
-        },
-    },
-    {
-        path: '/401',
-        name: 'noPower',
-        component: () => import('/@/views/error/401.vue'),
-        meta: {
-            title: 'message.staticRoutes.noPower',
-            isHide: true,
-        },
-    },
+	{
+		path: '/:path(.*)*',
+		name: 'notFound',
+		component: () => import('/@/views/error/404.vue'),
+		meta: {
+			title: 'message.staticRoutes.notFound',
+			isHide: true,
+		},
+	},
+	{
+		path: '/401',
+		name: 'noPower',
+		component: () => import('/@/views/error/401.vue'),
+		meta: {
+			title: 'message.staticRoutes.noPower',
+			isHide: true,
+		},
+	},
 ];
 
 /**
@@ -84,32 +91,32 @@ export const notFoundAndNoPower = [
  * @returns 返回路由菜单数据
  */
 export const staticRoutes: Array<RouteRecordRaw> = [
-    {
-        path: '/login',
-        name: 'login',
-        component: () => import('/@/views/login/index.vue'),
-        meta: {
-            title: '登录',
-        },
-    },
-    /**
-     * 提示：写在这里的为全屏界面，不建议写在这里
-     * 请写在 `dynamicRoutes` 路由数组中
-     */
-    {
-        path: '/visualizingDemo1',
-        name: 'visualizingDemo1',
-        component: () => import('/@/views/visualizing/demo1.vue'),
-        meta: {
-            title: 'message.router.visualizingLinkDemo1',
-        },
-    },
-    {
-        path: '/visualizingDemo2',
-        name: 'visualizingDemo2',
-        component: () => import('/@/views/visualizing/demo2.vue'),
-        meta: {
-            title: 'message.router.visualizingLinkDemo2',
-        },
-    },
+	{
+		path: '/login',
+		name: 'login',
+		component: () => import('/@/views/login/index.vue'),
+		meta: {
+			title: '登录',
+		},
+	},
+	/**
+	 * 提示：写在这里的为全屏界面，不建议写在这里
+	 * 请写在 `dynamicRoutes` 路由数组中
+	 */
+	{
+		path: '/visualizingDemo1',
+		name: 'visualizingDemo1',
+		component: () => import('/@/views/visualizing/demo1.vue'),
+		meta: {
+			title: 'message.router.visualizingLinkDemo1',
+		},
+	},
+	{
+		path: '/visualizingDemo2',
+		name: 'visualizingDemo2',
+		component: () => import('/@/views/visualizing/demo2.vue'),
+		meta: {
+			title: 'message.router.visualizingLinkDemo2',
+		},
+	},
 ];

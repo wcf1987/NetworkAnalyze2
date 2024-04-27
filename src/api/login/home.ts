@@ -8,20 +8,13 @@ import request from '/@/utils/request';
  * @method signOut 用户退出登录
  */
 export function homeApi() {
-
-    return {
-
-        getData: (data: object) => {
-            return request({
-                url: '/home/getdata',
-                method: 'post',
-                data,
-            });
-        },
-
-
-
-
-
-    };
+	return {
+		getData: (data: object) => {
+			return request({
+				url: '/home/getdata',
+				method: 'post',
+				data,
+			});
+		},
+	};
 }
