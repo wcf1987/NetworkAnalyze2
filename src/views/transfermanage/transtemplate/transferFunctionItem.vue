@@ -21,8 +21,8 @@ const props = defineProps({
 	},
 	children: {
 		type: Array<{
-			name: String;
-			description: String;
+			Name: String;
+			Describes: String;
 		}>,
 	},
 });
@@ -45,10 +45,10 @@ const isIsDark = storesThemeConfig.$state.themeConfig.isIsDark;
 		</div>
 		<div class="content">
 			<div class="transferFunctionItem" :style="{ backgroundImage: `url(${Images[Random.integer(0, 11)]})` }" v-for="item in $props.children">
-				<div class="template-description">{{ item.description }}</div>
+				<div class="template-description">{{ item.Describes }}</div>
 				<footer>
 					<span></span>
-					<div class="template-name">{{ item.name }}</div>
+					<div class="template-name">{{ item.Name }}</div>
 					<el-button type="text">编辑</el-button>
 				</footer>
 			</div>

@@ -2,7 +2,7 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入全局变量名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
+                <el-input size="default" placeholder="请输入消息转换分类名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
                 <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
@@ -29,8 +29,7 @@
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Code" label="变量英文名" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
+
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
                 <el-table-column label="操作" width="180">
@@ -70,10 +69,10 @@
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {useRouter} from "vue-router";
     import {userManageApi} from "/@/api/sysadmin/usermanage";
-    import {globalVarApi} from "/@/api/flowmanage/globalvar";
+    import {transclassfyApi} from "/@/api/transmanage/transclassfy";
 
     // 引入组件
-    const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/globalvar/dialog.vue'));
+    const UserDialog = defineAsyncComponent(() => import('/@/views/transfermanage/transclassfy/dialog.vue'));
     const router = useRouter();
     // 定义变量内容
     const userDialogRef = ref();
@@ -100,7 +99,7 @@
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
-       globalVarApi().search(
+       transclassfyApi().search(
             {
                 uid: 1,
                 pageNum: state.tableData.param.pageNum,
@@ -123,7 +122,7 @@
 
         });
         //const data = [];
-        globalVarApi().getSearchListSize(
+        transclassfyApi().getSearchListSize(
             {
                 uid: 1,
                 name: state.tableData.searchStr,
@@ -183,7 +182,7 @@
     };
     //批量删除
     const onDeleteIDS = (type: string) => {
-        ElMessageBox.confirm(`此操作将批量删除网口：“${state.tableData.ids.length}”条，是否继续?`, '提示', {
+        ElMessageBox.confirm(`此操作将批量删除分类：“${state.tableData.ids.length}”条，是否继续?`, '提示', {
             confirmButtonText: '确认',
             cancelButtonText: '取消',
             type: 'warning',
@@ -191,7 +190,7 @@
 
 
             .then(() => {
-                globalVarApi().delIDS(                                          state.tableData.ids
+                transclassfyApi().delIDS(                                          state.tableData.ids
 
                     )
                     .then(res => {
@@ -225,7 +224,7 @@
             type: 'warning',
         })
             .then(() => {
-                globalVarApi().del(
+                transclassfyApi().del(
                     {
                         ID: row.ID,
 

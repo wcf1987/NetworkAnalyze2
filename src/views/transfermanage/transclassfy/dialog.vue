@@ -11,7 +11,7 @@
                     </el-col>
 
 
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
                         <el-form-item label="类型" prop="Type">
                             <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
                                 <el-option label="数字" value="数字"></el-option>
@@ -22,7 +22,7 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
                         <el-form-item label="变量名" prop="Code">
                             <el-input v-model="state.ruleForm.Code" placeholder="请输入英文名" clearable></el-input>
                         </el-form-item>
@@ -50,7 +50,7 @@
 <script setup lang="ts" name="systemUserDialog">
     import {nextTick, reactive, ref} from 'vue';
     import {ElMessage} from "element-plus";
-    import {globalVarApi} from "/@/api/flowmanage/globalvar";
+    import {transclassfyApi} from "/@/api/transmanage/transclassfy";
     import {useUserInfo} from "/@/stores/userInfo";
     import {checkCodeName} from "/@/utils/rules";
 
@@ -130,7 +130,7 @@
                 return ElMessage.error('请确保数据格式填写正确！');
             } else {
                 if (state.dialog.type == 'edit') {
-                    globalVarApi().update(
+                    transclassfyApi().update(
                         state.ruleForm
                     )
                         .then(res => {
@@ -153,7 +153,7 @@
                 if (state.dialog.type == 'add') {
                     const stores = useUserInfo();
                     state.ruleForm['AuthorID'] = stores.userInfos.id
-                    globalVarApi().add(
+                    transclassfyApi().add(
                         state.ruleForm
                     )
                         .then(res => {

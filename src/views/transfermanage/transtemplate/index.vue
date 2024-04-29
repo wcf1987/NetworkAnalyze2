@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue';
+	import {onMounted, reactive} from 'vue';
 import { Random } from 'mockjs';
 import TransferFunctionItem from './transferFunctionItem.vue';
 
@@ -12,10 +12,64 @@ const fakedata = reactive(
 		})),
 	}))
 );
+
+    import {transclassfyApi} from "/@/api/transmanage/transclassfy";
+import {ElMessage} from "element-plus";
+    const state = reactive({
+      view:'list',
+      viewStr:'切换瀑布流显示',
+        tableData: {
+            data: [],
+            total: 0,
+            loading: false,
+            param: {
+                pageNum: 1,
+                pageSize: 10,
+            },
+            		        search: '',
+            searchStr: '',
+                ids:[],
+        },
+    });
+      const getTableData = () => {
+        state.tableData.loading = true;
+       transclassfyApi().searchWithChildren(
+            {
+                uid: 1,
+                pageNum: state.tableData.param.pageNum,
+                pageSize: state.tableData.param.pageSize,
+                name: state.tableData.searchStr,
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.tableData.data = res.data;
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+        //const data = [];
+
+
+        setTimeout(() => {
+            state.tableData.loading = false;
+        }, 500);
+    };
+    // 页面加载时
+    onMounted(() => {
+        getTableData();
+    });
 </script>
 <template>
 	<div class="transferHomeWrapper">
-		<TransferFunctionItem v-for="item in fakedata" :name="item.name" :children="item.children" />
+		<TransferFunctionItem v-for="item in state.tableData.data" :name="item.Name" :children="item.children" />
 	</div>
 </template>
 <style lang="scss" scoped>
