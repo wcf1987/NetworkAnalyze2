@@ -1,5 +1,5 @@
 <template>
-	<div class="layout-navbars-container">
+	<div class="layout-navbars-container" v-if="false">
 		<BreadcrumbIndex />
 		<TagsView v-if="setShowTagsView" />
 	</div>
