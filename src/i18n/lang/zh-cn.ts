@@ -23,6 +23,7 @@ export default {
         fieldsdetail: '字段集合管理',
         flowmanage: '流程编排管理',
         flowdesign: '流程编排设计',
+        flowdesigntemplate:'模板编辑',
         flowdesigndetail2:'流程详细设计',
         distribution:'应用场景管理',
         gateway:'CLIP管理',

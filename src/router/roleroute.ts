@@ -80,6 +80,21 @@ export const rolemenu=[
                                     icon: 'ele-Sunny',
                                 },
                             },
+                                {
+                                path: '/flowmanage/flowdesign/flowdesigntemplate',
+                                name: 'flowdesigntemplate',
+                                component: 'flowmanage/flowdesign/flowdesigndetail2/template',
+                                meta: {
+                                    title: 'message.router.flowdesigntemplate',
+                                    isLink: '',
+                                    isHide: true,
+                                    isKeepAlive: false,
+                                    isAffix: false,
+                                    isIframe: false,
+                                    roles: ['admin', 'common'],
+                                    icon: 'ele-Sunny',
+                                },
+                            },
                         ],
                     },
 

@@ -1,16 +1,24 @@
 <template>
     <div>
-        <el-drawer :title="`${state.nodeData.type === 'bezier' ? '连接' : '节点'}操作`" v-model="state.isOpen" size="500px">
-            <el-scrollbar>
+        <el-collapse class="centered-collapse" :title="`${state.nodeData.type === 'bezier' ? '连接' : '节点'}操作`"
+                     v-model="activeNames">
+            <el-collapse-item class="centered" name="1">
+                <template #title class="centered">
+                    {{`${state.nodeData.type === 'bezier' ? '连接' : '节点'}属性编辑`}}
+                    <el-icon class="header-icon">
+                        <ele-EditPen/>
+                    </el-icon>
+                </template>
                 <Lines v-if="state.nodeData.type === 'bezier'" @submit="onSubmit" @close="close" ref="lineRef"
-                       />
-                <Nodes v-else @submit="onSubmit" @close="close" ref="nodeRef" />
-            </el-scrollbar>
-        </el-drawer>
+                />
+                <Nodes v-else @submit="onSubmit" @close="close" ref="nodeRef"/>
+            </el-collapse-item>
+        </el-collapse>
     </div>
 </template>
 
 <script setup lang="ts" name="pagesWorkflowDrawer">
+    const activeNames = ref(['1'])
     import {defineAsyncComponent, nextTick, reactive, ref} from 'vue';
 
     // 定义子组件向父组件传值/事件
@@ -62,3 +70,16 @@
         open,
     });
 </script>
+<style scoped lang="scss">
+    .centered-collapse {
+
+        border: 2px solid #ebeef5;
+        margin-bottom: -1px;
+
+
+
+    }
+
+
+
+</style>

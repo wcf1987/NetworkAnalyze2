@@ -46,6 +46,10 @@
             name: '',
 
         },
+        type: {
+		type: String,
+		default: () => '',
+	    },
         lasttime:{
             name:'',
         }
@@ -53,7 +57,7 @@
     // 设置 tool 标题
     const setToolTitle = computed(() => {
         let {globalTitle} = themeConfig.value;
-        return '流程编排工作流 : ' + props.dropdown ;
+        return props.type+' : ' + props.dropdown ;
     });
         const setTimeTitle = computed(() => {
 

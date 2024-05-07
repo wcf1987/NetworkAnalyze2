@@ -1,11 +1,11 @@
 <template>
     <div class="workflow-drawer-node">
-        <el-tabs type="border-card" v-model="state.tabsActive">
+
             <!-- 节点编辑 -->
-            <el-tab-pane label="节点编辑" name="1">
+
                 <el-scrollbar>
-                    <el-form :model="state.node" ref="nodeFormRef" size="default"
-                             label-width="80px" class="pt15 pr15 pb15 pl15">
+                     <el-form :model="state.form" ref="extendFormRef" size="default" label-width="100px"
+                             class="pt15 pr15 pb15 pl15">
                         <el-form-item label="数据id" prop="id" v-if="false">
                             <el-input v-model="state.node.id" placeholder="请输入数据id" clearable disabled></el-input>
                         </el-form-item>
@@ -23,7 +23,7 @@
                         <el-form-item label="名称" prop="name">
                             <el-input v-model="state.proper.name" placeholder="请输入名称" clearable></el-input>
                         </el-form-item>
-                        <el-form-item>
+                        <el-form-item v-if="false">
                             <el-button class="mb15" @click="onNodeRefresh">
                                 <SvgIcon name="ele-RefreshRight"/>
                                 重置
@@ -33,15 +33,9 @@
                                 下一步
                             </el-button>
                         </el-form-item>
-                    </el-form>
-                </el-scrollbar>
-            </el-tab-pane>
 
-            <!-- 扩展表单 -->
-            <el-tab-pane label="属性" name="2">
-                <el-scrollbar>
-                    <el-form :model="state.form" ref="extendFormRef" size="default" label-width="100px"
-                             class="pt15 pr15 pb15 pl15">
+
+
 
                         <div class="customproper" v-if="state.showFlag['start']">
                             <el-form-item label="接口类型">
@@ -349,7 +343,7 @@
                         </div>
 
                         <el-form-item class="btn">
-                            <el-button class="mb15" @click="state.tabsActive = '1'">
+                            <el-button class="mb15" @click="state.tabsActive = '1'" v-if="false">
                                 <SvgIcon name="ele-DArrowLeft"/>
                                 上一步
                             </el-button>
@@ -392,17 +386,9 @@
                         </el-form-item>
                     </el-form>
                 </el-scrollbar>
-            </el-tab-pane>
 
-            <!-- 图表可视化 -->
-            <el-tab-pane label="图表可视化" name="3" v-if="false">
-                <el-scrollbar>
-                    <div class="flex-content-right">
-                        <div style="height: 200px; width: 320px" ref="chartsMonitorRef"></div>
-                    </div>
-                </el-scrollbar>
-            </el-tab-pane>
-        </el-tabs>
+
+
         <Translatedialog ref="translateDialogRef" @refresh="messTranslateModify"/>
         <Messdialog ref="messDialogRef" @refresh="onExtendSubmit()"/>
         <ViewDialog ref="viewDialogRef" @refresh="onExtendSubmit()"/>
@@ -1259,7 +1245,9 @@
         extendFormRef.value.validate((valid: boolean) => {
             if (valid) {
                 state.loading.extend = true;
+
                 const nodeModel = state.lf.getNodeModelById(state.node.id);
+                nodeModel.updateText(state.proper.name);
                 nodeModel.setProperties(state.properForm);
 
                 emit('submit');
@@ -1370,14 +1358,7 @@
                     }
                 }
 
-                .el-tabs__content {
-                    padding: 0;
-                    height: calc(100vh - 90px);
 
-                    .el-tab-pane {
-                        height: 100%;
-                    }
-                }
             }
         }
     }

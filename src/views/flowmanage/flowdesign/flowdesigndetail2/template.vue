@@ -700,7 +700,7 @@
     const state = reactive({
         FlowName: '',
         ID: 0,
-        type: '流程编排',
+        type: '模板编排',
         LastModified: '',
         leftNavList: [],
         dropdownNode: {x: '', y: ''},

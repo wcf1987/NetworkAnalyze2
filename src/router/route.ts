@@ -43,7 +43,7 @@ export const dynamicRoutes = [
 		path: '/',
 		name: '/',
 		component: () => import('/@/layout/index.vue'),
-		redirect: '/homepage',
+		redirect: '/transfermanage/transtemplate',
 		meta: {
 			isKeepAlive: true,
 		},
