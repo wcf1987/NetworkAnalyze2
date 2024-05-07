@@ -18,6 +18,7 @@ export default {
         messbody: '消息体对象',
         messbodydetail: '消息体详细编辑',
         messtraslate: '消息转换规则',
+        messtraslatedesign:'消息转化图形化设计',
         messtraslatedetail: '消息转换详细编辑',
         fieldcollection:'数据域集合',
         fieldsdetail: '字段集合管理',
