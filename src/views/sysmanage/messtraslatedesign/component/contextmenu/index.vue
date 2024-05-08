@@ -19,7 +19,7 @@
 					@click="onCurrentClick(v.contextMenuClickId)"
 				>
 					<SvgIcon :name="v.icon" />
-					<span>{{ v.txt }}{{ state.item.type === 'line' ? '线' : '节点' }}</span>
+					<span>{{ v.txt }}{{ state.item.type === 'line' ? '转换' : '节点' }}</span>
 				</li>
 			</ul>
 			<div class="el-popper__arrow" style="left: 10px"></div>
@@ -66,7 +66,7 @@ const onCurrentClick = (contextMenuClickId: number) => {
 	emit('current', Object.assign({}, { contextMenuClickId }, state.item), state.conn);
 };
 // 打开右键菜单：判断是否固定，固定则不显示关闭按钮
-const openContextmenu = (item: WorkflowDrawerLabelType, conn = {}) => {
+const openContextmenu = (item, conn = {}) => {
 	state.item = item;
 	state.conn = conn;
 	closeContextmenu();

@@ -24,7 +24,7 @@ export const jsplumbDefaults = {
 	// 删除线的时候节点不删除
 	DeleteEndpointsOnDetach: false,
 	//  每当添加或以其他方式创建 Endpoint 并且 jsPlumb 尚未给出任何明确的 Endpoint 定义时将使用
-	Endpoint: ['Blank', { Overlays: '' }],
+	Endpoint: ['Dot', { Overlays: '' }],
 	// 连接中源和目标端点的默认外观
 	EndpointStyle: { fill: '#1879ffa1', outlineWidth: 1 },
 	// jsPlumb 的内部日志记录是否打开
@@ -32,7 +32,7 @@ export const jsplumbDefaults = {
 	// 连接器的默认外观
 	PaintStyle: {
 		stroke: '#175094',
-		strokeWidth: 5,
+		strokeWidth: 2,
 		outlineStroke: 'transparent',
 		outlineWidth: 10,
 	},
@@ -43,8 +43,8 @@ export const jsplumbDefaults = {
 		[
 			'Arrow',
 			{
-				width: 10, // 箭头尾部的宽度
-				length: 8, // 从箭头的尾部到头部的距离
+				width: 20, // 箭头尾部的宽度
+				length: 16, // 从箭头的尾部到头部的距离
 				location: 1, // 位置，建议使用0～1之间
 				direction: 1, // 方向，默认值为1（表示向前），可选-1（表示向后）
 				foldback: 0.623, // 折回，也就是尾翼的角度，默认0.623，当为1时，为正三角
@@ -62,7 +62,7 @@ export const jsplumbDefaults = {
 	// 默认渲染模式 svg、canvas
 	RenderMode: 'svg',
 	// 悬停状态下连接的默认外观
-	HoverPaintStyle: { stroke: '#f4342d', strokeWidth: 2 },
+	HoverPaintStyle: { stroke: '#f4342d', strokeWidth: 4 },
 	// 悬停状态下端点的默认外观
 	EndpointHoverStyle: { fill: 'red' },
 	// 端点和连接的默认范围。范围提供了对哪些端点可以连接到哪些其他端点的基本控制
@@ -86,7 +86,7 @@ export const jsplumbMakeTarget = {
 	//filterExclude: false,
 	// 是否允许自己连接自己
 	anchor: 'Continuous',
-	allowLoopback: true,
+	allowLoopback: false,
 	dropOptions: { hoverClass: 'ef-drop-hover' },
 };
 
