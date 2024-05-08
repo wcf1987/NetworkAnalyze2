@@ -1,21 +1,107 @@
 
 export const rolemenu=[
+{
 
-                       {
-                path: '/homepage',
-                name: 'homepage',
-                component: 'home/homepage',
+                path: '/transfermanage',
+                name: 'transfermanage',
+                component:'layout/routerView/parent',
+                redirect: '/homepage',
                 meta: {
-                    title: 'message.router.homepage',
+                    title: 'message.router.transfermanage',
                     isLink: '',
                     isHide: false,
                     isKeepAlive: true,
-                    isAffix: true,
+                    isAffix: false,
                     isIframe: false,
-                    roles: ['admin','common'],
-                    icon: 'iconfont icon-shouye',
+                    roles: ['admin', 'common'],
+                    icon: 'ele-Switch',
                 },
+                children: [
+ {
+                        path: '/transfermanage/transclassfy',
+                        name: 'transclassfy',
+                        component: 'transfermanage/transclassfy/index',
+                        meta: {
+                            title: 'message.router.transclassfy',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-SetUp',
+                        },
+                    },
+
+                    {
+                        path: '/transfermanage/transtemplate',
+                        name: 'transtemplate',
+                        component: 'transfermanage/transtemplate/index',
+                        meta: {
+                            title: 'message.router.transtemplate',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-ScaleToOriginal',
+                        },
+                    },
+
+                    {
+                        path: '/flowmanage/flowdesign',
+                        name: 'flowdesign',
+                        component: 'flowmanage/flowdesign/index',
+                        meta: {
+                            title: 'message.router.flowdesign',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'iconfont icon-putong',
+                        },
+                        children: [
+
+                            {
+                                path: '/flowmanage/flowdesign/flowdesigndetail2',
+                                name: 'flowdesigndetail2',
+                                component: 'flowmanage/flowdesign/flowdesigndetail2/index',
+                                meta: {
+                                    title: 'message.router.flowdesigndetail2',
+                                    isLink: '',
+                                    isHide: true,
+                                    isKeepAlive: false,
+                                    isAffix: false,
+                                    isIframe: false,
+                                    roles: ['admin', 'common'],
+                                    icon: 'ele-Sunny',
+                                },
+                            },
+                                {
+                                path: '/flowmanage/flowdesign/flowdesigntemplate',
+                                name: 'flowdesigntemplate',
+                                component: 'flowmanage/flowdesign/flowdesigndetail2/template',
+                                meta: {
+                                    title: 'message.router.flowdesigntemplate',
+                                    isLink: '',
+                                    isHide: true,
+                                    isKeepAlive: false,
+                                    isAffix: false,
+                                    isIframe: false,
+                                    roles: ['admin', 'common'],
+                                    icon: 'ele-Sunny',
+                                },
+                            },
+                        ],
+                    },
+
+                ]
+
             },
+
             {
 
                 path: '/sysmanage',
@@ -34,7 +120,37 @@ export const rolemenu=[
                 },
                 children: [
 
+                    {
+                        path: '/sysmanage/fieldcollection',
+                        name: 'fieldcollection',
+                        component: 'sysmanage/fieldcollection/index',
+                        meta: {
+                            title: 'message.router.fieldcollection',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'iconfont icon--chaifenhang',
+                        },
+                        children: [{
+                            path: '/sysmanage/fieldcollection/fieldsdetail',
+                            name: 'fieldsdetail',
+                             component: 'sysmanage/fieldcollection/detail',
+                            meta: {
+                                title: 'message.router.fieldsdetail',
+                                isLink: '',
+                                isHide: true,
+                                isKeepAlive: false,
+                                isAffix: false,
+                                isIframe: false,
+                                roles: ['admin', 'common'],
+                                icon: 'iconfont icon-ico_shuju',
+                            },
 
+                        }],
+                    },
                     {
                         path: '/sysmanage/address',
                         name: 'address',
@@ -51,6 +167,37 @@ export const rolemenu=[
                         },
 
                         children: [
+                             {
+                        path: '/sysmanage/fieldcollection',
+                        name: 'fieldcollection',
+                        component: 'sysmanage/fieldcollection/index',
+                        meta: {
+                            title: 'message.router.fieldcollection',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'iconfont icon--chaifenhang',
+                        },
+                        children: [{
+                            path: '/sysmanage/fieldcollection/fieldsdetail',
+                            name: 'fieldsdetail',
+                             component: 'sysmanage/fieldcollection/detail',
+                            meta: {
+                                title: 'message.router.fieldsdetail',
+                                isLink: '',
+                                isHide: true,
+                                isKeepAlive: false,
+                                isAffix: false,
+                                isIframe: false,
+                                roles: ['admin', 'common'],
+                                icon: 'iconfont icon-ico_shuju',
+                            },
+
+                        }],
+                    },
                             {
                                 path: '/sysmanage/address/networkinterface',
                                 name: 'networkinterface',
@@ -116,12 +263,12 @@ export const rolemenu=[
                         ],
 
                     },
-                    /*{
-                        path: '/system/app',
-                        name: 'app',
-                        component: 'system/user/index',
+                     {
+                        path: '/sysmanage/appheader',
+                        name: 'appheader',
+                        component: 'sysmanage/appheader/index',
                         meta: {
-                            title: 'message.router.app',
+                            title: 'message.router.appheader',
                             isLink: '',
                             isHide: false,
                             isKeepAlive: true,
@@ -130,7 +277,25 @@ export const rolemenu=[
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon-bolangnengshiyanchang',
                         },
-                    },*/
+                        children: [
+                            {
+                                path: '/sysmanage/appheader/appheaderdetail',
+                                name: 'appheaderdetail',
+                                component: 'sysmanage/appheader/appheaderdetail',
+                                meta: {
+                                    title: 'message.router.appheaderdetail',
+                                    isLink: '',
+                                    isHide: true,
+                                    isKeepAlive: false,
+                                    isAffix: false,
+                                    isIframe: false,
+                                    roles: ['admin', 'common'],
+                                    icon: 'ele-Sunny',
+                                },
+                            },
+                        ],
+
+                    },
                     {
 
                         path: '/sysmanage/messheader',
@@ -226,37 +391,7 @@ export const rolemenu=[
                             },
                         ],
                     }
-                    , {
-                        path: '/sysmanage/fieldcollection',
-                        name: 'fieldcollection',
-                        component: 'sysmanage/fieldcollection/index',
-                        meta: {
-                            title: 'message.router.fieldcollection',
-                            isLink: '',
-                            isHide: false,
-                            isKeepAlive: true,
-                            isAffix: false,
-                            isIframe: false,
-                            roles: ['admin', 'common'],
-                            icon: 'iconfont icon--chaifenhang',
-                        },
-                        children: [{
-                            path: '/sysmanage/fieldcollection/fieldsdetail',
-                            name: 'fieldsdetail',
-                             component: 'sysmanage/fieldcollection/detail',
-                            meta: {
-                                title: 'message.router.fieldsdetail',
-                                isLink: '',
-                                isHide: true,
-                                isKeepAlive: false,
-                                isAffix: false,
-                                isIframe: false,
-                                roles: ['admin', 'common'],
-                                icon: 'iconfont icon-ico_shuju',
-                            },
-
-                        }],
-                    }
+                    ,
                 ]
 
             },
@@ -269,7 +404,7 @@ export const rolemenu=[
                 meta: {
                     title: 'message.router.flowmanage',
                     isLink: '',
-                    isHide: false,
+                    isHide: true,
                     isKeepAlive: true,
                     isAffix: false,
                     isIframe: false,
@@ -312,50 +447,7 @@ export const rolemenu=[
                             },
                         ],
                     },
-                    {
-                        path: '/flowmanage/builtnode',
-                        name: 'builtnode',
-                        component: 'flowmanage/builtnode/index',
-                        meta: {
-                            title: 'message.router.builtnode',
-                            isLink: '',
-                            isHide: false,
-                            isKeepAlive: true,
-                            isAffix: false,
-                            isIframe: false,
-                            roles: ['admin', 'common'],
-                            icon: 'iconfont icon-diqiu1',
-                        },
-                    },
-                    {
-                        path: '/flowmanage/globalvar',
-                        name: 'globalvar',
-                        component: 'flowmanage/globalvar/index',
-                        meta: {
-                            title: 'message.router.globalvar',
-                            isLink: '',
-                            isHide: false,
-                            isKeepAlive: true,
-                            isAffix: false,
-                            isIframe: false,
-                            roles: ['admin', 'common'],
-                            icon: 'iconfont icon-diqiu1',
-                        },
-                    }, {
-                        path: '/flowmanage/specialnode',
-                        name: 'specialnode',
-                        component: 'flowmanage/specialnode/index',
-                        meta: {
-                            title: 'message.router.specialnode',
-                            isLink: '',
-                            isHide: false,
-                            isKeepAlive: true,
-                            isAffix: false,
-                            isIframe: false,
-                            roles: ['admin', 'common'],
-                            icon: 'iconfont icon-zujian',
-                        },
-                    }
+
                 ]
 
             },
@@ -459,6 +551,50 @@ export const rolemenu=[
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon-siweidaotu',
                         },
+                    },
+                     {
+                        path: '/flowmanage/builtnode',
+                        name: 'builtnode',
+                        component: 'flowmanage/builtnode/index',
+                        meta: {
+                            title: 'message.router.builtnode',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'iconfont icon-diqiu1',
+                        },
+                    },
+                    {
+                        path: '/flowmanage/globalvar',
+                        name: 'globalvar',
+                        component: 'flowmanage/globalvar/index',
+                        meta: {
+                            title: 'message.router.globalvar',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'iconfont icon-diqiu1',
+                        },
+                    }, {
+                        path: '/flowmanage/specialnode',
+                        name: 'specialnode',
+                        component: 'flowmanage/specialnode/index',
+                        meta: {
+                            title: 'message.router.specialnode',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'iconfont icon-zujian',
+                        },
                     }
                 ]
 
@@ -531,6 +667,20 @@ export const rolemenu=[
                 ]
 
             },
-
+      {
+                path: '/homepage',
+                name: 'homepage',
+                component: 'home/homepage',
+                meta: {
+                    title: 'message.router.homepage',
+                    isLink: '',
+                    isHide: false,
+                    isKeepAlive: true,
+                    isAffix: true,
+                    isIframe: false,
+                    roles: ['admin','common'],
+                    icon: 'iconfont icon-shouye',
+                },
+            },
         ]
 

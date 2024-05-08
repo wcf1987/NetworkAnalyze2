@@ -1,11 +1,5 @@
 <template>
 	<div v-if="isShowBreadcrumb" class="layout-navbars-breadcrumb">
-		<SvgIcon
-			class="layout-navbars-breadcrumb-icon"
-			:name="themeConfig.isCollapse ? 'ele-Expand' : 'ele-Fold'"
-			:size="16"
-			@click="onThemeConfigChange"
-		/>
 		<el-breadcrumb class="layout-navbars-breadcrumb-hide">
 			<transition-group name="breadcrumb">
 				<el-breadcrumb-item v-for="(v, k) in state.breadcrumbList" :key="!v.meta.tagsViewName ? v.meta.title : v.meta.tagsViewName">
@@ -107,6 +101,7 @@ onBeforeRouteUpdate((to) => {
 
 <style scoped lang="scss">
 .layout-navbars-breadcrumb {
+	padding-left: 16px;
 	flex: 1;
 	height: inherit;
 	display: flex;

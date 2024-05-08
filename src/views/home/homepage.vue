@@ -139,7 +139,7 @@
 </template>
 
 <script setup lang="ts" name="home">
-    import {defineAsyncComponent, markRaw, nextTick, onActivated, onMounted, reactive, ref, watch} from 'vue';
+    import {defineAsyncComponent, markRaw, nextTick, onActivated, onMounted,onUnmounted, reactive, ref, watch} from 'vue';
     import * as echarts from 'echarts';
     import {storeToRefs} from 'pinia';
     import {useThemeConfig} from '/@/stores/themeConfig';
@@ -603,14 +603,21 @@
             }
         });
     };
+    let timer;
     // 批量设置 echarts resize
     const initEchartsResize = () => {
         window.addEventListener('resize', initEchartsResizeFun);
     };
     // 页面加载时
     onMounted(() => {
-        initData();
+         timer=setInterval(initData,5000);
+        //initData();
         initEchartsResize();
+
+
+    });
+     onUnmounted(()=>{
+       clearInterval(timer);
     });
     const initData = () => {
         homeApi().getData(

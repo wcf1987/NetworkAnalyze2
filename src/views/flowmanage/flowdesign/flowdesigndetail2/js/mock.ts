@@ -18,6 +18,9 @@ import calcicon from '/@/assets/svgicon/calc.svg';
 import convericon from '/@/assets/svgicon/conver.svg';
 import inpacicon from '/@/assets/svgicon/inpac.svg';
 import desticon from '/@/assets/svgicon/dest.svg';
+import forwhileicon from '/@/assets/svgicon/forwhile.svg';
+
+import delayedicon from '/@/assets/svgicon/delayed.svg';
 export const leftNavList = [
     {
         title: '基础节点',
@@ -100,6 +103,13 @@ export const leftNavList = [
                 descrip: '按设定好规则转化消息体',
             },
             {
+                icon: forwhileicon,
+                name: '循环',
+                type: 'forwhile',
+                id: '18',
+                descrip: '循环结构，可重复运行',
+            },
+            {
                 icon: swichicon,
                 name: '条件分支',
                 type: 'swich',
@@ -145,6 +155,13 @@ export const leftNavList = [
                 type: 'timer',
                 id: '31',
 				descrip: '定时器，用来计时',
+            },
+            {
+                icon: delayedicon,
+                name: '延时器',
+                type: 'delayed',
+                id: '34',
+				descrip: '延时器，用来延时运行',
             },
             {
                 icon: statisticsicon,

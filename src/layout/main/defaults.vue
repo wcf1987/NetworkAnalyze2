@@ -1,11 +1,15 @@
 <template>
 	<el-container class="layout-container">
-		<LayoutAside />
 		<el-container class="layout-container-view h100">
-			<el-scrollbar ref="layoutScrollbarRef" class="layout-backtop">
-				<LayoutHeader />
-				<LayoutMain ref="layoutMainRef" />
-			</el-scrollbar>
+			<el-header style="margin-bottom: -16px">
+				<LayoutAside />
+			</el-header>
+			<el-main>
+				<el-scrollbar ref="layoutScrollbarRef" class="layout-backtop">
+					<LayoutHeader />
+					<LayoutMain ref="layoutMainRef" />
+				</el-scrollbar>
+			</el-main>
 		</el-container>
 	</el-container>
 </template>

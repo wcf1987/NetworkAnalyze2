@@ -38,18 +38,33 @@ declare module 'vue-router' {
  * @returns 返回路由菜单数据
 
  */
-export const dynamicRoutes=
-   [
+export const dynamicRoutes = [
     {
         path: '/',
         name: '/',
         component: () => import('/@/layout/index.vue'),
-        redirect: '/homepage',
+        redirect: '/transfermanage/transtemplate',
         meta: {
             isKeepAlive: true,
         },
+    },
+    {
+        path: '/sysmanage/messtraslatedesign',
+        name: 'messtraslatedesign',
+		component: () => import('/@/views/sysmanage/messtraslatedesign/index.vue'),
 
-    }
+        meta: {
+            title: 'message.router.messtraslatedesign',
+            isLink: '',
+            isHide: true,
+            isKeepAlive: false,
+            isAffix: false,
+            isIframe: false,
+            roles: ['admin', 'common'],
+            icon: 'ele-Sunny',
+        },
+    },
+
 ];
 
 /**
