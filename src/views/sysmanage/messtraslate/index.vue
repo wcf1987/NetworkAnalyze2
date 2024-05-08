@@ -54,7 +54,7 @@
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip
                                  v-if="false"></el-table-column>
-                <el-table-column label="操作" width="180">
+                <el-table-column label="操作" width="220">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                    @click="onOpenEdit('edit', scope.row)"
@@ -64,6 +64,11 @@
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                    @click="onOpenEditDetail('edit', scope.row)"
                         >编辑详细
+                        </el-button
+                        >
+                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+                                   @click="onOpenEditDetailDesign('edit', scope.row)"
+                        >图形化编辑
                         </el-button
                         >
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
@@ -227,6 +232,13 @@
     const onOpenEditDetail = (type: string, row: RowUserType) => {
         router.push({
             path: '/sysmanage/messtraslate/messtraslatedetail',
+            query: {id: row.ID,sourceid:row.sourceID,targetid:row.targetID},
+        });
+    };
+    //图形化消息体转换编辑
+        const onOpenEditDetailDesign = (type: string, row: RowUserType) => {
+        router.push({
+            path: '/sysmanage/messtraslatedesign',
             query: {id: row.ID,sourceid:row.sourceID,targetid:row.targetID},
         });
     };
