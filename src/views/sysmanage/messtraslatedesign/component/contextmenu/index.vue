@@ -19,7 +19,7 @@
 					@click="onCurrentClick(v.contextMenuClickId)"
 				>
 					<SvgIcon :name="v.icon" />
-					<span>{{ v.txt }}{{ state.item.type === 'bezier' ? '连接' : '节点' }}</span>
+					<span>{{ v.txt }}{{ state.item.type === 'line' ? '线' : '节点' }}</span>
 				</li>
 			</ul>
 			<div class="el-popper__arrow" style="left: 10px"></div>
@@ -48,9 +48,8 @@ const contextmenuRef = ref();
 const state = reactive({
 	isShow: false,
 	dropdownList: [
-			{ contextMenuClickId: 0, txt: '编辑', icon: 'ele-Edit' },
-		{ contextMenuClickId: 1, txt: '删除', icon: 'ele-Delete' },
-
+		{ contextMenuClickId: 0, txt: '删除', icon: 'ele-Delete' },
+		{ contextMenuClickId: 1, txt: '编辑', icon: 'ele-Edit' },
 	],
 	item: {
 		type: 'node',
@@ -60,17 +59,16 @@ const state = reactive({
 
 // 父级传过来的坐标 x,y 值
 const dropdowns = computed(() => {
-	//console.log(props.dropdown);
 	return props.dropdown;
 });
 // 当前项菜单点击
 const onCurrentClick = (contextMenuClickId: number) => {
-	emit('current', contextMenuClickId , state.item);
+	emit('current', Object.assign({}, { contextMenuClickId }, state.item), state.conn);
 };
 // 打开右键菜单：判断是否固定，固定则不显示关闭按钮
-const openContextmenu = (type,data) => {
-	state.item = data;
-
+const openContextmenu = (item: WorkflowDrawerLabelType, conn = {}) => {
+	state.item = item;
+	state.conn = conn;
 	closeContextmenu();
 	setTimeout(() => {
 		state.isShow = true;

@@ -31,8 +31,8 @@ export const jsplumbDefaults = {
 	LogEnabled: true,
 	// 连接器的默认外观
 	PaintStyle: {
-		stroke: '#E0E3E7',
-		strokeWidth: 1,
+		stroke: '#175094',
+		strokeWidth: 5,
 		outlineStroke: 'transparent',
 		outlineWidth: 10,
 	},
@@ -62,7 +62,7 @@ export const jsplumbDefaults = {
 	// 默认渲染模式 svg、canvas
 	RenderMode: 'svg',
 	// 悬停状态下连接的默认外观
-	HoverPaintStyle: { stroke: '#b0b2b5', strokeWidth: 1 },
+	HoverPaintStyle: { stroke: '#f4342d', strokeWidth: 2 },
 	// 悬停状态下端点的默认外观
 	EndpointHoverStyle: { fill: 'red' },
 	// 端点和连接的默认范围。范围提供了对哪些端点可以连接到哪些其他端点的基本控制
@@ -72,18 +72,18 @@ export const jsplumbDefaults = {
 // 整个节点作为source或者target
 export const jsplumbMakeSource = {
 	// 设置可以拖拽的类名，只要鼠标移动到该类名上的DOM，就可以拖拽连线
-	filter: '.workflow-icon-drag',
-	filterExclude: false,
+	//filter: '.workflow-icon-drag',
+	//filterExclude: false,
 	anchor: 'Continuous',
 	// 是否允许自己连接自己
-	allowLoopback: true,
+	allowLoopback: false,
 	maxConnections: -1,
 };
 
 // 整个节点作为source或者target
 export const jsplumbMakeTarget = {
-	filter: '.workflow-icon-drag',
-	filterExclude: false,
+	//filter: '.workflow-icon-drag',
+	//filterExclude: false,
 	// 是否允许自己连接自己
 	anchor: 'Continuous',
 	allowLoopback: true,
