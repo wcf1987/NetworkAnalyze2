@@ -19,9 +19,15 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                        <el-form-item label="模板类型" prop="ClassfyID">
+                            <el-select v-model="state.ruleForm.ClassfyID" placeholder="请选择" clearable class="w100">
+                                <el-option v-for="item in props.transferList" :label="item.Name" :value="item.ID"/>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
 
-
-                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="用户描述" prop="Describes">
                             <el-input v-model="state.ruleForm.Describes" type="textarea" placeholder="请输入用户描述"
                                       maxlength="150"></el-input>
@@ -43,6 +49,11 @@
     import {nextTick, reactive, ref} from 'vue';
     import {transtemplateApi} from "/@/api/transmanage/transtemplate";
     import {ElMessage} from "element-plus";
+
+
+    const props = defineProps<{
+        transferList:  Array<{ ID: string; Name: string; Describes: string }>;
+    }>()
 
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);

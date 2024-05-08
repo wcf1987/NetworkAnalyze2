@@ -1,5 +1,5 @@
 <template>
-	<el-menu router mode="horizontal" :default-active="state.defaultActive" background-color="transparent">
+	<el-menu router mode="horizontal" :default-active="state.defaultActive" :style="{height: 'unset'}" background-color="transparent">
 		<template v-for="val in menuLists">
 			<el-sub-menu :index="val.path" v-if="val.children && val.children.length > 0" :key="val.path">
 				<template #title>

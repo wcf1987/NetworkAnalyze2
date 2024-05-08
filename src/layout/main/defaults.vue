@@ -1,7 +1,7 @@
 <template>
 	<el-container class="layout-container">
 		<el-container class="layout-container-view h100">
-			<el-header style="margin-bottom: -16px">
+			<el-header :style="{ marginBottom: '-16px', backgroundColor: themeConfig.isIsDark ? '#262626' : '#f0f0f0', height: 'unset' }">
 				<LayoutAside />
 			</el-header>
 			<el-main>

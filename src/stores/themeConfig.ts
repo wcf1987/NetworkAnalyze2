@@ -40,7 +40,7 @@ export const useThemeConfig = defineStore('themeConfig', {
 			// 默认菜单导航字体颜色
 			menuBarColor: '#eaeaea',
 			// 默认菜单高亮背景色
-			menuBarActiveColor: 'rgba(0, 0, 0, 0.2)',
+			menuBarActiveColor: 'rgba(0, 0, 0, 0.9)',
 			// 是否开启菜单背景颜色渐变
 			isMenuBarColorGradual: false,
 
