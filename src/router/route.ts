@@ -64,6 +64,22 @@ export const dynamicRoutes = [
             icon: 'ele-Sunny',
         },
     },
+        {
+        path: '/distribution/gateway/gatewaydistribute',
+        name: 'gatewaydistribute',
+		component: () => import('/@/views/distribution/gateway/gatewaydistribute/index.vue'),
+
+        meta: {
+            title: 'message.router.gatewaydistribute',
+            isLink: '',
+            isHide: true,
+            isKeepAlive: false,
+            isAffix: false,
+            isIframe: false,
+            roles: ['admin', 'common'],
+            icon: 'ele-Sunny',
+        },
+    },
 
 ];
 

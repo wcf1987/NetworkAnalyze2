@@ -31,7 +31,9 @@
                         <div class="flex-warp-item">
                             <div class="flex-warp-item-box">
                                 <div class="item-img">
-                                    <img :src="flowimg"/>
+                                    <img :src="flowimg1" v-if="v.Type=='透明传输'"/>
+                                    <img :src="flowimg2" v-if="v.Type=='混合编排'"/>
+                                    <img :src="flowimg3" v-if="v.Type=='指定流程'"/>
                                 </div>
                                 <div class="item-txt">
                                     <div class="item-txt-title">
@@ -158,7 +160,16 @@
     import {flowApi} from "/@/api/flowmanage/flow";
     import {useUserInfo} from "/@/stores/userInfo";
     import flowdesignimg from '/@/assets/flowdesign.jpg';
+    import flowpng1 from '/@/assets/flow1.png';
+    import flowpng2 from '/@/assets/flow2.png';
+    import flowpng3 from '/@/assets/flow3.png';
+    import flowpng4 from '/@/assets/flow4.png';
+
     const flowimg = ref(flowdesignimg);
+    const flowimg1 = ref(flowpng1);
+    const flowimg2 = ref(flowpng2);
+    const flowimg3 = ref(flowpng3);
+    const flowimg4 = ref(flowpng4);
     const UserDialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/dialog.vue'));
     const userDialogRef = ref();
     // 定义变量内容
@@ -247,7 +258,7 @@
     const onTableItemClick = (v: FilterListType) => {
         router.push({
             path: '/flowmanage/flowdesign/flowdesigndetail2',
-            query: {ID: v.ID, FlowName: v.Name,Type:v.Type},
+            query: {ID: v.ID, FlowName: v.Name, Type: v.Type},
         });
 
     };
@@ -288,12 +299,12 @@
     // 分页点击
     const onHandleSizeChange = (val: number) => {
         state.tableData.param.pageSize = val;
-      getTableData();
+        getTableData();
     };
     // 分页点击
     const onHandleCurrentChange = (val: number) => {
         state.tableData.param.pageNum = val;
-      getTableData();
+        getTableData();
     };
     const onRowDownload = (row: RowUserType) => {
         downloadProcess(row, 'txt', '流程脚本');
@@ -301,9 +312,9 @@
     const onRowCopy = (row: RowUserType) => {
         const stores = useUserInfo();
 
-          flowApi().copy(
+        flowApi().copy(
             {
-                AuthorID : stores.userInfos.id,
+                AuthorID: stores.userInfos.id,
                 ID: row.ID,
             })
             .then(res => {
@@ -324,6 +335,7 @@
         });
 
     }
+
     async function downloadProcess(row, type, name = '流程脚本') {
         let data = row.FlowJson
         const {href, filename} = setEncoded('json', name, data)
