@@ -1,5 +1,13 @@
 <template>
-	<el-menu router mode="horizontal" :default-active="state.defaultActive" :style="{height: 'unset'}" background-color="transparent">
+	<el-menu
+		router
+		mode="horizontal"
+		menu-trigger="click"
+		:class="themeConfig.isIsDark ? '' : 'custom-menu-style'"
+		:default-active="state.defaultActive"
+		:style="{ height: 'unset' }"
+		background-color="transparent"
+	>
 		<template v-for="val in menuLists">
 			<el-sub-menu :index="val.path" v-if="val.children && val.children.length > 0" :key="val.path">
 				<template #title>
@@ -93,3 +101,12 @@ watch(
 	}
 );
 </script>
+<style lang="scss">
+// .custom-menu-style {
+// 	.is-active {
+// 		.el-sub-menu__title {
+// 			// background-color: #ccc !important;
+// 		}
+// 	}
+// }
+</style>

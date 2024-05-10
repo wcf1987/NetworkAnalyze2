@@ -68,7 +68,7 @@
 ------------------------------- */
 // 鼠标 hover 时颜色
 .el-menu-hover-bg-color {
-	background-color: var(--next-bg-menuBarActiveColor) !important;
+	background-color: var(--next-bg-menuBarActiveColor);
 }
 // 默认样式修改
 .el-menu {
@@ -103,9 +103,9 @@
 	@include generalIcon;
 }
 // 水平菜单、横向菜单高亮 背景色，鼠标 hover 时，有子级菜单的背景色
-.el-menu-item.is-active,
-.el-sub-menu.is-active .el-sub-menu__title,
-.el-sub-menu:not(.is-opened):hover .el-sub-menu__title {
+// .el-menu-item.is-active,
+// .el-sub-menu.is-active .el-sub-menu__title,
+.el-sub-menu:not(.is-opened):hover {
 	@extend .el-menu-hover-bg-color;
 }
 .el-menu-item:hover {
