@@ -19,7 +19,7 @@
 					@click="onCurrentClick(v.contextMenuClickId)"
 				>
 					<SvgIcon :name="v.icon" />
-					<span>{{ v.txt }}{{ state.item.type === 'line' ? '转换' : '节点' }}</span>
+					<span>{{ v.txt }}{{ state.item.type === 'line' ? '分发' : '节点' }}</span>
 				</li>
 			</ul>
 			<div class="el-popper__arrow" style="left: 10px"></div>
@@ -49,7 +49,7 @@ const state = reactive({
 	isShow: false,
 	dropdownList: [
 		{ contextMenuClickId: 0, txt: '删除', icon: 'ele-Delete' },
-		{ contextMenuClickId: 1, txt: '编辑', icon: 'ele-Edit' },
+
 	],
 	item: {
 		type: 'node',

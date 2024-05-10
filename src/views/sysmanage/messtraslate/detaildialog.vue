@@ -41,18 +41,13 @@
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='直接转换'">
 
-                        <el-form-item label="源字段" :label-width="formLabelWidth" prop="SourceData">
+                      <el-form-item label="源字段" prop="SourceData">
 
-
-                            <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions" :props="props1"
-                                         @change="changeSourceInput12"
-                                         clearable collapse-tags class="w100" placeholder="可以多选">
-
-
-                            </el-cascader>
-
-
-                        </el-form-item>
+                        <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions" :props="props21"
+                                     @change="changeSourceInput21"
+                                     clearable
+                                     style="width: 300px; " collapse-tags/>
+                      </el-form-item>
                     </el-col>
 
 

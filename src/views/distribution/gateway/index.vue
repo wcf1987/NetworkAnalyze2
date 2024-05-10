@@ -176,6 +176,13 @@
         index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
         return index
     }
+        const onTableItemClick = (v: FilterListType) => {
+        router.push({
+            path: '/distribution/gateway/gatewaydistribute',
+            query: {id: v.ID, name: v.Name,ip:v.IP,describes:v.Describes},
+        });
+
+    };
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;

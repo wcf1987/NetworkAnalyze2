@@ -10,7 +10,7 @@ import request from '/@/utils/request';
 export function gatewayApi() {
 
     return {
-                 delIDS: (data: object) => {
+        delIDS: (data: object) => {
             return request({
                 url: '/gateway/delids',
                 method: 'post',
@@ -31,6 +31,20 @@ export function gatewayApi() {
                 data,
             });
         },
+        addGatewayDistribute: (data: object) => {
+            return request({
+                url: '/gateway/adddis',
+                method: 'post',
+                data,
+            });
+        },
+        searchGatewayDistribute: (data: object) => {
+            return request({
+                url: '/gateway/searchdis',
+                method: 'post',
+                data,
+            });
+        },
         updateGateway: (data: object) => {
             return request({
                 url: '/gateway/update',
@@ -41,6 +55,13 @@ export function gatewayApi() {
         delGateway: (data: object) => {
             return request({
                 url: '/gateway/delete',
+                method: 'post',
+                data,
+            });
+        },
+        delGatewayDistribute: (data: object) => {
+            return request({
+                url: '/gateway/deletedis',
                 method: 'post',
                 data,
             });
