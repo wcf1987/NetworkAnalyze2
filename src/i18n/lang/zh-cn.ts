@@ -30,7 +30,7 @@ export default {
         gateway:'CLIP管理',
         gatewaydistribute:'网关流程分发',
         flowdistribution:'消息转换流程分发',
-
+        gatewayshow:'CLIP规则展示',
         builtnode:'内置节点管理',
         globalvar: '全局变量管理',
         specialnode: '流程特殊节点',

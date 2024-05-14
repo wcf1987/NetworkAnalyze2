@@ -52,7 +52,7 @@ import { Session, Local } from '/@/utils/storage';
 // 引入组件
 const UserNews = defineAsyncComponent(() => import('/@/layout/navBars/topBar/userNews.vue'));
 const Search = defineAsyncComponent(() => import('/@/layout/navBars/topBar/search.vue'));
-import face from '/@/assets/logo-mini.svg';
+import face from '/@/assets/logo-mini.png';
 // 定义变量内容
 const userNewsRef = ref();
 const userNewsBadgeRef = ref();

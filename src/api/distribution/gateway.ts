@@ -45,6 +45,14 @@ export function gatewayApi() {
                 data,
             });
         },
+
+            searchGatewayDistributeall: (data: object) => {
+            return request({
+                url: '/gateway/searchdisall',
+                method: 'post',
+                data,
+            });
+        },
         updateGateway: (data: object) => {
             return request({
                 url: '/gateway/update',

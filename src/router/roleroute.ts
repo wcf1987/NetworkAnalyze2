@@ -499,7 +499,22 @@ export const rolemenu=[
                             roles: ['admin', 'common'],
                             icon: 'ele-Connection',
                         },
-                    }
+                    },
+                    {
+                        path: '/distribution/gatewayshow',
+                        name: 'gatewayshow',
+                        component: 'distribution/gatewayshow/index',
+                        meta: {
+                            title: 'message.router.gatewayshow',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-DataLine',
+                        },
+                    },
                 ]
 
             },
