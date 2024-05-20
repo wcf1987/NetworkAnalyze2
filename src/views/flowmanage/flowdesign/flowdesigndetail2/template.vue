@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts" name="pagesWorkflow">
-    import {flowApi} from "/@/api/flowmanage/flow";
+        import {transtemplateApi} from "/@/api/transmanage/transtemplate";
     import '@logicflow/core/dist/style/index.css'
     import '@logicflow/extension/lib/style/index.css'
     import LogicFlow from '@logicflow/core'
@@ -156,7 +156,7 @@
     }
 
     const getFlowFromDB = () => {
-        flowApi().getFlowByID(
+        transtemplateApi().getFlowByID(
             {
                 id: state.ID,
 
@@ -460,7 +460,7 @@
         // const encodeJson = JSON.stringify(script)
 
 
-        flowApi().updateFlowJson(
+        transtemplateApi().updateFlowJson(
             {
                 ID: state.ID,
                 FlowJson: encodedData,
