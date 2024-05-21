@@ -32,6 +32,7 @@ export function fieldsApi() {
                 data,
             });
         },
+
         updateFields: (data: object) => {
             return request({
                 url: '/fields/update',

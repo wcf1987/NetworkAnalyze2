@@ -39,6 +39,13 @@ export function fieldsdetailApi() {
                 data,
             });
         },
+        getById: (data: object) => {
+            return request({
+                url: '/fieldsdetail/getById',
+                method: 'post',
+                data,
+            });
+        },
         addFieldsDetail: (data: object) => {
             return request({
                 url: '/fieldsdetail/add',

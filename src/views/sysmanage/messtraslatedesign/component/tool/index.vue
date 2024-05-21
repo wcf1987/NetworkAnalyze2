@@ -22,12 +22,7 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const state = reactive({
 	toolList: [
-		{ icon: 'ele-Help', title: '帮助', fnName: 'help' },
-		{ icon: 'ele-Download', title: '下载', fnName: 'download' },
-		{ icon: 'ele-Check', title: '提交', fnName: 'submit' },
-		{ icon: 'ele-DocumentCopy', title: '复制', fnName: 'copy' },
-		{ icon: 'ele-Delete', title: '删除', fnName: 'del' },
-		{ icon: 'ele-FullScreen', title: '全屏', fnName: 'fullscreen' },
+
 	],
 });
 
