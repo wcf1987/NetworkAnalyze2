@@ -22,7 +22,7 @@
                                     <SvgIcon :name="val.isOpen ? 'ele-ArrowDown' : 'ele-ArrowRight'"/>
                                 </div>
                                 <div class="workflow-left-item" v-for="(v, k) in val.children" :key="k"
-                                     :data-name="v.name" :data-icon="v.icon" :data-id="v.id">
+                                     :data-name="v.name" :data-icon="v.icon" :data-id="v.id" >
                                     <div class="workflow-left-item-icon">
                                         <SvgIcon :name="v.icon" class="workflow-icon-drag"/>
                                         <div class="font10 pl5 name">{{ v.name }}</div>
@@ -190,7 +190,7 @@
         <!-- 线右键菜单 -->
         <Contextmenu :dropdown="state.dropdownLine" ref="contextmenuLineRef" @current="onCurrentLineClick"/>
         <!-- 编辑窗口 -->
-        <UserDialog ref="userDialogRef" @refresh="getTableDataTarget()"/>
+        <UserDialog ref="userDialogRef" @refresh="getTableDataTranslate()"/>
         <!-- 顶部工具栏-帮助弹窗 -->
         <Help ref="helpRef"/>
     </div>
@@ -782,12 +782,7 @@
             } else {
                 trow.SourceData = JSON.parse(trow.SourceData);
             }
-            if (trow.Optional == '直接转换' || trow.Optional == '系统函数' || trow.Optional == '自定义转换计算') {
 
-            } else {
-                trow.Optional = '自定义转换计算';
-                trow.SourceData = [];
-            }
             trow.SourceData.push([sname]);
             updateNodeDB(trow);
         }
@@ -874,7 +869,7 @@
                 //console.log(node);
                 for (let i of node.SourceData) {
                     let t = findTreeItemByName(state.tableDataSource.data, i)
-                    console.log(t);
+                    //console.log(t);
                     if (t == null) {
                         continue;
                     }
@@ -1035,80 +1030,9 @@
             state.jsPlumb.setSuspendDrawing(false, true);
         });
     };
-    // 顶部工具栏-当前项点击
-    const onToolClick = (fnName: String) => {
-        switch (fnName) {
-            case 'help':
-                onToolHelp();
-                break;
-            case 'download':
-                onToolDownload();
-                break;
-            case 'submit':
-                onToolSubmit();
-                break;
-            case 'copy':
-                onToolCopy();
-                break;
-            case 'del':
-                onToolDel();
-                break;
-            case 'fullscreen':
-                onToolFullscreen();
-                break;
-        }
-    };
-    // 顶部工具栏-帮助
-    const onToolHelp = () => {
-        nextTick(() => {
-            helpRef.value.open();
-        });
-    };
-    // 顶部工具栏-下载
-    const onToolDownload = () => {
-        const {globalTitle} = themeConfig.value;
-        const href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(state.jsplumbData, null, '\t'));
-        const aLink = document.createElement('a');
-        aLink.setAttribute('href', href);
-        aLink.setAttribute('download', `${globalTitle}工作流.json`);
-        aLink.click();
-        aLink.remove();
-        ElMessage.success('下载成功');
-    };
-    // 顶部工具栏-提交
-    const onToolSubmit = () => {
-        // console.log(state.jsplumbData);
-        ElMessage.success('数据提交成功');
-    };
-    // 顶部工具栏-复制
-    const onToolCopy = () => {
-        copyText(JSON.stringify(state.jsplumbData));
-    };
-    // 顶部工具栏-删除
-    const onToolDel = () => {
-        ElMessageBox.confirm('此操作将清空画布，是否继续？', '提示', {
-            confirmButtonText: '清空',
-            cancelButtonText: '取消',
-        })
-            .then(() => {
-                state.jsplumbData.nodeList.forEach((v) => {
-                    state.jsPlumb.removeAllEndpoints(v.nodeId);
-                });
-                nextTick(() => {
-                    state.jsplumbData = {
-                        nodeList: [],
-                        lineList: [],
-                    };
-                    ElMessage.success('清空画布成功');
-                });
-            })
-            .catch(() => {
-            });
-    };
-    // 顶部工具栏-全屏
-    const onToolFullscreen = () => {
-        stores.setCurrenFullscreen(true);
-    };
+
+
+
     // 页面加载时
     onMounted(async () => {
         state.id = querys.id;
