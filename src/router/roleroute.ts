@@ -167,37 +167,7 @@ export const rolemenu=[
                         },
 
                         children: [
-                             {
-                        path: '/sysmanage/fieldcollection',
-                        name: 'fieldcollection',
-                        component: 'sysmanage/fieldcollection/index',
-                        meta: {
-                            title: 'message.router.fieldcollection',
-                            isLink: '',
-                            isHide: false,
-                            isKeepAlive: true,
-                            isAffix: false,
-                            isIframe: false,
-                            roles: ['admin', 'common'],
-                            icon: 'iconfont icon--chaifenhang',
-                        },
-                        children: [{
-                            path: '/sysmanage/fieldcollection/fieldsdetail',
-                            name: 'fieldsdetail',
-                             component: 'sysmanage/fieldcollection/detail',
-                            meta: {
-                                title: 'message.router.fieldsdetail',
-                                isLink: '',
-                                isHide: true,
-                                isKeepAlive: false,
-                                isAffix: false,
-                                isIframe: false,
-                                roles: ['admin', 'common'],
-                                icon: 'iconfont icon-ico_shuju',
-                            },
 
-                        }],
-                    },
                             {
                                 path: '/sysmanage/address/networkinterface',
                                 name: 'networkinterface',
@@ -328,7 +298,8 @@ export const rolemenu=[
                                 },
                             },
                         ],
-                    }, {
+                    },
+                    {
                         path: '/sysmanage/messbody',
                         name: 'messbody',
                         component: 'sysmanage/messbody/index',
@@ -390,8 +361,21 @@ export const rolemenu=[
                                 },
                             },
                         ],
+                    } ,{
+                        path: '/sysmanage/fieldstraslate',
+                        name: 'fieldstraslate',
+                        component: 'sysmanage/fieldcollection/fieldstraslate/index',
+                        meta: {
+                            title: 'message.router.fieldstraslate',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-Eleme',
+                        },
                     }
-                    ,
                 ]
 
             },

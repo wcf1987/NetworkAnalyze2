@@ -22,6 +22,7 @@ export default {
         messtraslatedetail: '消息转换详细编辑',
         fieldcollection:'数据域集合',
         fieldsdetail: '字段集合管理',
+        fieldstraslate:'元素管理',
         flowmanage: '流程编排管理',
         flowdesign: '流程编排设计',
         flowdesigntemplate:'模板编辑',

@@ -11,7 +11,7 @@ import requestfile from "/@/utils/requestfile";
 export function fieldsdetailApi() {
 
     return {
-         delIDS: (data: object) => {
+        delIDS: (data: object) => {
             return request({
                 url: '/fieldsdetail/delids',
                 method: 'post',
@@ -25,7 +25,7 @@ export function fieldsdetailApi() {
                 data,
             });
         },
-                statisticsSize: (data: object) => {
+        statisticsSize: (data: object) => {
             return request({
                 url: '/fieldsdetail/statisticsSize',
                 method: 'post',
@@ -74,7 +74,13 @@ export function fieldsdetailApi() {
                 data,
             });
         },
-
+        searchAllDUITrans: (data: object) => {
+            return request({
+                url: '/messtranslatedetail/searchAllDUITrans',
+                method: 'post',
+                data,
+            });
+        },
         uploadfile: (data: object) => {
             return requestfile({
                 url: '/fieldsdetail/uploadfile',

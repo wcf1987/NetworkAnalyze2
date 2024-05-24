@@ -306,7 +306,7 @@
         }
         return null;
     }
-        const findSourceDataByName=(name)=>{
+        const findSourceDataByName=(ename)=>{
         const nodes=walkTreeToList(state.tableDataSource.data)
         for(let i of nodes){
             if(i.Name==name){
@@ -777,6 +777,9 @@
             sname = findTreeItemById(state.tableDataSource.data, sid).Name;
             console.log(trow['SourceData']);
             //trow.SourceData = JSON.parse(trow.SourceData)
+            if(trow.SourceData==null){
+                trow.SourceData=[];
+            }
             if (Array.isArray(trow.SourceData)) {
 
             } else {
@@ -805,7 +808,9 @@
     const updateNodeDB = (row) => {
         row['SourceData'] = JSON.stringify(row.SourceData);
         row['Funcrule'] = JSON.stringify(row.Funcrule);
-
+        if(row['Optional']==null){
+            row['Optional']='直接转换';
+        }
         messtranslateApi().updateMessTranslateDetail(
             row
         )
