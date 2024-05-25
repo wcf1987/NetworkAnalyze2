@@ -19,7 +19,7 @@
 
                             <div class="workflow-left-item" v-for="(v, k) in val.children" :key="k"
                                  :data-name="v.name" :data-icon="v.icon" :data-id="v.id"
-                                 @mousedown="dragNode(v)" draggable="true" @dragstart="onDragStart(v.name,$event)">
+                                draggable="true" @dragstart="onDragStart(v.name,$event)">
                                 <!--     @click="onFuncClick(v.name)" -->
 
 

@@ -125,33 +125,7 @@
     const querys = route.query;
 
 
-    const findTargetData = (id) => {
-        const nodes = walkTreeToList(state.tableDataTarget.data)
-        for (let i of nodes) {
-            if (i.ID == id) {
-                return i;
-            }
-        }
-        return null;
-    }
-    const findSourceData = (id) => {
-        const nodes = walkTreeToList(state.tableDataSource.data)
-        for (let i of nodes) {
-            if (i.ID == id) {
-                return i;
-            }
-        }
-        return null;
-    }
-    const findSourceDataByName = (name) => {
-        const nodes = walkTreeToList(state.tableDataSource.data)
-        for (let i of nodes) {
-            if (i.Name == name) {
-                return i;
-            }
-        }
-        return null;
-    }
+
     const state = reactive({
         loading: false,
         id: '',
@@ -167,6 +141,10 @@
 
 
         sourceData: {
+          DFINO: '',
+          DFIVersion: '',
+          DUINO: '',
+          DUIVersion: '',
             Name: '',
             Flag: '',
             Type: '',
@@ -174,6 +152,10 @@
             Length: ''
         },
         targetData: {
+          DFINO: '',
+          DFIVersion: '',
+          DUINO: '',
+          DUIVersion: '',
             Name: '',
             Flag: '',
             Type: '',
@@ -213,7 +195,8 @@
                         i['top'] = y + 'px';
                         x = x + 300;
                         if (x > 800) {
-                            y = y + 50;
+                            y = y + 150;
+                            x=30;
                         }
                     }
 

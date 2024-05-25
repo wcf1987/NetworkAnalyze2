@@ -4,7 +4,7 @@
     <div class="layout-padding-auto layout-padding-view workflow-warp">
       <div class="workflow">
         <!-- 顶部工具栏 -->
-        <Tool @tool="onToolClick"/>
+        <Tool/>
 
         <!-- 左侧导航区 -->
         <div class="workflow-content">
@@ -34,7 +34,7 @@
           </div>
 
           <!-- 右侧绘画区 -->
-          <div id="workflow-right" class="workflow-right" ref="workflowRightRef">
+          <div id="workflow-right" class="workflow-right" ref="workflowRightRef" @drop="onDrop($event)" @dragover.prevent>
 
             <div style="width: 100%">
               <!--:id="`source_${state.getway.ID}`"-->
@@ -51,6 +51,7 @@
 
             </div>
             <div class="rightcolumn">
+
             <div
                 v-for="v in state.tableDataFlowShow"
                 :key="v.ID"
@@ -58,7 +59,7 @@
             >
 
               <div class="flex-warp-item2">
-                <div :class="`flex-warp-item-box Target ${v.ID}`">
+                <div :class="`flex-warp-item-box Target ${v.ID}`" :id="`Target_${v.ID}`">
                   <div class="item-img">
                     <img :src="flowimg1" v-if="v.Type=='透明传输'"/>
                     <img :src="flowimg2" v-if="v.Type=='混合编排'"/>
@@ -73,30 +74,35 @@
 
             </div>
           </div>
-
-          <!-- 右侧流程选择区域 -->
-          <div ref="workflow-right2" v-if="false">
-            <Drawer ref="drawerRef" @label="setLineLabel" @node="setNodeContent" @save="saveFlow"/>
-            <el-collapse v-model="activeNames" class="centered-collapse">
-              <el-collapse-item title="流程设计属性" name="1" style="font-size:14px">
-                <template #title>
-                  流程设计属性
-                  <el-icon class="header-icon">
-                    <ele-InfoFilled/>
-                  </el-icon>
-                </template>
-                <el-card style="font-size:14px">
-                  <p class="text item">{{ '源IP/端口： ' }}</p>
-                  <p class="text item">{{ '消息封装格式： ' }}</p>
-                  <p class="text item">{{ '源消息类型： ' }}</p>
-                  <p class="text item">{{ '目的消息类型： ' }}</p>
-                  <p class="text item">{{ '消息转化规则： ' }}</p>
-                  <p class="text item">{{ '转换后封装格式： ' }}</p>
-                  <p class="text item">{{ '目的IP/端口： ' }}</p>
-                </el-card>
-              </el-collapse-item>
-            </el-collapse>
+          <div class="workflow-right2" >
+            <el-scrollbar>
+              <div
+                  ref="leftNavRefs"
+                  v-for="val in state.tableDataFlow.data"
+                  :key="val.ID"
+                  :id="val.ID"
+                  :style="{ height:  'auto' }"
+                  class="workflow-right-id"
+                  draggable="true" @dragstart="onDragStart(val.ID,$event)"
+              >
+                <div class="workflow-right-item">
+                  <div class="flex-warp-item " >
+                    <div class="flex-warp-item-box">
+                      <div class="item-img">
+                        <img :src="flowimg1" v-if="val.Type=='透明传输'"/>
+                        <img :src="flowimg2" v-if="val.Type=='混合编排'"/>
+                        <img :src="flowimg3" v-if="val.Type=='指定流程'"/>
+                      </div>
+                      <div class="item-txt-title">
+                        <span> {{ val.Name }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </el-scrollbar>
           </div>
+
         </div>
       </div>
     </div>
@@ -105,8 +111,7 @@
     <Contextmenu :dropdown="state.dropdownNode" ref="contextmenuNodeRef" @current="onCurrentNodeClick"/>
     <!-- 线右键菜单 -->
     <Contextmenu :dropdown="state.dropdownLine" ref="contextmenuLineRef" @current="onCurrentLineClick"/>
-    <!-- 编辑窗口 -->
-    <UserDialog ref="userDialogRef" @refresh="getTableDataTarget()"/>
+
     <!-- 顶部工具栏-帮助弹窗 -->
     <Help ref="helpRef"/>
   </div>
@@ -278,6 +283,81 @@ const getTableGateway = async () => {
     state.tableGateway.loading = false;
   }, 200);
 };
+const updateNodeByConn = (sourceId, targetId, type) => {
+  let tid = targetId.split('_')[1];
+  let trow;
+  let sname;
+  console.log('conn change')
+  if (type == 'add') {
+
+
+    addConn(state.gateway.ID, tid);
+  }
+  if (type == 'del') {
+
+
+    delConn(state.gateway.ID, tid);
+    delPoint(tid);
+  }
+  getTableDataGatewayDistribute();
+  nextTick(() => {
+
+      state.jsPlumb.repaintEverything();
+
+  });
+}
+const delPoint=(flowid)=>{
+  for(let v=0;v<state.tableDataFlowShow.length;v++){
+    if(state.tableDataFlowShow[v].ID==flowid){
+      state.tableDataFlowShow.splice(v, 1);
+      return
+    }
+  }
+}
+const addConn = (gatewayid, flowid) => {
+
+
+  gatewayApi().addGatewayDistribute(
+      {
+        GateID: gatewayid,
+        FlowID: flowid,
+      }
+  )
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
+
+        } else {
+          ElMessage.error(res.message);
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
+}
+const delConn = (gatewayid, flowid) => {
+  gatewayApi().delGatewayDistribute(
+      {
+        GateID: gatewayid,
+        FlowID: flowid,
+      }
+  )
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
+
+        } else {
+          ElMessage.error(res.message);
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
+}
 // 初始化分发连接情况
 const getTableDataGatewayDistribute = async () => {
   state.tableDataDistribute.loading = true;
@@ -354,65 +434,7 @@ const initLeftNavList = () => {
   };
 };
 // 左侧导航-初始化拖动
-const initSortable = () => {
-  leftNavRefs.value.forEach((v) => {
-    Sortable.create(v as HTMLDivElement, {
-      group: {
-        name: 'vue-next-admin-1',
-        pull: 'clone',
-        put: false,
-      },
-      animation: 0,
-      sort: false,
-      draggable: '.workflow-left-item',
-      forceFallback: true,
-      onEnd: function (evt: any) {
-        const {name, icon, id} = evt.clone.dataset;
-        const {layerX, layerY, clientX, clientY} = evt.originalEvent;
-        const el = workflowRightRef.value!;
-        const {x, y, width, height} = el.getBoundingClientRect();
-        if (clientX < x || clientX > width + x || clientY < y || y > y + height) {
-          ElMessage.warning('请把节点拖入到画布中');
-        } else {
-          // 节点id（唯一）
-          const nodeId = Math.random().toString(36).substr(2, 12);
-          // 处理节点数据
-          const node = {
-            nodeId,
-            left: `${layerX - 40}px`,
-            top: `${layerY - 15}px`,
-            class: 'workflow-right-clone',
-            name,
-            icon,
-            id,
-          };
-          // 右侧视图内容数组
-          state.jsplumbData.nodeList.push(node);
-          // 元素加载完毕时
-          nextTick(() => {
-            // 整个节点作为source或者target
-            state.jsPlumb.makeSource(nodeId, state.jsplumbMakeSource);
-            // // 整个节点作为source或者target
-            state.jsPlumb.makeTarget(nodeId, state.jsplumbMakeTarget, jsplumbConnect);
-            // 设置节点可以拖拽（此处为id值，非class）
-            state.jsPlumb.draggable(nodeId, {
-              containment: 'parent',
-              stop: (el: any) => {
-                state.jsplumbData.nodeList.forEach((v) => {
-                  if (v.nodeId === el.el.id) {
-                    // 节点x, y重新赋值，防止再次从左侧导航中拖拽节点时，x, y恢复默认
-                    v.left = `${el.pos[0]}px`;
-                    v.top = `${el.pos[1]}px`;
-                  }
-                });
-              },
-            });
-          });
-        }
-      },
-    });
-  });
-};
+
 // 初始化 jsPlumb
 const initJsPlumb = () => {
   (<any>jsPlumb).ready(() => {
@@ -430,6 +452,19 @@ const initJsPlumb = () => {
     initJsPlumbConnection();
     // 点击线弹出右键菜单
 
+    state.jsPlumb.bind('contextmenu', (conn: any, originalEvent: MouseEvent) => {
+      originalEvent.preventDefault();
+      const {sourceId, targetId} = conn;
+      const {clientX, clientY} = originalEvent;
+      state.dropdownLine.x = clientX;
+      state.dropdownLine.y = clientY;
+      //const v: any = state.jsplumbData.nodeList.find((v) => v.nodeId === targetId);
+      //const line: any = state.jsplumbData.lineList.find((v) => v.sourceId === sourceId && v.targetId === targetId);
+      //v.type = 'line';
+      //v.label = line.label;
+      const v = {type: 'line'};
+      contextmenuLineRef.value.openContextmenu(v, conn);
+    });
 
   });
 };
@@ -504,6 +539,20 @@ const initLeaf = (row, type) => {
 
 
 };
+const initLeafFromRight = (row,id ,type) => {
+  const ins = state.jsPlumb;
+  const elem = row;
+
+  if (type == 'Target') {
+
+    ins.setId(elem, "target_" + id);
+    ins.makeTarget(elem, state.jsplumbMakeTarget, jsplumbConnect);
+    ins.setTargetEnabled(elem, true)
+
+  }
+
+
+};
 //根据转换规则连接元和目的
 const initConn = () => {
   const list = state.tableDataDistribute.data;
@@ -543,6 +592,67 @@ const onLeftClick = (val) => {
   //getTableDataGatewayDistribute();
   updatetableDataFlowShow();
 
+}
+const onDragStart = (val, event) => {
+  const data = val;
+  event.dataTransfer.setData('FlowID', data);
+}
+const onDrop = (event) => {
+  if(state.gateway.ID=='0'){
+    ElMessage.warning('请在左侧先选择网关进行配置');
+    return;
+
+  }
+
+  const flowid = event.dataTransfer.getData('FlowID');
+  if(checkFlowExist(state.gateway.ID,flowid)){
+    ElMessage.warning('该流程已配置');
+    return;
+  }
+  if (state.tableDataFlowShow == null) {
+    state.tableDataFlowShow = [];
+  }
+
+  state.tableDataFlowShow.push(getFlowByID(flowid));
+  addConn(state.gateway.ID,flowid);
+  state.tableDataDistribute.data.push({
+    GateID:state.gateway.ID,
+    FlowID:flowid
+  })
+
+  nextTick(() => {
+    const target = document.getElementById('Target_'+flowid);
+    initLeafFromRight(target,flowid,'Target');
+
+
+    let targetid = "target_" + flowid
+    let label = getFlowDescribe(flowid);
+    let sourceid = "source_node";
+
+    state.jsPlumb.connect(
+        {
+          source: sourceid,
+          target: targetid,
+          label: label,
+        },
+        state.jsplumbConnect
+    );
+    setTimeout(() => {
+      state.jsPlumb.repaintEverything();
+    }, 50);
+  });
+
+
+
+}
+function getFlowByID(id){
+  for(let i of state.tableDataFlow.data){
+    if(i.ID==id){
+      return i;
+    }
+
+  }
+  return null
 }
 
 function getFlowDescribe(id) {
@@ -743,7 +853,7 @@ onMounted(async () => {
   console.log(state.tableDataFlow.data);
   console.log(state.tableDataDistribute.data);
   await initLeftNavList();
-  initSortable();
+
   initJsPlumb();
   setClientWidth();
 
@@ -1132,13 +1242,9 @@ onUnmounted(() => {
         :deep(.rightcolumn) {
           display: flex;
           flex-direction: column;
-
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-        :deep(.flex-warp-item2) {
-
-
+          justify-content:space-around;
+          flex-wrap:warp;
+        .flex-warp-item2 {
           align-self: center;
           overflow: auto;
 
@@ -1239,7 +1345,7 @@ onUnmounted(() => {
               }
             }
           }
-        }
+        }        }
 
         :deep(.eltableclass) {
           vertical-align: top;
@@ -1306,6 +1412,188 @@ onUnmounted(() => {
 
         :deep(.jtk-overlay.workflow-right-empty-label) {
           display: none;
+        }
+      }
+      .workflow-right2 {
+        width: 220px;
+        height: 100%;
+        border-right: 1px solid var(--el-border-color-light, #ebeef5);
+
+        :deep(.el-collapse-item__content) {
+          padding-bottom: 0;
+        }
+
+        .workflow-right-title {
+          height: 50px;
+          display: flex;
+          align-items: center;
+          padding: 0 10px;
+          border-top: 1px solid var(--el-border-color-light, #ebeef5);
+          color: var(--el-text-color-primary);
+          cursor: default;
+
+          span {
+            flex: 1;
+          }
+        }
+
+        .workflow-right-item {
+          display: inline-block;
+          width: calc(50% - 15px);
+          position: relative;
+          cursor: move;
+          margin: 0 0 10px 10px;
+
+          :deep(.flex-warp-item) {
+
+            align-self: flex-start;
+            overflow: auto;
+
+            margin-left: 40%;
+            margin-top: 5px;
+
+            width: 100%;
+
+            border-color: black;
+
+            padding: 5px;
+            width: 150px;
+            height: 150px;
+
+            .flex-warp-item-box {
+              border: 1px solid var(--next-border-color-light);
+              width: 100%;
+              height: 100%;
+              border-radius: 2px;
+              display: flex;
+              flex-direction: column;
+              transition: all 0.3s ease;
+
+              .item-txt-title {
+                color: var(--el-color-primary) !important;
+                font-size: 14px;
+                text-align: center;
+                transition: all 0.3s ease;
+              }
+
+              &:hover {
+                cursor: pointer;
+                border: 1px solid var(--el-color-primary);
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+
+
+                .item-img {
+                  height: 100%;
+
+                  img {
+                    transition: all 0.3s ease;
+                    transform: translateZ(0) scale(1.2);
+                  }
+                }
+              }
+
+              .item-img {
+                width: 100%;
+                height: 215px;
+                overflow: hidden;
+
+                img {
+                  transition: all 0.3s ease;
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+
+              .item-txt {
+                flex: 1;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+
+                .item-txt-title {
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  display: -webkit-box;
+                  color: #666666;
+                  transition: all 0.3s ease;
+
+                  &:hover {
+                    color: var(--el-color-primary);
+                    text-decoration: underline;
+                    transition: all 0.3s ease;
+                  }
+                }
+
+                .item-txt-other {
+                  flex: 1;
+                  align-items: flex-end;
+                  display: flex;
+
+                  .item-txt-msg {
+                    font-size: 12px;
+                    color: #8d8d91;
+                  }
+
+                  .item-txt-price {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .font-price {
+                      color: #ff5000;
+
+                      .font {
+                        font-size: 22px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .workflow-right-item-icon {
+            height: 35px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border: 1px dashed transparent;
+            background: var(--next-bg-color);
+            border-radius: 3px;
+
+            i,
+            .name {
+              color: var(--el-text-color-secondary);
+              transition: all 0.3s ease;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+            }
+
+            &:hover {
+              transition: all 0.3s ease;
+              border: 1px dashed var(--el-color-primary);
+              background: var(--el-color-primary-light-9);
+              border-radius: 5px;
+
+              i,
+              .name {
+                transition: all 0.3s ease;
+                color: var(--el-color-primary);
+              }
+            }
+          }
+        }
+
+        & .workflow-right-id:first-of-type {
+          .workflow-left-title {
+            border-top: none;
+          }
         }
       }
     }

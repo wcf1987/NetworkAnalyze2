@@ -18,15 +18,15 @@ export const jsplumbDefaults = {
 	// 连线的容器id
 	Container: 'workflow-right',
 	// 设置链接线的形状，如直线或者曲线之类的。anchor可以去设置锚点的位置。可选值"<Bezier|Flowchart|StateMachine|Straight>"
-	Connector: ['Flowchart', { curviness: 100 }],
+	Connector: ['Straight', { curviness: 100 }],
 	// 节点是否可以用鼠标拖动使其断开，默认为true。即用鼠标链接上的连线，也可以使用鼠标拖动让其断开。设置成false，可以让其拖动也不会自动断开
 	ConnectionsDetachable: false,
 	// 删除线的时候节点不删除
-	DeleteEndpointsOnDetach: false,
+	DeleteEndpointsOnDetach: true,
 	//  每当添加或以其他方式创建 Endpoint 并且 jsPlumb 尚未给出任何明确的 Endpoint 定义时将使用
-	Endpoint: ['Dot', { Overlays: '' }],
+	Endpoint: ['Dot', { radius:6,Overlays: '' ,maxConnections:-1},],
 	// 连接中源和目标端点的默认外观
-	EndpointStyle: { fill: '#1879ffa1', outlineWidth: 1,radius:4 },
+	EndpointStyle: { fill: '#1879ffa1', outlineWidth: 1 },
 	// jsPlumb 的内部日志记录是否打开
 	LogEnabled: true,
 	// 连接器的默认外观
@@ -62,7 +62,7 @@ export const jsplumbDefaults = {
 	// 默认渲染模式 svg、canvas
 	RenderMode: 'svg',
 	// 悬停状态下连接的默认外观
-	HoverPaintStyle: { stroke: '#f4342d', strokeWidth: 1 },
+	HoverPaintStyle: { stroke: '#f4342d', strokeWidth: 4 },
 	// 悬停状态下端点的默认外观
 	EndpointHoverStyle: { fill: 'red' },
 	// 端点和连接的默认范围。范围提供了对哪些端点可以连接到哪些其他端点的基本控制

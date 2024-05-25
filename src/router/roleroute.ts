@@ -468,7 +468,22 @@ export const rolemenu=[
                             roles: ['admin', 'common'],
                             icon: 'ele-Cpu',
                         },
+                    }, {
+                        path: '/distribution/gatewaydistributeall',
+                        name: 'gatewaydistributeall',
+                        component: 'distribution/gatewaydistributeall/index',
+                        meta: {
+                            title: 'message.router.gatewaydistributeall',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-Connection',
+                        },
                     },
+                    /**
                     {
                         path: '/distribution/flowdistribution',
                         name: 'flowdistribution',
@@ -483,7 +498,7 @@ export const rolemenu=[
                             roles: ['admin', 'common'],
                             icon: 'ele-Connection',
                         },
-                    },
+                    },**/
                     {
                         path: '/distribution/gatewayshow',
                         name: 'gatewayshow',
@@ -499,6 +514,7 @@ export const rolemenu=[
                             icon: 'ele-DataLine',
                         },
                     },
+
                 ]
 
             },

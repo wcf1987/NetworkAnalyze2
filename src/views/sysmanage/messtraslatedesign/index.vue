@@ -4,7 +4,7 @@
         <div class="layout-padding-auto layout-padding-view workflow-warp">
             <div class="workflow">
                 <!-- 顶部工具栏 -->
-                <Tool @tool="onToolClick"/>
+                <Tool />
 
                 <!-- 左侧导航区 -->
                 <div class="workflow-content">
@@ -306,7 +306,7 @@
         }
         return null;
     }
-        const findSourceDataByName=(ename)=>{
+        const findSourceDataByName=(name)=>{
         const nodes=walkTreeToList(state.tableDataSource.data)
         for(let i of nodes){
             if(i.Name==name){
