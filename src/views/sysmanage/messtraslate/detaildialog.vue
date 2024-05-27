@@ -3,7 +3,7 @@
         <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="900px" :draggable="true">
             <div class="container">
 
-                <div class="workflow-left">
+                <div class="workflow-left" v-if="state.ruleForm.Optional=='自定义转换计算'">
                     <el-scrollbar>
                         <div
                                 ref="leftNavRefs"
@@ -336,7 +336,7 @@
     const props21 = {
         multiple: true,
         expandTrigger: 'hover',
-        value: 'EName',
+        value: 'Name',
         label: 'Name'
     }
     const props22 = {

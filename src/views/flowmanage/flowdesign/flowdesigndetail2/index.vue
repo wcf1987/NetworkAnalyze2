@@ -728,6 +728,7 @@
         state.ID = querys.ID;
         state.FlowName = querys.FlowName;
         state.Type = querys.Type;
+        state.type='流程编排';
         //console.log(leftNavList)
         //console.log(state.Type);
         if (state.Type == '透明传输') {
@@ -1170,7 +1171,7 @@
                 .workflow-right2 {
 
 
-                    width: 50%;
+                    width: 30%;
                     height: 50%;
                 }
             }

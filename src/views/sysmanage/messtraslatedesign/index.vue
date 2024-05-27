@@ -146,10 +146,10 @@
                                     </el-icon>
                                 </template>
                                 <el-card style="font-size:14px">
-                                    <p class="text item" v-if="state.sourceData.OutType=='fields'">{{ 'DFI标识号：' +state.sourceData.DFINO}}</p>
-                                    <p class="text item" v-if="state.sourceData.OutType=='fields'">{{ 'DFI版本号：' +state.sourceData.DFIVersion}}</p>
-                                    <p class="text item" v-if="state.sourceData.OutType=='fields'">{{ 'DUI标识号：' +state.sourceData.DUINO}}</p>
-                                    <p class="text item" v-if="state.sourceData.OutType=='fields'">{{ 'DUI版本号：' +state.sourceData.DUIVersion}}</p>
+                                    <p class="text item" v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DFI标识号：' +state.sourceData.DFINO}}</p>
+                                    <p class="text item" v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DFI版本号：' +state.sourceData.DFIVersion}}</p>
+                                    <p class="text item" v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DUI标识号：' +state.sourceData.DUINO}}</p>
+                                    <p class="text item" v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DUI版本号：' +state.sourceData.DUIVersion}}</p>
                                     <p class="text item">{{ '名称： '+state.sourceData.Name }}</p>
                                     <p class="text item">{{ '数据标识： '+state.sourceData.Flag }}</p>
                                     <p class="text item">{{ '类型： '+state.sourceData.Type }}</p>
@@ -244,12 +244,27 @@
     // 打开修改转换规则界面弹窗
     const onOpenEdit = (row: RowUserType) => {
         state.targetData=findTargetData(row.ID);
-        if(row.SourceData!=null){
+        if(row.SourceData!=null && row.SourceData.length!=0){
             state.sourceData=findSourceDataByName(row.SourceData[0]);
-             if(state.sourceData.OutType=='fields'){
+            if(state.sourceData==null){
+                state.sourceData={};
+                  state.sourceData.Name='';
+            state.sourceData.Flag='';
+            state.sourceData.Type='';
+            state.sourceData.ShortName='';
+            state.sourceData.Length  ='';
+            }
+             if(state.sourceData!=null && state.sourceData.OutType=='fields'){
             addFieldsInfo(state.sourceData)
         }
-        }
+        }   else{
+            state.sourceData.Name='';
+            state.sourceData.Flag='';
+            state.sourceData.Type='';
+            state.sourceData.ShortName='';
+            state.sourceData.Length  ='';
+             }
+
         if(state.targetData.OutType=='fields'){
             addFieldsInfo(state.targetData)
         }

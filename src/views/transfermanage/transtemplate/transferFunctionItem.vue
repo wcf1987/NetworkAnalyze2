@@ -47,18 +47,33 @@ const onSearch = () => {
 //应用模板至流程编排
 const onTemplateApply = (v) => {
 	const stores = useUserInfo();
+	const flowName='';
+ ElMessageBox.prompt('请输入模板应用后名称', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
 
-	transtemplateApi()
+  })
+    .then(({ value }) => {
+      ElMessage({
+        type: '成功',
+        message: `您的新流程名称为:${value}`,
+      });
+
+			transtemplateApi()
 		.applyFlow({
 			AuthorID: stores.userInfos.id,
 			ID: v.ID,
+			Name:value,
 		})
 		.then((res) => {
 			//console.log(res);
 			if (res.code == '200') {
 				ElMessage.success('添加成功');
-				closeDialog();
-				emit('refresh');
+
+					router.push({
+		path: '/flowmanage/flowdesign/flowdesigntemplate',
+		query: { ID: v.ID, FlowName: value, Type: v.Type },
+	});
 			} else {
 				ElMessage.error(res.message);
 			}
@@ -66,10 +81,15 @@ const onTemplateApply = (v) => {
 		.catch((err) => {})
 		.finally(() => {});
 
-	router.push({
-		path: '/flowmanage/flowdesign/flowdesigntemplate',
-		query: { ID: v.ID, FlowName: v.Name, Type: v.Type },
-	});
+
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '您未确认新流程名称，应用取消',
+      })
+    });
+
 };
 //编辑模板
 const onTableItemClick = (v) => {

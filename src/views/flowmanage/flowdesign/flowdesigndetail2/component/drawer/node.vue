@@ -1,392 +1,390 @@
 <template>
     <div class="workflow-drawer-node">
 
-            <!-- 节点编辑 -->
+        <!-- 节点编辑 -->
 
-                <el-scrollbar>
-                     <el-form :model="state.form" ref="extendFormRef" size="default" label-width="100px"
-                             class="pt15 pr15 pb15 pl15">
-                        <el-form-item label="数据id" prop="id" v-if="false">
-                            <el-input v-model="state.node.id" placeholder="请输入数据id" clearable disabled></el-input>
-                        </el-form-item>
+        <el-scrollbar>
+            <el-form :model="state.form" ref="extendFormRef" size="default" label-width="100px"
+                     class="pt15 pr15 pb15 pl15">
+                <el-form-item label="数据id" prop="id" v-if="false">
+                    <el-input v-model="state.node.id" placeholder="请输入数据id" clearable disabled></el-input>
+                </el-form-item>
 
-                        <el-form-item label="类型" prop="type">
-                            <el-input v-model="state.proper.typeC" placeholder="请输入类型" clearable disabled></el-input>
-                        </el-form-item>
-                        <el-form-item label="left坐标" prop="x" v-if="false">
-                            <el-input v-model="state.node.x" placeholder="请输入left坐标" clearable disabled></el-input>
-                        </el-form-item>
-                        <el-form-item label="top坐标" prop="y" v-if="false">
-                            <el-input v-model="state.node.y" placeholder="请输入top坐标" clearable disabled></el-input>
-                        </el-form-item>
+                <el-form-item label="类型" prop="type">
+                    <el-input v-model="state.proper.typeC" placeholder="请输入类型" clearable disabled></el-input>
+                </el-form-item>
+                <el-form-item label="left坐标" prop="x" v-if="false">
+                    <el-input v-model="state.node.x" placeholder="请输入left坐标" clearable disabled></el-input>
+                </el-form-item>
+                <el-form-item label="top坐标" prop="y" v-if="false">
+                    <el-input v-model="state.node.y" placeholder="请输入top坐标" clearable disabled></el-input>
+                </el-form-item>
 
-                        <el-form-item label="名称" prop="name">
-                            <el-input v-model="state.proper.name" placeholder="请输入名称" clearable></el-input>
-                        </el-form-item>
-                        <el-form-item v-if="false">
-                            <el-button class="mb15" @click="onNodeRefresh">
-                                <SvgIcon name="ele-RefreshRight"/>
-                                重置
-                            </el-button>
-                            <el-button type="primary" class="mb15" @click="onNodeSubmit">
-                                <SvgIcon name="ele-Check"/>
-                                下一步
-                            </el-button>
-                        </el-form-item>
-
-
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="state.proper.name" placeholder="请输入名称" clearable></el-input>
+                </el-form-item>
+                <el-form-item v-if="false">
+                    <el-button class="mb15" @click="onNodeRefresh">
+                        <SvgIcon name="ele-RefreshRight"/>
+                        重置
+                    </el-button>
+                    <el-button type="primary" class="mb15" @click="onNodeSubmit">
+                        <SvgIcon name="ele-Check"/>
+                        下一步
+                    </el-button>
+                </el-form-item>
 
 
-                        <div class="customproper" v-if="state.showFlag['start']">
-                            <el-form-item label="接口类型">
-                                <el-select v-model="state.properForm.interfacetype" placeholder="请选择" clearable
-                                           class="w100">
-                                    <el-option label="网口" value="网口"></el-option>
-                                    <el-option label="串口" value="串口"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="源地址" prop="sourecenetworkID"
-                                          v-if="state.properForm.interfacetype=='网口'">
-                                <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable
-                                           v-on:change="onChangeStartSNIP"
-                                           class="w100">
-                                    <el-option
-                                            v-for="item in NetworkOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-                                </el-select>
-                            </el-form-item>
+                <div class="customproper" v-if="state.showFlag['start']">
+                    <el-form-item label="接口类型">
+                        <el-select v-model="state.properForm.interfacetype" placeholder="请选择" clearable
+                                   class="w100">
+                            <el-option label="网口" value="网口"></el-option>
+                            <el-option label="串口" value="串口"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="源地址" prop="sourecenetworkID"
+                                  v-if="state.properForm.interfacetype=='网口'">
+                        <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable
+                                   v-on:change="onChangeStartSNIP"
+                                   class="w100">
+                            <el-option
+                                    v-for="item in NetworkOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+                        </el-select>
+                    </el-form-item>
 
-                            <el-form-item label="输入源地址" prop="sourecenetworkIP"
-                                          v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''">
-                                <el-input v-model="state.properForm.sourecenetworkIP" placeholder="请输入源地址ip地址" clearable
-                                          :readonly=" state.properForm.sourecenetworkID!='-1'"
+                    <el-form-item label="输入源地址" prop="sourecenetworkIP"
+                                  v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''">
+                        <el-input v-model="state.properForm.sourecenetworkIP" placeholder="请输入源地址ip地址" clearable
+                                  :readonly=" state.properForm.sourecenetworkID!='-1'"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item label="源地址端口" prop="sourecenetworkPort"
+                                  v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''"
+                    >
+                        <el-input v-model="state.properForm.sourecenetworkPort" placeholder="请输入源地址端口" clearable
+                                  :readonly=" state.properForm.sourecenetworkID!='-1'"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="串口信息" prop="serialID" v-if="state.properForm.interfacetype=='串口'">
+                        <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
+                                   v-on:change="onChangeStartSerialChoose">
+                            <el-option
+                                    v-for="item in SerialOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="本地串口号" prop="SerialNO"
+                                  v-if="state.properForm.interfacetype=='串口'">
+                        <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
+                                  :readonly=" state.properForm.serialID!='-1'"></el-input>
+                    </el-form-item>
+                    <el-form-item label="本地波特率" prop="BAUD"
+                                  v-if="state.properForm.interfacetype=='串口' ">
+                        <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
+                                  :readonly=" state.properForm.serialID!='-1'"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="本地地址" prop="localnetworkID"
+                                  v-if="state.properForm.interfacetype=='网口'">
+                        <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
+                                   class="w100" v-on:change="onChangeStartNetworkChoose">
+                            <el-option
+                                    v-for="item in NetworkLocalOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="本地地址" prop="IP"
+                                  v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
+                        <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable
+                                  :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
+                    </el-form-item>
+                    <el-form-item label="本地端口" prop="Port"
+                                  v-if="state.properForm.interfacetype=='网口' "
+                                  :readonly=" state.properForm.localnetworkID!='-1'">
+                        <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable
+                                  :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
+                    </el-form-item>
+
+                </div>
+
+                <div class="customproper" v-if="state.showFlag['end']">
+                    <el-form-item label="接口类型">
+                        <el-select v-model="state.properForm.interfacetype" placeholder="请选择" clearable
+                                   class="w100">
+                            <el-option label="网口" value="网口"></el-option>
+                            <el-option label="串口" value="串口"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="目的串口" prop="type" v-if="state.properForm.interfacetype=='串口'">
+                        <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
+                                   v-on:change="onChangeEndSerialChoose">
+                            <el-option
+                                    v-for="item in SerialOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="目的串口号" prop="type"
+                                  v-if="state.properForm.interfacetype=='串口'">
+                        <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
+                                  :readonly=" state.properForm.serialID!='-1'"></el-input>
+                    </el-form-item>
+                    <el-form-item label="目的波特率" prop="type"
+                                  v-if="state.properForm.interfacetype=='串口' ">
+                        <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
+                                  :readonly=" state.properForm.serialID!='-1'"></el-input>
+                    </el-form-item>
+                    <el-form-item label="目的地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
+                        <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
+                                   v-on:change="onChangeEndNetworkChoose">
+                            <el-option
+                                    v-for="item in NetworkLocalOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+                        </el-select>
+                    </el-form-item>
+                    <el-row v-for="(v, k) in state.properForm.IPlist" :key="k" class="max-width-row">
+                        <el-form-item label="目的IP" prop="type"
+                                      v-if="state.properForm.interfacetype=='网口'">
+                            <el-col :span="11">
+
+                                <el-input v-model="v.IP" placeholder="请输入ip地址" clearable
                                 ></el-input>
-                            </el-form-item>
-                            <el-form-item label="源地址端口" prop="sourecenetworkPort"
-                                          v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''"
-                                        >
-                                <el-input v-model="state.properForm.sourecenetworkPort" placeholder="请输入源地址端口" clearable
-                                          :readonly=" state.properForm.sourecenetworkID!='-1'"></el-input>
-                            </el-form-item>
+                            </el-col>
+                            <el-col :span="1" class="text-center">
+                                <span style="display:block;text-align: center" class="text-gray-500">:</span>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-input v-model="v.Port" placeholder="请输入端口" clearable
+                                ></el-input>
+                            </el-col>
+                            <el-col :span="1"/>
+                            <el-col :span="2">
+                                <el-button type="success" size="small" circle @click="onAddEndIP">
+                                    <el-icon>
+                                        <ele-Plus/>
+                                    </el-icon>
 
-                            <el-form-item label="串口信息" prop="serialID" v-if="state.properForm.interfacetype=='串口'">
-                                <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
-                                           v-on:change="onChangeStartSerialChoose">
-                                    <el-option
-                                            v-for="item in SerialOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="本地串口号" prop="SerialNO"
-                                          v-if="state.properForm.interfacetype=='串口'">
-                                <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
-                                          :readonly=" state.properForm.serialID!='-1'"></el-input>
-                            </el-form-item>
-                            <el-form-item label="本地波特率" prop="BAUD"
-                                          v-if="state.properForm.interfacetype=='串口' ">
-                                <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
-                                          :readonly=" state.properForm.serialID!='-1'"></el-input>
-                            </el-form-item>
+                                </el-button>
+                            </el-col>
+    <el-col :span="1"/>
+                            <el-col :span="2">
+                                <el-button type="danger" size="small" circle @click="onDelEndIP(k)">
+                                    <el-icon>
+                                        <ele-Delete/>
+                                    </el-icon>
 
-                            <el-form-item label="本地地址" prop="localnetworkID"
-                                          v-if="state.properForm.interfacetype=='网口'">
-                                <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
-                                           class="w100" v-on:change="onChangeStartNetworkChoose">
-                                    <el-option
-                                            v-for="item in NetworkLocalOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="本地地址" prop="IP"
-                                          v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
-                                <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable
-                                          :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
-                            </el-form-item>
-                            <el-form-item label="本地端口" prop="Port"
-                                          v-if="state.properForm.interfacetype=='网口' "
-                                          :readonly=" state.properForm.localnetworkID!='-1'">
-                                <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable
-                                          :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
-                            </el-form-item>
-
-                        </div>
-
-                        <div class="customproper" v-if="state.showFlag['end']">
-                            <el-form-item label="接口类型">
-                                <el-select v-model="state.properForm.interfacetype" placeholder="请选择" clearable
-                                           class="w100">
-                                    <el-option label="网口" value="网口"></el-option>
-                                    <el-option label="串口" value="串口"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="目的串口" prop="type" v-if="state.properForm.interfacetype=='串口'">
-                                <el-select v-model="state.properForm.serialID" placeholder="请选择" clearable class="w100"
-                                           v-on:change="onChangeEndSerialChoose">
-                                    <el-option
-                                            v-for="item in SerialOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="目的串口号" prop="type"
-                                          v-if="state.properForm.interfacetype=='串口'">
-                                <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
-                                          :readonly=" state.properForm.serialID!='-1'"></el-input>
-                            </el-form-item>
-                            <el-form-item label="目的波特率" prop="type"
-                                          v-if="state.properForm.interfacetype=='串口' ">
-                                <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
-                                          :readonly=" state.properForm.serialID!='-1'"></el-input>
-                            </el-form-item>
-                            <el-form-item label="目的地址" prop="type" v-if="state.properForm.interfacetype=='网口'">
-                                <el-select v-model="state.properForm.localnetworkID" placeholder="请选择" clearable
-                                           class="w100" v-on:change="onChangeEndNetworkChoose">
-                                    <el-option
-                                            v-for="item in NetworkLocalOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-                                </el-select>
-                            </el-form-item>
-
-                            <el-row v-for="(v, k) in state.properForm.IPlist" :key="k">
-                                <el-form-item label="目的IP" prop="type"
-                                              v-if="state.properForm.interfacetype=='网口'">
-                                    <el-col :span="11">
-
-                                        <el-input v-model="v.IP" placeholder="请输入ip地址" clearable
-                                        ></el-input>
-                                    </el-col>
-                                    <el-col :span="1" class="text-center">
-                                        <span style="display:block;text-align: center" class="text-gray-500">:</span>
-                                    </el-col>
-                                    <el-col :span="4">
-                                        <el-input v-model="v.Port" placeholder="请输入端口" clearable
-                                        ></el-input>
-                                    </el-col>
-                                    <el-col :span="1"/>
-                                    <el-col :span="2">
-                                        <el-button type="success" size="small" circle @click="onAddEndIP">
-                                            <el-icon>
-                                                <ele-Plus/>
-                                            </el-icon>
-
-                                        </el-button>
-                                    </el-col>
-                                    <el-col :span="1"/>
-                                    <el-col :span="2">
-                                        <el-button type="danger" size="small" circle @click="onDelEndIP(k)">
-                                            <el-icon>
-                                                <ele-Delete/>
-                                            </el-icon>
-
-                                        </el-button>
-                                    </el-col>
-                                </el-form-item>
-                            </el-row>
-
-                        </div>
-
-
-                        <div class="customproper" v-if="state.showFlag['pacparse']">
-                            <el-form-item label="头部选择">
-                                <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable
-                                           class="w100">
-                                    <el-option
-                                            v-for="item in PackageOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-                                </el-select>
-                            </el-form-item>
-
-
-                        </div>
-
-                        <div class="customproper" v-if="state.showFlag['pacencap']">
-                            <el-form-item label="头部选择">
-                                <el-select v-model="state.properForm.pacencapID" placeholder="请选择" clearable
-                                           class="w100">
-                                    <el-option
-                                            v-for="item in PackageOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-                                </el-select>
-                            </el-form-item>
-
-
-                        </div>
-
-                        <div class="customproper" v-if="state.showFlag['messheaderparse']">
-                            <el-form-item label="消息头">
-                                <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable
-                                           class="w100">
-                                    <el-option
-                                            v-for="item in MessHeaderOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-
-
-                                </el-select>
-                            </el-form-item>
-
-
-                        </div>
-                        <div class="customproper" v-if="state.showFlag['messheaderencap']">
-                            <el-form-item label="消息头">
-                                <el-select v-model="state.properForm.messheaderencapID" placeholder="请选择" clearable
-                                           class="w100" v-on:change="onChangeMessheaderEncapChoose">
-                                    <el-option
-                                            v-for="item in MessHeaderOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-
-                                </el-select>
-                            </el-form-item>
-
-
-                        </div>
-                        <div class="customproper" v-if="state.showFlag['messbodyparse']">
-                            <el-form-item label="消息体">
-                                <el-select v-model="state.properForm.messbodyparseID" placeholder="请选择" clearable
-                                           class="w100">
-                                    <el-option
-                                            v-for="item in MessBodyOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-
-                                </el-select>
-                            </el-form-item>
-
-
-                        </div>
-                        <div class="customproper" v-if="state.showFlag['messbodyencap']">
-                            <el-form-item label="消息体">
-                                <el-select v-model="state.properForm.messbodyencapID" placeholder="请选择" clearable
-                                           class="w100">
-                                    <el-option
-                                            v-for="item in MessBodyOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-
-                                </el-select>
-                            </el-form-item>
-
-
-                        </div>
-
-
-                        <div class="customproper" v-if="state.showFlag['messtraslate']">
-                            <el-form-item label="转换规则模板">
-                                <el-select v-model="state.properForm.transid" v-on:change="onChangeMessTranslateChoose"
-                                           placeholder="请选择" clearable class="w100">
-                                    <el-option
-                                            v-for="item in MessTraslateOptions"
-                                            :key="item.ID"
-                                            :label="item.Name"
-                                            :value="item.ID"
-                                    />
-                                </el-select>
-                            </el-form-item>
-
-
-                        </div>
-
-                        <div class="customproper" v-if="state.showFlag['spemark']">
-                            <el-form-item label="变量名">
-                                <el-input v-model="state.properForm.globalVarName" placeholder="请输入临时变量代码名称" clearable>
-                                </el-input>
-                            </el-form-item>
-
-                            <el-form-item label="源字段" prop="source">
-
-                                <el-cascader v-model="state.properForm.sourceData" :options="sourceoptions"
-                                             :separator="'.'"
-                                             :props="props21"
-                                             @change="changeSourceInput21"
-                                             clearable
-                                             style="width: 500px; " collapse-tags/>
-                            </el-form-item>
-
-                            <el-form-item label="转换公式" prop="rulestr" clearable>
-                                <el-input
-                                        :autosize="{ minRows: 2, maxRows: 10 }"
-                                        type="textarea"
-                                        placeholder="请输入转换公式"
-                                        v-model="state.properForm.globalVarRule" autocomplete="off"/>
-                            </el-form-item>
-
-
-                        </div>
-
-                        <el-form-item class="btn">
-                            <el-button class="mb15" @click="state.tabsActive = '1'" v-if="false">
-                                <SvgIcon name="ele-DArrowLeft"/>
-                                上一步
-                            </el-button>
-
-                            <el-button class="mb15" @click="onExtendRefresh">
-                                <SvgIcon name="ele-RefreshRight"/>
-                                重置
-                            </el-button>
-
-                            <el-button type="primary" class="mb15" @click="onExtendEditMessTranslate"
-                                       :loading="state.loading.extend" v-if="state.showFlag['messtraslate']">
-                                <SvgIcon name="ele-EditPen"/>
-                                编辑模板
-                            </el-button>
-                            <el-button type="primary" class="mb15" @click="onExtendGlobalVar"
-                                       :loading="state.loading.extend" v-if="state.showFlag['spemark'] && false">
-                                <SvgIcon name="ele-EditPen"/>
-                                编辑变量
-                            </el-button>
-
-                            <el-button type="primary" class="mb15" @click="viewNess"
-                                       :loading="state.loading.extend"
-                                       v-if="state.showFlag['messbodyencap'] || state.showFlag['messbodyparse'] ||  state.showFlag['messheaderparse'] ">
-                                <SvgIcon name="ele-EditPen"/>
-                                查看详细信息
-                            </el-button>
-
-                            <el-button type="primary" class="mb15" @click="onExtendEditMessheader"
-                                       :loading="state.loading.extend" v-if="state.showFlag['messheaderencap']">
-                                <SvgIcon name="ele-EditPen"/>
-                                编辑消息头
-                            </el-button>
-
-                            <el-button type="primary" class="mb15" @click="onExtendSubmit"
-                                       :loading="state.loading.extend">
-                                <SvgIcon name="ele-Check"/>
-                                保存
-                            </el-button>
-
+                                </el-button>
+                            </el-col>
                         </el-form-item>
-                    </el-form>
-                </el-scrollbar>
+                    </el-row>
+                    <!--
 
+-->
+                </div>
+
+
+                <div class="customproper" v-if="state.showFlag['pacparse']">
+                    <el-form-item label="头部选择">
+                        <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable
+                                   class="w100">
+                            <el-option
+                                    v-for="item in PackageOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+                        </el-select>
+                    </el-form-item>
+
+
+                </div>
+
+                <div class="customproper" v-if="state.showFlag['pacencap']">
+                    <el-form-item label="头部选择">
+                        <el-select v-model="state.properForm.pacencapID" placeholder="请选择" clearable
+                                   class="w100">
+                            <el-option
+                                    v-for="item in PackageOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+                        </el-select>
+                    </el-form-item>
+
+
+                </div>
+
+                <div class="customproper" v-if="state.showFlag['messheaderparse']">
+                    <el-form-item label="消息头">
+                        <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable
+                                >
+                            <el-option
+                                    v-for="item in MessHeaderOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+
+
+                        </el-select>
+                    </el-form-item>
+
+
+                </div>
+                <div class="customproper" v-if="state.showFlag['messheaderencap']">
+                    <el-form-item label="消息头">
+                        <el-select v-model="state.properForm.messheaderencapID" placeholder="请选择" clearable
+                                  v-on:change="onChangeMessheaderEncapChoose">
+                            <el-option
+                                    v-for="item in MessHeaderOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+
+                        </el-select>
+                    </el-form-item>
+
+
+                </div>
+                <div class="customproper" v-if="state.showFlag['messbodyparse']">
+                    <el-form-item label="消息体">
+                        <el-select v-model="state.properForm.messbodyparseID" placeholder="请选择" clearable
+                                   class="w100">
+                            <el-option
+                                    v-for="item in MessBodyOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+
+                        </el-select>
+                    </el-form-item>
+
+
+                </div>
+                <div class="customproper" v-if="state.showFlag['messbodyencap']">
+                    <el-form-item label="消息体">
+                        <el-select v-model="state.properForm.messbodyencapID" placeholder="请选择" clearable
+                                   class="w100">
+                            <el-option
+                                    v-for="item in MessBodyOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+
+                        </el-select>
+                    </el-form-item>
+
+
+                </div>
+
+
+                <div class="customproper" v-if="state.showFlag['messtraslate']">
+                    <el-form-item label="转换规则模板">
+                        <el-select v-model="state.properForm.transid" v-on:change="onChangeMessTranslateChoose"
+                                   placeholder="请选择" clearable class="w100">
+                            <el-option
+                                    v-for="item in MessTraslateOptions"
+                                    :key="item.ID"
+                                    :label="item.Name"
+                                    :value="item.ID"
+                            />
+                        </el-select>
+                    </el-form-item>
+
+
+                </div>
+
+                <div class="customproper" v-if="state.showFlag['spemark']">
+                    <el-form-item label="变量名">
+                        <el-input v-model="state.properForm.globalVarName" placeholder="请输入临时变量代码名称" clearable>
+                        </el-input>
+                    </el-form-item>
+
+                    <el-form-item label="源字段" prop="source">
+
+                        <el-cascader v-model="state.properForm.sourceData" :options="sourceoptions"
+                                     :separator="'.'"
+                                     :props="props21"
+                                     @change="changeSourceInput21"
+                                     clearable
+                                     style="width: 500px; " collapse-tags/>
+                    </el-form-item>
+
+                    <el-form-item label="转换公式" prop="rulestr" clearable>
+                        <el-input
+                                :autosize="{ minRows: 2, maxRows: 10 }"
+                                type="textarea"
+                                placeholder="请输入转换公式"
+                                v-model="state.properForm.globalVarRule" autocomplete="off"/>
+                    </el-form-item>
+
+
+                </div>
+
+                <el-form-item class="btn">
+                    <el-button class="mb15" @click="state.tabsActive = '1'" v-if="false">
+                        <SvgIcon name="ele-DArrowLeft"/>
+                        上一步
+                    </el-button>
+
+                    <el-button class="mb15" @click="onExtendRefresh">
+                        <SvgIcon name="ele-RefreshRight"/>
+                        重置
+                    </el-button>
+
+                    <el-button type="primary" class="mb15" @click="onExtendEditMessTranslate"
+                               :loading="state.loading.extend" v-if="state.showFlag['messtraslate']">
+                        <SvgIcon name="ele-EditPen"/>
+                        编辑模板
+                    </el-button>
+                    <el-button type="primary" class="mb15" @click="onExtendGlobalVar"
+                               :loading="state.loading.extend" v-if="state.showFlag['spemark'] && false">
+                        <SvgIcon name="ele-EditPen"/>
+                        编辑变量
+                    </el-button>
+
+                    <el-button type="primary" class="mb15" @click="viewNess"
+                               :loading="state.loading.extend"
+                               v-if="state.showFlag['messbodyencap'] || state.showFlag['messbodyparse'] ||  state.showFlag['messheaderparse'] ">
+                        <SvgIcon name="ele-EditPen"/>
+                        查看信息
+                    </el-button>
+
+                    <el-button type="primary" class="mb15" @click="onExtendEditMessheader"
+                               :loading="state.loading.extend" v-if="state.showFlag['messheaderencap']">
+                        <SvgIcon name="ele-EditPen"/>
+                        编辑消息
+                    </el-button>
+
+                    <el-button type="primary" class="mb15" @click="onExtendSubmit"
+                               :loading="state.loading.extend">
+                        <SvgIcon name="ele-Check"/>
+                        保存
+                    </el-button>
+
+                </el-form-item>
+            </el-form>
+        </el-scrollbar>
 
 
         <Translatedialog ref="translateDialogRef" @refresh="messTranslateModify"/>
@@ -495,11 +493,11 @@
             getSerial();
 
         }
-      if (data.type == 'dest') {
-        state.proper.typeC = '结束节点';
+        if (data.type == 'dest') {
+            state.proper.typeC = '结束节点';
 
 
-      }
+        }
 
         if (data.type == 'end') {
             state.proper.typeC = '目的节点';
@@ -602,16 +600,16 @@
         if (data.type == 'timer') {
             state.proper.typeC = '定时器';
         }
-      if (data.type == 'conver') {
-        state.proper.typeC = '内置转换节点';
+        if (data.type == 'conver') {
+            state.proper.typeC = '内置转换节点';
 
 
-      }
-      if (data.type == 'inpac') {
-        state.proper.typeC = '内置封装';
+        }
+        if (data.type == 'inpac') {
+            state.proper.typeC = '内置封装';
 
 
-      }
+        }
         if (data.type == 'swich') {
             state.proper.typeC = '分支选择';
             getNetwork();
@@ -983,7 +981,7 @@
                 pageSize: 10000,
                 name: '',
                 ttype: 'header',
-   nestid: 0,
+                nestid: 0,
             })
             .then(res => {
                 console.log(res);
@@ -1016,7 +1014,7 @@
                 pageSize: 10000,
                 name: '',
                 ttype: 'body',
-   nestid: 0,
+                nestid: 0,
             })
             .then(res => {
                 console.log(res);
@@ -1331,6 +1329,13 @@
                 margin-left: 30px !important;
             }
         }
+    }
+
+    :deep(.max-width-row) {
+        max-width: 300px; /* 你想要的最大宽度 */
+        margin: 0 auto;
+
+        /* 水平居中 */
     }
 
     .workflow-drawer-node {
