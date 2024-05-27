@@ -2,6 +2,7 @@
 	<el-menu
 		router
 		mode="horizontal"
+		:unique-opened="true"
 		menu-trigger="click"
 		:class="themeConfig.isIsDark ? '' : 'custom-menu-style'"
 		:default-active="state.defaultActive"
