@@ -84,7 +84,7 @@
                                                  :props="props21"
                                                  @change="changeSourceInput21"
                                                  clearable
-                                                 style="width: 300px; " collapse-tags/>
+                                                 style="width: 300px; " collapse-tags :disabled="true"/>
                                 </el-form-item>
                             </el-col>
 
@@ -125,7 +125,7 @@
                                                  :props="props21"
                                                  @change="changeSourceInput21"
                                                  clearable
-                                                 style="width: 300px; " collapse-tags/>
+                                                 style="width: 300px; " collapse-tags :disabled="true"/>
                                 </el-form-item>
                             </el-col>
 

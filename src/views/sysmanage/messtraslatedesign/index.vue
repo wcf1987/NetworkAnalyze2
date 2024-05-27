@@ -803,6 +803,7 @@
 
             trow.SourceData.push([sname]);
             updateNodeDB(trow);
+            onOpenEdit(trow);
         }
         if (type == 'del') {
             trow = findTreeItemById(state.tableDataTranslate.data, tid);

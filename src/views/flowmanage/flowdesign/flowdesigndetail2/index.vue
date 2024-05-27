@@ -875,12 +875,18 @@
                 drawerRef.value.open(GraphConfigData.nodes[0], lf.value);
                 break;
             case 'zoomIn':
+                //const { transformModel1 }=lf.value.graphModel;
+                //transformModel1.zoom(true)
                 lf.value.zoom(true);
                 break;
             case 'zoomOut':
+                // const { transformModel2 }=lf.value.graphModel;
+               // transformModel2.zoom(false)
                 lf.value.zoom(false);
                 break;
             case 'zoomReset':
+                //       const { transformModel3 }=lf.value.graphModel;
+                //transformModel3.resetZoom()
                 lf.value.resetZoom();
                 break;
             case 'translateRest':
