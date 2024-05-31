@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts" name="pagesWorkflow">
-        import {transtemplateApi} from "/@/api/transmanage/transtemplate";
+    import {transtemplateApi} from "/@/api/transmanage/transtemplate";
     import '@logicflow/core/dist/style/index.css'
     import '@logicflow/extension/lib/style/index.css'
     import LogicFlow from '@logicflow/core'
@@ -109,6 +109,7 @@
     import {leftNavList} from './js/mock';
     import {leftNavListSimple} from './js/mocksimple';
     import {leftNavListSpecial} from './js/mockspecial';
+    import {useRoute, useRouter} from "vue-router";
     import {jsplumbConnect, jsplumbDefaults, jsplumbMakeSource, jsplumbMakeTarget} from './js/config';
     // 定义变量内容
     import {
@@ -132,8 +133,9 @@
         TimemarkNode,
         TimerNode,
     } from './logicflowpanel/registerNode/index.js'
-    import {useRoute} from "vue-router";
     import {builtNodeApi} from "/@/api/flowmanage/builtnode";
+
+    const router = useRouter();
 
     const activeNames = ref(['1'])
     const route = useRoute()
@@ -915,6 +917,9 @@
                 break;
             case 'fullscreen':
                 onToolFullscreen();
+                break;
+            case 'closeWin':
+                router.go(-1);
                 break;
         }
     };

@@ -22,7 +22,7 @@
                     批量删除
                 </el-button>
             </div>
-            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table :cell-style="{'padding': '2px 2px 0 10px'}"   :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
                  <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
@@ -50,7 +50,7 @@
                     @current-change="onHandleCurrentChange"
                     class="mt15"
                     :pager-count="5"
-                    :page-sizes="[10, 20, 30]"
+                    :page-sizes="[10,17, 20, 30]"
                     v-model:current-page="state.tableData.param.pageNum"
                     background
                     v-model:page-size="state.tableData.param.pageSize"
@@ -81,7 +81,7 @@
             loading: false,
             param: {
                 pageNum: 1,
-                pageSize: 10,
+                pageSize: 17,
             },
             		        search: '',
             searchStr: '',

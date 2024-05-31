@@ -39,6 +39,7 @@
             {icon: 'ele-DataLine', title: '查看缩略图', fnName: 'showMiniMap'},
             {icon: 'ele-FullScreen', title: '全屏', fnName: 'fullscreen'},
             {icon: 'ele-Help', title: '帮助', fnName: 'help'},
+            {icon: 'ele-CloseBold', title: '关闭', fnName: 'closeWin'},
         ],
     });
     const props = defineProps({

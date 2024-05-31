@@ -31,9 +31,10 @@
                         <div class="flex-warp-item">
                             <div class="flex-warp-item-box">
                                 <div class="item-img">
-                                    <img :src="flowimg1" v-if="v.Type=='透明传输'"/>
+                                    <img :src="flowimg1" v-if="v.Type=='应用层透明传输'"/>
                                     <img :src="flowimg2" v-if="v.Type=='混合编排'"/>
                                     <img :src="flowimg3" v-if="v.Type=='指定流程'"/>
+                                    <img :src="flowimg4" v-if="v.Type=='网络层透明传输'"/>
                                 </div>
                                 <div class="item-txt">
                                     <div class="item-txt-title">

@@ -110,6 +110,8 @@
     import {leftNavListSimple} from './js/mocksimple';
     import {leftNavListSpecial} from './js/mockspecial';
     import {jsplumbConnect, jsplumbDefaults, jsplumbMakeSource, jsplumbMakeTarget} from './js/config';
+    import {useRoute, useRouter} from "vue-router";
+    const router = useRouter();
     // 定义变量内容
     import {
         CalcNode,
@@ -132,7 +134,6 @@
         TimemarkNode,
         TimerNode,
     } from './logicflowpanel/registerNode/index.js'
-    import {useRoute} from "vue-router";
     import {builtNodeApi} from "/@/api/flowmanage/builtnode";
 
     const activeNames = ref(['1'])
@@ -731,7 +732,11 @@
         state.type='流程编排';
         //console.log(leftNavList)
         //console.log(state.Type);
-        if (state.Type == '透明传输') {
+        if (state.Type == '网络层透明传输') {
+            state.leftNavList = leftNavListSimple;
+
+        } else{
+           if (state.Type == '应用层透明传输') {
             state.leftNavList = leftNavListSimple;
 
         } else {
@@ -799,6 +804,7 @@
             });
 
 
+        }
         }
     };
 
@@ -922,6 +928,9 @@
                 break;
             case 'fullscreen':
                 onToolFullscreen();
+                break;
+            case 'closeWin':
+                router.go(-1);
                 break;
         }
     };

@@ -12,6 +12,7 @@ const userDialogRef = ref();
 const emit = defineEmits(['refresh']);
 const refreshUI = () => {
 	emit('refresh');
+		getTableData();
 };
 
 const state = reactive({

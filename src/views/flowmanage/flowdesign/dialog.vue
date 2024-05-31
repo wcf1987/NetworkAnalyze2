@@ -13,7 +13,8 @@
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="类型" prop="Type">
                             <el-select v-model="state.ruleForm.Type" placeholder="请选择" clearable class="w100">
-                                <el-option label="透明传输" value="透明传输"></el-option>
+                                <el-option label="网络层透明传输" value="网络层透明传输"></el-option>
+                                <el-option label="应用层透明传输" value="应用层透明传输"></el-option>
                                 <el-option label="混合编排" value="混合编排"></el-option>
                                 <el-option label="指定流程" value="指定流程"></el-option>
                             </el-select>

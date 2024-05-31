@@ -51,7 +51,7 @@
                 <el-tag type="info" effect="dark" round  class="eltagr">名称:{{ state.tableData.name  }}</el-tag>
               </el-tooltip>
             </div>
-            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%"
+            <el-table  :cell-style="{'padding': '2px 2px 0 10px'}"  :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%"
                       @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="30"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
@@ -97,7 +97,7 @@
                     @current-change="onHandleCurrentChange"
                     class="mt15"
                     :pager-count="5"
-                    :page-sizes="[10, 20, 30]"
+                    :page-sizes="[10,17, 20, 30]"
                     v-model:current-page="state.tableData.param.pageNum"
                     background
                     v-model:page-size="state.tableData.param.pageSize"
