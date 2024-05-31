@@ -732,10 +732,14 @@
         state.Type = querys.Type;
         //console.log(leftNavList)
         //console.log(state.Type);
-        if (state.Type == '透明传输') {
+        if (state.Type == '网络层透明传输') {
             state.leftNavList = leftNavListSimple;
 
-        } else {
+        } else{
+           if (state.Type == '应用层透明传输') {
+            state.leftNavList = leftNavListSimple;
+
+        }else {
             if (state.Type == '指定流程') {
                 state.leftNavList = leftNavListSpecial;
             }
@@ -800,7 +804,7 @@
             });
 
 
-        }
+        }}
     };
 
     // 左侧导航-菜单标题点击

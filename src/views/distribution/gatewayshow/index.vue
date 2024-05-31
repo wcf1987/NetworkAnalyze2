@@ -60,9 +60,10 @@
               <div class="flex-warp-item2">
                 <div :class="`flex-warp-item-box Target ${v.ID}`">
                   <div class="item-img">
-                    <img :src="flowimg1" v-if="v.Type=='透明传输'"/>
-                    <img :src="flowimg2" v-if="v.Type=='混合编排'"/>
-                    <img :src="flowimg3" v-if="v.Type=='指定流程'"/>
+                                    <img :src="flowimg1" v-if="v.Type=='应用层透明传输'"/>
+                                    <img :src="flowimg2" v-if="v.Type=='混合编排'"/>
+                                    <img :src="flowimg3" v-if="v.Type=='指定流程'"/>
+                                    <img :src="flowimg4" v-if="v.Type=='网络层透明传输'"/>
                   </div>
                   <div class="item-txt-title">
                     <span> {{ v.Name }}</span>
@@ -355,63 +356,7 @@ const initLeftNavList = () => {
 };
 // 左侧导航-初始化拖动
 const initSortable = () => {
-  leftNavRefs.value.forEach((v) => {
-    Sortable.create(v as HTMLDivElement, {
-      group: {
-        name: 'vue-next-admin-1',
-        pull: 'clone',
-        put: false,
-      },
-      animation: 0,
-      sort: false,
-      draggable: '.workflow-left-item',
-      forceFallback: true,
-      onEnd: function (evt: any) {
-        const {name, icon, id} = evt.clone.dataset;
-        const {layerX, layerY, clientX, clientY} = evt.originalEvent;
-        const el = workflowRightRef.value!;
-        const {x, y, width, height} = el.getBoundingClientRect();
-        if (clientX < x || clientX > width + x || clientY < y || y > y + height) {
-          ElMessage.warning('请把节点拖入到画布中');
-        } else {
-          // 节点id（唯一）
-          const nodeId = Math.random().toString(36).substr(2, 12);
-          // 处理节点数据
-          const node = {
-            nodeId,
-            left: `${layerX - 40}px`,
-            top: `${layerY - 15}px`,
-            class: 'workflow-right-clone',
-            name,
-            icon,
-            id,
-          };
-          // 右侧视图内容数组
-          state.jsplumbData.nodeList.push(node);
-          // 元素加载完毕时
-          nextTick(() => {
-            // 整个节点作为source或者target
-            state.jsPlumb.makeSource(nodeId, state.jsplumbMakeSource);
-            // // 整个节点作为source或者target
-            state.jsPlumb.makeTarget(nodeId, state.jsplumbMakeTarget, jsplumbConnect);
-            // 设置节点可以拖拽（此处为id值，非class）
-            state.jsPlumb.draggable(nodeId, {
-              containment: 'parent',
-              stop: (el: any) => {
-                state.jsplumbData.nodeList.forEach((v) => {
-                  if (v.nodeId === el.el.id) {
-                    // 节点x, y重新赋值，防止再次从左侧导航中拖拽节点时，x, y恢复默认
-                    v.left = `${el.pos[0]}px`;
-                    v.top = `${el.pos[1]}px`;
-                  }
-                });
-              },
-            });
-          });
-        }
-      },
-    });
-  });
+
 };
 // 初始化 jsPlumb
 const initJsPlumb = () => {
@@ -435,37 +380,8 @@ const initJsPlumb = () => {
 };
 // 初始化节点、线的链接
 const initJsPlumbConnection = () => {
-  // 节点
-  state.jsplumbData.nodeList.forEach((v) => {
-    // 整个节点作为source或者target
-    state.jsPlumb.makeSource(v.nodeId, state.jsplumbMakeSource);
-    // 整个节点作为source或者target
-    state.jsPlumb.makeTarget(v.nodeId, state.jsplumbMakeTarget, jsplumbConnect);
-    // 设置节点可以拖拽（此处为id值，非class）
-    state.jsPlumb.draggable(v.nodeId, {
-      containment: 'parent',
-      stop: (el: any) => {
-        state.jsplumbData.nodeList.forEach((v) => {
-          if (v.nodeId === el.el.id) {
-            // 节点x, y重新赋值，防止再次从左侧导航中拖拽节点时，x, y恢复默认
-            v.left = `${el.pos[0]}px`;
-            v.top = `${el.pos[1]}px`;
-          }
-        });
-      },
-    });
-  });
-  // 线
-  state.jsplumbData.lineList.forEach((v) => {
-    state.jsPlumb.connect(
-        {
-          source: v.sourceId,
-          target: v.targetId,
-          label: v.label,
-        },
-        state.jsplumbConnect
-    );
-  });
+
+
 
 
 };
@@ -529,6 +445,9 @@ const initConn = () => {
   }
 
   state.jsPlumb.setSuspendDrawing(false, true);
+    const sourceitem = document.getElementById("source_node");
+
+  state.jsPlumb.setSourceEnabled(sourceitem, false);
 }
 
 

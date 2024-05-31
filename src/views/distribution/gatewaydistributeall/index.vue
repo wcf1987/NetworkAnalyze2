@@ -63,9 +63,10 @@
                                 <div class="flex-warp-item2">
                                     <div :class="`flex-warp-item-box Target ${v.ID}`" :id="`Target_${v.ID}`">
                                         <div class="item-img">
-                                            <img :src="flowimg1" v-if="v.Type=='透明传输'"/>
+                                            <img :src="flowimg1" v-if="v.Type=='应用层透明传输'"/>
                                             <img :src="flowimg2" v-if="v.Type=='混合编排'"/>
                                             <img :src="flowimg3" v-if="v.Type=='指定流程'"/>
+                                            <img :src="flowimg4" v-if="v.Type=='网络层透明传输'"/>
                                         </div>
                                         <div class="item-txt-title">
                                             <span> {{ v.Name }}</span>
@@ -91,9 +92,10 @@
                                     <div class="flex-warp-item ">
                                         <div class="flex-warp-item-box">
                                             <div class="item-img">
-                                                <img :src="flowimg1" v-if="val.Type=='透明传输'"/>
+                                                <img :src="flowimg1" v-if="val.Type=='应用层透明传输'"/>
                                                 <img :src="flowimg2" v-if="val.Type=='混合编排'"/>
                                                 <img :src="flowimg3" v-if="val.Type=='指定流程'"/>
+                                                <img :src="flowimg4" v-if="val.Type=='网络层透明传输'"/>
                                             </div>
                                             <div class="item-txt-title">
                                                 <span> {{ val.Name }}</span>
