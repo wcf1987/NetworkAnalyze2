@@ -15,6 +15,12 @@
 					</el-icon>
 					新增用户
 				</el-button>
+				                <el-button size="default" type="warning" class="mr10" @click="back()">
+                    <el-icon>
+                        <ele-ArrowLeftBold/>
+                    </el-icon>
+                    返回
+                </el-button>
 			</div>
 			<el-table :cell-style="{'padding': '2px 2px 0 10px'}"  :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" :index="calcIndex" />
@@ -88,6 +94,13 @@ const state = reactive({
     const  calcIndex=(index)=>{
         index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
         return index
+    }
+        import {useRouter} from "vue-router";
+    const router = useRouter();
+    //返回上一级
+    const back = () => {
+
+        router.back();
     }
 // 初始化表格数据
 const getTableData = () => {

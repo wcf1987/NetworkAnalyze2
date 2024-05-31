@@ -2,7 +2,8 @@
     <div class="system-user-container layout-padding">
         <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入串口名称" style="max-width: 180px" v-model="state.tableData.search"></el-input>
+                <el-input size="default" placeholder="请输入串口名称" style="max-width: 180px"
+                          v-model="state.tableData.search"></el-input>
                 <el-button size="default" type="primary" class="ml10" @click="onSearch">
                     <el-icon>
                         <ele-Search/>
@@ -15,15 +16,22 @@
                     </el-icon>
                     新增串口对象
                 </el-button>
-                       <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')">
+                <el-button size="default" type="danger" class="ml10" @click="onDeleteIDS('add')">
                     <el-icon>
                         <ele-DeleteFilled/>
                     </el-icon>
                     批量删除
                 </el-button>
+                <el-button size="default" type="warning" class="mr10" @click="back()">
+                    <el-icon>
+                        <ele-ArrowLeftBold/>
+                    </el-icon>
+                    返回
+                </el-button>
             </div>
-            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange"   :cell-style="{'padding': '2px 2px 0 10px'}">
-                  <el-table-column type="selection" width="30"/>
+            <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%"
+                      @selection-change="handleSelectionChange" :cell-style="{'padding': '2px 2px 0 10px'}">
+                <el-table-column type="selection" width="30"/>
                 <el-table-column type="ID" label="序号" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
@@ -34,7 +42,7 @@
                 <el-table-column prop="StopBit" label="停止位" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="FlowControl" label="流控" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
+                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column label="操作" width="100">
                     <template #default="scope">
                         <el-button size="small" text type="primary" @click="onOpenEdit('edit', scope.row)"
@@ -67,7 +75,8 @@
 <script setup lang="ts" name="systemUser">
     import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
-import {addressApi} from '/@/api/sysmanage/address';
+    import {addressApi} from '/@/api/sysmanage/address';
+    import {useRouter} from "vue-router";
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/address/serial/dialog.vue'));
 
@@ -82,26 +91,33 @@ import {addressApi} from '/@/api/sysmanage/address';
                 pageNum: 1,
                 pageSize: 17,
             },
-               search:'',
-            searchStr:'',
-            ids:[],
+            search: '',
+            searchStr: '',
+            ids: [],
         },
     });
-    const  calcIndex=(index)=>{
-        index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
+    const calcIndex = (index) => {
+        index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
         return index
+    }
+    import {useRouter} from "vue-router";
+    const router = useRouter();
+    //返回上一级
+    const back = () => {
+
+        router.back();
     }
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
 
 
-            addressApi().searchSerialInter(
+        addressApi().searchSerialInter(
             {
                 uid: 1,
                 pageNum: state.tableData.param.pageNum,
                 pageSize: state.tableData.param.pageSize,
-                name:state.tableData.searchStr,
+                name: state.tableData.searchStr,
             })
             .then(res => {
                 //console.log(res);
@@ -122,10 +138,10 @@ import {addressApi} from '/@/api/sysmanage/address';
         addressApi().getSerialSearchListSize(
             {
                 uid: 1,
-                name:state.tableData.searchStr,
+                name: state.tableData.searchStr,
             })
             .then(res => {
-            	//console.log(res);
+                //console.log(res);
                 if (res.code == '200') {
 
                     state.tableData.total = res.data;
@@ -141,8 +157,6 @@ import {addressApi} from '/@/api/sysmanage/address';
         });
 
 
-
-
         setTimeout(() => {
             state.tableData.loading = false;
         }, 100);
@@ -155,11 +169,11 @@ import {addressApi} from '/@/api/sysmanage/address';
     const onOpenEdit = (type: string, row: RowUserType) => {
         userDialogRef.value.openDialog(type, row);
     };
-     //多选监听
+    //多选监听
     const handleSelectionChange = (val) => {
         state.tableData.ids = val.map(v => v.ID)
         //this.$message.warning("选择了"+this.ids.length+"条数据");
-        console.log("选择了"+state.tableData.ids.length+"条数据")
+        console.log("选择了" + state.tableData.ids.length + "条数据")
     };
     //批量删除
     const onDeleteIDS = (type: string) => {
@@ -171,14 +185,13 @@ import {addressApi} from '/@/api/sysmanage/address';
 
 
             .then(() => {
-                addressApi().deSerialIDS(                                          state.tableData.ids
-
-                    )
+                addressApi().deSerialIDS(state.tableData.ids
+                )
                     .then(res => {
                         //console.log(res);
                         if (res.code == '200') {
 
-                            ElMessage.success('成功批量删除'+res.data+'条');
+                            ElMessage.success('成功批量删除' + res.data + '条');
                             getTableData();
 
 
@@ -197,8 +210,8 @@ import {addressApi} from '/@/api/sysmanage/address';
             });
     };
     const onSearch = () => {
-        state.tableData.searchStr=state.tableData.search;
-       getTableData();
+        state.tableData.searchStr = state.tableData.search;
+        getTableData();
     };
     // 删除用户
     const onRowDel = (row: RowUserType) => {
@@ -208,27 +221,27 @@ import {addressApi} from '/@/api/sysmanage/address';
             type: 'warning',
         })
             .then(() => {
-      addressApi().delSerialInter(
-            {
-                ID:row.ID,
+                addressApi().delSerialInter(
+                    {
+                        ID: row.ID,
 
-            })
-            .then(res => {
-                //console.log(res);
-                if (res.code == '200') {
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
 
-                      ElMessage.success('删除成功');
-                         getTableData();
+                            ElMessage.success('删除成功');
+                            getTableData();
 
-                } else {
-                    ElMessage.error(res.message);
-                }
+                        } else {
+                            ElMessage.error(res.message);
+                        }
 
-            }).catch(err => {
+                    }).catch(err => {
 
-        }).finally(() => {
+                }).finally(() => {
 
-        });
+                });
 
 
             })

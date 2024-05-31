@@ -16,7 +16,12 @@
                     </el-icon>
                     查询数据源定义
                 </el-button>
-
+                <el-button size="default" type="warning" class="mr10" @click="back()">
+                    <el-icon>
+                        <ele-ArrowLeftBold/>
+                    </el-icon>
+                    返回
+                </el-button>
             </div>
             <el-table  :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%" >
 
@@ -103,6 +108,12 @@
         const  calcIndex=(index)=>{
         index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
         return index
+    }
+
+    //返回上一级
+    const back = () => {
+
+        router.back();
     }
     const onSearch = () => {
         state.tableData.searchStr = state.tableData.search;

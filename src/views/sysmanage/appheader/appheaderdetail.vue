@@ -21,6 +21,12 @@
                     </el-icon>
                     批量删除
                 </el-button>
+                                <el-button size="default" type="warning" class="mr10" @click="back()">
+                    <el-icon>
+                        <ele-ArrowLeftBold/>
+                    </el-icon>
+                    返回
+                </el-button>
               <el-tooltip
                   class="box-item"
                   effect="dark"
@@ -110,6 +116,12 @@ import {packageApi} from '/@/api/sysmanage/package';
     const  calcIndex=(index)=>{
         index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
         return index
+    }
+
+    //返回上一级
+    const back = () => {
+
+        router.back();
     }
     // 初始化表格数据
     const getTableData = () => {

@@ -42,6 +42,12 @@
                     </el-icon>
                     返回上一级
                 </el-button>
+                                <el-button size="default" type="warning" class="mr10" @click="back()" v-if="state.tableData.nestid==0">
+                    <el-icon>
+                        <ele-ArrowLeftBold/>
+                    </el-icon>
+                    返回
+                </el-button>
               <el-tooltip
                   class="box-item"
                   effect="dark"
@@ -153,6 +159,12 @@
         const  calcIndex=(index)=>{
         index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
         return index
+    }
+
+    //返回上一级
+    const back = () => {
+
+        router.back();
     }
     //编辑嵌套结构
     const onOpenEditGroup = (type: string, row: RowUserType) => {

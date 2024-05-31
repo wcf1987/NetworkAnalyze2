@@ -21,12 +21,19 @@
                     </el-icon>
                     批量删除
                 </el-button>
+                                <el-button size="default" type="warning" class="mr10" @click="back()">
+                    <el-icon>
+                        <ele-ArrowLeftBold/>
+                    </el-icon>
+                    返回
+                </el-button>
               <el-button size="default" type="warning" class="eltagr" @click="onChangeView()">
                 <el-icon>
                   <ele-Memo/>
                 </el-icon>
                 <div>{{state.viewStr }}</div>
               </el-button>
+
             </div>
           <div  class="flex-warp mt15 mb15" v-if="state.tableData.data.length > 0 &&state.view=='waterfall'">
             <el-row :gutter="15">
@@ -175,6 +182,12 @@
     const  calcIndex=(index)=>{
         index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
         return index
+    }
+
+    //返回上一级
+    const back = () => {
+
+        router.back();
     }
         const onTableItemClick = (v: FilterListType) => {
         router.push({
