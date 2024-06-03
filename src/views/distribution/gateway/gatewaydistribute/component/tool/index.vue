@@ -28,6 +28,7 @@ const state = reactive({
 		{ icon: 'ele-DocumentCopy', title: '复制', fnName: 'copy' },
 		{ icon: 'ele-Delete', title: '删除', fnName: 'del' },
 		{ icon: 'ele-FullScreen', title: '全屏', fnName: 'fullscreen' },
+			            {icon: 'ele-CloseBold', title: '关闭', fnName: 'closeWin'},
 	],
 });
 

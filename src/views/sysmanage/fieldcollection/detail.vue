@@ -36,9 +36,9 @@
                     返回
                 </el-button>
       </div>
-      <el-table  :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%"
+      <el-table  :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data" v-loading="state.tableData.loading"
                 @sort-change="sort_change" @selection-change="handleSelectionChange">
-         <el-table-column type="selection" width="30"/>
+         <el-table-column type="selection" width="50"/>
         <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
         <el-table-column label="序号" type="index" width="60" :index="calcIndex"/>
 
@@ -58,7 +58,7 @@
                          v-if="isHide"></el-table-column>
         <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
         <el-table-column prop="CreateTimes" label="创建时间" show-overflow-tooltip v-if="isHide"></el-table-column>
-        <el-table-column label="操作" width="130">
+        <el-table-column label="操作" width="180">
           <template #default="scope">
 
             <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"

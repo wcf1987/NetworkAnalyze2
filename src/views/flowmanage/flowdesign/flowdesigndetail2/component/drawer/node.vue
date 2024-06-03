@@ -182,7 +182,7 @@
 
                                 </el-button>
                             </el-col>
-    <el-col :span="1"/>
+                            <el-col :span="1"/>
                             <el-col :span="2">
                                 <el-button type="danger" size="small" circle @click="onDelEndIP(k)">
                                     <el-icon>
@@ -234,7 +234,7 @@
                 <div class="customproper" v-if="state.showFlag['messheaderparse']">
                     <el-form-item label="消息头">
                         <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable
-                                >
+                        >
                             <el-option
                                     v-for="item in MessHeaderOptions"
                                     :key="item.ID"
@@ -251,7 +251,7 @@
                 <div class="customproper" v-if="state.showFlag['messheaderencap']">
                     <el-form-item label="消息头">
                         <el-select v-model="state.properForm.messheaderencapID" placeholder="请选择" clearable
-                                  v-on:change="onChangeMessheaderEncapChoose">
+                                   v-on:change="onChangeMessheaderEncapChoose">
                             <el-option
                                     v-for="item in MessHeaderOptions"
                                     :key="item.ID"
@@ -347,7 +347,7 @@
                         上一步
                     </el-button>
 
-                    <el-button class="mb15" @click="onExtendRefresh">
+                    <el-button class="mb15" @click="onExtendRefresh" >
                         <SvgIcon name="ele-RefreshRight"/>
                         重置
                     </el-button>
@@ -626,7 +626,7 @@
         }
 
 
-        initChartsMonitor();
+        // initChartsMonitor();
     };
     const getNetwork = () => {
         addressApi().searchNetworkInter(
@@ -1069,12 +1069,7 @@
 
 
     }
-    // 节点编辑-重置
-    const onNodeRefresh = () => {
-        state.node.icon = '';
-        state.node.name = '';
 
-    };
     // 节点编辑-保存
     const onNodeSubmit = () => {
         nodeFormRef.value.validate((valid: boolean) => {
@@ -1189,6 +1184,27 @@
     // 扩展表单-重置
     const onExtendRefresh = () => {
         extendFormRef.value.resetFields();
+        state.proper.name = '';
+        state.properForm.interfacetype = '';
+        state.properForm.sourecenetworkID = '';
+        state.properForm.sourecenetworkIP = '';
+        state.properForm.sourecenetworkPort = '';
+        state.properForm.serialID = '';
+        state.properForm.SerialNO = '';
+        state.properForm.BAUD = '';
+        state.properForm.localnetworkID = '';
+        state.properForm.IP = '';
+        state.properForm.Port = '';
+        state.properForm.pacparseID = '';
+        state.properForm.pacencapID = '';
+        state.properForm.messheaderparseID = '';
+        state.properForm.messbodyparseID = '';
+        state.properForm.messbodyencapID = '';
+        state.properForm.messheaderencapID = '';
+        state.properForm.transid = '';
+        state.properForm.globalVarName = '';
+        state.properForm.sourceData = '';
+
     };
     const onChangeMessTranslateChoose = () => {
         let targetid = 0;

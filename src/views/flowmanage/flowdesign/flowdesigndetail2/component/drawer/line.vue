@@ -108,6 +108,10 @@
     // 重置
     const onLineTextReset = () => {
         state.edge.label = '';
+        state.properForm.rulestr='';
+        state.properForm.globalvar='';
+        state.properForm.fieldvar='';
+        state.proper.name='';
     };
     // 保存
     const onLineTextChange = () => {

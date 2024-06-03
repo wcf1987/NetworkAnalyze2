@@ -9,7 +9,7 @@
                 <!-- 左侧导航区 -->
                 <div class="workflow-content">
                     <div class="workflow-left">
-                        <el-scrollbar>
+                        <el-scrollbar height="600px">
                             <div
                                     ref="leftNavRefs"
                                     v-for="val in state.leftNavList"
@@ -1024,7 +1024,8 @@
         position: relative;
 
         .workflow-warp {
-            position: relative;
+                   position: absolute;
+            height: 100% !important;
         }
 
         .workflow {

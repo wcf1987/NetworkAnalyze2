@@ -22,7 +22,7 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const state = reactive({
 	toolList: [
-
+            {icon: 'ele-CloseBold', title: '关闭', fnName: 'closeWin'},
 	],
 });
 

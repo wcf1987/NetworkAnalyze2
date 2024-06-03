@@ -22,7 +22,7 @@
                     </el-icon>
                     批量删除
                 </el-button>
-                <el-button size="default" type="warning" class="mr10" @click="back()">
+                <el-button size="default" type="warning" class="mr10" @click="back()" v-if="false">
                     <el-icon>
                         <ele-ArrowLeftBold/>
                     </el-icon>
@@ -32,7 +32,7 @@
             </div>
 
             <el-table  :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange" v-if="state.view=='list'">
-               <el-table-column type="selection" width="30"/>
+               <el-table-column type="selection" width="50"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>

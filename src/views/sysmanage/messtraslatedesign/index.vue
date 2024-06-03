@@ -4,7 +4,8 @@
         <div class="layout-padding-auto layout-padding-view workflow-warp">
             <div class="workflow">
                 <!-- 顶部工具栏 -->
-                <Tool />
+            <Tool @tool="onToolClick" />
+
 
                 <!-- 左侧导航区 -->
                 <div class="workflow-content">
@@ -41,7 +42,7 @@
                                   :row-class-name="({row}) => `SourceRow ${row.ID}`"
                                   @expand-change="(row, expanded) => !expanded && SourceTable?.toggleRowExpansion(row)"
                                   default-expand-all class="eltableclass" id="sourcetable">
-                            <el-table-column type="selection" width="30" v-if="false"/>
+                            <el-table-column type="selection" width="50" v-if="false"/>
                             <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                             <el-table-column prop="parentindex" label="" width="60" v-if="false"/>
                             <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
@@ -83,7 +84,7 @@
                                   :row-class-name="({row}) => `TargetRow ${row.ID}`"
                                   @expand-change="(row, expanded) => !expanded && TargetTable?.toggleRowExpansion(row)"
                                   default-expand-all class="eltableclass" >
-                            <el-table-column type="selection" width="30" v-if="false"/>
+                            <el-table-column type="selection" width="50" v-if="false"/>
                             <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                             <el-table-column prop="parentindex" label="" width="60" v-if="false"/>
                             <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
@@ -1052,7 +1053,16 @@
         });
     };
 
+  // 顶部工具栏-当前项点击
+    const onToolClick = (fnName: String) => {
 
+        switch (fnName) {
+
+            case 'closeWin':
+                router.go(-1);
+                break;
+        }
+    };
 
     // 页面加载时
     onMounted(async () => {

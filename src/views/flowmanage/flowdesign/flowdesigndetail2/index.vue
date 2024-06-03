@@ -9,7 +9,7 @@
                 <!-- 左侧导航区 -->
                 <div class="workflow-content">
                     <div class="workflow-left">
-                        <el-scrollbar>
+                        <el-scrollbar ref="scrollbar" height="600px">
                             <div
                                     ref="leftNavRefs"
                                     v-for="val in state.leftNavList"
@@ -56,13 +56,14 @@
                                     </el-icon>
                                 </template>
                                 <el-card style="font-size:14px">
-                                    <p class="text item">{{ '源IP/端口： '}}</p>
-                                    <p class="text item">{{ '消息封装格式： '}}</p>
-                                    <p class="text item">{{ '源消息类型： '}}</p>
-                                    <p class="text item">{{ '目的消息类型： '}}</p>
-                                    <p class="text item">{{ '消息转化规则： '}}</p>
-                                    <p class="text item">{{ '转换后封装格式： '}}</p>
-                                    <p class="text item">{{ '目的IP/端口： '}}</p>
+                                    <p class="text item">{{ `流程编排类型：${state.FlowType} `}}</p>
+                                    <p class="text item">{{ `消息头解析格式： ${state.headerParseName} `}}</p>
+                                    <p class="text item">{{ `消息体解析格式： ${state.bodyPaserName} `}}</p>
+                                    <p class="text item">{{ `转换规则： ${state.transName} `}}</p>
+                                    <p class="text item">{{ `消息体封装格式： ${state.bodyEncapName} `}}</p>
+                                    <p class="text item">{{ `消息头封装格式：${state.headerEncapName} `}}</p>
+                                    <p class="text item">{{ `源IP/端口： ${state.SourceIPAndPort} `}}</p>
+                                    <p class="text item">{{ `目的IP/端口： ${state.TargetIPAndPort} `}}</p>
                                 </el-card>
                             </el-collapse-item>
                         </el-collapse>
@@ -111,7 +112,6 @@
     import {leftNavListSpecial} from './js/mockspecial';
     import {jsplumbConnect, jsplumbDefaults, jsplumbMakeSource, jsplumbMakeTarget} from './js/config';
     import {useRoute, useRouter} from "vue-router";
-    const router = useRouter();
     // 定义变量内容
     import {
         CalcNode,
@@ -135,6 +135,11 @@
         TimerNode,
     } from './logicflowpanel/registerNode/index.js'
     import {builtNodeApi} from "/@/api/flowmanage/builtnode";
+    import {messheaderApi} from "/@/api/sysmanage/messheader";
+    import {messbodyApi} from "/@/api/sysmanage/messbody";
+    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
+
+    const router = useRouter();
 
     const activeNames = ref(['1'])
     const route = useRoute()
@@ -147,6 +152,7 @@
     const Help = defineAsyncComponent(() => import('./component/tool/help.vue'));
 
     const container = ref(null)
+    const scrollbar = ref(null)
     const lf = ref(null)
 
     function dragNode(item) {
@@ -169,8 +175,10 @@
                     //let temps = decodeURIComponent(res.data.FlowJson)
                     let temps = res.data.FlowJson
                     let xmlStrread = JSON.parse(temps)
-                    //console.log(xmlStrread);
-                    createFlowFromStr(xmlStrread);
+                    let FlowOutStr=res.data.FlowOutStr
+                    let flowOutStr=JSON.parse(FlowOutStr)
+                    //console.log(flowOutStr);
+                    createFlowFromStr(xmlStrread,flowOutStr);
                     // ElMessage.success("修改成功");
 
                 } else {
@@ -185,7 +193,15 @@
 
 
     }
-    const createFlowFromStr = (flowstr) => {
+    const createFlowFromStr = (flowstr,flowOutStr) => {
+        console.log(flowOutStr)
+                     state.SourceIPAndPort=flowOutStr.stateShow.SourceIPAndPort;
+           state.TargetIPAndPort=flowOutStr.stateShow.TargetIPAndPort;
+            state.headerParseName=flowOutStr.stateShow.headerParseName;
+            state.bodyPaserName=flowOutStr.stateShow.bodyPaserName;
+            state.bodyEncapName=flowOutStr.stateShow.bodyEncapName;
+            state.headerEncapName=flowOutStr.stateShow.headerEncapName;
+            state.transName=flowOutStr.stateShow.transName;
         lf.value.render(flowstr);
         //LfEvent();
         for (let i = 0; i < flowstr.nodes.length; i++) {
@@ -200,11 +216,21 @@
             lf.value.setProperties(temp.id, temp.properties);
             lf.value.updateText(temp.id, temp.text.value);
         }
+       // console.log(flowstr.stateShow)
+
     }
     const saveScript = (grajson) => {
         //console.log(grajson);
         let scripts = {nodes: [], edges: []};
         let nodes = grajson.nodes;
+
+        state.SourceIPAndPort = '';
+        state.TargetIPAndPort = '';
+        state.headerParseName = '';
+        state.bodyPaserName = '';
+        state.bodyEncapName = '';
+        state.headerEncapName = '';
+        state.transName = '';
         for (let i = 0; i < nodes.length; i++) {
             let nodet = nodes[i]
             delete nodet.text;
@@ -213,7 +239,12 @@
             let tt = nodet.properties;
             if (nodet.type == 'start') {
                 if (nodet.properties.interfacetype == '网口') {
-
+                    if (tt.sourecenetworkIP != null && tt.sourecenetworkIP != '') {
+                        state.SourceIPAndPort = tt.sourecenetworkIP;
+                        if (tt.sourecenetworkPort != null && tt.sourecenetworkPort != '') {
+                            state.SourceIPAndPort = state.SourceIPAndPort + ":" + tt.sourecenetworkPort;
+                        }
+                    }
 
                     nodet.properties = {};
                     nodet.properties.interfacetype = '网口'
@@ -239,7 +270,12 @@
             }
             if (nodet.type == 'end') {
                 if (nodet.properties.interfacetype == '网口') {
-
+                    if (tt.IPlist != null && tt.IPlist != {}) {
+                        for (let z of tt.IPlist) {
+                            console.log(z);
+                            state.TargetIPAndPort = z.IP + ":" + z.Port + '  ' + state.TargetIPAndPort;
+                        }
+                    }
 
                     nodet.properties = {};
                     nodet.properties.interfacetype = '网口'
@@ -260,18 +296,22 @@
 
             }
             if (nodes[i].type == 'pacparse') {
-
+                //state.headerParseName = nodes[i].ID;
             }
             if (nodes[i].type == 'pacencap') {
-
+                //state.headerEncapName = nodes[i].ID;
             }
             if (nodes[i].type == 'swich') {
                 delete nodet.properties;
             }
             if (nodes[i].type == 'messheaderparse') {
+
+
+                state.headerParseName = findOptionsName(state.MessHeaderOptions, tt.messheaderparseID);
                 console.log(tt);
             }
             if (nodes[i].type == 'messheaderencap') {
+                state.headerEncapName = findOptionsName(state.MessHeaderOptions, tt.messheaderencapID);
                 if (tt == null || tt.messtranslatedata == null || tt.length == 0) {
                     continue;
                 }
@@ -334,13 +374,13 @@
 
 
             if (nodes[i].type == 'messbodyparse') {
-
+                state.bodyPaserName = findOptionsName(state.MessBodyOptions, tt.messbodyparseID);
             }
             if (nodes[i].type == 'messbodyencap') {
-
+                state.bodyEncapName = findOptionsName(state.MessBodyOptions, tt.messbodyencapID);
             }
             if (nodes[i].type == 'messtraslate') {
-
+                state.transName = findOptionsName(state.MessTraslateOptions, tt.transid);
                 if (tt == null || tt.messtranslatedata == null || tt.length == 0) {
                     continue;
                 }
@@ -428,8 +468,26 @@
                 edget.properties.rulestr = ttt.rulestr;
             }
         }
+        grajson.stateShow = {
+            SourceIPAndPort: state.SourceIPAndPort,
+            TargetIPAndPort: state.TargetIPAndPort,
+            headerParseName: state.headerParseName,
+            bodyPaserName: state.bodyPaserName,
+            bodyEncapName: state.bodyEncapName,
+            headerEncapName: state.headerEncapName,
+            transName: state.transName
+        }
         console.log(grajson);
         return grajson;
+    }
+    const findOptionsName= (options, id) => {
+        for (let k of options) {
+            if (k.ID = id) {
+                return k.Name
+            }
+
+        }
+        return '';
     }
     const checkGraph = (grajson) => {
         let nodes = grajson.nodes;
@@ -493,9 +551,91 @@
         //initJsPlumb();
         //setClientWidth();
         initLf();
+
         getFlowFromDB();
+        getMessHeader();
+        getMessBody();
+        getMessTraslate();
         //window.addEventListener('resize', setClientWidth);
     });
+    const getMessHeader = () => {
+        messheaderApi().searchMessHeader(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.MessHeaderOptions = res.data;
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+    const getMessBody = () => {
+        messbodyApi().searchMessBody(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.MessBodyOptions = res.data;
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+    const getMessTraslate = () => {
+        messtranslateApi().searchMessTranslate(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.MessTraslateOptions = res.data;
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
 
     function initLf() {
         // 画布配置
@@ -700,6 +840,17 @@
     const {copyText} = commonFunction();
     const state = reactive({
         FlowName: '',
+        FlowType: '',
+        SourceIPAndPort: '',
+        TargetIPAndPort: '',
+        headerParseName: '',
+        bodyPaserName: '',
+        bodyEncapName: '',
+        headerEncapName: '',
+        transName: '',
+        MessHeaderOptions:{},
+        MessBodyOptions:{},
+        MessTraslateOptions:{},
         ID: 0,
         type: '流程编排',
         LastModified: '',
@@ -728,83 +879,84 @@
     const initLeftNavList = () => {
         state.ID = querys.ID;
         state.FlowName = querys.FlowName;
+        state.FlowType = querys.Type;
         state.Type = querys.Type;
-        state.type='流程编排';
+        state.type = '流程编排';
         //console.log(leftNavList)
         //console.log(state.Type);
         if (state.Type == '网络层透明传输') {
             state.leftNavList = leftNavListSimple;
 
-        } else{
-           if (state.Type == '应用层透明传输') {
-            state.leftNavList = leftNavListSimple;
-
         } else {
-            if (state.Type == '指定流程') {
-                state.leftNavList = leftNavListSpecial;
-            }
-            if (state.Type == '混合编排') {
-                state.leftNavList = leftNavList;
-            }
+            if (state.Type == '应用层透明传输') {
+                state.leftNavList = leftNavListSimple;
 
-            //console.log(state.leftNavList);
-            builtNodeApi().search(
-                {
-                    uid: 1,
-                    pageNum: 1,
-                    pageSize: 1000,
-                    name: '',
-                })
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+            } else {
+                if (state.Type == '指定流程') {
+                    state.leftNavList = leftNavListSpecial;
+                }
+                if (state.Type == '混合编排') {
+                    state.leftNavList = leftNavList;
+                }
 
-                        let convlist = state.leftNavList[3];
+                //console.log(state.leftNavList);
+                builtNodeApi().search(
+                    {
+                        uid: 1,
+                        pageNum: 1,
+                        pageSize: 1000,
+                        name: '',
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
 
-                        convlist.children = new Array();
-                        for (let i = 0, k = 0; k < res.data.length; k++) {
-                            if (res.data[k].Type == '内置转换节点') {
-                                convlist.children[i] = {
-                                    icon: conver,
-                                    name: res.data[k].Name,
-                                    type: 'conver',
-                                    id: res.data[k].ID,
-                                    descrip: res.data[k].Desc,
+                            let convlist = state.leftNavList[3];
+
+                            convlist.children = new Array();
+                            for (let i = 0, k = 0; k < res.data.length; k++) {
+                                if (res.data[k].Type == '内置转换节点') {
+                                    convlist.children[i] = {
+                                        icon: conver,
+                                        name: res.data[k].Name,
+                                        type: 'conver',
+                                        id: res.data[k].ID,
+                                        descrip: res.data[k].Desc,
+                                    }
+                                    i++
                                 }
-                                i++
+
                             }
+                            convlist = state.leftNavList[4];
+                            convlist.children = new Array();
 
-                        }
-                        convlist = state.leftNavList[4];
-                        convlist.children = new Array();
-
-                        for (let i = 0, k = 0; k < res.data.length; k++) {
-                            if (res.data[k].Type == '内置封装节点') {
-                                convlist.children[i] = {
-                                    icon: inpac,
-                                    name: res.data[k].Name,
-                                    type: 'conver',
-                                    id: res.data[k].ID,
-                                    descrip: res.data[k].Desc,
+                            for (let i = 0, k = 0; k < res.data.length; k++) {
+                                if (res.data[k].Type == '内置封装节点') {
+                                    convlist.children[i] = {
+                                        icon: inpac,
+                                        name: res.data[k].Name,
+                                        type: 'conver',
+                                        id: res.data[k].ID,
+                                        descrip: res.data[k].Desc,
+                                    }
+                                    i++
                                 }
-                                i++
-                            }
 
+                            }
+                            scrollbar.update();
+
+                        } else {
+                            ElMessage.error(res.message);
                         }
 
+                    }).catch(err => {
 
-                    } else {
-                        ElMessage.error(res.message);
-                    }
+                }).finally(() => {
 
-                }).catch(err => {
-
-            }).finally(() => {
-
-            });
+                });
 
 
-        }
+            }
         }
     };
 
@@ -887,7 +1039,7 @@
                 break;
             case 'zoomOut':
                 // const { transformModel2 }=lf.value.graphModel;
-               // transformModel2.zoom(false)
+                // transformModel2.zoom(false)
                 lf.value.zoom(false);
                 break;
             case 'zoomReset':
@@ -969,7 +1121,7 @@
             // 读取文件内容
             const fileString = e.target.result;
             let xmlStrread = JSON.parse(fileString)
-            createFlowFromStr(xmlStrread);
+            createFlowFromStr(xmlStrread,'');
             ElMessage.success('上传成功');
         }
     };
@@ -1031,7 +1183,8 @@
         position: relative;
 
         .workflow-warp {
-            position: relative;
+            position: absolute;
+            height: 100% !important;
         }
 
         .workflow {

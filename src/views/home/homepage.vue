@@ -174,8 +174,8 @@
         } as any,
         homeOne: [
             {
-                num1: '125,12',
-                num2: '-12.32',
+                num1: '0',
+                num2: '0',
                 num3: '流程设计总量',
                 num4: 'iconfont icon-zaosheng',
                 color1: '#FF6462',
@@ -183,8 +183,8 @@
                 color3: '--el-color-primary',
             },
             {
-                num1: '653,33',
-                num2: '+42.32',
+                num1: '0',
+                num2: '0',
                 num3: '字段设计总量',
                 num4: 'iconfont icon-zaosheng',
                 color1: '#6690F9',
@@ -192,8 +192,8 @@
                 color3: '--el-color-success',
             },
             {
-                num1: '125,65',
-                num2: '+17.32',
+                num1: '0',
+                num2: '0',
                 num3: '分发运行情况',
                 num4: 'iconfont icon-zaosheng',
                 color1: '#6690F9',
@@ -201,8 +201,8 @@
                 color3: '--el-color-warning',
             },
             {
-                num1: '520,43',
-                num2: '-10.01',
+                num1: '0',
+                num2: '0',
                 num3: '用户总数统计',
                 num4: 'iconfont icon-zaosheng',
                 color1: '#FF6462',

@@ -774,6 +774,9 @@
             case 'fullscreen':
                 onToolFullscreen();
                 break;
+                            case 'closeWin':
+                router.go(-1);
+                break;
         }
     };
     // 顶部工具栏-帮助

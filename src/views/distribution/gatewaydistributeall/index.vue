@@ -8,6 +8,7 @@
 
                 <!-- 左侧导航区 -->
                 <div class="workflow-content">
+
                     <div class="workflow-left">
                         <el-scrollbar>
                             <div
@@ -36,7 +37,19 @@
                     <!-- 右侧绘画区 -->
                     <div id="workflow-right" class="workflow-right" ref="workflowRightRef" @drop="onDrop($event)"
                          @dragover.prevent>
+                        <div class="floatinginfo">
+                            <div style="display:inline-block;">{{ `CLIP名称： ${state.gateway.Name}
+                                IP地址：${state.gateway.IP} 描述：${state.gateway.Describes}`
+                                }}
+                                <el-button size="small" type="success" class="eltagr" @click="disflow">
 
+                                    下发流程
+                                </el-button>
+                                <el-progress :text-inside="true" :stroke-width="20" width="20px" class="eltagr2"
+                                             :percentage="state.gateway.DisPercentage"/>
+
+                            </div>
+                        </div>
                         <div style="width: 100%">
                             <!--:id="`source_${state.getway.ID}`"-->
                             <div class="flex-warp-item">
@@ -189,6 +202,7 @@
             Name: '',
             IP: '',
             Describes: '',
+            DisPercentage: 0,
         },
         tableGateway: {
             data: [],
@@ -399,7 +413,10 @@
         }, 200);
     };
 
-
+    //下发流程
+    const disflow = () => {
+        state.gateway.DisPercentage = 100
+    }
     // 初始化目的消息体表格数据
     const getTableDataFlow = async () => {
         state.tableDataFlow.loading = true;
@@ -598,6 +615,7 @@
         state.gateway.Name = val.Name
         state.gateway.IP = val.IP;
         state.gateway.Describes = val.Describes;
+        state.gateway.DisPercentage = 0;
         //getTableDataGatewayDistribute();
         updatetableDataFlowShow();
 
@@ -797,6 +815,9 @@
             case 'fullscreen':
                 onToolFullscreen();
                 break;
+                            case 'closeWin':
+                router.go(-1);
+                break;
         }
     };
     // 顶部工具栏-帮助
@@ -875,6 +896,27 @@
 
 <style scoped lang="scss">
     .workflow-container {
+        .floatinginfo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 80%;
+            z-index: 2; /* 设置z-index使其在另一个div上方显示 */
+
+            padding: 10px;
+
+            :deep(.eltagr) {
+                position: relative;
+                left: 250px
+            }
+
+            :deep(.eltagr2) {
+                width: 100px;
+                top: -25px;
+                left: 700px
+            }
+        }
+
         :deep(.el-card__body) {
             display: flex;
             flex-direction: column;

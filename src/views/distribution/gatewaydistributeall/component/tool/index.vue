@@ -21,7 +21,9 @@ const emit = defineEmits(['tool']);
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const state = reactive({
+	toolList: [
 
+	],
 });
 
 // 设置 tool 标题

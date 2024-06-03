@@ -21,7 +21,10 @@ const emit = defineEmits(['tool']);
 const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const state = reactive({
+	toolList: [
 
+			            {icon: 'ele-CloseBold', title: '关闭', fnName: 'closeWin'},
+	],
 });
 
 // 设置 tool 标题
