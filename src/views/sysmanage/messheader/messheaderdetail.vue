@@ -83,16 +83,16 @@
                 <el-table-column label="操作" width="150">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEdit('edit', scope.row)"
+                                   @click="onOpenEdit('edit', scope.row)" class="buttonfont"
                         >修改
                         </el-button
                         >
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEditGroup('edit', scope.row)"
+                                   @click="onOpenEditGroup('edit', scope.row)" class="buttonfont"
                                    v-if="scope.row.OutType=='nest'">编辑
                         </el-button
                         >
-                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" class="buttonfont"
                                    @click="onRowDel(scope.row)">删除
                         </el-button>
                     </template>
@@ -401,6 +401,9 @@
           margin-right: 10px;
         }
       }
+          :deep(.buttonfont) {
+                    font-size: 14px;
+                }
         :deep(.el-card__body) {
             display: flex;
             flex-direction: column;

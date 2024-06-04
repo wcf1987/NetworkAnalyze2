@@ -74,7 +74,8 @@
                             >
 
                                 <div class="flex-warp-item2">
-                                    <div :class="`flex-warp-item-box Target ${v.ID}`" :id="`Target_${v.ID}`">
+                                    <div :class="`flex-warp-item-box Target ${v.ID}`" :id="`Target_${v.ID}`"
+                                         @dblclick="flowdesign(v)">
                                         <div class="item-img">
                                             <img :src="flowimg1" v-if="v.Type=='应用层透明传输'"/>
                                             <img :src="flowimg2" v-if="v.Type=='混合编排'"/>
@@ -363,6 +364,13 @@
 
         });
     }
+    //点击右侧元素跳转至流程设计
+    const flowdesign = (v) => {
+        router.push({
+            path: '/flowmanage/flowdesign/flowdesigndetail2',
+            query: {ID: v.ID, FlowName: v.Name, Type: v.Type},
+        });
+    }
     const delConn = (gatewayid, flowid) => {
         gatewayApi().delGatewayDistribute(
             {
@@ -494,6 +502,15 @@
                 const v = {type: 'line'};
                 contextmenuLineRef.value.openContextmenu(v, conn);
             });
+            // 添加单击连线事件
+            state.jsPlumb.bind('click', function (conn) {
+                   const {sourceId, targetId} = conn;
+                   let tid = targetId.split('_')[1];
+                   let v=getFlowByID(tid);
+                   flowdesign(v);
+                // 删除线
+              //  jsPlumb.deleteConnection(conn)
+            })
 
         });
     };
@@ -815,7 +832,7 @@
             case 'fullscreen':
                 onToolFullscreen();
                 break;
-                            case 'closeWin':
+            case 'closeWin':
                 router.go(-1);
                 break;
         }

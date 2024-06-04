@@ -117,15 +117,15 @@
                 <el-table-column prop="IP" label="IP地址" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip  v-if="false"></el-table-column>
-                <el-table-column label="操作" width="100">
+                <el-table-column label="操作" width="120">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEdit('edit', scope.row)"
+                                   @click="onOpenEdit('edit', scope.row)" class="buttonfont"
                         >修改
                         </el-button
                         >
 
-                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" class="buttonfont"
                                    @click="onRowDel(scope.row)">删除
                         </el-button>
                     </template>
@@ -378,6 +378,9 @@
 
 <style scoped lang="scss">
     .system-user-container {
+          :deep(.buttonfont) {
+                    font-size: 14px;
+                }
       .system-user-search{
         display: flex;
         .eltagr{

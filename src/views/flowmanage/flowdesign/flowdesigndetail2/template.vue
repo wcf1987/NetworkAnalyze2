@@ -134,6 +134,9 @@
         TimerNode,
     } from './logicflowpanel/registerNode/index.js'
     import {builtNodeApi} from "/@/api/flowmanage/builtnode";
+    import {messheaderApi} from "/@/api/sysmanage/messheader";
+    import {messbodyApi} from "/@/api/sysmanage/messbody";
+    import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
 
     const router = useRouter();
 
@@ -156,7 +159,84 @@
             type: item.type,
         })
     }
+    const getMessHeader = () => {
+        messheaderApi().searchMessHeader(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
 
+                    state.MessHeaderOptions = res.data;
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+    const getMessBody = () => {
+        messbodyApi().searchMessBody(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.MessBodyOptions = res.data;
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
+    const getMessTraslate = () => {
+        messtranslateApi().searchMessTranslate(
+            {
+                uid: 1,
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    state.MessTraslateOptions = res.data;
+
+
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+    }
     const getFlowFromDB = () => {
         transtemplateApi().getFlowByID(
             {
@@ -171,7 +251,10 @@
                     let temps = res.data.FlowJson
                     let xmlStrread = JSON.parse(temps)
                     //console.log(xmlStrread);
-                    createFlowFromStr(xmlStrread);
+                    let FlowOutStr = res.data.FlowOutStr
+                    let flowOutStr = JSON.parse(FlowOutStr)
+                    //console.log(flowOutStr);
+                    createFlowFromStr(xmlStrread, flowOutStr);
                     // ElMessage.success("修改成功");
 
                 } else {
@@ -186,7 +269,15 @@
 
 
     }
-    const createFlowFromStr = (flowstr) => {
+    const createFlowFromStr = (flowstr, flowOutStr) => {
+        console.log(flowOutStr)
+        state.SourceIPAndPort = flowOutStr.stateShow.SourceIPAndPort;
+        state.TargetIPAndPort = flowOutStr.stateShow.TargetIPAndPort;
+        state.headerParseName = flowOutStr.stateShow.headerParseName;
+        state.bodyPaserName = flowOutStr.stateShow.bodyPaserName;
+        state.bodyEncapName = flowOutStr.stateShow.bodyEncapName;
+        state.headerEncapName = flowOutStr.stateShow.headerEncapName;
+        state.transName = flowOutStr.stateShow.transName;
         lf.value.render(flowstr);
         //LfEvent();
         for (let i = 0; i < flowstr.nodes.length; i++) {
@@ -201,11 +292,21 @@
             lf.value.setProperties(temp.id, temp.properties);
             lf.value.updateText(temp.id, temp.text.value);
         }
+        // console.log(flowstr.stateShow)
+
     }
     const saveScript = (grajson) => {
         //console.log(grajson);
         let scripts = {nodes: [], edges: []};
         let nodes = grajson.nodes;
+
+        state.SourceIPAndPort = '';
+        state.TargetIPAndPort = '';
+        state.headerParseName = '';
+        state.bodyPaserName = '';
+        state.bodyEncapName = '';
+        state.headerEncapName = '';
+        state.transName = '';
         for (let i = 0; i < nodes.length; i++) {
             let nodet = nodes[i]
             delete nodet.text;
@@ -214,7 +315,12 @@
             let tt = nodet.properties;
             if (nodet.type == 'start') {
                 if (nodet.properties.interfacetype == '网口') {
-
+                    if (tt.sourecenetworkIP != null && tt.sourecenetworkIP != '') {
+                        state.SourceIPAndPort = tt.sourecenetworkIP;
+                        if (tt.sourecenetworkPort != null && tt.sourecenetworkPort != '') {
+                            state.SourceIPAndPort = state.SourceIPAndPort + ":" + tt.sourecenetworkPort;
+                        }
+                    }
 
                     nodet.properties = {};
                     nodet.properties.interfacetype = '网口'
@@ -240,7 +346,12 @@
             }
             if (nodet.type == 'end') {
                 if (nodet.properties.interfacetype == '网口') {
-
+                    if (tt.IPlist != null && tt.IPlist != {}) {
+                        for (let z of tt.IPlist) {
+                            console.log(z);
+                            state.TargetIPAndPort = z.IP + ":" + z.Port + '  ' + state.TargetIPAndPort;
+                        }
+                    }
 
                     nodet.properties = {};
                     nodet.properties.interfacetype = '网口'
@@ -261,18 +372,22 @@
 
             }
             if (nodes[i].type == 'pacparse') {
-
+                //state.headerParseName = nodes[i].ID;
             }
             if (nodes[i].type == 'pacencap') {
-
+                //state.headerEncapName = nodes[i].ID;
             }
             if (nodes[i].type == 'swich') {
                 delete nodet.properties;
             }
             if (nodes[i].type == 'messheaderparse') {
+
+
+                state.headerParseName = findOptionsName(state.MessHeaderOptions, tt.messheaderparseID);
                 console.log(tt);
             }
             if (nodes[i].type == 'messheaderencap') {
+                state.headerEncapName = findOptionsName(state.MessHeaderOptions, tt.messheaderencapID);
                 if (tt == null || tt.messtranslatedata == null || tt.length == 0) {
                     continue;
                 }
@@ -335,13 +450,13 @@
 
 
             if (nodes[i].type == 'messbodyparse') {
-
+                state.bodyPaserName = findOptionsName(state.MessBodyOptions, tt.messbodyparseID);
             }
             if (nodes[i].type == 'messbodyencap') {
-
+                state.bodyEncapName = findOptionsName(state.MessBodyOptions, tt.messbodyencapID);
             }
             if (nodes[i].type == 'messtraslate') {
-
+                state.transName = findOptionsName(state.MessTraslateOptions, tt.transid);
                 if (tt == null || tt.messtranslatedata == null || tt.length == 0) {
                     continue;
                 }
@@ -429,8 +544,26 @@
                 edget.properties.rulestr = ttt.rulestr;
             }
         }
+        grajson.stateShow = {
+            SourceIPAndPort: state.SourceIPAndPort,
+            TargetIPAndPort: state.TargetIPAndPort,
+            headerParseName: state.headerParseName,
+            bodyPaserName: state.bodyPaserName,
+            bodyEncapName: state.bodyEncapName,
+            headerEncapName: state.headerEncapName,
+            transName: state.transName
+        }
         console.log(grajson);
         return grajson;
+    }
+    const findOptionsName = (options, id) => {
+        for (let k of options) {
+            if (k.ID = id) {
+                return k.Name
+            }
+
+        }
+        return '';
     }
     const checkGraph = (grajson) => {
         let nodes = grajson.nodes;
@@ -495,6 +628,9 @@
         //setClientWidth();
         initLf();
         getFlowFromDB();
+        getMessHeader();
+        getMessBody();
+        getMessTraslate();
         //window.addEventListener('resize', setClientWidth);
     });
 
@@ -735,76 +871,77 @@
         if (state.Type == '网络层透明传输') {
             state.leftNavList = leftNavListSimple;
 
-        } else{
-           if (state.Type == '应用层透明传输') {
-            state.leftNavList = leftNavListSimple;
+        } else {
+            if (state.Type == '应用层透明传输') {
+                state.leftNavList = leftNavListSimple;
 
-        }else {
-            if (state.Type == '指定流程') {
-                state.leftNavList = leftNavListSpecial;
-            }
-            if (state.Type == '混合编排') {
-                state.leftNavList = leftNavList;
-            }
+            } else {
+                if (state.Type == '指定流程') {
+                    state.leftNavList = leftNavListSpecial;
+                }
+                if (state.Type == '混合编排') {
+                    state.leftNavList = leftNavList;
+                }
 
-            //console.log(state.leftNavList);
-            builtNodeApi().search(
-                {
-                    uid: 1,
-                    pageNum: 1,
-                    pageSize: 1000,
-                    name: '',
-                })
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
+                //console.log(state.leftNavList);
+                builtNodeApi().search(
+                    {
+                        uid: 1,
+                        pageNum: 1,
+                        pageSize: 1000,
+                        name: '',
+                    })
+                    .then(res => {
+                        //console.log(res);
+                        if (res.code == '200') {
 
-                        let convlist = state.leftNavList[3];
+                            let convlist = state.leftNavList[3];
 
-                        convlist.children = new Array();
-                        for (let i = 0, k = 0; k < res.data.length; k++) {
-                            if (res.data[k].Type == '内置转换节点') {
-                                convlist.children[i] = {
-                                    icon: conver,
-                                    name: res.data[k].Name,
-                                    type: 'conver',
-                                    id: res.data[k].ID,
-                                    descrip: res.data[k].Desc,
+                            convlist.children = new Array();
+                            for (let i = 0, k = 0; k < res.data.length; k++) {
+                                if (res.data[k].Type == '内置转换节点') {
+                                    convlist.children[i] = {
+                                        icon: conver,
+                                        name: res.data[k].Name,
+                                        type: 'conver',
+                                        id: res.data[k].ID,
+                                        descrip: res.data[k].Desc,
+                                    }
+                                    i++
                                 }
-                                i++
+
+                            }
+                            convlist = state.leftNavList[4];
+                            convlist.children = new Array();
+
+                            for (let i = 0, k = 0; k < res.data.length; k++) {
+                                if (res.data[k].Type == '内置封装节点') {
+                                    convlist.children[i] = {
+                                        icon: inpac,
+                                        name: res.data[k].Name,
+                                        type: 'conver',
+                                        id: res.data[k].ID,
+                                        descrip: res.data[k].Desc,
+                                    }
+                                    i++
+                                }
+
                             }
 
-                        }
-                        convlist = state.leftNavList[4];
-                        convlist.children = new Array();
 
-                        for (let i = 0, k = 0; k < res.data.length; k++) {
-                            if (res.data[k].Type == '内置封装节点') {
-                                convlist.children[i] = {
-                                    icon: inpac,
-                                    name: res.data[k].Name,
-                                    type: 'conver',
-                                    id: res.data[k].ID,
-                                    descrip: res.data[k].Desc,
-                                }
-                                i++
-                            }
-
+                        } else {
+                            ElMessage.error(res.message);
                         }
 
+                    }).catch(err => {
 
-                    } else {
-                        ElMessage.error(res.message);
-                    }
+                }).finally(() => {
 
-                }).catch(err => {
-
-            }).finally(() => {
-
-            });
+                });
 
 
-        }}
+            }
+        }
     };
 
     // 左侧导航-菜单标题点击
@@ -1024,7 +1161,7 @@
         position: relative;
 
         .workflow-warp {
-                   position: absolute;
+            position: absolute;
             height: 100% !important;
         }
 

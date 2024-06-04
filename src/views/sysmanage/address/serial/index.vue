@@ -43,14 +43,14 @@
                 <el-table-column prop="FlowControl" label="流控" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column label="操作" width="100">
+                <el-table-column label="操作" width="120">
                     <template #default="scope">
-                        <el-button size="small" text type="primary" @click="onOpenEdit('edit', scope.row)"
+                        <el-button size="small" text type="primary" @click="onOpenEdit('edit', scope.row)" class="buttonfont"
                         >修改
                         </el-button
                         >
 
-                        <el-button size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
+                        <el-button size="small" text type="primary" @click="onRowDel(scope.row)" class="buttonfont">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -276,5 +276,8 @@
                 flex: 1;
             }
         }
+          :deep(.buttonfont) {
+                    font-size: 14px;
+                }
     }
 </style>

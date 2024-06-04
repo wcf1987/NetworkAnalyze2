@@ -62,16 +62,16 @@
           <template #default="scope">
 
             <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                       @click="onOpenEdit('view', scope.row)"
+                       @click="onOpenEdit('view', scope.row)" class="buttonfont"
             >详情
             </el-button>
             <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                       @click="onOpenEdit('edit', scope.row)"
+                       @click="onOpenEdit('edit', scope.row)" class="buttonfont"
             >修改
             </el-button
             >
 
-            <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+            <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" class="buttonfont"
                        @click="onRowDel(scope.row)">删除
             </el-button>
           </template>
@@ -342,5 +342,8 @@ onMounted(() => {
       flex: 1;
     }
   }
+    :deep(.buttonfont) {
+                    font-size: 14px;
+                }
 }
 </style>

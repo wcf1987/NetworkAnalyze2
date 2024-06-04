@@ -60,24 +60,24 @@
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip
                                  v-if="false"></el-table-column>
-                <el-table-column label="操作" width="240">
+                <el-table-column label="操作" width="260">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEdit('edit', scope.row)"
+                                   @click="onOpenEdit('edit', scope.row)" class="buttonfont"
                         >修改
                         </el-button
                         >
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEditDetail('edit', scope.row)"
+                                   @click="onOpenEditDetail('edit', scope.row)" class="buttonfont"
                         >编辑详细
                         </el-button
                         >
                          <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEditDetailDesign('edit', scope.row)"
+                                   @click="onOpenEditDetailDesign('edit', scope.row)" class="buttonfont"
                         >图形化编辑
                         </el-button
                         >
-                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
+                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" class="buttonfont"
                                    @click="onRowDel(scope.row)">删除
                         </el-button>
                     </template>
@@ -251,7 +251,7 @@
         const onOpenEditDetailDesign = (type: string, row: RowUserType) => {
         router.push({
             path: '/sysmanage/messtraslatedesign',
-            query: {id: row.ID,sourceid:row.sourceID,targetid:row.targetID},
+            query: {id: row.ID,sourceid:row.sourceID,targetid:row.targetID,sourceName:row.sourmess,targetName:row.tarmess},
         });
     };
     const viewNess = (type: string, id) => {
@@ -314,6 +314,9 @@
 
 <style scoped lang="scss">
     .system-user-container {
+          :deep(.buttonfont) {
+                    font-size: 14px;
+                }
         :deep(.el-card__body) {
             display: flex;
             flex-direction: column;

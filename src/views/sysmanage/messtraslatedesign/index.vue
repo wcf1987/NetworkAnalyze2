@@ -4,7 +4,7 @@
         <div class="layout-padding-auto layout-padding-view workflow-warp">
             <div class="workflow">
                 <!-- 顶部工具栏 -->
-            <Tool @tool="onToolClick" />
+                <Tool @tool="onToolClick"/>
 
 
                 <!-- 左侧导航区 -->
@@ -23,7 +23,7 @@
                                     <SvgIcon :name="val.isOpen ? 'ele-ArrowDown' : 'ele-ArrowRight'"/>
                                 </div>
                                 <div class="workflow-left-item" v-for="(v, k) in val.children" :key="k"
-                                     :data-name="v.name" :data-icon="v.icon" :data-id="v.id" >
+                                     :data-name="v.name" :data-icon="v.icon" :data-id="v.id">
                                     <div class="workflow-left-item-icon">
                                         <SvgIcon :name="v.icon" class="workflow-icon-drag"/>
                                         <div class="font10 pl5 name">{{ v.name }}</div>
@@ -34,11 +34,11 @@
                     </div>
 
                     <!-- 右侧绘画区 -->
-                    <div id="workflow-right" class="workflow-right" ref="workflowRightRef">
+                    <div id="workflow-right" class="workflow-right" ref="workflowRightRef"  @scroll="scrollPaint" >
                         <el-table :data="state.tableDataSource.data" row-key="ID"
                                   ref="SourceTable"
                                   v-loading="state.tableDataSource.loading"
-                                   @row-click="onClickSource"
+                                  @row-click="onClickSource"
                                   :row-class-name="({row}) => `SourceRow ${row.ID}`"
                                   @expand-change="(row, expanded) => !expanded && SourceTable?.toggleRowExpansion(row)"
                                   default-expand-all class="eltableclass" id="sourcetable">
@@ -47,7 +47,7 @@
                             <el-table-column prop="parentindex" label="" width="60" v-if="false"/>
                             <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
                             <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
-                            <el-table-column prop="Name" label="源消息体"
+                            <el-table-column prop="Name" :label="'源:'+state.sourceName"
                                              show-overflow-tooltip></el-table-column>
                             <el-table-column prop="EName" label="引用名" show-overflow-tooltip
                                              v-if="false"></el-table-column>
@@ -83,13 +83,13 @@
                                   @row-click="onOpenEdit"
                                   :row-class-name="({row}) => `TargetRow ${row.ID}`"
                                   @expand-change="(row, expanded) => !expanded && TargetTable?.toggleRowExpansion(row)"
-                                  default-expand-all class="eltableclass" >
+                                  default-expand-all class="eltableclass">
                             <el-table-column type="selection" width="50" v-if="false"/>
                             <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                             <el-table-column prop="parentindex" label="" width="60" v-if="false"/>
                             <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
                             <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
-                            <el-table-column prop="Name" label="目的消息体"
+                            <el-table-column prop="Name" :label="'目的:'+state.targetName"
                                              show-overflow-tooltip></el-table-column>
                             <el-table-column prop="EName" label="引用名" show-overflow-tooltip
                                              v-if="false"></el-table-column>
@@ -138,7 +138,7 @@
                         </div>
                     </div>
                     <div ref="workflow-right2">
-                         <el-collapse v-model="activeNames" class="centered-collapse">
+                        <el-collapse v-model="activeNames" class="centered-collapse">
                             <el-collapse-item title="流程设计属性" name="1" style="font-size:14px">
                                 <template #title>
                                     源消息体字段属性
@@ -147,10 +147,18 @@
                                     </el-icon>
                                 </template>
                                 <el-card style="font-size:14px">
-                                    <p class="text item" v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DFI标识号：' +state.sourceData.DFINO}}</p>
-                                    <p class="text item" v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DFI版本号：' +state.sourceData.DFIVersion}}</p>
-                                    <p class="text item" v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DUI标识号：' +state.sourceData.DUINO}}</p>
-                                    <p class="text item" v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DUI版本号：' +state.sourceData.DUIVersion}}</p>
+                                    <p class="text item"
+                                       v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DFI标识号：'
+                                        +state.sourceData.DFINO}}</p>
+                                    <p class="text item"
+                                       v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DFI版本号：'
+                                        +state.sourceData.DFIVersion}}</p>
+                                    <p class="text item"
+                                       v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DUI标识号：'
+                                        +state.sourceData.DUINO}}</p>
+                                    <p class="text item"
+                                       v-if="state.sourceData!=null &&state.sourceData.OutType=='fields'">{{ 'DUI版本号：'
+                                        +state.sourceData.DUIVersion}}</p>
                                     <p class="text item">{{ '名称： '+state.sourceData.Name }}</p>
                                     <p class="text item">{{ '数据标识： '+state.sourceData.Flag }}</p>
                                     <p class="text item">{{ '类型： '+state.sourceData.Type }}</p>
@@ -168,12 +176,16 @@
                                     </el-icon>
                                 </template>
                                 <el-card style="font-size:14px">
-                                  <p class="text item" v-if="state.targetData.OutType=='fields'">{{ 'DFI标识号：' +state.targetData.DFINO}}</p>
-                                    <p class="text item" v-if="state.targetData.OutType=='fields'">{{ 'DFI版本号：' +state.targetData.DFIVersion}}</p>
-                                    <p class="text item" v-if="state.targetData.OutType=='fields'">{{ 'DUI标识号：' +state.targetData.DUINO}}</p>
-                                    <p class="text item" v-if="state.targetData.OutType=='fields'">{{ 'DUI版本号：' +state.targetData.DUIVersion}}</p>
+                                    <p class="text item" v-if="state.targetData.OutType=='fields'">{{ 'DFI标识号：'
+                                        +state.targetData.DFINO}}</p>
+                                    <p class="text item" v-if="state.targetData.OutType=='fields'">{{ 'DFI版本号：'
+                                        +state.targetData.DFIVersion}}</p>
+                                    <p class="text item" v-if="state.targetData.OutType=='fields'">{{ 'DUI标识号：'
+                                        +state.targetData.DUINO}}</p>
+                                    <p class="text item" v-if="state.targetData.OutType=='fields'">{{ 'DUI版本号：'
+                                        +state.targetData.DUIVersion}}</p>
 
-                                     <p class="text item">{{ '名称： '+state.targetData.Name }}</p>
+                                    <p class="text item">{{ '名称： '+state.targetData.Name }}</p>
                                     <p class="text item">{{ '数据标识： '+state.targetData.Flag }}</p>
                                     <p class="text item">{{ '类型： '+state.targetData.Type }}</p>
                                     <p class="text item">{{ '简称： '+state.targetData.ShortName }}</p>
@@ -244,29 +256,29 @@
     }
     // 打开修改转换规则界面弹窗
     const onOpenEdit = (row: RowUserType) => {
-        state.targetData=findTargetData(row.ID);
-        if(row.SourceData!=null && row.SourceData.length!=0){
-            state.sourceData=findSourceDataByName(row.SourceData[0]);
-            if(state.sourceData==null){
-                state.sourceData={};
-                  state.sourceData.Name='';
-            state.sourceData.Flag='';
-            state.sourceData.Type='';
-            state.sourceData.ShortName='';
-            state.sourceData.Length  ='';
+        state.targetData = findTargetData(row.ID);
+        if (row.SourceData != null && row.SourceData.length != 0) {
+            state.sourceData = findSourceDataByName(row.SourceData[0]);
+            if (state.sourceData == null) {
+                state.sourceData = {};
+                state.sourceData.Name = '';
+                state.sourceData.Flag = '';
+                state.sourceData.Type = '';
+                state.sourceData.ShortName = '';
+                state.sourceData.Length = '';
             }
-             if(state.sourceData!=null && state.sourceData.OutType=='fields'){
-            addFieldsInfo(state.sourceData)
+            if (state.sourceData != null && state.sourceData.OutType == 'fields') {
+                addFieldsInfo(state.sourceData)
+            }
+        } else {
+            state.sourceData.Name = '';
+            state.sourceData.Flag = '';
+            state.sourceData.Type = '';
+            state.sourceData.ShortName = '';
+            state.sourceData.Length = '';
         }
-        }   else{
-            state.sourceData.Name='';
-            state.sourceData.Flag='';
-            state.sourceData.Type='';
-            state.sourceData.ShortName='';
-            state.sourceData.Length  ='';
-             }
 
-        if(state.targetData.OutType=='fields'){
+        if (state.targetData.OutType == 'fields') {
             addFieldsInfo(state.targetData)
         }
         userDialogRef.value.openDialog('edit', state.sourceid, row);
@@ -274,58 +286,58 @@
     // 点击左侧节点
     const onClickSource = (row: RowUserType) => {
 
-        state.sourceData=findSourceData(row.ID);
-         if(state.sourceData.OutType=='fields'){
-             addFieldsInfo(state.sourceData)
+        state.sourceData = findSourceData(row.ID);
+        if (state.sourceData.OutType == 'fields') {
+            addFieldsInfo(state.sourceData)
         }
     };
     //追加数据域信息
-    const addFieldsInfo=(origin)=>{
- fieldsdetailApi().getById(
-            { id:origin.OutID}
-            )
-                .then(res => {
-                    //console.log(res);
-                    if (res.code == '200') {
-                       origin.DFINO=res.data.DFINO;
-                       origin.DFIVersion=res.data.DFIVersion;
-                       origin.DUINO=res.data.DUINO;
-                       origin.DUIVersion=res.data.DUIVersion;
+    const addFieldsInfo = (origin) => {
+        fieldsdetailApi().getById(
+            {id: origin.OutID}
+        )
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+                    origin.DFINO = res.data.DFINO;
+                    origin.DFIVersion = res.data.DFIVersion;
+                    origin.DUINO = res.data.DUINO;
+                    origin.DUIVersion = res.data.DUIVersion;
 
-                        //closeDialog();
-                        //emit('refresh');
-                    } else {
-                        //ElMessage.error(res.message);
-                    }
+                    //closeDialog();
+                    //emit('refresh');
+                } else {
+                    //ElMessage.error(res.message);
+                }
 
-                }).catch(err => {
+            }).catch(err => {
 
-            }).finally(() => {
+        }).finally(() => {
 
-            });
+        });
     }
-    const findTargetData=(id)=>{
-        const nodes=walkTreeToList(state.tableDataTarget.data)
-        for(let i of nodes){
-            if(i.ID==id){
+    const findTargetData = (id) => {
+        const nodes = walkTreeToList(state.tableDataTarget.data)
+        for (let i of nodes) {
+            if (i.ID == id) {
                 return i;
             }
         }
         return null;
     }
-    const findSourceData=(id)=>{
-        const nodes=walkTreeToList(state.tableDataSource.data)
-        for(let i of nodes){
-            if(i.ID==id){
+    const findSourceData = (id) => {
+        const nodes = walkTreeToList(state.tableDataSource.data)
+        for (let i of nodes) {
+            if (i.ID == id) {
                 return i;
             }
         }
         return null;
     }
-        const findSourceDataByName=(name)=>{
-        const nodes=walkTreeToList(state.tableDataSource.data)
-        for(let i of nodes){
-            if(i.Name==name){
+    const findSourceDataByName = (name) => {
+        const nodes = walkTreeToList(state.tableDataSource.data)
+        for (let i of nodes) {
+            if (i.Name == name) {
                 return i;
             }
         }
@@ -336,6 +348,8 @@
         id: '',
         sourceid: '',
         targetid: '',
+        sourceName: '',
+        targetName: '',
         walkStatus: false,
         tableDataSource: {
             id: '',
@@ -391,18 +405,20 @@
             ids: [],
             desc: '',
         },
-        sourceData:{
-            Name:'',
-            Flag:'',
-            Type:'',
-            ShortName:'',
-            Length:''
+        sourceData: {
+            Name: '',
+            Flag: '',
+            Type: '',
+            ShortName: '',
+            Length: ''
         },
-        targetData:{ Name:'',
-            Flag:'',
-            Type:'',
-            ShortName:'',
-            Length:''},
+        targetData: {
+            Name: '',
+            Flag: '',
+            Type: '',
+            ShortName: '',
+            Length: ''
+        },
         leftNavList: [],
         dropdownNode: {x: '', y: ''},
         dropdownLine: {x: '', y: ''},
@@ -493,7 +509,6 @@
         //const data = [];
 
 
-
     };
 
     function walkTreeToList(tree) {
@@ -561,26 +576,25 @@
             state.tableDataTranslate.loading = false;
         }, 200);
     };
-//获取当前页面的缩放值
+    //获取当前页面的缩放值
 
 
-      //放大缩小处理
+    //放大缩小处理
     const setClientWidth = () => {
-      console.log("重画画布");
+        console.log("重画画布");
 
-      //const scale=getPageZoomRatio();
+        //const scale=getPageZoomRatio();
 
         //document.getElementById("workflow-right").css({"transform": `scale(${scale})`})
-      //document.getElementById("workflow-right").style.transform = "scale(0.75)";
-      //state.jsPlumb.setZoom(0.75);
+        //document.getElementById("workflow-right").style.transform = "scale(0.75)";
+        //state.jsPlumb.setZoom(0.75);
 
-             setTimeout(() => {
-                    state.jsPlumb.repaintEverything();
+        setTimeout(() => {
+            state.jsPlumb.repaintEverything();
         }, 50);
 
 
-          };
-
+    };
 
 
     // 左侧导航-数据初始化
@@ -684,7 +698,7 @@
             state.jsPlumb.bind('beforeDrop', (conn: any) => {
 
                 const {sourceId, targetId} = conn;
-                   console.log(conn);
+                console.log(conn);
                 let existingConnections = state.jsPlumb.getConnections({
                     source: sourceId,
                     target: targetId
@@ -722,15 +736,47 @@
         });
 
         //滚动条重绘
-        var container = document.getElementById("workflow-right");
-        container.addEventListener("scroll", function () {
-            state.jsPlumb.repaintEverything();
-        });
+      //  var container = document.getElementById("workflow-right");
+      //  container.addEventListener("scroll", function (e) {
+
+        //});
+
         //放大缩小处理
         //state.jsPlumb.setZoom(0.75)
-      //设置画布放大缩小级别
+        //设置画布放大缩小级别
 
     };
+    const scrollPaint=(e)=>{
+
+
+
+            nextTick(() => {
+                console.log("滚动触发");
+                 fix_jsPlumb_offset(e.target.scrollTop);
+                // 获取滑动距离，修改锚点、连线位置
+                state.jsPlumb.repaintEverything();
+
+
+            })
+
+    }
+    function fix_jsPlumb_offset(top) {
+        console.log(top);
+        var lines = document.getElementsByClassName("jtk-connector");
+        var dots = document.getElementsByClassName("jtk-endpoint");
+        _fix_left(lines, top);
+        _fix_left(dots, top);
+    }
+
+    function _fix_left(arr, left) {
+        for (var i = 0; i < arr.length; i++) {
+            var obj = arr[i];
+            var origin_left = obj.style.top.replace(/px/, "");
+            obj.style.top = (parseInt(origin_left) + parseInt(left)) + 'px';
+            //console.log(obj.style.top);
+        }
+    }
+
     // 初始化节点、线的链接
     const initJsPlumbConnection = () => {
         // 节点
@@ -793,8 +839,8 @@
             sname = findTreeItemById(state.tableDataSource.data, sid).Name;
             console.log(trow['SourceData']);
             //trow.SourceData = JSON.parse(trow.SourceData)
-            if(trow.SourceData==null){
-                trow.SourceData=[];
+            if (trow.SourceData == null) {
+                trow.SourceData = [];
             }
             if (Array.isArray(trow.SourceData)) {
 
@@ -825,8 +871,8 @@
     const updateNodeDB = (row) => {
         row['SourceData'] = JSON.stringify(row.SourceData);
         row['Funcrule'] = JSON.stringify(row.Funcrule);
-        if(row['Optional']==null){
-            row['Optional']='直接转换';
+        if (row['Optional'] == null) {
+            row['Optional'] = '直接转换';
         }
         messtranslateApi().updateMessTranslateDetail(
             row
@@ -853,11 +899,19 @@
 
         if (type == 'Source') {
             //console.log(elem.classList[2]);
+            let node = findSourceData(elem.classList[2]);
+            if (node.OutType == 'nest') {
+                return
+            }
             ins.setId(elem, "source_" + elem.classList[2]);
             ins.makeSource(elem, state.jsplumbMakeSource)
             ins.setSourceEnabled(elem, true)
 
         } else {
+            let node = findTargetData(elem.classList[2]);
+            if (node.OutType == 'nest') {
+                return
+            }
             ins.setId(elem, "target_" + elem.classList[2]);
             ins.makeTarget(elem, state.jsplumbMakeTarget, jsplumbConnect)
             ins.setTargetEnabled(elem, true)
@@ -894,6 +948,14 @@
                     //console.log(t);
                     if (t == null) {
                         continue;
+                    }
+
+                    if (t.OutType == 'nest') {
+                        continue
+                    }
+
+                    if (node.OutType == 'nest') {
+                        continue
                     }
                     let sourceid = "source_" + t.ID;
                     let targetid = "target_" + node.ID
@@ -1007,9 +1069,33 @@
         });
         item.contact = `${intercourse[0].innerText}(${intercourse[0].id}) => ${intercourse[1].innerText}(${intercourse[1].id})`;
         if (contextMenuClickId === 0) {
-            state.jsPlumb.deleteConnection(conn);
-            const {sourceId, targetId} = conn;
-            updateNodeByConn(sourceId, targetId, 'del');
+
+            ElMessageBox.confirm(
+                '您是否确认删除该转换',
+                'Warning',
+                {
+                    confirmButtonText: '确认',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }
+            )
+                .then(() => {
+                    state.jsPlumb.deleteConnection(conn);
+                    const {sourceId, targetId} = conn;
+                    updateNodeByConn(sourceId, targetId, 'del');
+                    ElMessage({
+                        type: 'success',
+                        message: '删除成功',
+                    })
+                })
+                .catch(() => {
+                    ElMessage({
+                        type: 'info',
+                        message: '删除 取消',
+                    })
+                })
+
+
         } else if (contextMenuClickId === 1) {
             const {sourceId, targetId} = conn;
             let tid = targetId.split('_')[1];
@@ -1053,7 +1139,7 @@
         });
     };
 
-  // 顶部工具栏-当前项点击
+    // 顶部工具栏-当前项点击
     const onToolClick = (fnName: String) => {
 
         switch (fnName) {
@@ -1070,10 +1156,12 @@
 
         state.sourceid = querys.sourceid;
         state.targetid = querys.targetid;
+        state.sourceName = querys.sourceName;
+        state.targetName = querys.targetName;
         await getTableDataSource();
         await getTableDataTranslate();
         await initLeftNavList();
-        getTableDataTarget();
+        await getTableDataTarget();
         initSortable();
         initJsPlumb();
         //setClientWidth();
@@ -1093,7 +1181,7 @@
             display: flex;
             flex-direction: column;
             flex: 1;
-            overflow: auto;
+
 
             .el-table {
                 flex: 1;
@@ -1242,7 +1330,7 @@
                     :deep(.eltableclass) {
                         vertical-align: top;
                         display: inline-block;
-                        overflow: auto;
+
 
                         margin-left: 50px;
                         margin-top: 25px;

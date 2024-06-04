@@ -27,9 +27,9 @@
                   <el-table-column type="selection" width="50"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
-                <el-table-column prop="Username" label="用户名" show-overflow-tooltip  width="100"></el-table-column>
-                <el-table-column prop="CreateTime" label="时间" show-overflow-tooltip  width="200"></el-table-column>
-                <el-table-column prop="Logs" label="日志" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Username" label="用户名"  width="100"></el-table-column>
+                <el-table-column prop="CreateTime" label="时间"  width="200"></el-table-column>
+                <el-table-column prop="Logs" label="日志" ></el-table-column>
 
             </el-table>
             <el-pagination

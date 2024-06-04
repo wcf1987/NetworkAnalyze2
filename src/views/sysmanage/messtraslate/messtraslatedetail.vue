@@ -41,10 +41,10 @@
                 <el-table-column prop="DefaultValue" label="源字段" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column label="操作" width="60">
+                <el-table-column label="操作" width="70">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
-                                   @click="onOpenEdit('edit', scope.row)" v-if="scope.row.OutType!='nest'"
+                                   @click="onOpenEdit('edit', scope.row)" v-if="scope.row.OutType!='nest'" class="buttonfont"
                         >修改
                         </el-button
                         >
@@ -281,6 +281,9 @@
 
 <style scoped lang="scss">
     .system-user-container {
+          :deep(.buttonfont) {
+                    font-size: 14px;
+                }
         :deep(.el-card__body) {
             display: flex;
             flex-direction: column;

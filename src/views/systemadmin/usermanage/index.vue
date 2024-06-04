@@ -40,12 +40,12 @@
 				</el-table-column>
 				<el-table-column prop="describes" label="用户描述" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
-				<el-table-column label="操作" width="100">
+				<el-table-column label="操作" width="120">
 					<template #default="scope">
-						<el-button :disabled="scope.row.userName === 'admins' || scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
+						<el-button class="buttonfont" :disabled="scope.row.userName === 'admins' || scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
 							>修改</el-button
 						>
-						<el-button :disabled="scope.row.userName === 'admins' || scope.row.userName === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button class="buttonfont" :disabled="scope.row.userName === 'admins' || scope.row.userName === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -219,6 +219,9 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .system-user-container {
+	  :deep(.buttonfont) {
+                    font-size: 14px;
+                }
 	:deep(.el-card__body) {
 		display: flex;
 		flex-direction: column;

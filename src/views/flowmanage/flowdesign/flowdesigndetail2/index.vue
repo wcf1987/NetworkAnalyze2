@@ -1058,7 +1058,7 @@
                 lf.value.redo();
                 break;
             case 'showMiniMap':
-                lf.value.extension.miniMap.show(lf.value.graphModel.width - 150, 40)
+                lf.value.extension.miniMap.show(lf.value.graphModel.width - 350, 20)
                 break;
             case 'help':
                 onToolHelp();
