@@ -34,7 +34,7 @@
                     </div>
 
                     <!-- 右侧绘画区 -->
-                    <div id="workflow-right" class="workflow-right" ref="workflowRightRef"  @scroll="scrollPaint" >
+                    <div id="workflow-right" class="workflow-right" ref="workflowRightRef" @scroll.stop="scrollPaint">
                         <el-table :data="state.tableDataSource.data" row-key="ID"
                                   ref="SourceTable"
                                   v-loading="state.tableDataSource.loading"
@@ -213,7 +213,6 @@
     import {defineAsyncComponent, nextTick, onMounted, onUnmounted, reactive, ref} from 'vue';
     import {ElMessage, ElMessageBox} from 'element-plus';
     import {jsPlumb} from 'jsplumb';
-    import Sortable from 'sortablejs';
     import {storeToRefs} from 'pinia';
     import {useThemeConfig} from '/@/stores/themeConfig';
     import {useTagsViewRoutes} from '/@/stores/tagsViewRoutes';
@@ -607,63 +606,7 @@
     };
     // 左侧导航-初始化拖动
     const initSortable = () => {
-        leftNavRefs.value.forEach((v) => {
-            Sortable.create(v as HTMLDivElement, {
-                group: {
-                    name: 'vue-next-admin-1',
-                    pull: 'clone',
-                    put: false,
-                },
-                animation: 0,
-                sort: false,
-                draggable: '.workflow-left-item',
-                forceFallback: true,
-                onEnd: function (evt: any) {
-                    const {name, icon, id} = evt.clone.dataset;
-                    const {layerX, layerY, clientX, clientY} = evt.originalEvent;
-                    const el = workflowRightRef.value!;
-                    const {x, y, width, height} = el.getBoundingClientRect();
-                    if (clientX < x || clientX > width + x || clientY < y || y > y + height) {
-                        ElMessage.warning('请把节点拖入到画布中');
-                    } else {
-                        // 节点id（唯一）
-                        const nodeId = Math.random().toString(36).substr(2, 12);
-                        // 处理节点数据
-                        const node = {
-                            nodeId,
-                            left: `${layerX - 40}px`,
-                            top: `${layerY - 15}px`,
-                            class: 'workflow-right-clone',
-                            name,
-                            icon,
-                            id,
-                        };
-                        // 右侧视图内容数组
-                        state.jsplumbData.nodeList.push(node);
-                        // 元素加载完毕时
-                        nextTick(() => {
-                            // 整个节点作为source或者target
-                            state.jsPlumb.makeSource(nodeId, state.jsplumbMakeSource);
-                            // // 整个节点作为source或者target
-                            state.jsPlumb.makeTarget(nodeId, state.jsplumbMakeTarget, jsplumbConnect);
-                            // 设置节点可以拖拽（此处为id值，非class）
-                            state.jsPlumb.draggable(nodeId, {
-                                containment: 'parent',
-                                stop: (el: any) => {
-                                    state.jsplumbData.nodeList.forEach((v) => {
-                                        if (v.nodeId === el.el.id) {
-                                            // 节点x, y重新赋值，防止再次从左侧导航中拖拽节点时，x, y恢复默认
-                                            v.left = `${el.pos[0]}px`;
-                                            v.top = `${el.pos[1]}px`;
-                                        }
-                                    });
-                                },
-                            });
-                        });
-                    }
-                },
-            });
-        });
+
     };
     // 初始化 jsPlumb
     const initJsPlumb = () => {
@@ -693,6 +636,10 @@
                 //v.label = line.label;
                 const v = {type: 'line'};
                 contextmenuLineRef.value.openContextmenu(v, conn);
+            });
+            state.jsPlumb.bind("beforeDrag", function (params) {
+               console.log(params);
+                return true;
             });
             // 连线之前
             state.jsPlumb.bind('beforeDrop', (conn: any) => {
@@ -736,8 +683,8 @@
         });
 
         //滚动条重绘
-      //  var container = document.getElementById("workflow-right");
-      //  container.addEventListener("scroll", function (e) {
+        //  var container = document.getElementById("workflow-right");
+        //  container.addEventListener("scroll", function (e) {
 
         //});
 
@@ -746,70 +693,56 @@
         //设置画布放大缩小级别
 
     };
-    const scrollPaint=(e)=>{
+    const scrollPaint = (e) => {
 
+        //fix_jsPlumb_offset(e.target.scrollTop);
+        nextTick(() => {
+            console.log("滚动触发");
 
+            // 获取滑动距离，修改锚点、连线位置
 
-            nextTick(() => {
-                console.log("滚动触发");
-                 fix_jsPlumb_offset(e.target.scrollTop);
-                // 获取滑动距离，修改锚点、连线位置
-                state.jsPlumb.repaintEverything();
+            var dots = document.getElementsByClassName("jtk-endpoint");
+            for (var i = 0; i < dots.length; i++) {
+                var obj = dots[i];
 
-
-            })
+                //console.log('new:' + obj.style.top);
+            }
+            // state.jsPlumb.repaintEverything();
+        })
 
     }
+
     function fix_jsPlumb_offset(top) {
-        console.log(top);
+        console.log('scroll dis:' + top);
         var lines = document.getElementsByClassName("jtk-connector");
         var dots = document.getElementsByClassName("jtk-endpoint");
-        _fix_left(lines, top);
-        _fix_left(dots, top);
+        for (var i = 0; i < lines.length; i++) {
+            var obj = lines[i];
+            console.log('old line top:' + obj.style.top);
+            var origin_left = obj.style.top.replace(/px/, "");
+            obj.style.top = (parseInt(origin_left)) + 'px';
+            //
+            //console.log(obj.style.top);
+        }
+        for (var i = 0; i < dots.length; i++) {
+            var obj = dots[i];
+            console.log('old endpoint top:' + obj.style.top);
+            var origin_left = obj.style.top.replace(/px/, "");
+            // obj.style.top = (parseInt(origin_left) + parseInt(top)) + 'px';
+            obj.style.top = (parseInt(origin_left)) + 'px';
+            console.log('new point now ' + obj.style.top);
+        }
+
     }
 
     function _fix_left(arr, left) {
-        for (var i = 0; i < arr.length; i++) {
-            var obj = arr[i];
-            var origin_left = obj.style.top.replace(/px/, "");
-            obj.style.top = (parseInt(origin_left) + parseInt(left)) + 'px';
-            //console.log(obj.style.top);
-        }
+
     }
 
     // 初始化节点、线的链接
     const initJsPlumbConnection = () => {
-        // 节点
-        state.jsplumbData.nodeList.forEach((v) => {
-            // 整个节点作为source或者target
-            state.jsPlumb.makeSource(v.nodeId, state.jsplumbMakeSource);
-            // 整个节点作为source或者target
-            state.jsPlumb.makeTarget(v.nodeId, state.jsplumbMakeTarget, jsplumbConnect);
-            // 设置节点可以拖拽（此处为id值，非class）
-            state.jsPlumb.draggable(v.nodeId, {
-                containment: 'parent',
-                stop: (el: any) => {
-                    state.jsplumbData.nodeList.forEach((v) => {
-                        if (v.nodeId === el.el.id) {
-                            // 节点x, y重新赋值，防止再次从左侧导航中拖拽节点时，x, y恢复默认
-                            v.left = `${el.pos[0]}px`;
-                            v.top = `${el.pos[1]}px`;
-                        }
-                    });
-                },
-            });
-        });
-        // 线
-        state.jsplumbData.lineList.forEach((v) => {
-            state.jsPlumb.connect(
-                {
-                    source: v.sourceId,
-                    target: v.targetId,
-                    label: v.label,
-                },
-                state.jsplumbConnect
-            );
-        });
+
+
         console.log("初始化转化目的节点");
         const SourceElList = document.querySelectorAll('.SourceRow')
         const TargetElList = document.querySelectorAll('.TargetRow')
@@ -1320,8 +1253,8 @@
 
                     position: relative;
                     //transform: scale(0.75);
-                    justify-content: space-between;
-                    overflow: auto;
+                    //justify-content: space-between;
+                    overflow: scroll;
                     height: 100%;
                     background-image: linear-gradient(90deg, rgb(156 214 255 / 15%) 10%, rgba(0, 0, 0, 0) 10%),
                     linear-gradient(rgb(156 214 255 / 15%) 10%, rgba(0, 0, 0, 0) 10%);
