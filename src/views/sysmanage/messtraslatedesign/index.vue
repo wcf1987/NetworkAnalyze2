@@ -502,16 +502,6 @@
 
     };
 
-    function walkTreeToList(tree) {
-        let node, list = [...tree], nodes = []
-
-        while (node = list.shift()) {
-            nodes.push(node)
-            node.children && list.unshift(...node.children)
-        }
-
-        return nodes
-    }
 
     function walkTreeJSONParse(tree) {
         let node, list = [...tree], nodes = []
@@ -581,7 +571,7 @@
         //state.jsPlumb.setZoom(0.75);
 
         setTimeout(() => {
-            state.jsPlumb.repaintEverything();
+            repaintWithScroll()
         }, 50);
 
 
@@ -590,6 +580,31 @@
     const repaintWithScroll = () => {
         state.jsPlumb.repaintEverything();
         fix_jsPlumb_offset(state.scrollTop);
+    }
+
+    function handleDrag(event) {
+        // 处理drag事件
+        console.log('Drag event:', event);
+    }
+
+    function handleDragStart(event) {
+        // 处理dragstart事件
+        console.log('Drag start event:', event);
+    }
+
+    function handleDragEnd(event) {
+        // 处理dragend事件
+        console.log('Drag end event:', event);
+    }
+
+    const fixDragScroll = () => {
+        setTimeout(() => {
+            state.jsPlumb.repaintEverything();
+            var dragpoints = document.querySelectorAll(".endpointDrag");
+            console.log(dragpoints);
+            _fix_left(dragpoints, state.scrollTop);
+        }, 200);
+
     }
     // 左侧导航-数据初始化
     const initLeftNavList = () => {
@@ -635,6 +650,14 @@
             });
             state.jsPlumb.bind("beforeDrag", function (params) {
                 console.log(params);
+                //repaintWithScroll();
+                fixDragScroll();
+                return true;
+            });
+            state.jsPlumb.bind("connectionDrag", function (params) {
+                console.log('connectionDrag');
+                //repaintWithScroll();
+                fixDragScroll();
                 return true;
             });
             // 连线之前
@@ -646,7 +669,7 @@
                     source: sourceId,
                     target: targetId
                 });
-
+                repaintWithScroll();
                 if (existingConnections.length > 0) {
                     ElMessage.warning('该源字段已存在，不可重复添加');
                     return false;
@@ -696,11 +719,31 @@
         //设置画布放大缩小级别
 
     };
+    const clearJsplumb = () => {
+        state.jsPlumb.deleteEveryConnection();
+        state.jsPlumb.deleteEveryEndpoint();
+        /**
+         var lists=walkTreeToList(state.tableDataSource.data);
+         var listt= walkTreeToList(state.tableDataTarget.data);
+         for(var i of lists){
+               state.jsPlumb.remove('source_'+i.ID);
+           }
+         for(var i of listt){
+               state.jsPlumb.remove('target_'+i.ID);
+           }
+         **/
+    }
     const scrollPaint = (e) => {
+
+
         state.scrollTop = e.target.scrollTop;
         //
+        //clearJsplumb();
+
+        // initJsPlumbConnection()
+
         nextTick(() => {
-           // console.log("滚动触发");
+            // console.log("滚动触发");
 
             // 获取滑动距离，修改锚点、连线位置
             repaintWithScroll();
@@ -773,7 +816,7 @@
             if (Array.isArray(trow.SourceData)) {
 
             } else {
-                trow.SourceData = JSON.parse(trow.SourceData);
+                trow.SourceData = []
             }
 
             trow.SourceData.push([sname]);
@@ -812,14 +855,15 @@
                     row['Funcrule'] = JSON.parse(row.Funcrule);
                     initConn();
                 } else {
+                    row['SourceData'] = JSON.parse(row.SourceData);
+                    row['Funcrule'] = JSON.parse(row.Funcrule);
                     ElMessage.error(res.message);
                 }
 
             }).catch(err => {
 
         }).finally(() => {
-            row['SourceData'] = JSON.parse(row.SourceData);
-            row['Funcrule'] = JSON.parse(row.Funcrule);
+
         });
     }
     // 初始化具体节点
@@ -937,6 +981,18 @@
         return nodes
     }
 
+    //树形结构返回list
+    function walkTreeToList(tree) {
+        let node, list = [...tree], nodes = []
+
+        while (node = list.shift()) {
+
+            nodes.push(node)
+            node.children && list.unshift(...node.children)
+        }
+
+        return nodes
+    }
 
     //树形结构查询指定id
     function findTreeItemById(list, id) {
@@ -1124,12 +1180,19 @@
         initJsPlumb();
         //setClientWidth();
 
-
+// 监听drag相关事件
+        window.addEventListener('drag', handleDrag);
+        window.addEventListener('dragstart', handleDragStart);
+        window.addEventListener('dragend', handleDragEnd);
         window.addEventListener('resize', setClientWidth);
     });
     // 页面卸载时
     onUnmounted(() => {
         window.removeEventListener('resize', setClientWidth);
+        // 移除事件监听器
+        window.removeEventListener('drag', handleDrag);
+        window.removeEventListener('dragstart', handleDragStart);
+        window.removeEventListener('dragend', handleDragEnd);
     });
 </script>
 
