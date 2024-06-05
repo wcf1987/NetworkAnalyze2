@@ -332,7 +332,7 @@
         return null;
     }
     const state = reactive({
-
+        intervalId: '',
         id: '',
         sourceid: '',
         targetid: '',
@@ -581,7 +581,10 @@
         state.jsPlumb.repaintEverything();
         fix_jsPlumb_offset(state.scrollTop);
     }
+    const repaintWithScroll2 = () => {
 
+        fix_jsPlumb_offset(state.scrollTop);
+    }
     function handleDrag(event) {
         // 处理drag事件
         console.log('Drag event:', event);
@@ -648,21 +651,21 @@
                 const v = {type: 'line'};
                 contextmenuLineRef.value.openContextmenu(v, conn);
             });
-            state.jsPlumb.bind("beforeDrag", function (params) {
+            state.jsPlumb.bind("beforeDrag", (params) =>{
                 console.log(params);
-                //repaintWithScroll();
-                fixDragScroll();
+
+              //  state.intervalId = setInterval(repaintWithScroll2, 500);
+                 //       setTimeout(() => {
+        //   repaintWithScroll2();
+       // }, 50);
+                //  fixDragScroll();
                 return true;
             });
-            state.jsPlumb.bind("connectionDrag", function (params) {
-                console.log('connectionDrag');
-                //repaintWithScroll();
-                fixDragScroll();
-                return true;
-            });
+
             // 连线之前
             state.jsPlumb.bind('beforeDrop', (conn: any) => {
 
+               // clearInterval(state.intervalId);
                 const {sourceId, targetId} = conn;
                 console.log(conn);
                 let existingConnections = state.jsPlumb.getConnections({
