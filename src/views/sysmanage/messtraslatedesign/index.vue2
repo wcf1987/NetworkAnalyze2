@@ -17,7 +17,6 @@
                                   ref="SourceTable"
                                   v-loading="state.tableDataSource.loading"
                                   @row-click="onClickSource"
-
                                   :row-class-name="({row}) => `SourceRow ${row.ID}`"
                                   @expand-change="(row, expanded) => !expanded && SourceTable?.toggleRowExpansion(row)"
                                   default-expand-all class="eltableclass" id="sourcetable">
@@ -28,30 +27,7 @@
                             <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
                             <el-table-column prop="Name" :label="'源:'+state.sourceName"
                                              show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="EName" label="引用名" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="ShortName" label="简称" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="Describes" label="说明" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="OutType" label="特别类型" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="NestID" label="特别类型" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="Length" label="位数" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="TableName" label="标准表名" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="TableSaveName" label="标准表存储名" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="Type" label="类型" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
+
 
 
                         </el-table>
@@ -70,30 +46,7 @@
                             <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
                             <el-table-column prop="Name" :label="'目的:'+state.targetName"
                                              show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="EName" label="引用名" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="ShortName" label="简称" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="Describes" label="说明" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="OutType" label="特别类型" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="NestID" label="特别类型" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="Length" label="位数" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="TableName" label="标准表名" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="TableSaveName" label="标准表存储名" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
-                            <el-table-column prop="Type" label="类型" show-overflow-tooltip
-                                             v-if="false"></el-table-column>
-                            <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip
-                                             v-if="isHide"></el-table-column>
+
 
 
                         </el-table>
@@ -196,13 +149,13 @@
     import {useTagsViewRoutes} from '/@/stores/tagsViewRoutes';
     import commonFunction from '/@/utils/commonFunction';
     import {leftNavList} from './js/mock';
-    import {jsplumbConnect, jsplumbDefaults, jsplumbEndpoint, jsplumbMakeSource, jsplumbMakeTarget} from './js/config';
+    import {jsplumbConnect, jsplumbDefaults, jsplumbMakeSource, jsplumbMakeTarget} from './js/config';
     import {useRoute, useRouter} from "vue-router";
     import {messdetailApi} from "/@/api/sysmanage/messdetail";
     import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
     import {fieldsdetailApi} from "/@/api/sysmanage/fieldsdetail";
 
-    import {jsPlumb} from 'jsplumb';
+    import {newInstance, ready} from "@jsplumb/browser-ui"
 
     const isHide = ref(false);
     const activeNames = ref(['1'])
@@ -270,15 +223,6 @@
             addFieldsInfo(state.sourceData)
         }
     };
-    // 鼠标划入左侧
-    const cellMouseEnter = (row: RowUserType) => {
-
-        state.sourceData = findSourceData(row.ID);
-        //console.log(row);
-        //fix_jsPlumb_offset(state.scrollTop);
-        //repaintWithScroll();
-    };
-
     //追加数据域信息
     const addFieldsInfo = (origin) => {
         fieldsdetailApi().getById(
@@ -339,8 +283,6 @@
         sourceName: '',
         targetName: '',
         walkStatus: false,
-        scrollTop: 0,
-
         tableDataSource: {
             id: '',
             data: [],
@@ -419,7 +361,6 @@
         jsplumbMakeSource,
         jsplumbMakeTarget,
         jsplumbConnect,
-        jsplumbEndpoint,
         jsplumbData: {
             nodeList: [],
             lineList: [],
@@ -587,10 +528,7 @@
 
     };
 
-    const repaintWithScroll = () => {
-        state.jsPlumb.repaintEverything();
-        fix_jsPlumb_offset(state.scrollTop);
-    }
+
     // 左侧导航-数据初始化
     const initLeftNavList = () => {
         state.leftNavList = leftNavList;
@@ -605,17 +543,17 @@
     };
     // 初始化 jsPlumb
     const initJsPlumb = () => {
-        jsPlumb.ready(() => {
-            state.jsPlumb = jsPlumb.getInstance({
-                detachable: false,
-                Container: 'workflow-right',
+        ready(() => {
+            var container = document.getElementById("workflow-right");
+            state.jsPlumb = newInstance({
+                connectionsDetachable:false,
+                container: container,
             });
             state.jsPlumb.fire('jsPlumbDemoLoaded', state.jsPlumb);
             // 导入默认配置
             state.jsPlumb.importDefaults(state.jsplumbDefaults);
             // 会使整个jsPlumb立即重绘。
             // state.jsPlumb.setSuspendDrawing(false, true);
-            repaintWithScroll();
             // 初始化节点、线的链接
             console.log("初始化节点1");
             initJsPlumbConnection();
@@ -666,11 +604,6 @@
                     updateNodeByConn(sourceId, targetId, 'add');
                 }
             });
-            // endpointClick 端点单击事件
-            state.jsPlumb.bind('endpointClick', (endpoint, originalEvent: MouseEvent) => {
-                console.log(endpoint);
-                repaintWithScroll()
-            });
             // 删除连线时回调函数
             state.jsPlumb.bind('connectionDetached', (conn: any) => {
                 const {sourceId, targetId} = conn;
@@ -697,40 +630,50 @@
 
     };
     const scrollPaint = (e) => {
-        state.scrollTop = e.target.scrollTop;
-        //
+
+
         nextTick(() => {
-           // console.log("滚动触发");
+            console.log("滚动触发");
 
             // 获取滑动距离，修改锚点、连线位置
-            repaintWithScroll();
 
+            var dots = document.getElementsByClassName("jtk-endpoint");
+            for (var i = 0; i < dots.length; i++) {
+                var obj = dots[i];
+
+                //console.log('new:' + obj.style.top);
+            }
+            state.jsPlumb.setSuspendDrawing(false, true);
+            fix_jsPlumb_offset(e.target.scrollTop);
         })
 
     }
 
     function fix_jsPlumb_offset(top) {
-        //console.log('scroll dis:' + top);
+        console.log('scroll dis:' + top);
         var lines = document.getElementsByClassName("jtk-connector");
         var dots = document.getElementsByClassName("jtk-endpoint");
-        var overlay = document.getElementsByClassName("jtk-overlay");
-        var drops = document.getElementsByClassName("jtk-endpoint-anchor");
-
-        _fix_left(lines, top);
-        _fix_left(dots, top);
-        _fix_left(overlay, top);
-        // _fix_left(drops, top);
-    }
-
-    function _fix_left(arr, top) {
-        for (var i = 0; i < arr.length; i++) {
-            var obj = arr[i];
-
-            var origin_top = obj.style.top.replace(/px/, "");
-            obj.style.top = (parseInt(origin_top) + parseInt(top)) + 'px';
+        for (var i = 0; i < lines.length; i++) {
+            var obj = lines[i];
+            //console.log('old line top:' + obj.style.top);
+            var origin_left = obj.style.top.replace(/px/, "");
+            obj.style.top = (parseInt(origin_left)+ parseInt(top)) + 'px';
             //
             //console.log(obj.style.top);
         }
+        for (var i = 0; i < dots.length; i++) {
+            var obj = dots[i];
+            var origin_left = obj.style.top.replace(/px/, "");
+            //console.log('old endpoint top:' + obj.style.top);
+            // obj.style.top = (parseInt(origin_left) + parseInt(top)) + 'px';
+            obj.style.top = (parseInt(origin_left)+ parseInt(top)) + 'px';
+           // console.log('new point now ' + obj.style.top);
+        }
+
+    }
+
+    function _fix_left(arr, left) {
+
     }
 
     // 初始化节点、线的链接
@@ -749,7 +692,6 @@
                 initLeaf(TargetElList[i], 'Target')
             }
         });
-        // 现在我们可以获取所有的Endpoints
         console.log("初始化转化目的连接");
         initConn();
 
@@ -808,9 +750,7 @@
             .then(res => {
                 //console.log(res);
                 if (res.code == '200') {
-                    row['SourceData'] = JSON.parse(row.SourceData);
-                    row['Funcrule'] = JSON.parse(row.Funcrule);
-                    initConn();
+
                 } else {
                     ElMessage.error(res.message);
                 }
@@ -833,30 +773,22 @@
             if (node.OutType == 'nest') {
                 return
             }
-            ins.setId(elem, "source_" + elem.classList[2]);
-            ins.makeSource(elem, state.jsplumbMakeSource)
+            //ins.setId(elem, "source_" + elem.classList[2]);
+            //ins.makeSource(elem, state.jsplumbMakeSource)
+            //ins.setSourceEnabled(elem, true)
+            elem.id="source_" + elem.classList[2];
+            ins.addEndpoint(elem, state.jsplumbMakeSource)
 
-            ins.setSourceEnabled(elem, true)
-            /**
-             const endpointsource = ins.addEndpoint(elem, {endpoint: 'Dot', anchor: 'Right',maxConnections: -1,}, state.jsplumbEndpoint);
-
-             endpointsource.bind("mouseover", function (endpoint) {
-                console.log("you mouse on ", endpoint);
-                repaintWithScroll();
-            });
-             endpointsource.bind("mouseout", function (endpoint) {
-                console.log("you mouse on ", endpoint);
-                repaintWithScroll();
-            });
-             **/
         } else {
             let node = findTargetData(elem.classList[2]);
             if (node.OutType == 'nest') {
                 return
             }
-            ins.setId(elem, "target_" + elem.classList[2]);
-            ins.makeTarget(elem, state.jsplumbMakeTarget, jsplumbConnect)
-            ins.setTargetEnabled(elem, true)
+            //ins.setId(elem, "target_" + elem.classList[2]);
+            //ins.makeTarget(elem, state.jsplumbMakeTarget, jsplumbConnect)
+            //ins.setTargetEnabled(elem, true)
+            elem.id="target_" + elem.classList[2];
+            ins.addEndpoint(elem, state.jsplumbMakeTarget)
         }
 
 
@@ -875,8 +807,7 @@
                   },
                   state.jsplumbConnect
               );*/
-        //state.jsPlumb.setSuspendDrawing(false, true);
-        repaintWithScroll();
+        state.jsPlumb.setSuspendDrawing(false, true);
     }
 
     //遍历树形结构
@@ -886,45 +817,33 @@
         while (node = list.shift()) {
             if (node.Optional == '直接转换' || node.Optional == '系统函数' || node.Optional == '自定义转换计算') {
                 //console.log(node);
-                if (node.SourceData instanceof Array) {
-
-
-                    for (let i of node.SourceData) {
-                        let t = findTreeItemByName(state.tableDataSource.data, i)
-                        //console.log(t);
-                        if (t == null) {
-                            continue;
-                        }
-
-                        if (t.OutType == 'nest') {
-                            continue
-                        }
-
-                        if (node.OutType == 'nest') {
-                            continue
-                        }
-                        let sourceid = "source_" + t.ID;
-                        let targetid = "target_" + node.ID
-                        let label = node.TName;
-                        var connection = state.jsPlumb.connect(
-                            {
-                                source: sourceid,
-                                target: targetid,
-                                label: label,
-                            },
-                            state.jsplumbConnect
-                        );
-                        connection.bind("mouseover", function (conn) {
-                            repaintWithScroll()
-                            // console.log("you clicked on ", conn);
-                        });
-                        connection.bind("mouseout", function (conn) {
-                            repaintWithScroll()
-                            // console.log("you clicked on ", conn);
-                        });
+                for (let i of node.SourceData) {
+                    let t = findTreeItemByName(state.tableDataSource.data, i)
+                    //console.log(t);
+                    if (t == null) {
+                        continue;
                     }
-                } else {
 
+                    if (t.OutType == 'nest') {
+                        continue
+                    }
+
+                    if (node.OutType == 'nest') {
+                        continue
+                    }
+                    let sourceid = "source_" + t.ID;
+                    let targetid = "target_" + node.ID
+                    let sourceElement=document.getElementById(sourceid);
+                    let targetElement=document.getElementById(targetid);
+                    let label = node.TName;
+                    state.jsPlumb.connect(
+                        {
+                            source: sourceElement,
+                            target: targetElement,
+                            label: label,
+                        },
+                        state.jsplumbConnect
+                    );
                 }
             } else {
 
@@ -1092,8 +1011,7 @@
         });
         // 重绘
         nextTick(() => {
-            //state.jsPlumb.setSuspendDrawing(false, true);
-            repaintWithScroll();
+            state.jsPlumb.setSuspendDrawing(false, true);
         });
     };
 

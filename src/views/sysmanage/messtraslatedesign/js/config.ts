@@ -75,6 +75,7 @@ export const jsplumbMakeSource = {
 	//filter: '.workflow-icon-drag',
 	//filterExclude: false,
 	anchor: 'Continuous',
+
 	// 是否允许自己连接自己
 	allowLoopback: false,
 	maxConnections: -1,
@@ -96,4 +97,11 @@ export const jsplumbConnect = {
 	isTarget: true,
 	// 动态锚点、提供了4个方向 Continuous、AutoDefault
 	anchor: 'Continuous',
+};
+// 连线参数
+export const jsplumbEndpoint = {
+	isSource: true,
+	isTarget: true,
+	// 动态锚点、提供了4个方向 Continuous、AutoDefault
+
 };
