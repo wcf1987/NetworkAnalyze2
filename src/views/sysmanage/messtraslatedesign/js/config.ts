@@ -1,4 +1,6 @@
 // jsplumb 默认配置
+import {BezierConnector, DotEndpoint} from "@jsplumb/browser-ui";
+
 export const jsplumbDefaults = {
 	// 多个锚点 [源锚点，目标锚点]
 	Anchors: [
@@ -68,7 +70,73 @@ export const jsplumbDefaults = {
 	// 端点和连接的默认范围。范围提供了对哪些端点可以连接到哪些其他端点的基本控制
 	Scope: 'jsPlumb_DefaultScope',
 };
-
+export const jsplumbDefaults2 = {
+	// 多个锚点 [源锚点，目标锚点]
+	anchors: [
+		'Top',
+		'TopCenter',
+		'TopRight',
+		'TopLeft',
+		'Right',
+		'RightMiddle',
+		'Bottom',
+		'BottomCenter',
+		'BottomRight',
+		'BottomLeft',
+		'Left',
+		'LeftMiddle',
+	],
+	// 连线的容器id
+	// 设置链接线的形状，如直线或者曲线之类的。anchor可以去设置锚点的位置。可选值"<Bezier|Flowchart|StateMachine|Straight>"
+	connector: ['Bezier', { curviness: 100 }],
+	// 节点是否可以用鼠标拖动使其断开，默认为true。即用鼠标链接上的连线，也可以使用鼠标拖动让其断开。设置成false，可以让其拖动也不会自动断开
+	connectionsDetachable: false,
+	// 删除线的时候节点不删除
+	//  每当添加或以其他方式创建 Endpoint 并且 jsPlumb 尚未给出任何明确的 Endpoint 定义时将使用
+	endpoint: ['Dot', { Overlays: '' }],
+	// 连接中源和目标端点的默认外观
+	endpointStyle: { fill: '#1879ffa1', outlineWidth: 1 },
+	// jsPlumb 的内部日志记录是否打开
+	logEnabled: true,
+	// 连接器的默认外观
+	paintStyle: {
+		stroke: '#175094',
+		strokeWidth: 2,
+		outlineStroke: 'transparent',
+		outlineWidth: 10,
+	},
+	// 用于配置任何可拖动元素的默认选项jsPlumb.draggable
+	dragOptions: { cursor: 'pointer', zIndex: 2000 },
+	// 添加到连接器和端点的默认叠加层。已弃用：从 4.x 开始，将不支持此功能。并非所有叠加层都可以连接到连接器和端点。
+	overlays: [
+		[
+			'Arrow',
+			{
+				width: 20, // 箭头尾部的宽度
+				length: 16, // 从箭头的尾部到头部的距离
+				location: 1, // 位置，建议使用0～1之间
+				direction: 1, // 方向，默认值为1（表示向前），可选-1（表示向后）
+				foldback: 0.623, // 折回，也就是尾翼的角度，默认0.623，当为1时，为正三角
+			},
+		],
+		[
+			'Label',
+			{
+				label: '',
+				location: 0.5,
+				cssClass: 'aLabel',
+			},
+		],
+	],
+	// 默认渲染模式 svg、canvas
+	renderMode: 'svg',
+	// 悬停状态下连接的默认外观
+	hoverPaintStyle: { stroke: '#f4342d', strokeWidth: 4 },
+	// 悬停状态下端点的默认外观
+	endpointHoverStyle: { fill: 'red' },
+	// 端点和连接的默认范围。范围提供了对哪些端点可以连接到哪些其他端点的基本控制
+	scope: 'jsPlumb_DefaultScope',
+};
 // 整个节点作为source或者target
 export const jsplumbMakeSource = {
 	// 设置可以拖拽的类名，只要鼠标移动到该类名上的DOM，就可以拖拽连线
@@ -80,7 +148,22 @@ export const jsplumbMakeSource = {
 	allowLoopback: false,
 	maxConnections: -1,
 };
+export const jsplumbMakeSource2 = {
+	// 设置可以拖拽的类名，只要鼠标移动到该类名上的DOM，就可以拖拽连线
+	//filter: '.workflow-icon-drag',
+	//filterExclude: false,
+	anchor: 'Right',
+	maxConnections:20,
+	cssClass:"sourceEndpoint",
+	endpoint:{
+		type: DotEndpoint.type,
+		options:{
+			radius: 10
+		}
+	},
+	source: true,
 
+};
 // 整个节点作为source或者target
 export const jsplumbMakeTarget = {
 	//filter: '.workflow-icon-drag',
@@ -90,13 +173,48 @@ export const jsplumbMakeTarget = {
 	allowLoopback: false,
 	dropOptions: { hoverClass: 'ef-drop-hover' },
 };
-
+export const jsplumbMakeTarget2 = {
+	//filter: '.workflow-icon-drag',
+	//filterExclude: false,
+	// 是否允许自己连接自己
+	anchor: 'Left',
+	cssClass:"targetEndpoint",
+	maxConnections:20,
+	endpoint:{
+		type: DotEndpoint.type,
+		options:{
+			radius:10
+		}
+	},
+	dropOptions: { hoverClass: 'ef-drop-hover' },
+	target: true,
+};
 // 连线参数
 export const jsplumbConnect = {
 	isSource: true,
 	isTarget: true,
 	// 动态锚点、提供了4个方向 Continuous、AutoDefault
 	anchor: 'Continuous',
+};
+export const jsplumbConnect2 = {
+
+	type:BezierConnector.type,
+	options:{
+		curviness: 50
+	}
+
+};
+export const paintStyle2= {
+	stroke: '#40BDEC',
+		strokeWidth: 2,
+		outlineStroke: '#FFF',
+		outlineWidth: 1,
+};
+export const  hoverPaintStyle2={
+	stroke: '#f60e0e',
+		strokeWidth: 4,
+		outlineStroke: '#FFF',
+		outlineWidth: 1,
 };
 // 连线参数
 export const jsplumbEndpoint = {
