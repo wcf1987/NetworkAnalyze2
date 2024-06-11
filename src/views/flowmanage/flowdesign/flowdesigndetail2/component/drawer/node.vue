@@ -4,7 +4,7 @@
         <!-- 节点编辑 -->
 
         <el-scrollbar>
-            <el-form :model="state.form" ref="extendFormRef" size="default" label-width="100px"
+            <el-form :model="state.form" ref="extendFormRef" size="default" label-width="80px"
                      class="pt15 pr15 pb15 pl15">
                 <el-form-item label="数据id" prop="id" v-if="false">
                     <el-input v-model="state.node.id" placeholder="请输入数据id" clearable disabled></el-input>
@@ -57,13 +57,13 @@
                         </el-select>
                     </el-form-item>
 
-                    <el-form-item label="输入源地址" prop="sourecenetworkIP"
+                    <el-form-item label="源地址" prop="sourecenetworkIP"
                                   v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''">
                         <el-input v-model="state.properForm.sourecenetworkIP" placeholder="请输入源地址ip地址" clearable
                                   :readonly=" state.properForm.sourecenetworkID!='-1'"
                         ></el-input>
                     </el-form-item>
-                    <el-form-item label="源地址端口" prop="sourecenetworkPort"
+                    <el-form-item label="源端口" prop="sourecenetworkPort"
                                   v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''"
                     >
                         <el-input v-model="state.properForm.sourecenetworkPort" placeholder="请输入源地址端口" clearable
@@ -81,12 +81,12 @@
                             />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="本地串口号" prop="SerialNO"
+                    <el-form-item label="串口号" prop="SerialNO"
                                   v-if="state.properForm.interfacetype=='串口'">
                         <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
                                   :readonly=" state.properForm.serialID!='-1'"></el-input>
                     </el-form-item>
-                    <el-form-item label="本地波特率" prop="BAUD"
+                    <el-form-item label="波特率" prop="BAUD"
                                   v-if="state.properForm.interfacetype=='串口' ">
                         <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
                                   :readonly=" state.properForm.serialID!='-1'"></el-input>
@@ -137,12 +137,12 @@
                             />
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="目的串口号" prop="type"
+                    <el-form-item label="串口号" prop="type"
                                   v-if="state.properForm.interfacetype=='串口'">
                         <el-input v-model="state.properForm.SerialNO" placeholder="请输入串口号" clearable
                                   :readonly=" state.properForm.serialID!='-1'"></el-input>
                     </el-form-item>
-                    <el-form-item label="目的波特率" prop="type"
+                    <el-form-item label="波特率" prop="type"
                                   v-if="state.properForm.interfacetype=='串口' ">
                         <el-input v-model="state.properForm.BAUD" placeholder="请输入波特率" clearable
                                   :readonly=" state.properForm.serialID!='-1'"></el-input>
@@ -299,7 +299,7 @@
 
 
                 <div class="customproper" v-if="state.showFlag['messtraslate']">
-                    <el-form-item label="转换规则模板">
+                    <el-form-item label="转换规则">
                         <el-select v-model="state.properForm.transid" v-on:change="onChangeMessTranslateChoose"
                                    placeholder="请选择" clearable class="w100">
                             <el-option
@@ -481,7 +481,12 @@
         clearFlag();
         state.tabsActive = '1';
         state.node = data;
-        state.proper.name = data.text.value;
+        if(data.text==null){
+               state.proper.name = '';
+        }else{
+               state.proper.name = data.text.value;
+        }
+
         state.properForm = data.properties;
 
         state.lf = lf;
@@ -1334,7 +1339,9 @@
     .customproper {
         padding-bottom: 20px;
     }
-
+  :deep(.el-form-item__label){
+     margin-left: -10px;
+  }
     //解决按钮过多延长至第二排问题
     .btn {
         display: flex;

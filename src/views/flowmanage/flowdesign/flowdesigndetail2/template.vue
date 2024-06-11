@@ -284,13 +284,25 @@
             let temp = flowstr.nodes[i];
 
             lf.value.setProperties(temp.id, temp.properties);
-            lf.value.updateText(temp.id, temp.text.value);
+             let texts='';
+            if(temp.text == null){
+              texts='';
+            }else{
+              texts=temp.text.value;
+            }
+            lf.value.updateText(temp.id, texts);
         }
         for (let i = 0; i < flowstr.edges.length; i++) {
             let temp = flowstr.edges[i];
 
             lf.value.setProperties(temp.id, temp.properties);
-            lf.value.updateText(temp.id, temp.text.value);
+                         let texts='';
+            if(temp.text == null){
+              texts='';
+            }else{
+              texts=temp.text.value;
+            }
+            lf.value.updateText(temp.id, texts);
         }
         // console.log(flowstr.stateShow)
 
