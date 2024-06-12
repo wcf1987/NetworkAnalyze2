@@ -3,7 +3,7 @@
 		router
 		mode="horizontal"
 		:unique-opened="true"
-		menu-trigger="click"
+		menu-trigger="hover"
 		:class="themeConfig.isIsDark ? '' : 'custom-menu-style'"
 		:default-active="state.defaultActive"
 		:style="{ height: 'unset' }"
