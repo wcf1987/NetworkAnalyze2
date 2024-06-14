@@ -49,7 +49,7 @@
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                 <el-form-item label="目的字段" prop="Name">
                   <el-input v-model="state.ruleForm.Name" placeholder="" clearable
-                            readonly='true'></el-input>
+                            :readonly='true'></el-input>
                 </el-form-item>
               </el-col>
 
@@ -84,23 +84,12 @@
                                :props="props21"
                                @change="changeSourceInput21"
                                clearable
-                               style="width: 300px; " collapse-tags :disabled="true"/>
+                               style="width: 300px; " collapse-tags :disabled="state.editEabled"/>
                 </el-form-item>
               </el-col>
 
 
-              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
-                      v-if="state.ruleForm.Optional=='系统函数'">
 
-                <el-form-item label="源字段" prop="SourceData">
-
-                  <el-cascader v-model="state.ruleForm.SourceData" :options="sourceoptions"
-                               :props="props21"
-                               @change="changeSourceInput21"
-                               clearable
-                               style="width: 300px; " collapse-tags/>
-                </el-form-item>
-              </el-col>
 
 
               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
@@ -125,7 +114,7 @@
                                :props="props21"
                                @change="changeSourceInput21"
                                clearable
-                               style="width: 300px; " collapse-tags :disabled="true"/>
+                               style="width: 300px; " collapse-tags :disabled="state.editEabled"/>
                 </el-form-item>
               </el-col>
 
@@ -240,7 +229,7 @@ const initLeftNavList = () => {
 const getOptionData = () => {
   funcoptions.value = JSON.parse(JSON.stringify(FunctionType));
   // funcoptions.value=FunctionType.slice()
-  console.log(funcoptions.value)
+  //console.log(funcoptions.value)
   functionplugManageApi().search(
       {
 
@@ -262,7 +251,7 @@ const getOptionData = () => {
               //funcoptions.value = res.data
             }
           }
-          console.log(funcoptions)
+          //console.log(funcoptions)
           //locOptions.value.push({ID:-1,Name:'最后'});
         } else {
           ElMessage.error(res.message);
@@ -337,7 +326,8 @@ const props21 = {
   multiple: true,
   expandTrigger: 'hover',
   value: 'Name',
-  label: 'Name'
+  label: 'Name',
+  emitPath:false,
 }
 const props22 = {
   expandTrigger: 'hover',
@@ -359,8 +349,17 @@ const state = reactive({
   ID: 0,
   type: '流程编排',
   original: '',
+  ssid: 0,
+  sourceid: 0,
+  targetid: 0,
+  targetname: '',
+  source: '',
+  target: '',
+  sourceoptions: [],
+  targetoptions: [],
+  targetoptions1: [],
   leftNavList: [],
-
+  editEabled:true,
 
   ruleForm: {
     Name: '', // 账户名称
@@ -431,16 +430,26 @@ const changeSourceInput32 = (fo) => {
 
 }
 // 打开弹窗
-const openDialog = (type: string, sourceid, row: RowUserType, original: string) => {
+const openDialog = (type: string, sourceid, row: RowUserType, original: string,ssid) => {
   state.original = original;
-  state.targetid = row.ID;
+  console.log(row)
+  state.targetfiledid = row.ID;
   state.sourceid = sourceid;
+
+  if(state.original=='TableEdit'){
+    state.editEabled=false;
+  }else{
+    state.editEabled=true;
+  }
+  if(state.original=='AddConn'){
+    state.ssid=ssid;
+  }
   if (type === 'edit') {
     state.ruleForm = row;
 
     state.dialog.title = '修改';
     state.dialog.submitTxt = '修 改';
-    console.log('修改');
+    //console.log('修改');
   } else {
     state.dialog.title = '新增';
     state.dialog.submitTxt = '新 增';
@@ -458,13 +467,14 @@ const closeDialog = () => {
 };
 // 取消
 const onCancel = () => {
-  console.log(state.original)
-  if (state.original == 'addConn') {
-    let conn={sourceId:state.sourceid, targetId:state.targetid};
+  //console.log(state.original)
+  if (state.original == 'AddConn') {
+    let conn={sourceId:state.ssid, targetId:state.targetfiledid};
 
      emit('delConn',conn);
+
   }
-  closeDialog();
+closeDialog();
 };
 // 提交
 const onSubmit = () => {

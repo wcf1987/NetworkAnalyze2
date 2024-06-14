@@ -37,7 +37,6 @@ const state = reactive({
     {icon: 'ele-Check', title: '保存', fnName: 'submit'},
     {icon: 'ele-Delete', title: '清空画布', fnName: 'clearMap'},
     {icon: 'ele-DataLine', title: '查看缩略图', fnName: 'showMiniMap'},
-    {icon: 'ele-FullScreen', title: '全屏', fnName: 'fullscreen'},
     {icon: 'ele-Help', title: '帮助', fnName: 'help'},
     {icon: 'ele-CloseBold', title: '关闭', fnName: 'closeWin'},
   ],

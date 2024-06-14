@@ -46,6 +46,7 @@
                     </div>
                     <!-- 抽屉表单、线 -->
                     <div ref="workflow-right2">
+                         <el-scrollbar >
                         <Drawer ref="drawerRef" @label="setLineLabel" @node="setNodeContent" @save="saveFlow"/>
                         <el-collapse v-model="activeNames" class="centered-collapse">
                             <el-collapse-item title="流程设计属性" name="1" style="font-size:14px">
@@ -56,16 +57,18 @@
                                     </el-icon>
                                 </template>
                                 <el-card style="font-size:14px">
-                                    <p class="text item">{{ '源IP/端口： '}}</p>
-                                    <p class="text item">{{ '消息封装格式： '}}</p>
-                                    <p class="text item">{{ '源消息类型： '}}</p>
-                                    <p class="text item">{{ '目的消息类型： '}}</p>
-                                    <p class="text item">{{ '消息转化规则： '}}</p>
-                                    <p class="text item">{{ '转换后封装格式： '}}</p>
-                                    <p class="text item">{{ '目的IP/端口： '}}</p>
+                                    <p class="text item">{{ `流程编排类型：${state.FlowType} `}}</p>
+                                    <p class="text item">{{ `消息头解析格式： ${state.headerParseName} `}}</p>
+                                    <p class="text item">{{ `消息体解析格式： ${state.bodyPaserName} `}}</p>
+                                    <p class="text item">{{ `转换规则： ${state.transName} `}}</p>
+                                    <p class="text item">{{ `消息体封装格式： ${state.bodyEncapName} `}}</p>
+                                    <p class="text item">{{ `消息头封装格式：${state.headerEncapName} `}}</p>
+                                    <p class="text item">{{ `源IP/端口： ${state.SourceIPAndPort} `}}</p>
+                                    <p class="text item">{{ `目的IP/端口： ${state.TargetIPAndPort} `}}</p>
                                 </el-card>
                             </el-collapse-item>
                         </el-collapse>
+                          </el-scrollbar>
                     </div>
                 </div>
             </div>
@@ -1048,7 +1051,7 @@
                 lf.value.redo();
                 break;
             case 'showMiniMap':
-                lf.value.extension.miniMap.show(lf.value.graphModel.width - 150, 40)
+                lf.value.extension.miniMap.show(lf.value.graphModel.width - 350, 20)
                 break;
             case 'help':
                 onToolHelp();
@@ -1127,7 +1130,7 @@
     };
     // 顶部工具栏-删除
     const onToolDel = () => {
-        ElMessageBox.confirm('此操作将清空画布，是否继续？', '提示', {
+        ElMessageBox.confirm('此操作将清空模板，是否继续？', '提示', {
             confirmButtonText: '清空',
             cancelButtonText: '取消',
         })
@@ -1135,7 +1138,7 @@
                 lf.value.clearData();
                 nextTick(() => {
 
-                    ElMessage.success('清空画布成功');
+                    ElMessage.success('清空模板成功');
                 });
             })
             .catch(() => {

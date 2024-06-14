@@ -46,6 +46,7 @@
                     </div>
                     <!-- 抽屉表单、线 -->
                     <div ref="workflow-right2">
+                      <el-scrollbar >
                         <Drawer ref="drawerRef" @label="setLineLabel" @node="setNodeContent" @save="saveFlow"/>
                         <el-collapse v-model="activeNames" class="centered-collapse">
                             <el-collapse-item title="流程设计属性" name="1" style="font-size:14px">
@@ -67,6 +68,7 @@
                                 </el-card>
                             </el-collapse-item>
                         </el-collapse>
+                          </el-scrollbar>
                     </div>
                 </div>
             </div>
@@ -1150,7 +1152,7 @@
     };
     // 顶部工具栏-删除
     const onToolDel = () => {
-        ElMessageBox.confirm('此操作将清空画布，是否继续？', '提示', {
+        ElMessageBox.confirm('此操作将清空流程，是否继续？', '提示', {
             confirmButtonText: '清空',
             cancelButtonText: '取消',
         })
@@ -1158,7 +1160,7 @@
                 lf.value.clearData();
                 nextTick(() => {
 
-                    ElMessage.success('清空画布成功');
+                    ElMessage.success('清空流程成功');
                 });
             })
             .catch(() => {

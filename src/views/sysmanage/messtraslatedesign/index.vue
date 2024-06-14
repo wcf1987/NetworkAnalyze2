@@ -44,7 +44,9 @@
                       @row-click="onOpenEdit"
                       :row-class-name="({row}) => `TargetRow ${row.ID}`"
                       @expand-change="(row, expanded) => !expanded && TargetTable?.toggleRowExpansion(row)"
-                      default-expand-all class="eltableclass" :style="state.tableStyle">
+                      default-expand-all class="eltableclass" :style="state.tableStyle"
+
+                      :cell-style="handleChangeCellStyle">
               <el-table-column type="selection" width="50" v-if="false"/>
               <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
               <el-table-column prop="parentindex" label="" width="60" v-if="false"/>
@@ -207,9 +209,35 @@ const calcIndex = (index) => {
   index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
   return index
 }
+const handleChangeCellStyle=({row, column, rowIndex, columnIndex})=> {
+    let cellStyle = {}
+  console.log(row);
+     cellStyle.backgroundColor = '#efb40a'
+    if (row['Optional'] == null || row['Optional'] == '' ) {
+      cellStyle.backgroundColor = '#efb40a'
+    }
+     if (row['Optional'] == '默认值' && row['Transrule']!='') {
+      cellStyle.backgroundColor = '#75ea12'
+    }
+     if (row['Optional'] == '直接转换' && row['SourceData'].length>0) {
+      cellStyle.backgroundColor = '#75ea12'
+    }
+     if (row['Optional'] == '自定义转换计算' && row['SourceData'].length>0) {
+      cellStyle.backgroundColor = '#75ea12'
+    }
+
+   if (row['OutType'] == 'nest') {
+      cellStyle.backgroundColor ='#ffffff'
+    }
+        return cellStyle
+  }
+
 // 打开修改转换规则界面弹窗
-const onOpenEdit = (row: RowUserType) => {
+const onOpenEdit = (row: RowUserType, sid) => {
   state.targetData = findTargetData(row.ID);
+  if (row.OutType == 'nest') {
+    return
+  }
   if (row.SourceData != null && row.SourceData.length != 0) {
     state.sourceData = findSourceDataByName(row.SourceData[0]);
     if (state.sourceData == null) {
@@ -234,7 +262,12 @@ const onOpenEdit = (row: RowUserType) => {
   if (state.targetData.OutType == 'fields') {
     addFieldsInfo(state.targetData)
   }
-  userDialogRef.value.openDialog('edit', state.sourceid, row,'addConn');
+  if (sid == null || sid == '') {
+    userDialogRef.value.openDialog('edit', state.sourceid, row, 'DesignEdit');
+  } else {
+    userDialogRef.value.openDialog('edit', state.sourceid, row, 'AddConn', sid);
+  }
+
 };
 // 点击左侧节点
 const onClickSource = (row: RowUserType) => {
@@ -813,7 +846,7 @@ const delConn = (conn) => {
   });
   if (connf[0]) {
     state.jsPlumb.deleteConnection(connf[0]);
-    updateNodeByConn(sourceId,targetId,'del');
+    updateNodeByConn(sourceids, targetids, 'del');
   }
 
 
@@ -825,11 +858,12 @@ const updateNodeByConn = (sourceId, targetId, type) => {
   let sid = sourceId.split('_')[1];
   let trow;
   let sname;
-  console.log('conn change')
+
   if (type == 'add') {
+    console.log('conn add:', sid, tid);
     trow = findTreeItemById(state.tableDataTranslate.data, tid);
     sname = findTreeItemById(state.tableDataSource.data, sid).Name;
-    console.log(trow['SourceData']);
+
     //trow.SourceData = JSON.parse(trow.SourceData)
     if (trow.SourceData == null) {
       trow.SourceData = [];
@@ -839,21 +873,33 @@ const updateNodeByConn = (sourceId, targetId, type) => {
     } else {
       trow.SourceData = []
     }
-
-    trow.SourceData.push([sname]);
+    if (trow['Optional'] == null || trow['Optional'] == '' || trow['Optional'] == '默认值') {
+      trow['Optional'] = '直接转换';
+    }
+    trow.SourceData.push(sname);
+    console.log(trow['SourceData']);
     updateNodeDB(trow);
-    onOpenEdit(trow);
+    onOpenEdit(trow, sid);
   }
   if (type == 'del') {
     trow = findTreeItemById(state.tableDataTranslate.data, tid);
     sname = findTreeItemById(state.tableDataSource.data, sid).Name;
+    console.log(trow);
     for (let k of trow.SourceData) {
       const index = k.indexOf(sname);
       if (index != -1) {
         const i2 = trow.SourceData.indexOf(k);
         trow.SourceData.splice(i2, 1);
+        if (trow.SourceData.length == 0) {
+          trow.TName = '';
+          trow.Funcrule = '';
+          trow.Optional = '';
+          trow.Transrule = '';
+
+        }
         break;
       }
+
     }
 
 
@@ -863,9 +909,7 @@ const updateNodeByConn = (sourceId, targetId, type) => {
 const updateNodeDB = (row) => {
   row['SourceData'] = JSON.stringify(row.SourceData);
   row['Funcrule'] = JSON.stringify(row.Funcrule);
-  if (row['Optional'] == null || row['Optional'] == '默认值') {
-    row['Optional'] = '直接转换';
-  }
+
   messtranslateApi().updateMessTranslateDetail(
       row
   )
@@ -979,21 +1023,9 @@ function walkTree(tree) {
               },
               state.jsplumbConnect
           );
-          connection.bind("mouseover", function (conn) {
-            repaintWithScroll()
-            // console.log("you clicked on ", conn);
-          });
-          connection.bind("mouseout", function (conn) {
-            repaintWithScroll()
-            // console.log("you clicked on ", conn);
-          });
+
         }
-      } else {
-
       }
-    } else {
-
-
     }
     nodes.push(node)
     node.children && list.unshift(...node.children)
@@ -1370,7 +1402,7 @@ onUnmounted(() => {
 
 
         overflow: scroll;
-        width: 200px;
+        width: 250px;
         border-left: 1px solid;
         background-size: 10px 10px;
 
