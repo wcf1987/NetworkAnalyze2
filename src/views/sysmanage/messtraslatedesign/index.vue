@@ -212,9 +212,9 @@ const calcIndex = (index) => {
 const handleChangeCellStyle=({row, column, rowIndex, columnIndex})=> {
     let cellStyle = {}
   console.log(row);
-     cellStyle.backgroundColor = '#efb40a'
+     cellStyle.backgroundColor = '#ffffff'
     if (row['Optional'] == null || row['Optional'] == '' ) {
-      cellStyle.backgroundColor = '#efb40a'
+      cellStyle.backgroundColor = '#ffffff'
     }
      if (row['Optional'] == '默认值' && row['Transrule']!='') {
       cellStyle.backgroundColor = '#75ea12'
@@ -324,7 +324,7 @@ const findSourceData = (id) => {
   const nodes = walkTreeToList(state.tableDataSource.data)
   for (let i of nodes) {
     if (i.ID == id) {
-      return i;
+        return  JSON.parse(JSON.stringify(i));
     }
   }
   return null;
@@ -333,7 +333,8 @@ const findSourceDataByName = (name) => {
   const nodes = walkTreeToList(state.tableDataSource.data)
   for (let i of nodes) {
     if (i.Name == name) {
-      return i;
+
+      return  JSON.parse(JSON.stringify(i));
     }
   }
   return null;
@@ -773,10 +774,8 @@ const scrollPaint = (e) => {
 
 
   state.scrollTop = e.target.scrollTop;
-  //
-  //clearJsplumb();
 
-  // initJsPlumbConnection()
+
 
   nextTick(() => {
     // console.log("滚动触发");

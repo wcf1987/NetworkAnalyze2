@@ -10,6 +10,12 @@
                     </el-icon>
                     查询
                 </el-button>
+                     <el-button  size="default" type="success" class="ml10" @click="onRowExpand">
+          <el-icon>
+            <ele-Expand/>
+          </el-icon>
+          展开/收起
+        </el-button>
                 <el-button size="default" type="primary" class="ml10" @click="viewMess('view')">
                     <el-icon>
                         <ele-Coin/>
@@ -23,7 +29,7 @@
                     返回
                 </el-button>
             </div>
-            <el-table  :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%" >
+            <el-table :expand-row-keys="state.expandArr"  :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%" >
 
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                                 <el-table-column prop="parentindex" label="序号" width="80" />
@@ -89,6 +95,7 @@
     const route = useRoute()
     const querys = route.query
     const state = reactive({
+        expandArr: [],
         tableData: {
             id: 0,
             sourceid: 0,
@@ -115,6 +122,52 @@
 
         router.back();
     }
+
+/**
+ * 控制行展开状态的函数
+ *
+ * 该函数用于管理表格中行的展开和折叠状态。它通过操作state.expandArr数组来实现。
+ * 当数组为空时，意味着所有行都是折叠的，此时函数会将当前行展开；
+ * 当数组不为空时，意味着至少有一行是展开的，此时函数会将所有行折叠。
+ *
+ * 注意：该函数目前缺少对展开行ID的管理，这可能导致无法正确地展开或折叠行。
+ */
+const onRowExpand = () => {
+  // 输出当前展开的行ID数组用于调试
+  //console.log(state.expandArr);
+
+  // 检查展开数组是否为空
+  //state.expand=false;
+  if (state.expandArr.length == 0) {
+    // 如果展开数组为空，意味着所有行都是折叠的，因此需要将当前行展开
+    //expandArr中之前有这个数据 --去除它
+    expandID(state.tableData.data);
+
+  } else {
+    // 如果展开数组不为空，意味着至少有一行是展开的，此时应该将所有行折叠
+    //原来没有这个数据 --增加它
+    state.expandArr = [];
+  }
+}
+
+/**
+ * 将列表中具有子项的项的ID添加到展开数组中。
+ * 该函数递归处理列表中的每个项，如果项有子项，则将其ID转换为字符串并添加到展开数组中。
+ * 这样做的目的是为了在用户界面中可能的展开/收起功能，标记哪些项应该默认是展开的。
+ *
+ * @param {Array} list - 包含项的列表，这些项可能有子项。
+ *
+ * 注意：该函数修改了全局状态对象state的expandArr属性，因此应该谨慎调用，
+ * 确保不会意外地影响应用的状态管理。
+ */
+function expandID(list){
+  for(let i of list){
+      if(i.children!=null){
+        state.expandArr.push(i.ID+"");
+        expandID(i.children)
+      }
+  }
+}
     const onSearch = () => {
         state.tableData.searchStr = state.tableData.search;
         getTableData();
@@ -145,7 +198,7 @@
                         i.parentindex=id+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1;
                         id=id+1;
                     }
-
+                      onRowExpand();
                 } else {
                     ElMessage.error(res.message);
                 }
