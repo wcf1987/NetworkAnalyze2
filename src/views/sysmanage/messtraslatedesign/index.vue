@@ -12,7 +12,7 @@
 
 
           <!-- 右侧绘画区 -->
-          <div id="workflow-right" class="workflow-right" ref="workflowRightRef" @scroll.stop="scrollPaint">
+          <div id="workflow-right" class="workflow-right" ref="workflowRightRef" >
             <el-table :data="state.tableDataSource.data" row-key="ID"
                       ref="SourceTable"
                       v-loading="state.tableDataSource.loading"
@@ -41,6 +41,7 @@
                       v-loading="state.tableDataTranslate.loading"
                       ref="TargetTable"
                       style="margin-left: 600px;"
+
                       @row-click="onOpenEdit"
                       :row-class-name="({row}) => `TargetRow ${row.ID}`"
                       @expand-change="(row, expanded) => !expanded && TargetTable?.toggleRowExpansion(row)"
@@ -209,28 +210,28 @@ const calcIndex = (index) => {
   index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
   return index
 }
-const handleChangeCellStyle=({row, column, rowIndex, columnIndex})=> {
-    let cellStyle = {}
-  console.log(row);
-     cellStyle.backgroundColor = '#ffffff'
-    if (row['Optional'] == null || row['Optional'] == '' ) {
-      cellStyle.backgroundColor = '#ffffff'
-    }
-     if (row['Optional'] == '默认值' && row['Transrule']!='') {
-      cellStyle.backgroundColor = '#75ea12'
-    }
-     if (row['Optional'] == '直接转换' && row['SourceData'].length>0) {
-      cellStyle.backgroundColor = '#75ea12'
-    }
-     if (row['Optional'] == '自定义转换计算' && row['SourceData'].length>0) {
-      cellStyle.backgroundColor = '#75ea12'
-    }
-
-   if (row['OutType'] == 'nest') {
-      cellStyle.backgroundColor ='#ffffff'
-    }
-        return cellStyle
+const handleChangeCellStyle = ({row, column, rowIndex, columnIndex}) => {
+  let cellStyle = {}
+  //console.log(row);
+  cellStyle.backgroundColor = '#ffffff'
+  if (row['Optional'] == null || row['Optional'] == '') {
+    cellStyle.backgroundColor = '#ffffff'
   }
+  if (row['Optional'] == '默认值' && row['Transrule'] != '') {
+    cellStyle.backgroundColor = '#75ea12'
+  }
+  if (row['Optional'] == '直接转换' && row['SourceData'].length > 0) {
+    cellStyle.backgroundColor = '#75ea12'
+  }
+  if (row['Optional'] == '自定义转换计算' && row['SourceData'].length > 0) {
+    cellStyle.backgroundColor = '#75ea12'
+  }
+
+  if (row['OutType'] == 'nest') {
+    cellStyle.backgroundColor = '#ffffff'
+  }
+  return cellStyle
+}
 
 // 打开修改转换规则界面弹窗
 const onOpenEdit = (row: RowUserType, sid) => {
@@ -324,7 +325,7 @@ const findSourceData = (id) => {
   const nodes = walkTreeToList(state.tableDataSource.data)
   for (let i of nodes) {
     if (i.ID == id) {
-        return  JSON.parse(JSON.stringify(i));
+      return JSON.parse(JSON.stringify(i));
     }
   }
   return null;
@@ -334,7 +335,7 @@ const findSourceDataByName = (name) => {
   for (let i of nodes) {
     if (i.Name == name) {
 
-      return  JSON.parse(JSON.stringify(i));
+      return JSON.parse(JSON.stringify(i));
     }
   }
   return null;
@@ -670,22 +671,23 @@ const initJsPlumb = () => {
       contextmenuLineRef.value.openContextmenu(v, conn);
     });
     state.jsPlumb.bind("beforeDrag", (params) => {
+      // repaintWithScroll2();
       console.log(params);
 
       //  state.intervalId = setInterval(repaintWithScroll2, 500);
       //       setTimeout(() => {
-      //   repaintWithScroll2();
+      //
       // }, 50);
       //  fixDragScroll();
       return true;
     });
 
     // 连线之前
-    state.jsPlumb.bind('beforeDrop', (conn: any) => {
-      //repaintWithScroll();
+    state.jsPlumb.bind('beforeDrop', (conn: any,originalEvent) => {
+      repaintWithScroll();
       // clearInterval(state.intervalId);
       const {sourceId, targetId} = conn;
-      // console.log(conn);
+      //console.log(conn);
       let existingConnections = state.jsPlumb.getConnections({
         source: sourceId,
         target: targetId
@@ -699,14 +701,27 @@ const initJsPlumb = () => {
       }
     });
     // 连线时
-    state.jsPlumb.bind('connection', (conn: any) => {
+    state.jsPlumb.bind('connection', (conn: any, originalEvent) => {
       //  console.log(conn);
       const {sourceId, targetId} = conn;
-
+      if (originalEvent != null) {
+        var e = originalEvent;
+        var x = e.pageX || e.clientX + document.body.scroolLeft;
+        var y = e.pageY || e.clientY + document.body.scrollTop;
+        var domcu = document.elementsFromPoint(x, y);
+        var newtargetId='';
+        if(domcu!=null){
+          console.log(domcu)
+          var newtarget=findTreeItemByName(state.tableDataTranslate.data,domcu[0].textContent)
+          newtargetId= "target_" +newtarget.ID
+        }
+        console.log(newtargetId);
+      }
 
       if (state.walkStatus) {
 
       } else {
+
         updateNodeByConn(sourceId, targetId, 'add');
       }
     });
@@ -763,29 +778,14 @@ const handleWheel = (event) => {
   var top = 50;
   if (deltaY < 0) {
     state.tableStyle.top = (parseInt(origin_top) + parseInt(top)) + 'px';
-
+    state.scrollTop=state.scrollTop+top;
   } else if (deltaY > 0) {
     state.tableStyle.top = (parseInt(origin_top) - parseInt(top)) + 'px';
+    state.scrollTop=state.scrollTop-top;
   }
   repaintWithScroll()
 }
 
-const scrollPaint = (e) => {
-
-
-  state.scrollTop = e.target.scrollTop;
-
-
-
-  nextTick(() => {
-    // console.log("滚动触发");
-
-    // 获取滑动距离，修改锚点、连线位置
-    repaintWithScroll();
-
-  })
-
-}
 
 function fix_jsPlumb_offset(top) {
   //console.log('scroll dis:' + top);
