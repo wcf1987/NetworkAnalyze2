@@ -12,7 +12,7 @@
 
 
           <!-- 右侧绘画区 -->
-          <div id="workflow-right" class="workflow-right" ref="workflowRightRef" >
+          <div id="workflow-right" class="workflow-right" ref="workflowRightRef">
             <el-table :data="state.tableDataSource.data" row-key="ID"
                       ref="SourceTable"
                       v-loading="state.tableDataSource.loading"
@@ -218,8 +218,8 @@ const calcIndex = (index) => {
   index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
   return index
 }
-const onDrop = (row,event) => {
-   console.log('drop event');
+const onDrop = (row, event) => {
+  console.log('drop event');
   console.log(row);
 
 }
@@ -698,7 +698,7 @@ const initJsPlumb = () => {
     });
 
     // 连线之前
-    state.jsPlumb.bind('beforeDrop', (conn: any,originalEvent) => {
+    state.jsPlumb.bind('beforeDrop', (conn: any, originalEvent) => {
       repaintWithScroll();
       // clearInterval(state.intervalId);
       const {sourceId, targetId} = conn;
@@ -706,16 +706,16 @@ const initJsPlumb = () => {
       if (state.pageX != 0) {
 
         var domcu = document.elementsFromPoint(state.pageX, state.pageY);
-        var newtargetId='';
-        if(domcu!=null){
+        var newtargetId = '';
+        if (domcu != null) {
 
-          for(var i of domcu){
+          for (var i of domcu) {
             //console.log(i.className)
-           //  console.log(i.innerText)
-            if (i.className!=null  && typeof i.className === 'string' &&  i.className.indexOf("el-table_2_column_2 el-table__cell")>-1){
-              var newtarget=findTreeItemByName(state.tableDataTranslate.data,i.innerText)
-               newtargetId= 'target_'+newtarget.ID;
-                  console.log(newtargetId);
+            //  console.log(i.innerText)
+            if (i.className != null && typeof i.className === 'string' && i.className.indexOf("el-table_2_column_2 el-table__cell") > -1) {
+              var newtarget = findTreeItemByName(state.tableDataTranslate.data, i.innerText)
+              newtargetId = 'target_' + newtarget.ID;
+              console.log(newtargetId);
 
             }
           }
@@ -723,7 +723,6 @@ const initJsPlumb = () => {
         }
 
       }
-
 
 
       //console.log(conn);
@@ -749,16 +748,16 @@ const initJsPlumb = () => {
         var x = e.pageX || e.clientX + document.body.scroolLeft;
         var y = e.pageY || e.clientY + document.body.scrollTop;
         var domcu = document.elementsFromPoint(x, y);
-        var newtargetId='';
-        if(domcu!=null){
+        var newtargetId = '';
+        if (domcu != null) {
 
-          for(var i of domcu){
+          for (var i of domcu) {
             //console.log(i.className)
-           //  console.log(i.innerText)
-            if (i.className!=null  && typeof i.className === 'string' &&  i.className.indexOf("el-table_2_column_2 el-table__cell")>-1){
-              var newtarget=findTreeItemByName(state.tableDataTranslate.data,i.innerText)
-               newtargetId= 'target_'+newtarget.ID;
-                  console.log(newtargetId);
+            //  console.log(i.innerText)
+            if (i.className != null && typeof i.className === 'string' && i.className.indexOf("el-table_2_column_2 el-table__cell") > -1) {
+              var newtarget = findTreeItemByName(state.tableDataTranslate.data, i.innerText)
+              newtargetId = 'target_' + newtarget.ID;
+              console.log(newtargetId);
 
             }
           }
@@ -769,14 +768,58 @@ const initJsPlumb = () => {
       if (state.walkStatus) {
 
       } else {
-        if(newtargetId!=targetId){
+        if (newtargetId != targetId) {
           console.log('出现偏移，需要纠正');
           updateNodeByConn(sourceId, newtargetId, 'add');
-        }else{
+        } else {
           updateNodeByConn(sourceId, targetId, 'add');
         }
 
       }
+    });
+    // 连线出现偏差时，特殊处理。
+    state.jsPlumb.bind('connectionAborted', (conn: any, originalEvent) => {
+      // console.log("目标节点为空");
+      const {sourceId, targetId} = conn;
+
+      if (originalEvent != null) {
+        var e = originalEvent;
+        var x = e.pageX || e.clientX + document.body.scroolLeft;
+        var y = e.pageY || e.clientY + document.body.scrollTop;
+        var domcu = document.elementsFromPoint(x, y);
+        var newtargetId = '';
+        if (domcu != null) {
+
+          for (var i of domcu) {
+            //console.log(i.className)
+            //  console.log(i.innerText)
+            if (i.className != null && typeof i.className === 'string' && i.className.indexOf("el-table_2_column_2 el-table__cell") > -1) {
+              var newtarget = findTreeItemByName(state.tableDataTranslate.data, i.innerText)
+              newtargetId = 'target_' + newtarget.ID;
+              console.log(newtargetId);
+
+            }
+          }
+
+        }
+
+      }
+      if (newtargetId != '') {
+        let existingConnections = state.jsPlumb.getConnections({
+          source: sourceId,
+          target: newtargetId
+        });
+
+        if (existingConnections.length > 0) {
+          ElMessage.warning('该源字段已存在，不可重复添加');
+          return ;
+        }
+
+        console.log('出现偏移，需要纠正');
+        updateNodeByConn(sourceId, newtargetId, 'add');
+
+      }
+
     });
     // endpointClick 端点单击事件
     state.jsPlumb.bind('endpointClick', (endpoint, originalEvent: MouseEvent) => {
@@ -831,17 +874,17 @@ const handleWheel = (event) => {
   var top = 50;
   if (deltaY < 0) {
     state.tableStyle.top = (parseInt(origin_top) + parseInt(top)) + 'px';
-    state.scrollTop=state.scrollTop+top;
+    state.scrollTop = state.scrollTop + top;
   } else if (deltaY > 0) {
     state.tableStyle.top = (parseInt(origin_top) - parseInt(top)) + 'px';
-    state.scrollTop=state.scrollTop-top;
+    state.scrollTop = state.scrollTop - top;
   }
   repaintWithScroll()
 }
-const handleMouseMove=(event)=>{
-        var e = event;
-        state.pageX = e.pageX || e.clientX + document.body.scroolLeft;
-        state.pageY = e.pageY || e.clientY + document.body.scrollTop;
+const handleMouseMove = (event) => {
+  var e = event;
+  state.pageX = e.pageX || e.clientX + document.body.scroolLeft;
+  state.pageY = e.pageY || e.clientY + document.body.scrollTop;
 }
 
 function fix_jsPlumb_offset(top) {
@@ -1301,7 +1344,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', setClientWidth);
 
   window.removeEventListener('wheel', handleWheel);
-    window.removeEventListener('mousemove', handleMouseMove);
+  window.removeEventListener('mousemove', handleMouseMove);
 });
 </script>
 
