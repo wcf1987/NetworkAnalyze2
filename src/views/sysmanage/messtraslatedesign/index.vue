@@ -54,7 +54,15 @@
               <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
               <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
               <el-table-column prop="Name" :label="'目的:'+state.targetName"
-                               show-overflow-tooltip></el-table-column>
+                               show-overflow-tooltip>
+
+                <!--
+                  <template #default="scope">
+        <div @drop="ondrop(scope.row)">{{ scope.row.Name}}</div>
+      </template>
+-->
+
+              </el-table-column>
 
 
             </el-table>
@@ -210,6 +218,11 @@ const calcIndex = (index) => {
   index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
   return index
 }
+const onDrop = (row,event) => {
+   console.log('drop event');
+  console.log(row);
+
+}
 const handleChangeCellStyle = ({row, column, rowIndex, columnIndex}) => {
   let cellStyle = {}
   //console.log(row);
@@ -342,6 +355,8 @@ const findSourceDataByName = (name) => {
 }
 const state = reactive({
   intervalId: '',
+  pageX: 0,
+  pageY: 0,
   id: '',
   sourceid: '',
   targetid: '',
@@ -687,10 +702,34 @@ const initJsPlumb = () => {
       repaintWithScroll();
       // clearInterval(state.intervalId);
       const {sourceId, targetId} = conn;
+      var newtargetId;
+      if (state.pageX != 0) {
+
+        var domcu = document.elementsFromPoint(state.pageX, state.pageY);
+        var newtargetId='';
+        if(domcu!=null){
+
+          for(var i of domcu){
+            //console.log(i.className)
+           //  console.log(i.innerText)
+            if (i.className!=null  && typeof i.className === 'string' &&  i.className.indexOf("el-table_2_column_2 el-table__cell")>-1){
+              var newtarget=findTreeItemByName(state.tableDataTranslate.data,i.innerText)
+               newtargetId= 'target_'+newtarget.ID;
+                  console.log(newtargetId);
+
+            }
+          }
+
+        }
+
+      }
+
+
+
       //console.log(conn);
       let existingConnections = state.jsPlumb.getConnections({
         source: sourceId,
-        target: targetId
+        target: newtargetId
       });
 
       if (existingConnections.length > 0) {
@@ -704,6 +743,7 @@ const initJsPlumb = () => {
     state.jsPlumb.bind('connection', (conn: any, originalEvent) => {
       //  console.log(conn);
       const {sourceId, targetId} = conn;
+
       if (originalEvent != null) {
         var e = originalEvent;
         var x = e.pageX || e.clientX + document.body.scroolLeft;
@@ -711,18 +751,31 @@ const initJsPlumb = () => {
         var domcu = document.elementsFromPoint(x, y);
         var newtargetId='';
         if(domcu!=null){
-          console.log(domcu)
-          var newtarget=findTreeItemByName(state.tableDataTranslate.data,domcu[0].textContent)
-          newtargetId= "target_" +newtarget.ID
-        }
-        console.log(newtargetId);
-      }
 
+          for(var i of domcu){
+            //console.log(i.className)
+           //  console.log(i.innerText)
+            if (i.className!=null  && typeof i.className === 'string' &&  i.className.indexOf("el-table_2_column_2 el-table__cell")>-1){
+              var newtarget=findTreeItemByName(state.tableDataTranslate.data,i.innerText)
+               newtargetId= 'target_'+newtarget.ID;
+                  console.log(newtargetId);
+
+            }
+          }
+
+        }
+
+      }
       if (state.walkStatus) {
 
       } else {
+        if(newtargetId!=targetId){
+          console.log('出现偏移，需要纠正');
+          updateNodeByConn(sourceId, newtargetId, 'add');
+        }else{
+          updateNodeByConn(sourceId, targetId, 'add');
+        }
 
-        updateNodeByConn(sourceId, targetId, 'add');
       }
     });
     // endpointClick 端点单击事件
@@ -785,7 +838,11 @@ const handleWheel = (event) => {
   }
   repaintWithScroll()
 }
-
+const handleMouseMove=(event)=>{
+        var e = event;
+        state.pageX = e.pageX || e.clientX + document.body.scroolLeft;
+        state.pageY = e.pageY || e.clientY + document.body.scrollTop;
+}
 
 function fix_jsPlumb_offset(top) {
   //console.log('scroll dis:' + top);
@@ -1236,12 +1293,15 @@ onMounted(async () => {
 
   window.addEventListener('resize', setClientWidth);
   window.addEventListener('wheel', handleWheel);
+  window.addEventListener('mousemove', handleMouseMove);
+
 });
 // 页面卸载时
 onUnmounted(() => {
   window.removeEventListener('resize', setClientWidth);
 
   window.removeEventListener('wheel', handleWheel);
+    window.removeEventListener('mousemove', handleMouseMove);
 });
 </script>
 
