@@ -288,9 +288,9 @@ const onFuncClick = (val: any) => {
   }
   state.ruleForm.Transrule = state.ruleForm.Transrule + ' ' + val + '(params)';
 };
-const getMenuOptions = () => {
+const getMenuOptions = async() => {
 
-  messdetailApi().searchMessDetail(
+  await messdetailApi().searchMessDetail(
       {
         uid: 1,
         pid: state.sourceid,
@@ -430,12 +430,12 @@ const changeSourceInput32 = (fo) => {
 
 }
 // 打开弹窗
-const openDialog = (type: string, sourceid, row: RowUserType, original: string,ssid) => {
+const openDialog = async (type: string, sourceid, row: RowUserType, original: string,ssid) => {
   state.original = original;
   console.log(row)
   state.targetfiledid = row.ID;
   state.sourceid = sourceid;
-
+  await getMenuOptions();
   if(state.original=='TableEdit'){
     state.editEabled=false;
   }else{
@@ -459,7 +459,7 @@ const openDialog = (type: string, sourceid, row: RowUserType, original: string,s
     });
   }
   state.dialog.isShowDialog = true;
-  getMenuOptions();
+
 };
 // 关闭弹窗
 const closeDialog = () => {
@@ -517,6 +517,7 @@ const onSubmit = () => {
 onMounted(() => {
   initLeftNavList();
   getOptionData();
+
 });
 
 // 暴露变量
