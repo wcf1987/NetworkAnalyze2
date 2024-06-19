@@ -768,7 +768,7 @@ const initJsPlumb = () => {
       if (state.walkStatus) {
 
       } else {
-        if (newtargetId != targetId) {
+        if (newtargetId!='' && newtargetId != targetId) {
           console.log('出现偏移，需要纠正');
           updateNodeByConn(sourceId, newtargetId, 'add');
         } else {

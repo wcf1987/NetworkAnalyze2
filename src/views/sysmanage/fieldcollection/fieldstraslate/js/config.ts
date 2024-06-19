@@ -18,7 +18,7 @@ export const jsplumbDefaults = {
 	// 连线的容器id
 	Container: 'workflow-right',
 	// 设置链接线的形状，如直线或者曲线之类的。anchor可以去设置锚点的位置。可选值"<Bezier|Flowchart|StateMachine|Straight>"
-	Connector: ['Flowchart', { curviness: 100 }],
+	Connector: ['StateMachine', { curviness: 100 }],
 	// 节点是否可以用鼠标拖动使其断开，默认为true。即用鼠标链接上的连线，也可以使用鼠标拖动让其断开。设置成false，可以让其拖动也不会自动断开
 	ConnectionsDetachable: false,
 	// 删除线的时候节点不删除

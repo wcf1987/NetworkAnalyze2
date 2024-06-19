@@ -189,7 +189,7 @@
 
                     state.connectlist.data = res.data['connect'];
                     state.pointlist.data = res.data['point'];
-                    let x = 30, y = 30;
+                    let x = 30, y = 100;
                     for (let i of state.pointlist.data) {
                         i['left'] = x + 'px';
                         i['top'] = y + 'px';
