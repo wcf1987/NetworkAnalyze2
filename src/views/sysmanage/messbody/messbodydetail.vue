@@ -64,12 +64,14 @@
           <el-tag type="info" effect="dark" round class="eltagr">名称:{{ state.tableData.name }}</el-tag>
         </el-tooltip>
       </div>
-      <el-table :expand-row-keys="state.expandArr" ref="tableRef" :cell-style="{'padding': '2px 2px 0 10px'}"
-                :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%"
-                @selection-change="handleSelectionChange" :default-expand-all="state.expand">
+      <el-table :expand-row-keys="state.expandArr" ref="tableRef" :cell-style="{'padding': '0px'}"
+                :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading"
+                @selection-change="handleSelectionChange"
+         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      >
         <el-table-column type="selection" width="50"/>
         <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-        <el-table-column prop="parentindex" label="序号" width="80"/>
+        <el-table-column prop="parentindex" label="序号" />
         <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
         <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
         <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>

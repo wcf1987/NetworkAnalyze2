@@ -67,7 +67,7 @@
                       @selection-change="handleSelectionChange" >
                 <el-table-column type="selection" width="50"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                <el-table-column prop="parentindex" label="序号" width="80" />
+                <el-table-column prop="parentindex" label="序号" />
                 <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
                 <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>

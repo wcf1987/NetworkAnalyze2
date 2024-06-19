@@ -881,6 +881,8 @@
         state.ID = querys.ID;
         state.FlowName = querys.FlowName;
         state.Type = querys.Type;
+        state.FlowType = querys.Type;
+        state.type = '模板编辑';
         //console.log(leftNavList)
         //console.log(state.Type);
         if (state.Type == '网络层透明传输') {
