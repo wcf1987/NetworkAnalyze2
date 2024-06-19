@@ -15,6 +15,7 @@ import timemarkicon from '/@/assets/svgicon/timemark.svg';
 import timericon from '/@/assets/svgicon/timer.svg';
 import statisticsicon from '/@/assets/svgicon/statistics.svg';
 import calcicon from '/@/assets/svgicon/calc.svg';
+import desticon from "/@/assets/svgicon/dest.svg";
 
 export const leftNavListSimple = [
     {
@@ -29,6 +30,13 @@ export const leftNavListSimple = [
                 id: '11',
                 type: 'start',
                 descrip: '流程的第一个节点',
+
+            }, {
+                icon: desticon,
+                name: '结束节点',
+                id: '11_1',
+                type: 'dest',
+                descrip: '流程的结束节点',
 
             },
             {
