@@ -446,7 +446,7 @@
         properForm: {
             type: "",
         },
-        tabsActive: '1',
+        tabsActive: '0',
         loading: {
             extend: false,
         },
@@ -1081,7 +1081,7 @@
             if (valid) {
                 const nodeModel = state.lf.getNodeModelById(state.node.id);
                 nodeModel.updateText(state.proper.name);
-                state.tabsActive = '2';
+
                 emit('submit');
                 //emit('close');
             } else {
@@ -1264,7 +1264,11 @@
         extendFormRef.value.validate((valid: boolean) => {
             if (valid) {
                 state.loading.extend = true;
-
+                if(state.tabsActive == '0'){
+                   ElMessage.error("请选择节点后再保存");
+                      state.loading.extend = false;
+                   return;
+                }
                 const nodeModel = state.lf.getNodeModelById(state.node.id);
                 nodeModel.updateText(state.proper.name);
                 nodeModel.setProperties(state.properForm);
