@@ -95,7 +95,7 @@
             Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
             Protocol: [{required: true, message: '请选择协议', trigger: 'change'}],
             IP: [{required: true, message: '请输入IP格式', trigger: 'change',validator:checkIP }],
-            Port: [{required: true, message: '端口为数字1-65535', trigger: 'change',validator:checkPort }]
+            //Port: [{ message: '端口为数字1-65535', trigger: 'change',validator:checkPort }]
         },
 
         deptData: [] as DeptTreeType[], // 部门数据

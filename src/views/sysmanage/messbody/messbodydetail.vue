@@ -122,9 +122,9 @@
       >
       </el-pagination>
     </el-card>
-    <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
-    <ImportDialog ref="importDialogRef" @refresh="getTableData()"/>
-    <GroupDialog ref="groupDialogRef" @refresh="getTableData()"/>
+    <UserDialog ref="userDialogRef" @refresh="getTableData"/>
+    <ImportDialog ref="importDialogRef" @refresh="getTableData"/>
+    <GroupDialog ref="groupDialogRef" @refresh="getTableData"/>
   </div>
 </template>
 
@@ -159,7 +159,7 @@ const state = reactive({
     loading: false,
     param: {
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 20,
     },
     history: [],
     nestid: 0,
@@ -253,9 +253,12 @@ function expandID(list){
     getTableData();
   }
   // 初始化表格数据
-  const getTableData = () => {
+  const getTableData = (type) => {
     state.tableData.loading = true;
-
+       if(type=='add'){
+         //console.log( state.tableData.param.pageNum);
+              state.tableData.param.pageNum= Math.ceil((state.tableData.total+1) /state.tableData.param.pageSize);
+            }
     messdetailApi().searchMessDetail(
         {
           uid: 1,

@@ -150,7 +150,7 @@ const options = ref(FieldType);
                      EName: [{required: true, message: '请输入引用名', trigger: 'blur'}],
 
                      Type: [{required: true, message: '请选择类型', trigger: 'change'}],
-                     TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
+                 //    TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
                      Length: [{required: true, message: '位数必须为正整数', trigger: 'blur',validator: checkInterNum}],
 
         },

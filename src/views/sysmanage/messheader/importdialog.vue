@@ -469,7 +469,7 @@
                                     ElMessage.success("添加成功");
 
                                     closeDialog();
-                                    emit('refresh');
+                                    emit('refresh','add');
                                 } else {
                                     ElMessage.error(res.message);
                                 }
