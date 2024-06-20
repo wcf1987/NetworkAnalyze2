@@ -9,7 +9,10 @@ import other from '/@/utils/other';
 import ElementPlus from 'element-plus';
 import '/@/theme/index.scss';
 import VueGridLayout from 'vue-grid-layout';
+import Vue from 'vue';
 import axios from "axios";
+// 请求公共封装ip地址
+
 
 const app = createApp(App);
 

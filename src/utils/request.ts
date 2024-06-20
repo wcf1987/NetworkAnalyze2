@@ -3,10 +3,11 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { Session } from '/@/utils/storage';
 import qs from 'qs';
 axios.defaults.withCredentials = true;
-axios.defaults.serverURL=''
+
+//getServerConfig();
 // 配置新建一个 axios 实例
 const service: AxiosInstance = axios.create({
-	baseURL: import.meta.env.VITE_API_URL,
+	baseURL: window.g.BASE_URL,
 	timeout: 50000,
 	//withCredentials: true,
 	headers: { 'Content-Type': 'application/json' },
@@ -16,19 +17,10 @@ const service: AxiosInstance = axios.create({
 		},
 	},
 });
-getServerConfig();
-function getServerConfig() {  // 定义
-	if (axios.defaults.serverURL == '') {
-		axios.get('./config.json').then(res => {  // 请求上面描述的本地配置文件
 
-			axios.defaults.serverURL = res.data.BASE_URL;
-			console.log('接口配置的基础地址', axios.defaults.serverURL)
 
-		})
-	}
-}
 const servicefile: AxiosInstance = axios.create({
-	baseURL: import.meta.env.VITE_API_URL,
+	baseURL: window.g.BASE_URL,
 	timeout: 50000,
 //withCredentials: true,
 	headers: { 'Content-Type': 'multipart/form-data' },
