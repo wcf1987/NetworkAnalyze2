@@ -35,13 +35,13 @@
                 <el-table-column type="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Type" label="类型" show-overflow-tooltip width="100"></el-table-column>
                 <el-table-column prop="IP" label="IP" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Port" label="端口" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Protocol" label="协议" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Port" label="端口" show-overflow-tooltip width="100"></el-table-column>
+                <el-table-column prop="Protocol" label="协议" show-overflow-tooltip  v-if="false"></el-table-column>
+                <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip width="500"></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column label="操作" width="120">
+                <el-table-column label="操作" width="140">
                     <template #default="scope">
                         <el-button size="small" text type="primary" @click="onOpenEdit('edit', scope.row)" class="buttonfont"
                         >修改

@@ -81,6 +81,7 @@
         baseRules: {
             Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
             Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+          ClassfyID: [{required: true, message: '请选择分类', trigger: 'change'}],
         },
         dialog: {
             isShowDialog: false,

@@ -146,10 +146,10 @@ const state = reactive({
         ids:[],
   },
 });
-    const  calcIndex=(index)=>{
-        index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
-        return index
-    }
+const calcIndex = (index) => {
+  index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
+  return index
+}
 
     //返回上一级
     const back = () => {
@@ -173,6 +173,7 @@ const getTableData = () => {
         if (res.code == '200') {
 
           state.tableData.data = res.data;
+
 
         } else {
           ElMessage.error(res.message);
