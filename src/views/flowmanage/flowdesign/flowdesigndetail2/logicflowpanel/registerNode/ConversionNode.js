@@ -10,7 +10,7 @@ class ConversionNode extends IconNode.view {
 class ConversionNodeModel extends IconNode.model{
     initNodeData(data) {
     super.initNodeData(data);
-    this.text.value = "内置转换方式"; // 不允许文本被拖动
+    //this.text.value = "内置转换方式"; // 不允许文本被拖动
 
   }
 }

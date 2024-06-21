@@ -1,250 +1,289 @@
 <template>
-    <div class="system-user-dialog-container">
-        <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="900px" :draggable="true">
+  <div class="system-user-dialog-container">
+    <el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="900px" :draggable="true">
 
-            <el-card shadow="hover" class="layout-padding-auto">
-           <div class="system-user-search mb15">
-                <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"
-                          v-model="state.tableData.search"></el-input>
-                <el-button size="default" type="primary" class="ml10" @click="onSearch">
-                    <el-icon>
-                        <ele-Search/>
-                    </el-icon>
-                    查询
-                </el-button>
-
-            </div>
-            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%">
-                <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                <el-table-column type="index" label="序号" width="60"/>
-                <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
-                <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
-                <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Describes" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
-                <el-table-column prop="OutType" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
-                <el-table-column prop="NestID" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
-                <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip v-if="isHide"></el-table-column>
-                <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="TableName" label="标准表名" show-overflow-tooltip v-if="isHide"></el-table-column>
-                <el-table-column prop="TableSaveName" label="标准表存储名" show-overflow-tooltip
-                                 v-if="isHide"></el-table-column>
-                <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="isHide"></el-table-column>
-
-
-                <el-table-column label="操作" width="100">
-                    <template #default="scope">
-
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                    @size-change="onHandleSizeChange"
-                    @current-change="onHandleCurrentChange"
-                    class="mt15"
-                    :pager-count="5"
-                    :page-sizes="[10, 20, 30]"
-                    v-model:current-page="state.tableData.param.pageNum"
-                    background
-                    v-model:page-size="state.tableData.param.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="state.tableData.total"
-            >
-            </el-pagination>
-            </el-card>
-            <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
+      <el-card shadow="hover" class="layout-padding-auto">
+        <div class="system-user-search mb15">
+          <el-input size="default" placeholder="请输入字段名称" style="max-width: 180px"
+                    v-model="state.tableData.search"></el-input>
+          <el-button size="default" type="primary" class="ml10" @click="onSearch">
+            <el-icon>
+              <ele-Search/>
+            </el-icon>
+            查询
+          </el-button>
+          <el-button size="default" type="success" class="ml10" @click="onRowExpand">
+            <el-icon>
+              <ele-Expand/>
+            </el-icon>
+            展开/收起
+          </el-button>
+        </div>
+        <el-table :expand-row-keys="state.expandArr" :data="state.tableData.data" row-key="ID"
+                  v-loading="state.tableData.loading" style="width: 100%">
+          <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
+          <el-table-column prop="parentindex" width="60" label="序号" type=""/>
+          <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
+          <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
+          <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="Describes" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
+          <el-table-column prop="OutType" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
+          <el-table-column prop="NestID" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
+          <el-table-column prop="TypeCode" label="数据格式内码" show-overflow-tooltip v-if="isHide"></el-table-column>
+          <el-table-column prop="Length" label="位数" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="TableName" label="标准表名" show-overflow-tooltip v-if="isHide"></el-table-column>
+          <el-table-column prop="TableSaveName" label="标准表存储名" show-overflow-tooltip
+                           v-if="isHide"></el-table-column>
+          <el-table-column prop="Type" label="类型" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="isHide"></el-table-column>
 
 
-        </el-dialog>
-    </div>
+          <el-table-column label="操作" width="100">
+            <template #default="scope">
+
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="onHandleSizeChange"
+            @current-change="onHandleCurrentChange"
+            class="mt15"
+            :pager-count="5"
+            :page-sizes="[10, 20, 30]"
+            v-model:current-page="state.tableData.param.pageNum"
+            background
+            v-model:page-size="state.tableData.param.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="state.tableData.total"
+        >
+        </el-pagination>
+      </el-card>
+      <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
+
+
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts" name="systemUserDialog">
-    import {nextTick, onMounted, reactive, ref} from 'vue';
-    import {messdetailApi} from '/@/api/sysmanage/messdetail';
-    import {useRoute} from "vue-router";
-    import {ElMessage} from "element-plus";
-    // 定义子组件向父组件传值/事件
-    const emit = defineEmits(['refresh']);
-    const route = useRoute()
-    const querys = route.query
-    // 定义变量内容
-    const userDialogFormRef = ref();
-    const rules = reactive({
+import {nextTick, onMounted, reactive, ref} from 'vue';
+import {messdetailApi} from '/@/api/sysmanage/messdetail';
+import {useRoute} from "vue-router";
+import {ElMessage} from "element-plus";
+// 定义子组件向父组件传值/事件
+const emit = defineEmits(['refresh']);
+const route = useRoute()
+const querys = route.query
+// 定义变量内容
+const userDialogFormRef = ref();
+const rules = reactive({
 // 普通的校验规则
-        name: [
-            {required: true, message: '名称不能为空'},
-            {min: 1, max: 10, message: '名称长度为1 - 10位'},
-        ],
-    });
-    const state = reactive({
-        ruleForm: {
-            Name: '', // 账户名称
-            sourmess: '',
-            tarmess: '',
-            describe: '', // 用户描述
-        },
-        dialog: {
-            isShowDialog: false,
-            type: '',
-            title: '',
-            submitTxt: '',
-        },
-        tableData: {
-            data: [],
-            deep: '',
-            total: 0,
-            loading: false,
-            param: {
-                pageNum: 1,
-                pageSize: 10,
-            },
-                  search: '',
-            searchStr: '',
-        },
+  name: [
+    {required: true, message: '名称不能为空'},
+    {min: 1, max: 10, message: '名称长度为1 - 10位'},
+  ],
+});
+const state = reactive({
+  expandArr: [],
+  ruleForm: {
+    Name: '', // 账户名称
+    sourmess: '',
+    tarmess: '',
+    describe: '', // 用户描述
+  },
+  dialog: {
+    isShowDialog: false,
+    type: '',
+    title: '',
+    submitTxt: '',
+  },
+  tableData: {
+    data: [],
+    deep: '',
+    total: 0,
+    loading: false,
+    param: {
+      pageNum: 1,
+      pageSize: 10,
+    },
+    search: '',
+    searchStr: '',
+  },
 
-    });
+});
 
-    // 打开弹窗
-    const openDialog = (type: string, id) => {
-        state.tableData.id = id;
-        state.dialog.title = '查看';
-        state.dialog.submitTxt = '新 增';
-        getTableData();
-        // 清空表单，此项需加表单验证才能使用
-        nextTick(() => {
-            userDialogFormRef.value.resetFields();
-        });
+// 打开弹窗
+const openDialog = (type: string, id) => {
+  state.tableData.id = id;
+  state.dialog.title = '查看';
+  state.dialog.submitTxt = '新 增';
+  getTableData();
+  // 清空表单，此项需加表单验证才能使用
+  nextTick(() => {
+    userDialogFormRef.value.resetFields();
+  });
 
-        state.dialog.isShowDialog = true;
+  state.dialog.isShowDialog = true;
 
-    };
-    // 关闭弹窗
-    const closeDialog = () => {
-        state.dialog.isShowDialog = false;
-    };
-    // 取消
-    const onCancel = () => {
-        closeDialog();
-    };
-        const onSearch = () => {
-        state.tableData.searchStr = state.tableData.search;
-        getTableData();
-    };
-    // 提交
-    const onSubmit = () => {
-        closeDialog();
-        emit('refresh');
-        // if (state.dialog.type === 'add') { }
-    };
-    // 初始化部门数据
-    const getTableData = () => {
-        state.tableData.loading = true;
+};
+const calcIndex = (index) => {
+  index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
+  return index
+}
+// 关闭弹窗
+const closeDialog = () => {
+  state.dialog.isShowDialog = false;
+};
+// 取消
+const onCancel = () => {
+  closeDialog();
+};
+const onRowExpand = () => {
+  // 输出当前展开的行ID数组用于调试
+  //console.log(state.expandArr);
 
-   messdetailApi().searchMessDetail(
-            {
-                uid: 1,
-                pid: state.tableData.id,
-                pageNum: state.tableData.param.pageNum,
-                pageSize: state.tableData.param.pageSize,
-                name: state.tableData.searchStr,
-                ttype: 'body',
-                   nestid: 0,
-            })
-            .then(res => {
-                //console.log(res);
-                if (res.code == '200') {
+  // 检查展开数组是否为空
+  //state.expand=false;
+  if (state.expandArr.length == 0) {
+    // 如果展开数组为空，意味着所有行都是折叠的，因此需要将当前行展开
+    //expandArr中之前有这个数据 --去除它
+    expandID(state.tableData.data);
 
-                    state.tableData.data = res.data;
+  } else {
+    // 如果展开数组不为空，意味着至少有一行是展开的，此时应该将所有行折叠
+    //原来没有这个数据 --增加它
+    state.expandArr = [];
+  }
+}
 
-                } else {
-                    ElMessage.error(res.message);
-                }
+function expandID(list) {
+  for (let i of list) {
+    if (i.children != null) {
+      state.expandArr.push(i.ID + "");
+      expandID(i.children)
+    }
+  }
+}
 
-            }).catch(err => {
+const onSearch = () => {
+  state.tableData.searchStr = state.tableData.search;
+  getTableData();
+};
+// 提交
+const onSubmit = () => {
+  closeDialog();
+  emit('refresh');
+  // if (state.dialog.type === 'add') { }
+};
+// 初始化部门数据
+const getTableData = () => {
+  state.tableData.loading = true;
 
-        }).finally(() => {
+  messdetailApi().searchMessDetail(
+      {
+        uid: 1,
+        pid: state.tableData.id,
+        pageNum: state.tableData.param.pageNum,
+        pageSize: state.tableData.param.pageSize,
+        name: state.tableData.searchStr,
+        ttype: 'body',
+        nestid: 0,
+      })
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
 
-        });
-        //const data = [];
-        messdetailApi().getMessDetailSearchListSize(
-            {
-                uid: 1,
-                name: state.tableData.searchStr,
-                pid: state.tableData.id,
-                ttype: 'body',
-                   nestid: 0,
-            })
-            .then(res => {
-                //console.log(res);
-                if (res.code == '200') {
+          state.tableData.data = res.data;
+          let id = 0;
+          for (let i of state.tableData.data) {
+            i.parentindex = id + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1;
+            id = id + 1;
+          }
+        } else {
+          ElMessage.error(res.message);
+        }
 
-                    state.tableData.total = res.data;
+      }).catch(err => {
 
-                } else {
-                    ElMessage.error(res.message);
-                }
+  }).finally(() => {
 
-            }).catch(err => {
+  });
+  //const data = [];
+  messdetailApi().getMessDetailSearchListSize(
+      {
+        uid: 1,
+        name: state.tableData.searchStr,
+        pid: state.tableData.id,
+        ttype: 'body',
+        nestid: 0,
+      })
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
 
-        }).finally(() => {
+          state.tableData.total = res.data;
 
-        });
+        } else {
+          ElMessage.error(res.message);
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
 
 
+  setTimeout(() => {
+    state.tableData.loading = false;
+  }, 500);
+};
+// 分页改变
+const onHandleSizeChange = (val: number) => {
+  state.tableData.param.pageSize = val;
+  getTableData();
+};
+// 分页改变
+const onHandleCurrentChange = (val: number) => {
+  state.tableData.param.pageNum = val;
+  getTableData();
+};
+// 页面加载时
+onMounted(() => {
+  //getTableData();
+});
+// 暴露变量
+defineExpose({
+  openDialog,
 
-
-
-        setTimeout(() => {
-            state.tableData.loading = false;
-        }, 500);
-    };
-    // 分页改变
-    const onHandleSizeChange = (val: number) => {
-        state.tableData.param.pageSize = val;
-        getTableData();
-    };
-    // 分页改变
-    const onHandleCurrentChange = (val: number) => {
-        state.tableData.param.pageNum = val;
-        getTableData();
-    };
-    // 页面加载时
-    onMounted(() => {
-        //getTableData();
-    });
-    // 暴露变量
-    defineExpose({
-        openDialog,
-
-    });
+});
 </script>
 
 <style scoped lang="scss">
-    :deep(.el-table) {
-        /* 替换默认展开收起图片 */
-        /* prettier-ignore */
-        .el-table__expand-icon {
-            width: 12PX;
-            height: 12PX;
-            //background: ele-Plus no-repeat;
-            //ele-Plus
-            background: url("/@/assets/public/add-bold.png") no-repeat;
-            background-size: 100% 100%;
+:deep(.el-table) {
+  /* 替换默认展开收起图片 */
+  /* prettier-ignore */
+  .el-table__expand-icon {
+    width: 12PX;
+    height: 12PX;
+    //background: ele-Plus no-repeat;
+    //ele-Plus
+    background: url("/@/assets/public/add-bold.png") no-repeat;
+    background-size: 100% 100%;
 
-            .el-icon {
-                display: none;
-            }
-        }
-
-        .el-table__expand-icon--expanded {
-            transform: none;
-            background: url("/@/assets/public/minus-bold.png") no-repeat;
-            //ele-SemiSelect
-            background-size: 100% 100%;
-        }
+    .el-icon {
+      display: none;
     }
+  }
+
+  .el-table__expand-icon--expanded {
+    transform: none;
+    background: url("/@/assets/public/minus-bold.png") no-repeat;
+    //ele-SemiSelect
+    background-size: 100% 100%;
+  }
+}
 </style>

@@ -9,7 +9,7 @@
         <!-- 左侧导航区 -->
         <div class="workflow-content">
           <div class="workflow-left">
-            <el-scrollbar ref="scrollbar" height="600px">
+            <el-scrollbar ref="scrollbar" height="1000px">
               <div
                   ref="leftNavRefs"
                   v-for="val in state.leftNavList"
@@ -64,6 +64,7 @@
                     <p class="text item">{{ `消息体封装格式： ${state.bodyEncapName} ` }}</p>
                     <p class="text item">{{ `消息头封装格式：${state.headerEncapName} ` }}</p>
                     <p class="text item">{{ `源IP/端口： ${state.SourceIPAndPort} ` }}</p>
+                    <p class="text item">{{ `本机地址IP/端口： ${state.LocalIPAndPort} ` }}</p>
                     <p class="text item">{{ `目的IP/端口： ${state.TargetIPAndPort} ` }}</p>
                   </el-card>
                 </el-collapse-item>
@@ -111,6 +112,8 @@ import {useTagsViewRoutes} from '/@/stores/tagsViewRoutes';
 import commonFunction from '/@/utils/commonFunction';
 import {leftNavList} from './js/mock';
 import {leftNavListSimple} from './js/mocksimple';
+import {leftNavListSimpleApp} from './js/mocksimple_app';
+
 import {leftNavListSpecial} from './js/mockspecial';
 import {jsplumbConnect, jsplumbDefaults, jsplumbMakeSource, jsplumbMakeTarget} from './js/config';
 import {useRoute, useRouter} from "vue-router";
@@ -119,6 +122,7 @@ import {
   CalcNode,
   ConversionNode,
   CustomLine,
+  FirstNode,
   DestNode,
   EndNode,
   InpacNode,
@@ -158,9 +162,10 @@ const scrollbar = ref(null)
 const lf = ref(null)
 
 function dragNode(item) {
-  //console.log(item)
+
   lf.value.dnd.startDrag({
     type: item.type,
+    text:item.name,
   })
 }
 
@@ -198,6 +203,7 @@ const getFlowFromDB = () => {
 const createFlowFromStr = (flowstr, flowOutStr) => {
   console.log(flowOutStr)
   state.SourceIPAndPort = flowOutStr.stateShow.SourceIPAndPort;
+  state.LocalIPAndPort = flowOutStr.stateShow.LocalIPAndPort;
   state.TargetIPAndPort = flowOutStr.stateShow.TargetIPAndPort;
   state.headerParseName = flowOutStr.stateShow.headerParseName;
   state.bodyPaserName = flowOutStr.stateShow.bodyPaserName;
@@ -239,12 +245,13 @@ const saveScript = (grajson) => {
   let scripts = {nodes: [], edges: []};
   let nodes = grajson.nodes;
 
-  state.SourceIPAndPort = '';
-  state.TargetIPAndPort = '';
-  state.headerParseName = '';
-  state.bodyPaserName = '';
-  state.bodyEncapName = '';
-  state.headerEncapName = '';
+  state.SourceIPAndPort = '-';
+  state.LocalIPAndPort = '-';
+  state.TargetIPAndPort = '-';
+  state.headerParseName = '-';
+  state.bodyPaserName = '-';
+  state.bodyEncapName = '-';
+  state.headerEncapName = '-';
   state.transName = '';
   for (let i = 0; i < nodes.length; i++) {
     let nodet = nodes[i]
@@ -260,7 +267,13 @@ const saveScript = (grajson) => {
             state.SourceIPAndPort = state.SourceIPAndPort + ":" + tt.sourecenetworkPort;
           }
         }
-
+        if (tt.localnetworkID != null && tt.localnetworkID != '') {
+         // console.log(tt);
+          state.LocalIPAndPort = tt.IP;
+          if (tt.Port != null && tt.Port != '') {
+            state.LocalIPAndPort = state.LocalIPAndPort + ":" + tt.Port;
+          }
+        }
         nodet.properties = {};
         nodet.properties.interfacetype = '网口'
         nodet.properties.sourecenetworkID = tt.sourecenetworkID;
@@ -268,7 +281,7 @@ const saveScript = (grajson) => {
         nodet.properties.sourecenetworkPort = tt.sourecenetworkPort;
         nodet.properties.localnetworkID = tt.localnetworkID;
         nodet.properties.IP = tt.sourecenetworkIP;
-        nodet.properties.Port = tt.sourecenetworkIP;
+        nodet.properties.Port = tt.sourecenetworkPort;
 
       }
       if (nodet.properties.interfacetype == '串口') {
@@ -485,6 +498,7 @@ const saveScript = (grajson) => {
   }
   grajson.stateShow = {
     SourceIPAndPort: state.SourceIPAndPort,
+    LocalIPAndPort:state.LocalIPAndPort,
     TargetIPAndPort: state.TargetIPAndPort,
     headerParseName: state.headerParseName,
     bodyPaserName: state.bodyPaserName,
@@ -783,6 +797,8 @@ function registerNode() {
   lf.value.register(ConversionNode);
   lf.value.register(InpacNode);
   lf.value.register(DestNode);
+  lf.value.register(FirstNode);
+
   render()
 }
 
@@ -857,6 +873,7 @@ const state = reactive({
   FlowName: '',
   FlowType: '',
   SourceIPAndPort: '-',
+  LocalIPAndPort: '-',
   TargetIPAndPort: '-',
   headerParseName: '-',
   bodyPaserName: '-',
@@ -904,7 +921,7 @@ const initLeftNavList = () => {
 
   } else {
     if (state.Type == '应用层透明传输') {
-      state.leftNavList = leftNavListSimple;
+      state.leftNavList = leftNavListSimpleApp;
 
     } else {
       if (state.Type == '指定流程') {

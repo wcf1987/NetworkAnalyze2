@@ -17,7 +17,7 @@ import statisticsicon from '/@/assets/svgicon/statistics.svg';
 import calcicon from '/@/assets/svgicon/calc.svg';
 import desticon from "/@/assets/svgicon/dest.svg";
 import firsticon from "/@/assets/svgicon/first.svg";
-export const leftNavListSimple = [
+export const leftNavListSimpleApp = [
     {
         title: '基础节点',
         icon: 'iconfont icon-shouye',
@@ -55,6 +55,20 @@ export const leftNavListSimple = [
                 type: 'end',
                 descrip: '流程的最终节点，可以有多个',
 
+            },{
+                icon: messheaderparseicon,
+                name: '消息头解析',
+                type: 'messheaderparse',
+                id: '15',
+                descrip: '消息头按格式解析',
+
+            },
+            {
+                icon: messheaderencapicon,
+                name: '消息头添加',
+                type: 'messheaderencap',
+                id: '15',
+                descrip: '设定消息头添加规则',
             },
         ],
     },

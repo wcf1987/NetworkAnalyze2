@@ -64,6 +64,8 @@
                     <p class="text item">{{ `消息体封装格式： ${state.bodyEncapName} ` }}</p>
                     <p class="text item">{{ `消息头封装格式：${state.headerEncapName} ` }}</p>
                     <p class="text item">{{ `源IP/端口： ${state.SourceIPAndPort} ` }}</p>
+                    <p class="text item">{{ `本地IP/端口： ${state.LocalIPAndPort} ` }}</p>
+
                     <p class="text item">{{ `目的IP/端口： ${state.TargetIPAndPort} ` }}</p>
                   </el-card>
                 </el-collapse-item>
@@ -119,6 +121,7 @@ import {
   CalcNode,
   ConversionNode,
   CustomLine,
+  FirstNode,
   DestNode,
   EndNode,
   InpacNode,
@@ -140,6 +143,7 @@ import {builtNodeApi} from "/@/api/flowmanage/builtnode";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
+import {leftNavListSimpleApp} from "/@/views/flowmanage/flowdesign/flowdesigndetail2/js/mocksimple_app";
 
 const router = useRouter();
 
@@ -160,6 +164,7 @@ function dragNode(item) {
   //console.log(item)
   lf.value.dnd.startDrag({
     type: item.type,
+    text: item.name,
   })
 }
 
@@ -276,6 +281,7 @@ const getFlowFromDB = () => {
 const createFlowFromStr = (flowstr, flowOutStr) => {
   console.log(flowOutStr)
   state.SourceIPAndPort = flowOutStr.stateShow.SourceIPAndPort;
+  state.LocalIPAndPort = flowOutStr.stateShow.LocalIPAndPort;
   state.TargetIPAndPort = flowOutStr.stateShow.TargetIPAndPort;
   state.headerParseName = flowOutStr.stateShow.headerParseName;
   state.bodyPaserName = flowOutStr.stateShow.bodyPaserName;
@@ -317,6 +323,7 @@ const saveScript = (grajson) => {
   let nodes = grajson.nodes;
 
   state.SourceIPAndPort = '';
+  state.LocalIPAndPort = '';
   state.TargetIPAndPort = '';
   state.headerParseName = '';
   state.bodyPaserName = '';
@@ -337,7 +344,12 @@ const saveScript = (grajson) => {
             state.SourceIPAndPort = state.SourceIPAndPort + ":" + tt.sourecenetworkPort;
           }
         }
-
+        if (tt.localnetworkID != null && tt.localnetworkID != '') {
+          state.LocalIPAndPort = tt.IP;
+          if (tt.Port != null && tt.Port != '') {
+            state.LocalIPAndPort = state.LocalIPAndPort + ":" + tt.Port;
+          }
+        }
         nodet.properties = {};
         nodet.properties.interfacetype = '网口'
         nodet.properties.sourecenetworkID = tt.sourecenetworkID;
@@ -562,6 +574,7 @@ const saveScript = (grajson) => {
   }
   grajson.stateShow = {
     SourceIPAndPort: state.SourceIPAndPort,
+    LocalIPAndPort: state.LocalIPAndPort,
     TargetIPAndPort: state.TargetIPAndPort,
     headerParseName: state.headerParseName,
     bodyPaserName: state.bodyPaserName,
@@ -781,6 +794,7 @@ function registerNode() {
   lf.value.register(ConversionNode);
   lf.value.register(InpacNode);
   lf.value.register(DestNode);
+  lf.value.register(FirstNode);
   render()
 }
 
@@ -856,6 +870,7 @@ const state = reactive({
   ID: 0,
   type: '模板编排',
   SourceIPAndPort: '-',
+  LocalIPAndPort: '-',
   TargetIPAndPort: '-',
   headerParseName: '-',
   bodyPaserName: '-',
@@ -898,7 +913,7 @@ const initLeftNavList = () => {
 
   } else {
     if (state.Type == '应用层透明传输') {
-      state.leftNavList = leftNavListSimple;
+      state.leftNavList = leftNavListSimpleApp;
 
     } else {
       if (state.Type == '指定流程') {

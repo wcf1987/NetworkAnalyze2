@@ -233,39 +233,7 @@ export const rolemenu=[
                         ],
 
                     },
-                     {
-                        path: '/sysmanage/appheader',
-                        name: 'appheader',
-                        component: 'sysmanage/appheader/index',
-                        meta: {
-                            title: 'message.router.appheader',
-                            isLink: '',
-                            isHide: false,
-                            isKeepAlive: true,
-                            isAffix: false,
-                            isIframe: false,
-                            roles: ['admin', 'common'],
-                            icon: 'iconfont icon-bolangnengshiyanchang',
-                        },
-                        children: [
-                            {
-                                path: '/sysmanage/appheader/appheaderdetail',
-                                name: 'appheaderdetail',
-                                component: 'sysmanage/appheader/appheaderdetail',
-                                meta: {
-                                    title: 'message.router.appheaderdetail',
-                                    isLink: '',
-                                    isHide: true,
-                                    isKeepAlive: false,
-                                    isAffix: false,
-                                    isIframe: false,
-                                    roles: ['admin', 'common'],
-                                    icon: 'ele-Sunny',
-                                },
-                            },
-                        ],
 
-                    },
                     {
 
                         path: '/sysmanage/messheader',

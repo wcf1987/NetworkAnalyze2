@@ -24,7 +24,51 @@ import delayedicon from '/@/assets/svgicon/delayed.svg';
 export const leftNavList = [
 
     {
-        title: '函数',
+        title: '三角函数',
+        isOpen: true,
+
+        icon: 'iconfont icon-shuju',
+        id: '1',
+        children: [
+
+        ],
+    },
+        {
+        title: '字符串计算',
+        isOpen: true,
+
+        icon: 'iconfont icon-shuju',
+        id: '2',
+        children: [
+            {
+                icon: convericon,
+                name: '函数1',
+                type: 'conver',
+                id: '1',
+                descrip: '转换方式1',
+            },
+
+        ],
+    },
+        {
+        title: '日期计算',
+        isOpen: true,
+
+        icon: 'iconfont icon-shuju',
+        id: '3',
+        children: [
+            {
+                icon: convericon,
+                name: '函数1',
+                type: 'conver',
+                id: '1',
+                descrip: '转换方式1',
+            },
+
+        ],
+    },
+        {
+        title: '类型转换',
         isOpen: true,
 
         icon: 'iconfont icon-shuju',
@@ -40,5 +84,57 @@ export const leftNavList = [
 
         ],
     },
+        {
+        title: '列表函数',
+        isOpen: true,
+
+        icon: 'iconfont icon-shuju',
+        id: '5',
+        children: [
+            {
+                icon: convericon,
+                name: '函数1',
+                type: 'conver',
+                id: '1',
+                descrip: '转换方式1',
+            },
+
+        ],
+    },
+        {
+        title: '字典函数',
+        isOpen: true,
+
+        icon: 'iconfont icon-shuju',
+        id: '6',
+        children: [
+            {
+                icon: convericon,
+                name: '函数1',
+                type: 'conver',
+                id: '1',
+                descrip: '转换方式1',
+            },
+
+        ],
+    },
+        {
+        title: '自定义函数',
+        isOpen: true,
+
+        icon: 'iconfont icon-shuju',
+        id: '7',
+        children: [
+            {
+                icon: convericon,
+                name: '函数1',
+                type: 'conver',
+                id: '1',
+                descrip: '转换方式1',
+            },
+
+        ],
+    },
+
 
 ];

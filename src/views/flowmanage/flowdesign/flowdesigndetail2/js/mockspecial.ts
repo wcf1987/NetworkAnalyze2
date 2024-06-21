@@ -18,6 +18,7 @@ import calcicon from '/@/assets/svgicon/calc.svg';
 import convericon from '/@/assets/svgicon/conver.svg';
 import inpacicon from '/@/assets/svgicon/inpac.svg';
 import desticon from '/@/assets/svgicon/dest.svg';
+import firsticon from "/@/assets/svgicon/first.svg";
 export const leftNavListSpecial = [
     {
         title: '基础节点',
@@ -25,25 +26,33 @@ export const leftNavListSpecial = [
         isOpen: true,
         id: '1',
         children: [
-            {
-                icon: starticon,
+        {
+                icon: firsticon,
                 name: '开始节点',
-                id: '11',
-                type: 'start',
+                id: '11_1',
+                type: 'first',
                 descrip: '流程的第一个节点',
 
             },
             {
                 icon: desticon,
                 name: '结束节点',
-                id: '11_1',
+                id: '12_1',
                 type: 'dest',
                 descrip: '流程的结束节点',
 
             },
+               {
+                icon: starticon,
+                name: '源消息节点',
+                id: '11',
+                type: 'start',
+                descrip: '流程的第一个节点',
+
+            },
             {
                 icon: targeticon,
-                name: '目的节点',
+                name: '目的消息节点',
                 id: '12',
                 type: 'end',
                 descrip: '流程的最终节点，可以有多个',

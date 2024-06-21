@@ -36,7 +36,7 @@
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="sourceID" label="源消息体ID" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column prop="targetID" label="目的消息体ID" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column prop="sourmess" label="源消息体" show-overflow-tooltip>
+                <el-table-column prop="sourmess" label="源消息体" width="150"  show-overflow-tooltip>
                     <template #default="scope">
                         <el-button size="default" text type="primary"
                                    @click="viewNess('view', scope.row.sourceID)"
@@ -47,7 +47,7 @@
 
 
                 </el-table-column>
-                <el-table-column prop="tarmess" label="目的消息体" show-overflow-tooltip>
+                <el-table-column prop="tarmess" label="目的消息体" width="150"  show-overflow-tooltip>
                     <template #default="scope">
                         <el-button size="default" text type="primary"
                                    @click="viewNess('view', scope.row.targetID)"

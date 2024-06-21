@@ -1,13 +1,6 @@
 <template>
-    <div class="filtering layout-pd">
-        <el-card
-                shadow="hover"
-                class="filtering-list br-top-no"
-                v-loading="state.tableData.loading"
-                element-loading-text="加载中..."
-                element-loading-background="rgba(255, 255, 255, 0.1)"
-                :class="{ 'min-h-360': state.tableData.data.length <= 0 }"
-        >
+    <div class="system-user-container layout-padding">
+        <el-card shadow="hover" class="layout-padding-auto">
             <div class="system-user-search mb15">
                 <el-input size="default" placeholder="请输入插件名称" style="max-width: 180px"  v-model="state.tableData.search"></el-input>
                 <el-button size="default" type="primary" class="ml10" @click="onSearch">
@@ -191,13 +184,15 @@ const getTableData = () => {
 		state.tableData.loading = false;
 	}, 100);
 };
-    // 分页点击
+    // 分页改变
     const onHandleSizeChange = (val: number) => {
         state.tableData.param.pageSize = val;
+        getTableData();
     };
-    // 分页点击
+    // 分页改变
     const onHandleCurrentChange = (val: number) => {
         state.tableData.param.pageNum = val;
+        getTableData();
     };
     const onOpenEdit = (type: string, row: RowUserType) => {
 	userDialogRef.value.openDialog(type, row);
@@ -280,308 +275,19 @@ const onRowDel = (row: RowUserType) => {
 </script>
 
 <style scoped lang="scss">
-    .el-dropdown{
-        margin-left: 7px;
-    }
-      :deep(.buttonfont) {
+       .system-user-container {
+        :deep(.el-card__body) {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: auto;
+
+            .el-table {
+                flex: 1;
+            }
+        }
+          :deep(.buttonfont) {
                     font-size: 14px;
                 }
-    .list-card-item {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 12px;
-        overflow: hidden;
-        cursor: pointer;
-        border-radius: 3px;
-
-        &_detail {
-            flex: 1;
-            min-height: 140px;
-            padding: 24px 32px;
-             border: 2px solid var(--next-border-color-light);
-            &--logo {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 56px;
-                height: 56px;
-                font-size: 32px;
-                color: #0052d9;
-                background: #e0ebff;
-                border-radius: 50%;
-
-                &__disabled {
-                    color: #a1c4ff;
-                }
-            }
-
-            &--operation {
-                display: flex;
-                height: 100%;
-
-                &--tag {
-                    border: 0;
-                }
-            }
-
-            &--name {
-                margin: 24px 0 8px;
-                font-size: 16px;
-                font-weight: 400;
-            }
-
-            &--desc {
-                display: -webkit-box;
-                height: 40px;
-                margin-bottom: 24px;
-                overflow: hidden;
-                font-size: 12px;
-                line-height: 20px;
-                text-overflow: ellipsis;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-            }
-            &:hover {
-                            cursor: pointer;
-                            border: 1px solid var(--el-color-primary);
-                            transition: all 0.3s ease;
-                            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
-
-                            .item-txt-title {
-                                color: var(--el-color-primary) !important;
-                                transition: all 0.3s ease;
-                            }
-
-                            .item-img {
-                                img {
-                                    transition: all 0.3s ease;
-                                    transform: translateZ(0) scale(1.05);
-                                }
-                            }
-                        }
-        }
-
-        &__disabled {
-            .list-card-item_detail--name,
-            .list-card-item_detail--desc {
-                color: var(--el-text-color-disabled);
-            }
-
-            .list-card-item_detail--operation--tag {
-                color: #bababa;
-            }
-        }
-    }
-
-    .filtering {
-        .filtering-list {
-            overflow: hidden;
-            border-bottom: none !important;
-
-            .filtering-list-flex {
-                &:last-of-type {
-                    .filtering-list-item {
-                        border-bottom: none !important;
-                    }
-                }
-
-                .filtering-list-title {
-                    float: left;
-                    width: 64px;
-                    font-weight: 700;
-                    position: relative;
-                    color: #909399;
-                    margin: 15px 0;
-
-                    &:after {
-                        content: '';
-                        position: absolute;
-                        border: 1px solid #909399;
-                        border-width: 0 1px 1px 0;
-                        width: 4px;
-                        height: 4px;
-                        transform: rotate(-45deg) translateY(-50%);
-                        right: 10px;
-                        top: 50%;
-                    }
-                }
-
-                .filtering-list-item {
-                    border-bottom: 1px dotted var(--next-border-color-light);
-                    margin-left: 64px;
-                    overflow: hidden;
-                    position: relative;
-
-                    .span {
-                        color: #8d8d91;
-                        font-size: 14px;
-                        float: left;
-                        padding: 0 15px;
-                        margin: 15px 0;
-
-                        &:hover {
-                            color: var(--el-color-primary);
-                            cursor: pointer;
-                        }
-                    }
-
-                    .dd-active {
-                        color: var(--el-color-primary);
-                    }
-
-                    .dd-more {
-                        font-size: 12px;
-                        position: absolute;
-                        right: 0;
-                        top: 16px;
-                        color: #a5a5a5;
-
-                        &:hover {
-                            cursor: pointer;
-                            color: #8d8d91;
-                        }
-                    }
-                }
-            }
-        }
-
-        .br-top-no {
-            border-top: none;
-
-            .flex-warp {
-                display: flex;
-                flex-wrap: wrap;
-                align-content: flex-start;
-                margin: 0 -5px;
-
-                .el-row {
-                    width: 101%;
-                }
-
-                .flex-warp-item {
-                    padding: 5px;
-                    width: 100%;
-                    height: 360px;
-
-                    .flex-warp-item-box {
-                        border: 1px solid var(--next-border-color-light);
-                        width: 100%;
-                        height: 100%;
-                        border-radius: 2px;
-                        display: flex;
-                        flex-direction: column;
-                        transition: all 0.3s ease;
-
-                        &:hover {
-                            cursor: pointer;
-                            border: 1px solid var(--el-color-primary);
-                            transition: all 0.3s ease;
-                            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
-
-                            .item-txt-title {
-                                color: var(--el-color-primary) !important;
-                                transition: all 0.3s ease;
-                            }
-
-                            .item-img {
-                                img {
-                                    transition: all 0.3s ease;
-                                    transform: translateZ(0) scale(1.05);
-                                }
-                            }
-                        }
-
-                        .item-img {
-                            width: 100%;
-                            height: 215px;
-                            overflow: hidden;
-
-                            img {
-                                transition: all 0.3s ease;
-                                width: 100%;
-                                height: 100%;
-                            }
-                        }
-
-                        .item-txt {
-                            flex: 1;
-                            padding: 15px;
-                            display: flex;
-                            flex-direction: column;
-                            overflow: hidden;
-
-                            .item-txt-title {
-                                text-overflow: ellipsis;
-                                overflow: hidden;
-                                -webkit-line-clamp: 2;
-                                -webkit-box-orient: vertical;
-                                display: -webkit-box;
-                                color: #666666;
-                                transition: all 0.3s ease;
-
-                                &:hover {
-                                    color: var(--el-color-primary);
-                                    text-decoration: underline;
-                                    transition: all 0.3s ease;
-                                }
-                            }
-
-                            .item-txt-other {
-                                flex: 1;
-                                align-items: flex-end;
-                                display: flex;
-
-                                .item-txt-msg {
-                                    font-size: 12px;
-                                    color: #8d8d91;
-                                }
-
-                                .item-txt-price {
-                                    display: flex;
-                                    justify-content: space-between;
-                                    align-items: center;
-
-                                    .font-price {
-                                        color: #ff5000;
-
-                                        .font {
-                                            font-size: 22px;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            :deep(.el-card__body) {
-                height: 100%;
-
-                .filtering-no-data {
-                    display: flex;
-                    height: 100%;
-
-                    .no-data-box {
-                        color: #cccccc;
-                        margin: auto;
-
-                        i {
-                            font-size: 70px;
-                        }
-
-                        .no-txt {
-                            font-size: 14px;
-                            text-align: center;
-                            margin-top: 15px;
-                        }
-                    }
-                }
-            }
-        }
-
-        .min-h-360 {
-            height: 360px;
-        }
     }
 </style>

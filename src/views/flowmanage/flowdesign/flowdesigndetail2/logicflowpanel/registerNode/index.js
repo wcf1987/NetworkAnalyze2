@@ -29,6 +29,8 @@ import ConversionNode
     from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/ConversionNode";
 import InpacNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/InpacNode";
 import DestNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/DestNode";
+import FirstNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/FirstNode";
+
 export {
     StartNode,
     EndNode,
@@ -49,4 +51,5 @@ export {
     ConversionNode,
     InpacNode,
     DestNode,
+    FirstNode
 }

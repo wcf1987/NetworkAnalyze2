@@ -4,7 +4,7 @@
       <div class="container">
 
         <div class="workflow-left" v-if="state.ruleForm.Optional=='自定义转换计算'">
-          <el-scrollbar>
+          <el-scrollbar height="400px">
             <div
                 ref="leftNavRefs"
                 v-for="val in state.leftNavList"
@@ -22,13 +22,18 @@
                    draggable="true" @dragstart="onDragStart(v.name,$event)">
                 <!--     @click="onFuncClick(v.name)" -->
 
-
-                <div class="workflow-left-item-icon">
-                  <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
-                           :size=16></SvgIcon>
-                  <div class="font10 pl5 name">{{ v.name }}</div>
-                </div>
-
+                <el-tooltip
+                    class="box-item"
+                    effect="light"
+                    :content="val.name"
+                    placement="bottom-start"
+                >
+                  <div class="workflow-left-item-icon">
+                    <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
+                             :size=16></SvgIcon>
+                    <div class="font10 pl5 name">{{ v.name }}</div>
+                  </div>
+                </el-tooltip>
 
               </div>
 
@@ -89,9 +94,6 @@
               </el-col>
 
 
-
-
-
               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
                       v-if="state.ruleForm.Optional=='系统函数'">
 
@@ -140,7 +142,7 @@
             </el-row>
           </el-form>
 
-          <span class="dialog-footer">
+          <span class="dialog-footer" style="textalign: center;">
                             <el-button @click="onCancel" size="default">取 消</el-button>
                             <el-button type="primary" @click="onSubmit"
                                        size="default">{{ state.dialog.submitTxt }}</el-button>
@@ -176,6 +178,7 @@ const funcoptions = ref([
   {name: 'Add()'},
   {name: 'Encode()'},
 ])
+
 // 左侧导航-数据初始化
 const initLeftNavList = () => {
 
@@ -195,30 +198,33 @@ const initLeftNavList = () => {
         name: '',
       })
       .then(res => {
-        //console.log(res);
-        if (res.code == '200') {
+            console.log(res);
+            if (res.code == '200') {
 
-          let convlist = state.leftNavList[0];
 
-          convlist.children = new Array();
-          for (let i = 0, k = 0; k < res.data.length; k++) {
+              for (let i = 0; i < FunctionType.length; i++) {
+                let convlist = state.leftNavList[i];
+                convlist.children = new Array();
+                for (let k = 0; k < res.data.length; k++) {
+                  if (FunctionType[i].label == res.data[k].Type) {
+                    convlist.children.push({
+                      icon: func,
+                      name: res.data[k].Name,
+                      type: res.data[k].Type,
+                      id: res.data[k].ID,
+                      descrip: res.data[k].Describes,
+                    })
+                  }
 
-            convlist.children[i] = {
-              icon: func,
-              name: res.data[k].Name,
-              type: res.data[k].Type,
-              id: res.data[k].ID,
-              descrip: res.data[k].Describes,
+                }
+              }
+              console.log(state.leftNavList)
+            } else {
+              ElMessage.error(res.message);
             }
-            i++
+
           }
-
-
-        } else {
-          ElMessage.error(res.message);
-        }
-
-      }).catch(err => {
+      ).catch(err => {
 
   }).finally(() => {
 
@@ -288,7 +294,7 @@ const onFuncClick = (val: any) => {
   }
   state.ruleForm.Transrule = state.ruleForm.Transrule + ' ' + val + '(params)';
 };
-const getMenuOptions = async() => {
+const getMenuOptions = async () => {
 
   await messdetailApi().searchMessDetail(
       {
@@ -312,9 +318,9 @@ const getMenuOptions = async() => {
 
       }).catch(err => {
 
-  }).finally(() => {
+      }).finally(() => {
 
-  });
+      });
 }
 const props1 = {
   multiple: false,
@@ -327,7 +333,7 @@ const props21 = {
   expandTrigger: 'hover',
   value: 'Name',
   label: 'Name',
-  emitPath:false,
+  emitPath: false,
 }
 const props22 = {
   expandTrigger: 'hover',
@@ -359,7 +365,7 @@ const state = reactive({
   targetoptions: [],
   targetoptions1: [],
   leftNavList: [],
-  editEabled:true,
+  editEabled: true,
 
   ruleForm: {
     Name: '', // 账户名称
@@ -430,19 +436,19 @@ const changeSourceInput32 = (fo) => {
 
 }
 // 打开弹窗
-const openDialog = async (type: string, sourceid, row: RowUserType, original: string,ssid) => {
+const openDialog = async (type: string, sourceid, row: RowUserType, original: string, ssid) => {
   state.original = original;
   console.log(row)
   state.targetfiledid = row.ID;
   state.sourceid = sourceid;
   await getMenuOptions();
-  if(state.original=='TableEdit'){
-    state.editEabled=false;
-  }else{
-    state.editEabled=true;
+  if (state.original == 'TableEdit') {
+    state.editEabled = false;
+  } else {
+    state.editEabled = true;
   }
-  if(state.original=='AddConn'){
-    state.ssid=ssid;
+  if (state.original == 'AddConn') {
+    state.ssid = ssid;
   }
   if (type === 'edit') {
     state.ruleForm = row;
@@ -469,12 +475,12 @@ const closeDialog = () => {
 const onCancel = () => {
   //console.log(state.original)
   if (state.original == 'AddConn') {
-    let conn={sourceId:state.ssid, targetId:state.targetfiledid};
+    let conn = {sourceId: state.ssid, targetId: state.targetfiledid};
 
-     emit('delConn',conn);
+    emit('delConn', conn);
 
   }
-closeDialog();
+  closeDialog();
 };
 // 提交
 const onSubmit = () => {
@@ -528,6 +534,13 @@ defineExpose({
 <style scoped lang="scss">
 .container {
   display: flex; /* 设定为flex布局 */
+  :deep(.dialog-footer) {
+
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+
+  }
 
   .workflow-left {
     width: 320px;

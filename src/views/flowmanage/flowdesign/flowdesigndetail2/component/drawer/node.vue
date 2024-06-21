@@ -163,14 +163,14 @@
                                       v-if="state.properForm.interfacetype=='网口'">
                             <el-col :span="11">
 
-                                <el-input v-model="v.IP" placeholder="请输入ip地址" clearable
+                                <el-input v-model="v.IP" placeholder="请输入ip地址" clearable style="font-size: 10px"
                                 ></el-input>
                             </el-col>
                             <el-col :span="1" class="text-center">
                                 <span style="display:block;text-align: center" class="text-gray-500">:</span>
                             </el-col>
                             <el-col :span="6">
-                                <el-input v-model="v.Port" placeholder="请输入端口" clearable
+                                <el-input v-model="v.Port" placeholder="请输入端口" clearable style="font-size: 10px"
                                 ></el-input>
                             </el-col>
                             <el-col :span="1"/>
@@ -1359,7 +1359,8 @@
     }
 
     :deep(.max-width-row) {
-        max-width: 300px; /* 你想要的最大宽度 */
+       // max-width: 310px; /* 你想要的最大宽度 */
+        width: 320px;
         margin: 0 auto;
 
         /* 水平居中 */

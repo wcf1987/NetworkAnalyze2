@@ -10,7 +10,7 @@ export default {
         address: '地址对象',
         networkinterface: '网口管理',
         serial: '串口管理',
-        package: '数据包封装对象',
+        package: '封装/应用头对象',
         packagedetail: '消息封装详细编辑',
         appheader: '应用头对象',
         messheader: '消息头对象',

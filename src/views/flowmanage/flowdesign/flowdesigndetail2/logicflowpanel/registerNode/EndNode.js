@@ -11,7 +11,7 @@ class EndNode extends IconNode.view {
 class EndNodeModel extends IconNode.model{
     initNodeData(data) {
     super.initNodeData(data);
-    this.text.value = "目的节点"; // 不允许文本被拖动
+    this.text.value = "目的消息节点"; // 不允许文本被拖动
     this.properties={
         interfacetype:'无',
         serialID:'',
