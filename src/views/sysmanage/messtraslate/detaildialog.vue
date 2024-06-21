@@ -25,8 +25,8 @@
                 <el-tooltip
                     class="box-item"
                     effect="light"
-                    :content="val.name"
-                    placement="bottom-start"
+                    :content="v.describes"
+                    placement="top-start"
                 >
                   <div class="workflow-left-item-icon">
                     <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
@@ -212,7 +212,7 @@ const initLeftNavList = () => {
                       name: res.data[k].Name,
                       type: res.data[k].Type,
                       id: res.data[k].ID,
-                      descrip: res.data[k].Describes,
+                      describes: res.data[k].Describes,
                     })
                   }
 

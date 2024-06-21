@@ -191,7 +191,7 @@
     }
         const onTableItemClick = (v: FilterListType) => {
         router.push({
-            path: '/distribution/gateway/gatewaydistribute',
+            path: '/distribution/gatewaydistributeall',
             query: {id: v.ID, name: v.Name,ip:v.IP,describes:v.Describes},
         });
 

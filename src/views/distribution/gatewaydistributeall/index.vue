@@ -38,10 +38,11 @@
           <div id="workflow-right" class="workflow-right" ref="workflowRightRef" @drop="onDrop($event)"
                @dragover.prevent>
             <div class="floatinginfo">
-              <div style="display:inline-block;">{{
+              <div style="display:inline-block;">
+                <span>{{
                   `CLIP名称： ${state.gateway.Name}
                                 IP地址：${state.gateway.IP} 描述：${state.gateway.Describes}`
-                }}
+                  }}</span>
                 <el-button size="small" type="success" class="eltagr" @click="disflow">
 
                   下发流程
@@ -917,7 +918,14 @@ onMounted(async () => {
 
   initJsPlumb();
   setClientWidth();
-
+  if(querys.id!=null){
+    state.gateway.ID = querys.id;
+    state.gateway.Name = querys.name
+    state.gateway.IP = querys.ip;
+    state.gateway.Describes = querys.describes;
+    state.gateway.DisPercentage = 0;
+    updatetableDataFlowShow();
+  }
   window.addEventListener('resize', setClientWidth);
 });
 // 页面卸载时
@@ -938,14 +946,18 @@ onUnmounted(() => {
     padding: 10px;
 
     :deep(.eltagr) {
-      position: relative;
-      left: 250px
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      margin-top: 10px;
     }
 
     :deep(.eltagr2) {
-      width: 100px;
-      top: -25px;
-      left: 700px
+      width: 300px;
+      top: -33px;
+      margin-top: 10px;
+      left: 100px;
     }
   }
 
