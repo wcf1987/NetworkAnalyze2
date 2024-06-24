@@ -35,12 +35,12 @@
                     返回
                 </el-button>
             </div>
-            <el-table  :cell-style="{'padding': '2px 2px 0 10px'}"  :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table @sort-change="sort_change" :cell-style="{'padding': '2px 2px 0 10px'}"  :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
-                <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="Type" label="格式" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Name" label="名称" show-overflow-tooltip sortable="custom"></el-table-column>
+                <el-table-column prop="Type" label="格式" show-overflow-tooltip sortable="custom"></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column label="操作" width="180">
@@ -101,6 +101,8 @@
             },
             search: '',
             searchStr: '',
+             order: 'asc',
+    orderField: 'ID',
                 ids:[],
         },
     });
@@ -114,6 +116,19 @@
 
         router.back();
     }
+    const sort_change = (k: any) => {
+  console.log(k);
+  if (k.order === 'ascending') {
+    // 升序排序 stopped在前
+    state.tableData.order = 'asc';
+    state.tableData.orderField = k.prop;
+  } else if (k.order === 'descending') {
+    // 降序排序 running在前（使用reverse是对数据进行翻转）
+    state.tableData.order = 'desc';
+    state.tableData.orderField = k.prop;
+  }
+  getTableData();
+}
     // 初始化表格数据
     const getTableData = () => {
         state.tableData.loading = true;
@@ -124,6 +139,8 @@
                 pageNum: state.tableData.param.pageNum,
                 pageSize: state.tableData.param.pageSize,
                 name: state.tableData.searchStr,
+                     order: state.tableData.order,
+        orderField: state.tableData.orderField
             })
             .then(res => {
                 //console.log(res);
