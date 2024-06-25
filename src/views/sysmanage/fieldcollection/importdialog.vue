@@ -54,7 +54,7 @@
                 :close-on-click-modal="true"
                 :destroy-on-close="true"
                 :show-close="true"
-                title="导入失败"
+                title="导入失败详细信息"
                 width="35%"
                 @close="handleClose"
         >
@@ -124,9 +124,13 @@
                 const {data, code} = res
                 if (code == '200') {
                     isShowFail.value = false
-                    ElMessage.success('导入成功')
+                    ElMessage.success(res.message)
                     emit('update:showDialog', false)
                     emit('import-success', successListData.value)
+                    if(res.data.length>0){
+                      isShowFail.value = true
+                    errorListData.value=res.data;
+                    }
                 } else {
                     if(res.data==null){
                          ElMessage.error('文件结构有误');

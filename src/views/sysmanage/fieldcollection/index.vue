@@ -6,21 +6,24 @@
 
         <el-row>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20" v-show="state.isToggle">
-
-            <el-input size="default" placeholder="请输入DFI标示号" style="max-width: 180px"
-                      v-model="state.tableData.search"></el-input>
+            <el-form-item label="DFI标示号" prop="DFIID">
+              <el-input size="default" placeholder="请输入DFI标示号" style="max-width: 180px"
+                        v-model="state.tableData.search"></el-input>
+            </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20" v-show="state.isToggle">
-
-            <el-input size="default" placeholder="请输入引用名" style="max-width: 180px"
-                      v-model="state.tableData.searchEname"></el-input>
+            <el-form-item label="引用名" prop="EName">
+              <el-input size="default" placeholder="请输入引用名" style="max-width: 180px"
+                        v-model="state.tableData.searchEname"></el-input>
+            </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20" v-show="state.isToggle">
-
-            <el-input size="default" placeholder="请输入适用消息" style="max-width: 180px"
-                      v-model="state.tableData.searchAppMess"></el-input>
+            <el-form-item label="适用消息" prop="appMEss">
+              <el-input size="default" placeholder="请输入适用消息" style="max-width: 180px"
+                        v-model="state.tableData.searchAppMess"></el-input>
+            </el-form-item>
           </el-col>
-	<el-button size="default" type="info" class="ml10" @click="onReset" v-show="state.isToggle"> 重置 </el-button>
+          <el-button size="default" type="info" class="ml10" @click="onReset" v-show="state.isToggle"> 重置</el-button>
 
         </el-row>
 
@@ -29,13 +32,12 @@
                   v-model="state.tableData.search" v-show="!state.isToggle"></el-input>
 
 
-
         <el-button size="default" type="primary" class="ml10" @click="state.isToggle = !state.isToggle">
-        <SvgIcon :name="state.isToggle ? 'ele-ArrowUp' : 'ele-ArrowDown'"/>
+          <SvgIcon :name="state.isToggle ? 'ele-ArrowUp' : 'ele-ArrowDown'"/>
 
-                  <span >{{ state.isToggle ? '收筛选' : '展筛选' }}</span>
+          <span>{{ state.isToggle ? '收筛选' : '展筛选' }}</span>
         </el-button>
-        <el-button size="default" type="primary" class="ml10" @click="onSearch"  >
+        <el-button size="default" type="primary" class="ml10" @click="onSearch">
           <el-icon>
             <ele-Search/>
           </el-icon>
@@ -162,11 +164,11 @@ const downLoadPlanEvent = () => {
   downFile("DFI模板下载.xls");
 
 };
-const onReset=() => {
+const onReset = () => {
   state.tableData.searchStr = '';
-  state.tableData.searchEname='';
+  state.tableData.searchEname = '';
   state.tableData.searchAppMess = '';
-  state.tableData.search='';
+  state.tableData.search = '';
   getTableData();
 }
 const downLoadPlanEventAll = () => {
@@ -205,13 +207,13 @@ const back = () => {
 // 初始化表格数据
 const getTableData = () => {
   state.tableData.loading = true;
-  let enamestr='';
-  let appmessstr='';
+  let enamestr = '';
+  let appmessstr = '';
 
-  if(state.isToggle==true){
-    enamestr=state.tableData.searchEname;
-    appmessstr=state.tableData.searchAppMess;
-  }else{
+  if (state.isToggle == true) {
+    enamestr = state.tableData.searchEname;
+    appmessstr = state.tableData.searchAppMess;
+  } else {
 
   }
   fieldsApi().searchFields(
@@ -220,8 +222,8 @@ const getTableData = () => {
         pageNum: state.tableData.param.pageNum,
         pageSize: state.tableData.param.pageSize,
         name: state.tableData.searchStr,
-        ename:enamestr,
-        appmessstr:appmessstr,
+        ename: enamestr,
+        appmessstr: appmessstr,
         order: state.tableData.order
       })
       .then(res => {
@@ -244,8 +246,8 @@ const getTableData = () => {
       {
         uid: 1,
         name: state.tableData.searchStr,
-                ename:enamestr,
-        appmessstr:appmessstr,
+        ename: enamestr,
+        appmessstr: appmessstr,
       })
       .then(res => {
         //console.log(res);

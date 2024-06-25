@@ -4,7 +4,30 @@
             <el-form ref="userDialogFormRef" :model="state.ruleFormOri" :rules="state.baseRules" size="default"
                      label-width="90px">
                 <el-row :gutter="35">
+          <el-col :xs="18" :sm="9" :md="9" :lg="9" :xl="9" class="mb20">
+            <el-form-item label="模糊查询" prop="DFIID">
+              <el-input v-model="state.ruleForm.searchName" placeholder="请输入名称" clearable
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="6" :sm="3" :md="3" :lg="3" :xl="3" class="mb20">
+            <el-button type="primary" @click="onSearch" size="default">查询</el-button>
 
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="查询结果" prop="DFINO">
+              <el-select v-model="state.ruleFormOri.sourceDUI" value-key="id" @change="chooseDUI"
+                         placeholder="请选择精确DUI" clearable class="w100">
+                <el-option
+                    v-for="item in DUIOptions"
+                    :key="item.ID"
+                    :label="item.DUINO+' - '+item.Name"
+                    :value="item.ID"
+                />
+
+              </el-select>
+            </el-form-item>
+          </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 
                         <el-form-item label="导入字段" prop="sourceDFI">
@@ -214,7 +237,43 @@
     const userDialogFormRef = ref();
     const DUIOptions = ref();
     const DFIOptions = ref();
+const onSearch=()=>{
+    fieldsdetailApi().searchFieldsDetail(
+      {
+        uid: 1,
+        pageNum: 1,
+        pageSize: 9999,
+        name: state.ruleForm.searchName,
+        pid: 0,
+      })
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
 
+          DUIOptions.value = res.data;
+          //locOptions.value.push({ID:-1,Name:'最后'});
+        } else {
+          DUIOptions.value = [];
+          ElMessage.error(res.message);
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
+}
+const chooseDUI = (fo) => {
+  console.log(fo);
+  let i = 0;
+  for (i = 0; i < DUIOptions.value.length; i++) {
+    if (DUIOptions.value[i].ID == fo) {
+      state.ruleForm = DUIOptions.value[i];
+      state.ruleFormOri.sourceDFI=DUIOptions.value[i].DFIID;
+    }
+  }
+
+};
     const changeDFI = (fo) => {
         console.log(fo)
         fieldsdetailApi().searchFieldsDetail(

@@ -148,6 +148,7 @@ const state = reactive({
   tableData: {
     id: '',
     data: [],
+    dataAll:[],
     type: '',
     total: 0,
 
@@ -221,32 +222,54 @@ function expandID(list) {
   }
 }
 
-//编辑嵌套结构
-const onOpenEditGroup = (type: string, row: RowUserType) => {
-  state.tableData.history.push({
-    nestid: state.tableData.nestid,
-    pageNum: state.tableData.param.pageNum,
-    pageSize: state.tableData.param.pageSize,
-    searchStr: state.tableData.searchStr
-  })
-  state.tableData.nestid = row.ID;
-  state.tableData.param.pageNum = 1;
-  state.tableData.param.pageSize = 10;
-  state.tableData.searchStr = '';
-  state.tableData.search = '';
-  getTableData();
+  //编辑嵌套结构
+  const onOpenEditGroup = (type: string, row: RowUserType) => {
+    state.tableData.history.push({
+      nestid: state.tableData.nestid,
+      pageNum: state.tableData.param.pageNum,
+      pageSize: state.tableData.param.pageSize,
+      searchStr: state.tableData.searchStr,
+      name:state.tableData.name
+    })
+    state.tableData.nestid = row.ID;
+    state.tableData.param.pageNum = 1;
+    state.tableData.param.pageSize = 10;
+    state.tableData.searchStr = '';
+    state.tableData.search = '';
+    var s=getPathById(state.tableData.dataAll,row.ID);
+    state.tableData.name=querys.name+'.'+s.join('.');
+    console.log(state.tableData.name);
+    getTableData();
 
-};
-//返回上一级
-const backUP = () => {
-  let temphis = state.tableData.history.pop()
-  state.tableData.nestid = temphis.nestid;
-  state.tableData.param.pageNum = temphis.pageNum;
-  state.tableData.param.pageSize = temphis.pageSize;
-  state.tableData.searchStr = temphis.searchStr;
-  state.tableData.search = state.tableData.searchStr;
-  getTableData();
+  };
+// 利用递归，将tree转化成数组结构来操作
+function getPathById(tree, id, path) {
+  tree = Array.isArray(tree) ? tree : [tree]
+  if (!path) {
+    path = []
+  }
+  for (let i = 0, len = tree.length; i < len; i++) {
+    let tempPath = [...path]
+    tempPath.push(tree[i].Name)
+    if (tree[i].ID === id) {
+      return tempPath
+    }
+    if (tree[i].children) {
+      return getPathById(tree[i].children, id, tempPath)
+    }
+  }
 }
+  //返回上一级
+  const backUP = () => {
+    let temphis = state.tableData.history.pop()
+    state.tableData.nestid = temphis.nestid;
+    state.tableData.param.pageNum = temphis.pageNum;
+    state.tableData.param.pageSize = temphis.pageSize;
+    state.tableData.searchStr = temphis.searchStr;
+    state.tableData.search = state.tableData.searchStr;
+    state.tableData.name=temphis.name;
+    getTableData();
+  }
 // 初始化表格数据
 const getTableData = (type) => {
   state.tableData.loading = true;
@@ -269,6 +292,9 @@ const getTableData = (type) => {
         if (res.code == '200') {
 
           state.tableData.data = res.data;
+           if(state.tableData.nestid==0){
+              state.tableData.dataAll=res.data;
+            }
           let id = 0;
           for (let i of state.tableData.data) {
             i.parentindex = id + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1;
