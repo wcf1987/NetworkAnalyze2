@@ -6,7 +6,7 @@ class CircleNewModel extends CircleNodeModel {
 //矩形外框大小设置
 initNodeData(data) {
     super.initNodeData(data);
-    this.r=50;
+    this.r=30;
     this.strokeWidth=10;
 
   }

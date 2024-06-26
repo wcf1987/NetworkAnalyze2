@@ -133,6 +133,7 @@
             <template #footer>
 				<span class="dialog-footer">
 					<el-button @click="onCancel" size="default">取 消</el-button>
+
 					<el-button type="primary" @click="onSubmit" size="default">{{ state.dialog.submitTxt }}</el-button>
 				</span>
             </template>
@@ -163,19 +164,19 @@
     const props1 = {
         multiple: false,
         expandTrigger: 'hover',
-        value: 'EName',
+        value: 'Name',
         label: 'Name'
     }
     const props23 = {
         multiple: false,
         expandTrigger: 'hover',
-        value: 'EName',
+        value: 'Name',
         label: 'Name'
     }
     const props21 = {
         multiple: true,
         expandTrigger: 'hover',
-        value: 'EName',
+        value: 'Name',
         label: 'Name'
     }
     const props22 = {

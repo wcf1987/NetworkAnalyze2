@@ -256,11 +256,13 @@ function getPathById(tree, id, path) {
   for (let i = 0, len = tree.length; i < len; i++) {
     let tempPath = [...path]
     tempPath.push(tree[i].Name)
-    if (tree[i].ID === id) {
+    if (tree[i].ID == id) {
       return tempPath
     }
     if (tree[i].children) {
-      return getPathById(tree[i].children, id, tempPath)
+      let s=getPathById(tree[i].children, id, tempPath);
+      if(s!=null){
+      return s;}
     }
   }
 }
@@ -297,9 +299,7 @@ function getPathById(tree, id, path) {
           if (res.code == '200') {
 
             state.tableData.data = res.data;
-            if(state.tableData.nestid==0){
-              state.tableData.dataAll=res.data;
-            }
+            getTableDataAll();
             let id = 0;
             for (let i of state.tableData.data) {
               i.parentindex = id + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1;
@@ -344,6 +344,39 @@ function getPathById(tree, id, path) {
     setTimeout(() => {
       state.tableData.loading = false;
     }, 200);
+  };
+  const getTableDataAll = (type) => {
+    state.tableData.loading = true;
+
+    messdetailApi().searchMessDetail(
+        {
+          uid: 1,
+          pid: state.tableData.id,
+          pageNum: 1,
+          pageSize: 10000,
+          name: state.tableData.searchStr,
+          ttype: 'body',
+          nestid: 0,
+        })
+        .then(res => {
+          //console.log(res);
+          if (res.code == '200') {
+
+
+              state.tableData.dataAll=res.data;
+
+
+          } else {
+           // ElMessage.error(res.message);
+          }
+
+        }).catch(err => {
+
+    }).finally(() => {
+
+    });
+
+
   };
   // 打开新增弹窗
   const onOpenAdd = (type: string) => {

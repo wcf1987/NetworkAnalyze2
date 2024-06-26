@@ -26,13 +26,18 @@
                      :data-name="v.name" :data-icon="v.icon" :data-id="v.id"
                      @mousedown="dragNode(v)">
 
-
+         <el-tooltip
+                    class="box-item"
+                    effect="light"
+                    :content="v.name"
+                    placement="top-start"
+                >
                   <div class="workflow-left-item-icon">
                     <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
                              :size=16></SvgIcon>
                     <div class="font10 pl5 name">{{ v.name }}</div>
                   </div>
-
+                </el-tooltip>
 
                 </div>
 
@@ -587,7 +592,7 @@ const saveScript = (grajson) => {
 }
 const findOptionsName = (options, id) => {
   for (let k of options) {
-    if (k.ID = id) {
+    if (k.ID == id) {
       return k.Name
     }
 
@@ -744,7 +749,8 @@ function initLf() {
       strokeWidth: 1
     },
     nodeText: {
-      color: '#000000'
+      color: '#000000',
+      overflowMode: "autoWrap",
     },
     edgeText: {
       color: '#000000',
@@ -1100,8 +1106,26 @@ const onToolClick = (fnName: String) => {
       onToolFullscreen();
       break;
     case 'closeWin':
+      ElMessageBox.confirm(
+    '你是否确定关闭？（未保存的更改将会丢失）',
+    '提示',
+    {
+      confirmButtonText: '保存后退出',
+     // customButtonText: '保存直接退出', // 自定义按钮文本
+      cancelButtonText: '不保存直接退出',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      saveFlow();
       router.go(-1);
-      break;
+
+
+    })
+    .catch(() => {
+   router.go(-1);
+    })
+break;
   }
 };
 // 顶部工具栏-帮助

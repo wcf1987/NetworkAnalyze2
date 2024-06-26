@@ -255,7 +255,9 @@ function getPathById(tree, id, path) {
       return tempPath
     }
     if (tree[i].children) {
-      return getPathById(tree[i].children, id, tempPath)
+           let s=getPathById(tree[i].children, id, tempPath);
+      if(s!=null){
+      return s;}
     }
   }
 }
@@ -270,6 +272,40 @@ function getPathById(tree, id, path) {
     state.tableData.name=temphis.name;
     getTableData();
   }
+
+    const getTableDataAll = (type) => {
+    state.tableData.loading = true;
+
+    messdetailApi().searchMessDetail(
+        {
+          uid: 1,
+          pid: state.tableData.id,
+          pageNum: 1,
+          pageSize: 10000,
+          name: state.tableData.searchStr,
+          ttype: 'header',
+          nestid: 0,
+        })
+        .then(res => {
+          //console.log(res);
+          if (res.code == '200') {
+
+
+              state.tableData.dataAll=res.data;
+
+
+          } else {
+           // ElMessage.error(res.message);
+          }
+
+        }).catch(err => {
+
+    }).finally(() => {
+
+    });
+
+
+  };
 // 初始化表格数据
 const getTableData = (type) => {
   state.tableData.loading = true;
@@ -292,9 +328,7 @@ const getTableData = (type) => {
         if (res.code == '200') {
 
           state.tableData.data = res.data;
-           if(state.tableData.nestid==0){
-              state.tableData.dataAll=res.data;
-            }
+                  getTableDataAll();
           let id = 0;
           for (let i of state.tableData.data) {
             i.parentindex = id + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1;

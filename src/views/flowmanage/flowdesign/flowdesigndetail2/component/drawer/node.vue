@@ -327,7 +327,7 @@
                                      :props="props21"
                                      @change="changeSourceInput21"
                                      clearable
-                                     style="width: 500px; " collapse-tags/>
+                                      collapse-tags/>
                     </el-form-item>
 
                     <el-form-item label="转换公式" prop="rulestr" clearable>
@@ -1258,6 +1258,7 @@
     };
     const messTranslateModify = (data) => {
         state.properForm.messtranslatedata = data;
+        onExtendSubmit();
     }
     // 扩展表单-保存
     const onExtendSubmit = () => {

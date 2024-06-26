@@ -60,10 +60,7 @@
     const userDialogFormRef = ref();
     const rules = reactive({
 // 普通的校验规则
-        name: [
-            {required: true, message: '名称不能为空'},
-            {min: 1, max: 10, message: '名称长度为1 - 10位'},
-        ],
+
     });
     const state = reactive({
         ruleForm: {
@@ -100,7 +97,9 @@
             state.dialog.submitTxt = '修 改';
             nextTick(() => {
                 Object.assign(state.ruleForm, row);
+                 userDialogFormRef.value.validate((valid) => {});
             });
+
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
