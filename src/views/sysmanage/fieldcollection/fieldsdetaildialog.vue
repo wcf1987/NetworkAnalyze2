@@ -48,6 +48,21 @@
                         :readonly="isReadOnly"></el-input>
             </el-form-item>
           </el-col>
+    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="数据标识" prop="Flag">
+              <el-select v-model="state.ruleForm.Flag" value-key="id" placeholder="请选择" clearable
+                         class="w100" @change="handleChange">
+                <el-option
+                    v-for="item in dataFlagOptions"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.value"
+                />
+
+
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="引用名" prop="EName">
               <el-input v-model="state.ruleForm.EName" placeholder="请输入引用名" clearable
@@ -84,7 +99,7 @@
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="位数" prop="Length">
               <el-input v-model="state.ruleForm.Length" placeholder="请输入位数" clearable
-                        :readonly="isReadOnly"></el-input>
+                        :readonly="isReadOnly||state.flagReadOnly"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -124,7 +139,7 @@
 
 <script setup lang="ts" name="systemUserDialog">
 import {nextTick, reactive, ref} from 'vue';
-import {FieldType} from '/@/utils/common';
+import {DataFlag, FieldType} from '/@/utils/common';
 import {fieldsdetailApi} from "/@/api/sysmanage/fieldsdetail";
 import {fieldsApi} from "/@/api/sysmanage/fields";
 import {packageApi} from "/@/api/sysmanage/package";
@@ -145,7 +160,9 @@ const rules = reactive({
     {min: 1, max: 10, message: '名称长度为1 - 10位'},
   ],
 });
+const dataFlagOptions = ref(DataFlag);
 const state = reactive({
+      flagReadOnly: false,
   ruleForm: {
     Name: '', // 账户名称
     Type: '', // 用户昵称
@@ -159,7 +176,8 @@ const state = reactive({
   baseRules: {
     DUINO: [{required: true, message: '请输入正整数DUI', trigger: 'blur', validator: checkInterNum}],
     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-    EName: [{required: true, message: '请输入引用名', trigger: 'blur'}],
+    Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
+
 
     Type: [{required: true, message: '请选择类型', trigger: 'change'}],
     //    TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
@@ -174,6 +192,15 @@ const state = reactive({
     submitTxt: '',
   },
 });
+const handleChange = (value) => {
+
+  if (value == '标识域（FPI）' || value == '标识域（FRI）' || value == '标识域（GPI）' || value == '标识域（GRI）') {
+    state.ruleForm.Length = 1;
+    state.flagReadOnly = true;
+  } else {
+    state.flagReadOnly = false;
+  }
+}
 const isReadOnly = ref(false);
 // 打开弹窗
 const openDialog = (type: string, pid, row: RowUserType) => {

@@ -34,7 +34,7 @@
                     <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip
                                      v-if="false"></el-table-column>
 
-                    <el-table-column label="操作" width="60">
+                    <el-table-column label="操作" width="100">
                         <template #default="scope">
                             <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                        @click="onOpenEdit('edit', scope.row)" v-if="scope.row.OutType!='nest'"

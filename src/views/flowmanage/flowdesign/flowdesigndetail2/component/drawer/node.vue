@@ -43,6 +43,18 @@
                             <el-option label="串口" value="串口"></el-option>
                         </el-select>
                     </el-form-item>
+                     <el-form-item label="数据类型" prop="dataType"  >
+                        <el-select v-model="state.properForm.dataType" placeholder="请选择" clearable
+
+                                   class="w100">
+                            <el-option
+                                    v-for="item in dataType"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                            />
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="源地址" prop="sourecenetworkID"
                                   v-if="state.properForm.interfacetype=='网口'">
                         <el-select v-model="state.properForm.sourecenetworkID" placeholder="请选择" clearable
@@ -160,7 +172,7 @@
                     </el-form-item>
                     <el-row v-for="(v, k) in state.properForm.IPlist" :key="k" class="max-width-row">
                         <el-form-item label="目的IP" prop="type"
-                                      v-if="state.properForm.interfacetype=='网口'">
+                                      v-if="state.properForm.interfacetype=='网口'" style="margin-top: 10px">
                             <el-col :span="11">
 
                                 <el-input v-model="v.IP" placeholder="请输入ip地址" clearable style="font-size: 10px"
@@ -192,6 +204,30 @@
                                 </el-button>
                             </el-col>
                         </el-form-item>
+                       <el-form-item label="消息封装" prop="messPackProperty"  >
+                        <el-select v-model="v.messPackProperty" placeholder="请选择" clearable
+
+                                   class="w100">
+                            <el-option
+                                    v-for="item in messPackProperty"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                            />
+                        </el-select>
+                    </el-form-item>
+                      <el-form-item label="转发SOCK" prop="reForwardSocket"  >
+                        <el-select v-model="v.reForwardSocket" placeholder="请选择" clearable
+
+                                   class="w100">
+                            <el-option
+                                    v-for="item in reForwardSocket"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                            />
+                        </el-select>
+                    </el-form-item>
                     </el-row>
                     <!--
 
@@ -405,6 +441,7 @@
     import {messheaderApi} from "/@/api/sysmanage/messheader";
     import {messdetailApi} from "/@/api/sysmanage/messdetail";
 
+    import {DataType, MessPackProperty,ReForwardSocket} from '/@/utils/common';
     const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
     const translateDialogRef = ref();
     const Messdialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/messdialog.vue'));
@@ -420,6 +457,9 @@
     const nodeFormRef = ref();
     const extendFormRef = ref();
     const chartsMonitorRef = ref();
+    const dataType = ref(DataType);
+    const messPackProperty=ref(MessPackProperty);
+    const reForwardSocket=ref(ReForwardSocket);
     const NetworkOptions = ref();
     const NetworkLocalOptions = ref();
     const SerialOptions = ref();
@@ -491,21 +531,30 @@
 
         state.lf = lf;
         state.showFlag[state.node["type"]] = true;
-
-        if (data.type == 'start') {
+        if (data.type == 'first') {
             state.proper.typeC = '开始节点';
-            getNetwork();
-            getSerial();
+
 
         }
+
         if (data.type == 'dest') {
             state.proper.typeC = '结束节点';
 
 
         }
+  if (data.type == 'start') {
+            state.proper.typeC = '源消息节点';
+           // console.log('start');
+            if(state.properForm.dataType==null || state.properForm.dataType==''){
+              state.properForm.dataType='通用数据'
+            }
+            getNetwork();
+            getSerial();
 
+        }
         if (data.type == 'end') {
-            state.proper.typeC = '目的节点';
+            state.proper.typeC = '目的消息节点';
+
             getNetwork();
             getSerial();
 
@@ -1130,7 +1179,7 @@
     // 目的节点中-网口类-目的地址菜单菜单联动
     const onChangeEndNetworkChoose = (value: any) => {
         if (state.properForm.localnetworkID == '-1') {
-            state.properForm.IPlist = [{IP: '', Port: ''}];
+            state.properForm.IPlist = [{IP: '', Port: '',messPackProperty:'无',reForwardSocket:''}];
         } else {
 
             for (let i = 0; i < NetworkLocalOptions.value.length; i++) {
@@ -1138,7 +1187,8 @@
 
                     state.properForm.IPlist = [{
                         IP: NetworkLocalOptions.value[i].IP,
-                        Port: NetworkLocalOptions.value[i].Port
+                        Port: NetworkLocalOptions.value[i].Port,
+                             messPackProperty: '无'
                     }];
                 }
             }
@@ -1191,6 +1241,7 @@
         extendFormRef.value.resetFields();
         state.proper.name = '';
         state.properForm.interfacetype = '';
+        state.properForm.dataType='通用数据';
         state.properForm.sourecenetworkID = '';
         state.properForm.sourecenetworkIP = '';
         state.properForm.sourecenetworkPort = '';
@@ -1248,7 +1299,7 @@
 
     };
     const onAddEndIP = () => {
-        state.properForm.IPlist.push({IP: '', Port: '0'});
+        state.properForm.IPlist.push({IP: '', Port: '0',       messPackProperty: '无',reForwardSocket:''});
     };
     const onDelEndIP = (k: number) => {
         state.properForm.IPlist.splice(k, 1);

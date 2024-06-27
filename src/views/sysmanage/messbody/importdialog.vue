@@ -62,8 +62,8 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="数据标识" prop="Flag">
-              <el-select v-model="state.ruleFormOri.Flag" value-key="id" placeholder="请选择" clearable
-                         class="w100">
+              <el-select v-model="state.ruleForm.Flag" value-key="id" placeholder="请选择" clearable
+                         class="w100" :disabled ="isReadOnly">
                 <el-option
                     v-for="item in dataFlagOptions"
                     :key="item.id"
@@ -133,7 +133,7 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="引用名" prop="EName">
-              <el-input v-model="state.ruleForm.EName" placeholder="请输入引用名" clearable
+              <el-input v-model="state.ruleFormOri.EName" placeholder="请输入引用名" clearable
               ></el-input>
             </el-form-item>
           </el-col>
@@ -221,7 +221,7 @@ const dataFlagOptions = ref(DataFlag);
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 const changeLoc = (fo) => {
-  console.log(fo)
+  //console.log(fo)
   state.ruleFormOri.SortID = fo;
   //
 };
@@ -265,19 +265,20 @@ const onSearch=()=>{
   });
 }
 const chooseDUI = (fo) => {
-  console.log(fo);
+  //console.log(fo);
   let i = 0;
   for (i = 0; i < DUIOptions.value.length; i++) {
     if (DUIOptions.value[i].ID == fo) {
       state.ruleForm = DUIOptions.value[i];
       state.ruleFormOri.sourceDFI=DUIOptions.value[i].DFIID;
+      state.ruleFormOri.EName=DUIOptions.value[i].EName;
     }
   }
 
 };
-const changeDFI = (fo) => {
+const changeDFI = async (fo) => {
   console.log(fo)
-  fieldsdetailApi().searchFieldsDetail(
+  await fieldsdetailApi().searchFieldsDetail(
       {
         uid: 1,
         pageNum: 1,
@@ -308,6 +309,7 @@ const changeDUI = (fo) => {
   for (i = 0; i < DUIOptions.value.length; i++) {
     if (DUIOptions.value[i].ID == fo) {
       state.ruleForm = DUIOptions.value[i];
+      state.ruleFormOri.EName=DUIOptions.value[i].EName;
     }
   }
 
@@ -341,9 +343,11 @@ const state = reactive({
   },
   nestid: 0,
   baseRules: {
-    Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
+
     sourceDUI: [{required: true, message: '请选择DUI', trigger: 'blur'}],
     sourceDFI: [{required: true, message: '请选择DFI', trigger: 'blur'}],
+
+    EName: [{required: true, message: '请输入引用名', trigger: 'blur'}],
   },
   dialog: {
     isShowDialog: false,
@@ -354,7 +358,7 @@ const state = reactive({
 });
 const isReadOnly = ref(false);
 // 打开弹窗
-const openDialog = (type: string, pid, row: RowUserType, nestid) => {
+const openDialog = async (type: string, pid, row: RowUserType, nestid) => {
   state.dialog.type = type;
   state.pid = pid;
   state.dialog.title = '导入字段';
@@ -363,21 +367,20 @@ const openDialog = (type: string, pid, row: RowUserType, nestid) => {
   state.dialog.isShowDialog = true;
   if (type === 'edit') {
     console.log(row);
-
+    await changeDFI(row.DFIID);
+    changeDUI(row.OutID);
     nextTick(() => {
       Object.assign(state.ruleForm, row);
 
       state.ruleFormOri.sourceDFI = row.DFIID;
-      changeDFI(row.DFIID);
+
       state.ruleFormOri.sourceDUI = row.OutID;
       state.ruleFormOri.ID = row.ID;
-      state.ruleFormOri.Flag = row.Flag;
       state.ruleFormOri.SortID = row.SortID;
       state.ruleFormOri.NestID = row.NestID;
-      setTimeout(() => {
-        changeDUI(row.OutID);
-        state.ruleForm.EName = row.EName;
-      }, 300);
+      state.ruleFormOri.EName = row.EName;
+
+
     });
 
 
@@ -487,8 +490,8 @@ const onSubmit = () => {
         state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
         state.ruleForm['SortID'] = state.ruleFormOri.SortID;
         state.ruleForm['NestID'] = state.ruleFormOri.NestID;
-        state.ruleForm['Flag'] = state.ruleFormOri.Flag;
         state.ruleForm['ID'] = state.ruleFormOri.ID;
+        state.ruleForm['EName'] = state.ruleFormOri.EName;
         messdetailApi().updateMessDetail(
             state.ruleForm
         )
@@ -518,7 +521,7 @@ const onSubmit = () => {
         state.ruleForm['OutType'] = 'fields';
         state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
         state.ruleForm['SortID'] = state.ruleFormOri.SortID;
-        state.ruleForm['Flag'] = state.ruleFormOri.Flag;
+              state.ruleForm['EName'] = state.ruleFormOri.EName;
         messdetailApi().addMessDetail(
             state.ruleForm
         )

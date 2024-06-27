@@ -53,3 +53,24 @@ export const DataFlag = [
 
 
 ];
+export const DataType = [
+    {id: 0, label: '通用数据', value: '通用数据'},
+    {id: 1, label: '端机数据', value: '端机数据'},
+    {id: 2, label: '47数据', value: '47数据'},
+
+
+
+];
+export const MessPackProperty = [
+    {id: 0, label: '无', value: '无'},
+    {id: 1, label: '网管', value: '网管'},
+    {id: 2, label: '端机', value: '端机'},
+{id: 3, label: '47001', value: '47001'},
+    {id: 4, label: '运管', value: '运管'},
+
+];
+export const ReForwardSocket = [
+    {id: 0, label: '新SOCKET', value: '新SOCKET'},
+    {id: 1, label: '原有SOCKET', value: '原有SOCKET'},
+    {id: 2, label: '默认地址的SOCKET', value: '默认地址的SOCKET'},
+];
