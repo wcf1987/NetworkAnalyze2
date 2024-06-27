@@ -35,13 +35,13 @@
                     返回
                 </el-button>
             </div>
-            <el-table   @sort-change="sort_change" :cell-style="{'padding': '2px 2px 0 10px'}"  :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%"
+            <el-table   @sort-change="sort_change" :cell-style="{'padding': '2px 2px 0 0px' , textAlign: 'center'}" :header-cell-style="{ textAlign: 'center' }"   :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%"
                       @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50"/>
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip sortable="custom"></el-table-column>
-                <el-table-column prop="Type" label="格式" show-overflow-tooltip sortable="custom"></el-table-column>
+                <el-table-column prop="Type" label="格式" show-overflow-tooltip sortable="custom" ></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column label="操作" width="180">

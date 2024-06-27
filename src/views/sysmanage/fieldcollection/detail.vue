@@ -36,7 +36,7 @@
                     返回
                 </el-button>
       </div>
-      <el-table  :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data" v-loading="state.tableData.loading"
+      <el-table  :cell-style="{'padding': '2px 2px 0 0px' , textAlign: 'center'}" :header-cell-style="{ textAlign: 'center' }"  :data="state.tableData.data" v-loading="state.tableData.loading"
                 @sort-change="sort_change" @selection-change="handleSelectionChange">
          <el-table-column type="selection" width="50"/>
         <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
@@ -45,7 +45,7 @@
         <el-table-column prop="DFIID" label="DFIID" show-overflow-tooltip v-if="isHide"/>
         <el-table-column prop="DFINO" label="DFI标识号" show-overflow-tooltip/>
         <el-table-column prop="DFIVersion" label="DFI版本" show-overflow-tooltip v-if="isHide"/>
-        <el-table-column prop="DUINO" label="DUI标识号" show-overflow-tooltip sortable="custom"/>
+        <el-table-column prop="DUINO" label="DUI标识号" show-overflow-tooltip sortable="custom" width="130"/>
         <el-table-column prop="DUIVersion" label="DUI版本" show-overflow-tooltip/>
         <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>

@@ -22,7 +22,7 @@
                     返回
                 </el-button>
 			</div>
-			<el-table :cell-style="{'padding': '2px 2px 0 10px'}"  :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
+			<el-table :cell-style="{'padding': '2px 2px 0 0px' , textAlign: 'center'}" :header-cell-style="{ textAlign: 'center' }"   :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" :index="calcIndex" />
 				<el-table-column prop="id" label="ID" show-overflow-tooltip v-if="false"></el-table-column>
 				<el-table-column prop="userName" label="账户名称" show-overflow-tooltip></el-table-column>
@@ -39,7 +39,7 @@
 					</template>
 				</el-table-column>
 				<el-table-column prop="describes" label="用户描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip width="180"></el-table-column>
 				<el-table-column label="操作" width="120">
 					<template #default="scope">
 						<el-button class="buttonfont" :disabled="scope.row.userName === 'admins' || scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"

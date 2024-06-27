@@ -63,7 +63,7 @@
           <el-tag type="info" effect="dark" round class="eltagr">名称:{{ state.tableData.name }}</el-tag>
         </el-tooltip>
       </div>
-      <el-table :expand-row-keys="state.expandArr" :cell-style="{'padding': '2px 2px 0 10px'}"
+      <el-table :expand-row-keys="state.expandArr" :cell-style="{'padding': '2px 2px 0 0px' , textAlign: 'center'}" :header-cell-style="{ textAlign: 'center' }" 
                 :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%"
                 @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50"/>
@@ -74,7 +74,7 @@
         <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip width="300"></el-table-column>
         <el-table-column prop="Describes" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
         <el-table-column prop="OutType" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
         <el-table-column prop="NestID" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>

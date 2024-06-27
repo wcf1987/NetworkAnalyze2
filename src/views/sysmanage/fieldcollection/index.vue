@@ -74,7 +74,7 @@
           返回
         </el-button>
       </div>
-      <el-table :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data"
+      <el-table :cell-style="{'padding': '2px 2px 0 0px' , textAlign: 'center'}" :header-cell-style="{ textAlign: 'center' }"  :data="state.tableData.data"
                 v-loading="state.tableData.loading" style="width: 100%"
                 @sort-change="sort_change" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50"/>

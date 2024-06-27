@@ -22,7 +22,7 @@
                     返回
                 </el-button>
 			</div>
-			<el-table :cell-style="{'padding': '2px 2px 0 10px'}"  :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
+			<el-table :cell-style="{'padding': '2px 2px 0 0px' , textAlign: 'center'}" :header-cell-style="{ textAlign: 'center' }"   :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" :index="calcIndex" />
 				<el-table-column prop="roleName" label="角色名称" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="roleSign" label="角色标识" show-overflow-tooltip></el-table-column>
@@ -34,7 +34,7 @@
 					</template>
 				</el-table-column>
 				<el-table-column prop="describes" label="角色描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip width="180"></el-table-column>
 				<el-table-column label="操作" width="120">
 					<template #default="scope">
 						<el-button class="buttonfont" :disabled="scope.row.roleName === '超级管理员'  " size="small" text type="primary" @click="onOpenEditRole('edit', scope.row)"
