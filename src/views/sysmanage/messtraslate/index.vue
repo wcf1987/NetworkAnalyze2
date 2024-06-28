@@ -39,7 +39,7 @@
                 <el-table-column prop="sourmess" label="源消息体" width="150"  show-overflow-tooltip>
                     <template #default="scope">
                         <el-button size="default" text type="primary"
-                                   @click="viewNess('view', scope.row.sourceID)"
+                                   @click="viewNess('view', scope.row.sourceID,scope.row.sourmess)"
                         >{{scope.row.sourmess}}
                         </el-button
                         >
@@ -50,7 +50,7 @@
                 <el-table-column prop="tarmess" label="目的消息体" width="150"  show-overflow-tooltip>
                     <template #default="scope">
                         <el-button size="default" text type="primary"
-                                   @click="viewNess('view', scope.row.targetID)"
+                                   @click="viewNess('view', scope.row.targetID,scope.row.tarmess)"
                         >{{scope.row.tarmess}}
                         </el-button
                         >
@@ -254,8 +254,8 @@
             query: {id: row.ID,sourceid:row.sourceID,targetid:row.targetID,sourceName:row.sourmess,targetName:row.tarmess},
         });
     };
-    const viewNess = (type: string, id) => {
-        viewDialogRef.value.openDialog(type, id);
+    const viewNess = (type: string, id,name) => {
+        viewDialogRef.value.openDialog(type, id,name);
     };
 
     const onSearch = () => {

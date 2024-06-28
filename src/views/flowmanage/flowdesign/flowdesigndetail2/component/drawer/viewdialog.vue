@@ -14,12 +14,12 @@
                 </el-button>
 
             </div>
-            <el-table :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%">
+            <el-table :cell-style="{'padding': '2px 2px 0 10px'}" :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
-                                <el-table-column prop="parentindex" label="序号" width="90" />
+                                <el-table-column prop="parentindex" label="序号" width="90" type=""/>
                 <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
                 <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
-                <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="Name" label="名称" show-overflow-tooltip width="180" ></el-table-column>
                 <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip></el-table-column>

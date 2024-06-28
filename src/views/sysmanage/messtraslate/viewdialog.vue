@@ -18,6 +18,14 @@
             </el-icon>
             展开/收起
           </el-button>
+          <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="'消息体名称：'+state.dialog.name"
+                  placement="top"
+              >
+                <el-tag type="info" effect="dark" round  class="eltagr">名称:{{ state.dialog.name }}</el-tag>
+              </el-tooltip>
         </div>
         <el-table :expand-row-keys="state.expandArr" :data="state.tableData.data" row-key="ID"
                   v-loading="state.tableData.loading" style="width: 100%">
@@ -25,10 +33,10 @@
           <el-table-column prop="parentindex" width="60" label="序号" type=""/>
           <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
           <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
-          <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="Name" label="名称" show-overflow-tooltip width="200"></el-table-column>
           <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="ShortName" label="简称" show-overflow-tooltip v-if="isHide"></el-table-column>
+          <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip v-if="isHide"></el-table-column>
           <el-table-column prop="Describes" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
           <el-table-column prop="OutType" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
           <el-table-column prop="NestID" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
@@ -41,7 +49,7 @@
           <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="isHide"></el-table-column>
 
 
-          <el-table-column label="操作" width="100">
+          <el-table-column label="操作" width="100" v-if="isHide">
             <template #default="scope">
 
             </template>
@@ -61,7 +69,7 @@
         >
         </el-pagination>
       </el-card>
-      <UserDialog ref="userDialogRef" @refresh="getTableData()"/>
+
 
 
     </el-dialog>
@@ -86,6 +94,7 @@ const rules = reactive({
     {min: 1, max: 10, message: '名称长度为1 - 10位'},
   ],
 });
+const isHide=ref(true);
 const state = reactive({
   expandArr: [],
   ruleForm: {
@@ -99,6 +108,7 @@ const state = reactive({
     type: '',
     title: '',
     submitTxt: '',
+    name:'',
   },
   tableData: {
     data: [],
@@ -116,14 +126,16 @@ const state = reactive({
 });
 
 // 打开弹窗
-const openDialog = (type: string, id) => {
+const openDialog = (type: string, id,name) => {
   state.tableData.id = id;
   state.dialog.title = '查看';
+  console.log(name)
+  state.dialog.name=name;
   state.dialog.submitTxt = '新 增';
   getTableData();
   // 清空表单，此项需加表单验证才能使用
   nextTick(() => {
-    userDialogFormRef.value.resetFields();
+   // userDialogFormRef.value.resetFields();
   });
 
   state.dialog.isShowDialog = true;
@@ -263,6 +275,16 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
+    .system-user-dialog-container {
+      .system-user-search {
+        display: flex;
+
+        .el-tag {
+          margin-left: auto;
+          margin-right: 10px;
+        }
+      }
+    }
 :deep(.el-table) {
   /* 替换默认展开收起图片 */
   /* prettier-ignore */
