@@ -8,18 +8,18 @@
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20" v-show="state.isToggle">
             <el-form-item label="DFI标示号" prop="DFIID">
               <el-input size="default" placeholder="请输入DFI标示号" style="max-width: 180px"
-                        v-model="state.tableData.search"></el-input>
+                        v-model="state.tableData.search" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20" v-show="state.isToggle">
             <el-form-item label="引用名" prop="EName">
-              <el-input size="default" placeholder="请输入引用名" style="max-width: 180px"
+              <el-input clearable size="default" placeholder="请输入引用名" style="max-width: 180px"
                         v-model="state.tableData.searchEname"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20" v-show="state.isToggle">
             <el-form-item label="适用消息" prop="appMEss">
-              <el-input size="default" placeholder="请输入适用消息" style="max-width: 180px"
+              <el-input clearable size="default" placeholder="请输入适用消息" style="max-width: 180px"
                         v-model="state.tableData.searchAppMess"></el-input>
             </el-form-item>
           </el-col>
@@ -28,7 +28,7 @@
         </el-row>
 
 
-        <el-input size="default" placeholder="请输入DFI标示号" style="max-width: 180px"
+        <el-input size="default" clearable placeholder="请输入DFI标示号" style="max-width: 180px"
                   v-model="state.tableData.search" v-show="!state.isToggle"></el-input>
 
 

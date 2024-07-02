@@ -107,7 +107,7 @@ import {transtemplateApi} from "/@/api/transmanage/transtemplate";
 import '@logicflow/core/dist/style/index.css'
 import '@logicflow/extension/lib/style/index.css'
 import LogicFlow from '@logicflow/core'
-import {Menu, MiniMap, Snapshot} from "@logicflow/extension";
+import {Menu, MiniMap, SelectionSelect, Snapshot} from "@logicflow/extension";
 import conver from '/@/assets/svgicon/conver.svg';
 import inpac from '/@/assets/svgicon/inpac.svg';
 import {defineAsyncComponent, nextTick, onMounted, onUnmounted, reactive, ref} from 'vue';
@@ -690,7 +690,8 @@ function initLf() {
     plugins: [
       Menu,
       MiniMap,
-      Snapshot
+      Snapshot,
+                SelectionSelect
     ],
     container: container.value,
 
@@ -845,10 +846,8 @@ function LfEvent() {
     // hideAddPanel()
   })
   lf.value.on('connection:not-allowed', (data) => {
-    this.$message({
-      type: 'error',
-      message: data.msg
-    })
+              ElMessage.error(data.msg);
+
   })
   lf.value.on('node:contextmenu', ({data, e, position}) => {
     console.log('节点右键');
@@ -873,6 +872,7 @@ const {themeConfig} = storeToRefs(storesThemeConfig);
 const {copyText} = commonFunction();
 const state = reactive({
   FlowName: '',
+    SelectionSelect:false,
   ID: 0,
   type: '模板编排',
   SourceIPAndPort: '-',
@@ -1057,6 +1057,17 @@ const setNodeContent = (obj: any) => {
 // 顶部工具栏-当前项点击
 const onToolClick = (fnName: String) => {
   switch (fnName) {
+        case 'selectionSelect':
+      if(state.SelectionSelect){
+        state.SelectionSelect = false;
+        lf.value.closeSelectionSelect();
+      }else{
+        state.SelectionSelect = true;
+
+      lf.value.openSelectionSelect();
+      }
+
+      break;
     case 'editProp':
       const GraphConfigData = lf.value.getSelectElements(false);
       //GraphConfigData.nodes[0];

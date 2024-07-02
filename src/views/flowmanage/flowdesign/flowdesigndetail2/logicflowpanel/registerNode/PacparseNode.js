@@ -16,6 +16,15 @@ class PacparseNodeModel extends IconNode.model{
         pacparseID:'',
 
     }
+    const NotSelfAsTarget = {
+      message: "不允许节点连接自身",
+      validate: (sourceNode, targetNode, sourceAnchor, targetAnchor) => {
+         // console.log(sourceNode.id);
+                        // console.log(targetNode.id);
+        return sourceNode.id!= targetNode.id;
+      },
+    };
+    this.sourceRules.push(NotSelfAsTarget);
   }
 }
 

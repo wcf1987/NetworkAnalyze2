@@ -10,7 +10,15 @@ class MessheaderencapNodeModel extends IconNode.model{
     initNodeData(data) {
     super.initNodeData(data);
     this.text.value = "消息头添加";
-
+const NotSelfAsTarget = {
+      message: "不允许节点连接自身",
+      validate: (sourceNode, targetNode, sourceAnchor, targetAnchor) => {
+         // console.log(sourceNode.id);
+                        // console.log(targetNode.id);
+        return sourceNode.id!= targetNode.id;
+      },
+    };
+    this.sourceRules.push(NotSelfAsTarget);
   }
 }
 

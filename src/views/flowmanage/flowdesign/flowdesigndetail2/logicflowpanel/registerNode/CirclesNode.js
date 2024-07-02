@@ -8,7 +8,15 @@ initNodeData(data) {
     super.initNodeData(data);
     this.r=30;
     this.strokeWidth=10;
-
+const NotSelfAsTarget = {
+      message: "不允许节点连接自身",
+      validate: (sourceNode, targetNode, sourceAnchor, targetAnchor) => {
+         // console.log(sourceNode.id);
+                        // console.log(targetNode.id);
+        return sourceNode.id!= targetNode.id;
+      },
+    };
+    this.sourceRules.push(NotSelfAsTarget);
   }
 
   setToBottom () {

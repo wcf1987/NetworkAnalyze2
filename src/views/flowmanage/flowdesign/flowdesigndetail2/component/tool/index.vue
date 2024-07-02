@@ -24,7 +24,7 @@ const storesThemeConfig = useThemeConfig();
 const {themeConfig} = storeToRefs(storesThemeConfig);
 const state = reactive({
   toolList: [
-
+   {icon: 'ele-TakeawayBox', title: '启用框选', fnName: 'selectionSelect'},
     {icon: 'ele-ZoomIn', title: '放大', fnName: 'zoomIn'},
     {icon: 'ele-ZoomOut', title: '缩小', fnName: 'zoomOut'},
     {icon: 'ele-RefreshRight', title: '大小适应', fnName: 'zoomReset'},
@@ -65,6 +65,13 @@ const setTimeTitle = computed(() => {
 });
 // 顶部工具栏
 const onToolClick = (fnName: string) => {
+  if(fnName=='selectionSelect'){
+    if(state.toolList[0].title=='启用框选'){
+      state.toolList[0].title='关闭框选'
+    }else{
+      state.toolList[0].title='启用框选'
+    }
+  }
   emit('tool', fnName);
 };
 </script>

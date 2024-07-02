@@ -3,7 +3,7 @@
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="system-user-search mb15">
         <el-input size="default" placeholder="请输入消息转换分类名称" style="max-width: 180px"
-                  v-model="state.tableData.search"></el-input>
+                  v-model="state.tableData.search" clearable></el-input>
         <el-button size="default" type="primary" class="ml10" @click="onSearch">
           <el-icon>
             <ele-Search/>
