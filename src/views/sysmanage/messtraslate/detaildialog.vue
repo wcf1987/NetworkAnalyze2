@@ -92,7 +92,13 @@
                                style="width: 300px; " collapse-tags :disabled="state.editEabled"/>
                 </el-form-item>
               </el-col>
+           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                      v-if="state.ruleForm.Optional=='直接转换'">
 
+                <el-form-item label="引用字段" prop="ENames">
+                  <el-input v-model="state.ruleForm.ENames" :readonly='true' placeholder="" clearable></el-input>
+                </el-form-item>
+              </el-col>
 
               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
                       v-if="state.ruleForm.Optional=='系统函数'">
@@ -119,7 +125,13 @@
                                style="width: 300px; " collapse-tags :disabled="state.editEabled"/>
                 </el-form-item>
               </el-col>
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                      v-if="state.ruleForm.Optional=='自定义转换计算'">
 
+                <el-form-item label="引用字段" prop="ENames">
+                  <el-input v-model="state.ruleForm.ENames" :readonly='true' placeholder="" clearable></el-input>
+                </el-form-item>
+              </el-col>
 
               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20"
                       v-if="state.ruleForm.Optional=='自定义转换计算'">
@@ -369,6 +381,7 @@ const state = reactive({
 
   ruleForm: {
     Name: '', // 账户名称
+    ENames:'',
     TargetName: '',
     Type: '', // 用户昵称
     Optional: '',
@@ -410,13 +423,58 @@ const changeSourceInput12 = (fo) => {
 }
 const changeSourceInput21 = (fo) => {
   console.log(fo)
-  let i = 0, tempstr = ''
+  let i = 0, tempstr = '',tempstr2=''
   for (i = 0; i < fo.length; i++) {
-    tempstr = tempstr + fo[i] + '\n'
+    tempstr = tempstr + getFullPath(fo[i]) + '\n'
+    tempstr2=tempstr2+getFullPath(fo[i])+','
+
   }
-  state.ruleForm.Transrule = state.ruleForm.Funcrule + tempstr;
+  //state.ruleForm.Transrule = state.ruleForm.Funcrule + tempstr;
+  state.ruleForm.ENames =  tempstr2;
+ if (fo && fo.length) {
+   let ks= getFullPath([fo[fo.length - 1]])
+
+        state.ruleForm.Transrule = state.ruleForm.Transrule+ks+'\n';
+      } else {
+
+      }
+}
+const reloadENames=()=>{
+   let i = 0, tempstr = '',tempstr2=''
+  console.log(state.ruleForm.SourceData)
+  for(let i of state.ruleForm.SourceData){
+
+    tempstr2=tempstr2+getFullPath(i)+','
+
+  }
+
+  state.ruleForm.ENames =  tempstr2;
 
 
+
+}
+const getFullPath=(name)=>{
+let k=findTreeItemByName(sourceoptions.value,name)
+  return k;
+}
+//树形结构查询指定Name
+function findTreeItemByName(list, name) {
+  // 每次进来使用find遍历一次
+  let res = list.find((item) => item.Name == name);
+
+  if (res) {
+    return res.EName;
+  } else {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].children instanceof Array && list[i].children.length > 0) {
+        res = findTreeItemByName(list[i].children, name);
+
+        if (res) return list[i].EName+'.'+res;
+      }
+    }
+
+    return null;
+  }
 }
 const changeSourceInput22 = (fo) => {
   console.log(fo)
@@ -465,7 +523,7 @@ const openDialog = async (type: string, sourceid, row: RowUserType, original: st
     });
   }
   state.dialog.isShowDialog = true;
-
+  reloadENames();
 };
 // 关闭弹窗
 const closeDialog = () => {

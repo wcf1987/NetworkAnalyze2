@@ -244,7 +244,7 @@
     const onOpenEditDetail = (type: string, row: RowUserType) => {
         router.push({
             path: '/sysmanage/messtraslate/messtraslatedetail',
-            query: {id: row.ID,sourceid:row.sourceID,targetid:row.targetID},
+            query: {id: row.ID,sourceid:row.sourceID,targetid:row.targetID,sourceName:row.sourmess,targetName:row.tarmess },
         });
     };
     //图形化消息体转换编辑

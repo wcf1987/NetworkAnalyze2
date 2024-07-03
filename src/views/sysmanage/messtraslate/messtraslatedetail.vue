@@ -28,6 +28,14 @@
           </el-icon>
           返回
         </el-button>
+                <el-tooltip
+            class="box-item"
+            effect="dark"
+            :content="'源消息体名称：'+state.tableData.sourceName+'\n'"
+            placement="top"
+        >
+          <el-tag type="info" effect="dark" round class="eltagr">源消息:{{ state.tableData.sourceName }}</el-tag>
+        </el-tooltip>
       </div>
       <el-table :expand-row-keys="state.expandArr" :cell-style="{'padding': '2px 2px 0 10px'}"
                 :data="state.tableData.data" row-key="ID" v-loading="state.tableData.loading" style="width: 100%">
@@ -270,7 +278,7 @@ const onOpenEditDetail = (type: string, row: RowUserType) => {
 };
 const viewMess = (type: string, row) => {
   console.log(state.tableData);
-  viewDialogRef.value.openDialog(type, state.tableData.sourceid);
+  viewDialogRef.value.openDialog(type, state.tableData.sourceid,state.tableData.sourceName);
 };
 //多选监听
 const handleSelectionChange = (val) => {
@@ -342,13 +350,22 @@ onMounted(() => {
 
   state.tableData.sourceid = querys.sourceid;
   state.tableData.targetid = querys.targetid;
-
+  state.tableData.sourceName=querys.sourceName;
+  state.tableData.targetName=querys.targetName;
   getTableData();
 });
 </script>
 
 <style scoped lang="scss">
 .system-user-container {
+  .system-user-search {
+    display: flex;
+
+    .el-tag {
+      margin-left: auto;
+      margin-right: 10px;
+    }
+  }
   :deep(.buttonfont) {
     font-size: 14px;
   }

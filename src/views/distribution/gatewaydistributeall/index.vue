@@ -904,6 +904,16 @@ const onToolDel = () => {
 const onToolFullscreen = () => {
   stores.setCurrenFullscreen(true);
 };
+const updateGatewayList=(id)=>{
+  let re=[];
+  for(let i of state.tableGateway.data) {
+    if (i.ID == id) {
+      state.gateway.ID = i.ID;
+      re=i;
+      state.tableGateway.data=[re];
+    }
+  }
+}
 // 页面加载时
 onMounted(async () => {
 
@@ -924,6 +934,7 @@ onMounted(async () => {
     state.gateway.IP = querys.ip;
     state.gateway.Describes = querys.describes;
     state.gateway.DisPercentage = 0;
+    updateGatewayList(state.gateway.ID);
     updatetableDataFlowShow();
   }
   window.addEventListener('resize', setClientWidth);
