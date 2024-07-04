@@ -40,7 +40,9 @@
                 <el-table-column prop="ID" label="ID" width="60" v-if="false"/>
                 <el-table-column type="index" label="序号" width="60" :index="calcIndex"/>
                 <el-table-column prop="Name" label="名称" show-overflow-tooltip sortable="custom"></el-table-column>
-                <el-table-column prop="Type" label="格式" show-overflow-tooltip sortable="custom"></el-table-column>
+                        <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
+
+              <el-table-column prop="Type" label="格式" show-overflow-tooltip sortable="custom"></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
                 <el-table-column label="操作" width="180">
@@ -66,7 +68,7 @@
                     @current-change="onHandleCurrentChange"
                     class="mt15"
                     :pager-count="5"
-                    :page-sizes="[10, 20, 30]"
+                    :page-sizes="[10, 20, 30,1000]"
                     v-model:current-page="state.tableData.param.pageNum"
                     background
                     v-model:page-size="state.tableData.param.pageSize"

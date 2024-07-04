@@ -73,6 +73,12 @@
                         :readonly="isReadOnly||state.flagReadOnly"></el-input>
             </el-form-item>
           </el-col>
+                      <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="默认值" prop="DefaultVal">
+              <el-input v-model="state.ruleForm.DefaultVal" placeholder="请输入默认值" clearable
+                        ></el-input>
+            </el-form-item>
+          </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
             <el-form-item label="标准表名" prop="TableName">
               <el-input v-model="state.ruleForm.TableName" placeholder="请输入标准表名" clearable

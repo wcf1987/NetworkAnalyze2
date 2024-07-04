@@ -90,7 +90,7 @@
 					background
 					@size-change="onHandleSizeChange"
 					@current-change="onHandleCurrentChange"
-					:page-sizes="[10, 20, 30]"
+					:page-sizes="[10, 20, 30,1000]"
 					:current-page="state.tableData.param.pageNum"
 					:page-size="state.tableData.param.pageSize"
 					layout="total, sizes, prev, pager, next, jumper"

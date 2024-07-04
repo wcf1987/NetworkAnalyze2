@@ -4,7 +4,7 @@
     <div class="layout-padding-auto layout-padding-view workflow-warp">
       <div class="workflow">
         <!-- 顶部工具栏 -->
-        <Tool/>
+        <Tool @tool="onSearch"/>
 
         <!-- 左侧导航区 -->
         <div class="workflow-content">
@@ -23,7 +23,7 @@
                 :style="{ left: v.left, top: v.top }"
                 @click.native="onItemClick(v)"
             >
-              <div class="workflow-right-box" >
+              <div class="workflow-right-box" :class="v.isSearch == true? 'back-red' : 'back-blue'">
                 <div class="workflow-left-item-icon">
 
                   <div class="font10 pl5 name">{{ `${v.DFINO}-${v.DUINO}：${v.Name}` }}</div>
@@ -127,6 +127,7 @@ const querys = route.query;
 
 const state = reactive({
   loading: false,
+  search: '',
   id: '',
   sourceid: '',
   targetid: '',
@@ -135,7 +136,8 @@ const state = reactive({
     data: []
   },
   pointlist: {
-    data: []
+    data: [],
+    Alldata: []
   },
 
 
@@ -176,6 +178,72 @@ const state = reactive({
     lineList: [],
   },
 });
+const onSearch = (searchstr) => {
+  state.search = searchstr;
+  state.pointlist.data.forEach((item) => {
+
+      item.isSearch = false;
+
+  })
+  if(state.search==''){ }else{
+  //state.jsPlumb.deleteEveryConnection();
+  state.pointlist.data.forEach((item) => {
+    if (item.DUINO.indexOf(state.search) > -1) {
+      item.isSearch = true;
+    }
+  })}
+  nextTick(() => {
+    state.jsPlumb.repaintEverything();
+
+  });
+  /**
+   state.pointlist.data = state.pointlist.Alldata.filter(function (item) {
+   return item.DUINO.indexOf(state.search) > -1;
+   });
+   for(let v of state.pointlist.data){
+   state.connectlist.data.forEach((item) => {
+
+   if (item.sourceFieldID == v.ID) {
+   addPointFromAll(item.targetFieldID);
+   }
+
+   if (item.targetFieldID == v.ID) {
+   addPointFromAll(item.sourceFieldID);
+   }
+   })
+
+
+   }
+
+   let x = 30, y = 100;
+   for (let i of state.pointlist.data) {
+   i['left'] = x + 'px';
+   i['top'] = y + 'px';
+   x = x + 300;
+   if (x > 800) {
+   y = y + 150;
+   x = 30;
+   }
+   }
+
+   // initConn();
+   console.log(state.pointlist.data);
+   nextTick(() => {
+   initJsPlumbConnection();
+
+   });**/
+}
+const addPointFromAll = (id) => {
+  for (let k of state.pointlist.Alldata) {
+    if (k.ID == id) {
+      if (state.pointlist.data.filter((item) => {
+        return item.ID == k.ID
+      }).length == 0) {
+        state.pointlist.data.push(k);
+      }
+    }
+  }
+}
 // 初始化元素管理数据
 const getTableData = async () => {
   state.loading = true;
@@ -188,6 +256,7 @@ const getTableData = async () => {
 
           state.connectlist.data = res.data['connect'];
           state.pointlist.data = res.data['point'];
+          state.pointlist.Alldata = res.data['point'];
           let x = 30, y = 100;
           for (let i of state.pointlist.data) {
             i['left'] = x + 'px';
@@ -346,54 +415,7 @@ const initJsPlumb = () => {
     // 初始化节点、线的链接
     console.log("初始化节点1");
     initJsPlumbConnection();
-    // 点击线弹出右键菜单
-    state.jsPlumb.bind('contextmenu', (conn: any, originalEvent: MouseEvent) => {
-      originalEvent.preventDefault();
-      const {sourceId, targetId} = conn;
-      const {clientX, clientY} = originalEvent;
-      state.dropdownLine.x = clientX;
-      state.dropdownLine.y = clientY;
-      //const v: any = state.jsplumbData.nodeList.find((v) => v.nodeId === targetId);
-      //const line: any = state.jsplumbData.lineList.find((v) => v.sourceId === sourceId && v.targetId === targetId);
-      //v.type = 'line';
-      //v.label = line.label;
-      const v = {type: 'line'};
-      contextmenuLineRef.value.openContextmenu(v, conn);
-    });
-    // 连线之前
-    state.jsPlumb.bind('beforeDrop', (conn: any) => {
 
-      const {sourceId, targetId} = conn;
-      console.log(conn);
-      let existingConnections = state.jsPlumb.getConnections({
-        source: sourceId,
-        target: targetId
-      });
-
-      if (existingConnections.length > 0) {
-        ElMessage.warning('该源字段已存在，不可重复添加');
-        return false;
-      } else {
-        return true;
-      }
-    });
-    // 连线时
-    state.jsPlumb.bind('connection', (conn: any) => {
-      console.log(conn);
-      const {sourceId, targetId} = conn;
-
-
-      if (state.walkStatus) {
-
-      } else {
-        updateNodeByConn(sourceId, targetId, 'add');
-      }
-    });
-    // 删除连线时回调函数
-    state.jsPlumb.bind('connectionDetached', (conn: any) => {
-      const {sourceId, targetId} = conn;
-
-    });
     // 单击连事件
     state.jsPlumb.bind('click', (conn: any, originalevent) => {
       const {sourceId, targetId} = conn;
@@ -414,48 +436,23 @@ const initJsPlumb = () => {
 };
 // 初始化节点、线的链接
 const initJsPlumbConnection = () => {
-  // 节点
-  state.jsplumbData.nodeList.forEach((v) => {
-    // 整个节点作为source或者target
-    state.jsPlumb.makeSource(v.nodeId, state.jsplumbMakeSource);
-    // 整个节点作为source或者target
-    state.jsPlumb.makeTarget(v.nodeId, state.jsplumbMakeTarget, jsplumbConnect);
-    // 设置节点可以拖拽（此处为id值，非class）
-    state.jsPlumb.draggable(v.nodeId, {
-      containment: 'parent',
-      stop: (el: any) => {
-        state.jsplumbData.nodeList.forEach((v) => {
-          if (v.nodeId === el.el.id) {
-            // 节点x, y重新赋值，防止再次从左侧导航中拖拽节点时，x, y恢复默认
-            v.left = `${el.pos[0]}px`;
-            v.top = `${el.pos[1]}px`;
-          }
-        });
-      },
-    });
-  });
-  // 线
-  state.jsplumbData.lineList.forEach((v) => {
-    state.jsPlumb.connect(
-        {
-          source: v.sourceId,
-          target: v.targetId,
-          label: v.label,
-        },
-        state.jsplumbConnect
-    );
-  });
+
+
   console.log("初始化转化目的节点");
   for (let i of state.pointlist.data) {
 
     const point = document.getElementById(i.ID);
 
-
+    console.log(point);
     initLeaf(point);
   }
 
   initConn();
-  state.jsPlumb.repaintEverything();
+  nextTick(() => {
+    state.jsPlumb.repaintEverything();
+
+  });
+
 };
 
 
@@ -478,13 +475,26 @@ const initConn = () => {
   const list = state.connectlist.data;
   state.jsPlumb.deleteEveryConnection();
   for (let i of list) {
-
-    state.jsPlumb.connect(
-        {
-          source: i.sourceFieldID,
-          target: i.targetFieldID,
-          label: i.TName
-        });
+    let flag = 0;
+    if (i.sourceFieldID != null && i.targetFieldID != null) {
+      state.pointlist.data.forEach((v) => {
+        if (v.ID == i.sourceFieldID) {
+          flag++;
+        }
+        if (v.ID == i.targetFieldID) {
+          flag++;
+        }
+      })
+      if (flag >= 2) {
+        console.log(i);
+        state.jsPlumb.connect(
+            {
+              source: i.sourceFieldID,
+              target: i.targetFieldID,
+              label: i.TName
+            });
+      }
+    }
   }
 
 
@@ -495,7 +505,7 @@ const initConn = () => {
 const onItemClick = (val) => {
   console.log(val);
   state.sourceData = val;
-   state.targetData= {
+  state.targetData = {
     DFINO: '',
     DFIVersion: '',
     DUINO: '',
@@ -612,7 +622,15 @@ onUnmounted(() => {
       background-size: 100% 100%;
     }
   }
+            :deep( .back-red ){ /* 红色背景 */
+             // width: 100px;
+             // height: 100px;
+              background-color: rgba(204, 109, 109, 0.43) !important;
+            }
 
+             :deep( .back-blue) { /* 蓝色背景 */
+
+            }
   :deep(.el-collapse-item__header) {
     text-align: center;
     font-size: 16px;
@@ -745,6 +763,8 @@ onUnmounted(() => {
           position: absolute;
 
           .workflow-right-box {
+
+
             height: 35px;
             align-items: center;
             color: var(--el-text-color-secondary);

@@ -54,7 +54,7 @@
 				v-model:current-page="state.page.pageNum"
 				v-model:page-size="state.page.pageSize"
 				:pager-count="5"
-				:page-sizes="[10, 20, 30]"
+				:page-sizes="[10, 20, 30,1000]"
 				:total="config.total"
 				layout="total, sizes, prev, pager, next, jumper"
 				background

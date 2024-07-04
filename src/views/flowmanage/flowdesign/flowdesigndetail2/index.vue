@@ -528,7 +528,7 @@ const checkGraph = (grajson) => {
   for (let i = 0; i < nodes.length; i++) {
     console.log(lf.value.getNodeEdges(nodes[i].id))
     if (lf.value.getNodeEdges(nodes[i].id).length == 0) {
-      ElMessage.error('请删除或调整无连接节点');
+      //ElMessage.error('请删除或调整无连接节点');
       return -1
     }
   }
@@ -539,9 +539,13 @@ const checkGraph = (grajson) => {
 const saveFlow = () => {
   let flowGraphStr = lf.value.getGraphData();
   let s2 = JSON.parse(JSON.stringify(flowGraphStr));
+  state.checkGraph=false;
   console.log(flowGraphStr);
   if (checkGraph(s2) == -1) {
-    return;
+    //ElMessage.warning('流程图中存在无连接节点');
+    state.checkGraph=false;
+  }else{
+    state.checkGraph=true;
   }
   let scripts = saveScript(s2);
 
@@ -557,7 +561,8 @@ const saveFlow = () => {
       {
         ID: state.ID,
         FlowJson: encodedData,
-        FlowOutStr: data2
+        FlowOutStr: data2,
+        CheckGraph:state.checkGraph
       }
   )
       .then(res => {

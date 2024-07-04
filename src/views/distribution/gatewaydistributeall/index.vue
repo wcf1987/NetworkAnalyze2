@@ -425,6 +425,17 @@ const getTableDataGatewayDistribute = async () => {
 
 //下发流程
 const disflow = () => {
+  let waringstr=''
+  for(let i of state.tableDataFlowShow){
+    if(i.CheckGraph=='false'){
+        waringstr=waringstr+i.Name+'的流程有错误，请检查后再下发'+'\n';
+    }
+  }
+  console.log(waringstr)
+  if(waringstr!=''){
+       ElMessage.warning(waringstr);
+        return
+  }
   if(state.gateway.ID=='0'){
         ElMessage.warning('您需要先配置CLIP网关，才能下发流程');
         return
