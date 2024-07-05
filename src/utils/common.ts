@@ -61,6 +61,14 @@ export const DataType = [
 
 
 ];
+export const ActionType = [
+    {id: 0, label: '发送数据', value: '发送数据'},
+    {id: 1, label: '延缓执行', value: '延缓执行'},
+    {id: 2, label: '其他1', value: '其他1'},
+
+
+
+];
 export const MessPackProperty = [
     {id: 0, label: '无', value: '无'},
     {id: 1, label: '网管', value: '网管'},

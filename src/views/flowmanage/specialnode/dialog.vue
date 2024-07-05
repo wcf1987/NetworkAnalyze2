@@ -17,6 +17,7 @@
                                 <el-option label="定时器节点" value="定时器节点"></el-option>
                                 <el-option label="数据统计节点" value="数据统计节点"></el-option>
                                 <el-option label="计算节点" value="计算节点"></el-option>
+                                      <el-option label="延时器节点" value="延时器节点"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>

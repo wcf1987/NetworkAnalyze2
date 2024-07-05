@@ -10,7 +10,7 @@ class TimerNode extends IconNode.view {
 class TimerNodeModel extends IconNode.model{
     initNodeData(data) {
     super.initNodeData(data);
-    this.text.value = "定时器"; // 不允许文本被拖动
+    //this.text.value = "定时器"; // 不允许文本被拖动
 const NotSelfAsTarget = {
       message: "不允许节点连接自身",
       validate: (sourceNode, targetNode, sourceAnchor, targetAnchor) => {

@@ -22,6 +22,10 @@ import forwhileicon from '/@/assets/svgicon/forwhile.svg';
 
 import delayedicon from '/@/assets/svgicon/delayed.svg';
 import firsticon from "/@/assets/svgicon/first.svg";
+
+import pacsizeicon from "/@/assets/svgicon/pacsize.svg";
+
+import pacnumicon from "/@/assets/svgicon/pacnum.svg";
 export const leftNavList = [
     {
         title: '基础节点',
@@ -142,11 +146,18 @@ export const leftNavList = [
                 descrip: '全局变量，可做中间计算结果储存',
             },
             {
-                icon: timemarkicon,
-                name: '时间标记',
-                type: 'timemark',
-                id: '22',
-                descrip: '全局变量，时间戳',
+                icon: pacsizeicon,
+                name: '数据包大小统计',
+                type: 'pacSize',
+                id: '23',
+                descrip: '全局变量，数据包大小统计',
+            },
+            {
+                icon: pacnumicon,
+                name: '数据包个数统计',
+                type: 'pacNum',
+                id: '24',
+                descrip: '全局变量，数据包个数统计',
             },
 
         ],

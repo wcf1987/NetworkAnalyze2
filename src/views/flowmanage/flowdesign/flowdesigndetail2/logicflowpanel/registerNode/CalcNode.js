@@ -10,7 +10,7 @@ class CalcNode extends IconNode.view {
 class CalcNodeModel extends IconNode.model{
     initNodeData(data) {
     super.initNodeData(data);
-    this.text.value = "计算节点"; // 不允许文本被拖动
+    //this.text.value = "计算节点"; // 不允许文本被拖动
 const NotSelfAsTarget = {
       message: "不允许节点连接自身",
       validate: (sourceNode, targetNode, sourceAnchor, targetAnchor) => {

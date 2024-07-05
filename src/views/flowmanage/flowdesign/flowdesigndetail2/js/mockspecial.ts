@@ -19,6 +19,8 @@ import convericon from '/@/assets/svgicon/conver.svg';
 import inpacicon from '/@/assets/svgicon/inpac.svg';
 import desticon from '/@/assets/svgicon/dest.svg';
 import firsticon from "/@/assets/svgicon/first.svg";
+import pacsizeicon from "/@/assets/svgicon/pacsize.svg";
+import pacnumicon from "/@/assets/svgicon/pacnum.svg";
 export const leftNavListSpecial = [
     {
         title: '基础节点',
@@ -82,12 +84,19 @@ export const leftNavListSpecial = [
                 type: 'spemark',
                 descrip: '全局变量，可做中间计算结果储存',
             },
+                     {
+                icon: pacsizeicon,
+                name: '数据包大小统计',
+                type: 'pacSize',
+                id: '23',
+                descrip: '全局变量，数据包大小统计',
+            },
             {
-                icon: timemarkicon,
-                name: '时间标记',
-                type: 'timemark',
-                id: '22',
-                descrip: '全局变量，时间戳',
+                icon: pacnumicon,
+                name: '数据包个数统计',
+                type: 'pacNum',
+                id: '24',
+                descrip: '全局变量，数据包个数统计',
             },
 
         ],

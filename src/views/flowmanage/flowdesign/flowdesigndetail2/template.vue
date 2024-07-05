@@ -142,13 +142,18 @@ import {
   StatisticsNode,
   SwichNode,
   TimemarkNode,
-  TimerNode,
+  TimerNode, DelayedNode,PacNumNode,PacSizeNode
 } from './logicflowpanel/registerNode/index.js'
 import {builtNodeApi} from "/@/api/flowmanage/builtnode";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
 import {leftNavListSimpleApp} from "/@/views/flowmanage/flowdesign/flowdesigndetail2/js/mocksimple_app";
+import {specialApi} from "/@/api/flowmanage/special";
+import calcicon from "/@/assets/svgicon/calc.svg";
+import statisticsicon from "/@/assets/svgicon/statistics.svg";
+import timericon from "/@/assets/svgicon/timer.svg";
+import delayedicon from "/@/assets/svgicon/delayed.svg";
 
 const router = useRouter();
 
@@ -791,6 +796,7 @@ function registerNode() {
   lf.value.register(MessbodyparseNode);
   lf.value.register(MessbodyencapNode);
 
+  lf.value.register(DelayedNode);
   lf.value.register(CalcNode);
   lf.value.register(PacparseNode);
   lf.value.register(PacencapNode);
@@ -802,6 +808,8 @@ function registerNode() {
   lf.value.register(InpacNode);
   lf.value.register(DestNode);
   lf.value.register(FirstNode);
+    lf.value.register(PacSizeNode);
+  lf.value.register(PacNumNode);
   render()
 }
 
@@ -984,7 +992,72 @@ const initLeftNavList = () => {
       }).finally(() => {
 
       });
+      specialApi().search(
+          {
+            uid: 1,
+            pageNum: 1,
+            pageSize: 1000,
+            name: '',
+          })
+          .then(res => {
+            //console.log(res);
+            if (res.code == '200') {
 
+              let convlist = state.leftNavList[2];
+              console.log(res.data);
+              convlist.children = new Array();
+              for (let k = 0; k < res.data.length; k++) {
+                if (res.data[k].Type == '计算节点') {
+                  convlist.children.push({
+                    icon: calcicon,
+                    name: res.data[k].Name,
+                    type: 'calc',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+
+                }
+                if (res.data[k].Type == '数据统计节点') {
+                       convlist.children.push({
+                    icon: statisticsicon,
+                    name: res.data[k].Name,
+                    type: 'statistics',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+
+                }
+                if (res.data[k].Type == '定时器节点') {
+                convlist.children.push({
+                    icon: timericon,
+                    name: res.data[k].Name,
+                    type: 'timer',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+                }
+                if (res.data[k].Type == '延时器节点') {
+                 convlist.children.push({
+                    icon: delayedicon,
+                    name: res.data[k].Name,
+                    type: 'delayed',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+                }
+              }
+
+              scrollbar.update();
+
+            } else {
+              ElMessage.error(res.message);
+            }
+
+          }).catch(err => {
+
+      }).finally(() => {
+
+      });
 
     }
   }

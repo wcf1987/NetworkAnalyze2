@@ -25,19 +25,19 @@
                 <div class="workflow-left-item" v-for="(v, k) in val.children" :key="k"
                      :data-name="v.name" :data-icon="v.icon" :data-id="v.id"
                      @mousedown="dragNode(v)">
-         <el-tooltip
-                    class="box-item"
-                    effect="light"
-                    :content="v.name"
-                    placement="top-start"
-                >
+                  <el-tooltip
+                      class="box-item"
+                      effect="light"
+                      :content="v.name"
+                      placement="top-start"
+                  >
 
-                  <div class="workflow-left-item-icon">
-                    <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
-                             :size=16></SvgIcon>
-                    <div  class="font10 pl5 name">{{ v.name }}</div>
-                  </div>
-                </el-tooltip>
+                    <div class="workflow-left-item-icon">
+                      <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
+                               :size=16></SvgIcon>
+                      <div class="font10 pl5 name">{{ v.name }}</div>
+                    </div>
+                  </el-tooltip>
 
                 </div>
 
@@ -106,7 +106,7 @@ import {flowApi} from "/@/api/flowmanage/flow";
 import '@logicflow/core/dist/style/index.css'
 import '@logicflow/extension/lib/style/index.css'
 import LogicFlow from '@logicflow/core'
-import {Menu, MiniMap, Snapshot,SelectionSelect } from "@logicflow/extension";
+import {Menu, MiniMap, Snapshot, SelectionSelect} from "@logicflow/extension";
 import conver from '/@/assets/svgicon/conver.svg';
 import inpac from '/@/assets/svgicon/inpac.svg';
 import {defineAsyncComponent, nextTick, onMounted, onUnmounted, reactive, ref} from 'vue';
@@ -143,13 +143,19 @@ import {
   StatisticsNode,
   SwichNode,
   TimemarkNode,
-  TimerNode,
+  TimerNode, DelayedNode,PacNumNode,PacSizeNode
 } from './logicflowpanel/registerNode/index.js'
 import {builtNodeApi} from "/@/api/flowmanage/builtnode";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messtranslateApi} from "/@/api/sysmanage/messtranslate";
+import {specialApi} from "/@/api/flowmanage/special";
+import calcicon from "/@/assets/svgicon/calc.svg";
 
+import statisticsicon from '/@/assets/svgicon/statistics.svg';
+import timericon from '/@/assets/svgicon/timer.svg';
+
+import delayedicon from '/@/assets/svgicon/delayed.svg';
 const router = useRouter();
 
 const activeNames = ref(['1'])
@@ -170,7 +176,7 @@ function dragNode(item) {
 
   lf.value.dnd.startDrag({
     type: item.type,
-    text:item.name,
+    text: item.name,
   })
 }
 
@@ -273,7 +279,7 @@ const saveScript = (grajson) => {
           }
         }
         if (tt.localnetworkID != null && tt.localnetworkID != '') {
-         // console.log(tt);
+          // console.log(tt);
           state.LocalIPAndPort = tt.IP;
           if (tt.Port != null && tt.Port != '') {
             state.LocalIPAndPort = state.LocalIPAndPort + ":" + tt.Port;
@@ -503,7 +509,7 @@ const saveScript = (grajson) => {
   }
   grajson.stateShow = {
     SourceIPAndPort: state.SourceIPAndPort,
-    LocalIPAndPort:state.LocalIPAndPort,
+    LocalIPAndPort: state.LocalIPAndPort,
     TargetIPAndPort: state.TargetIPAndPort,
     headerParseName: state.headerParseName,
     bodyPaserName: state.bodyPaserName,
@@ -539,13 +545,13 @@ const checkGraph = (grajson) => {
 const saveFlow = () => {
   let flowGraphStr = lf.value.getGraphData();
   let s2 = JSON.parse(JSON.stringify(flowGraphStr));
-  state.checkGraph=false;
+  state.checkGraph = false;
   console.log(flowGraphStr);
   if (checkGraph(s2) == -1) {
     //ElMessage.warning('流程图中存在无连接节点');
-    state.checkGraph=false;
-  }else{
-    state.checkGraph=true;
+    state.checkGraph = false;
+  } else {
+    state.checkGraph = true;
   }
   let scripts = saveScript(s2);
 
@@ -562,7 +568,7 @@ const saveFlow = () => {
         ID: state.ID,
         FlowJson: encodedData,
         FlowOutStr: data2,
-        CheckGraph:state.checkGraph
+        CheckGraph: state.checkGraph
       }
   )
       .then(res => {
@@ -700,7 +706,7 @@ function initLf() {
       Menu,
       MiniMap,
       Snapshot,
-        SelectionSelect
+      SelectionSelect
     ],
 
     container: container.value,
@@ -761,7 +767,7 @@ function initLf() {
     },
     nodeText: {
       color: '#000000',
-        overflowMode: "autoWrap",
+      overflowMode: "autoWrap",
     },
     edgeText: {
       color: '#000000',
@@ -807,11 +813,14 @@ function registerNode() {
   lf.value.register(SpemarkNode);
   lf.value.register(StatisticsNode);
   lf.value.register(TimerNode);
+  lf.value.register(DelayedNode);
   lf.value.register(TimemarkNode);
   lf.value.register(ConversionNode);
   lf.value.register(InpacNode);
   lf.value.register(DestNode);
   lf.value.register(FirstNode);
+  lf.value.register(PacSizeNode);
+  lf.value.register(PacNumNode);
 
   render()
 }
@@ -857,7 +866,7 @@ function LfEvent() {
     // hideAddPanel()
   })
   lf.value.on('connection:not-allowed', (data) => {
-              ElMessage.error(data.msg);
+    ElMessage.error(data.msg);
 
   })
   lf.value.on('node:contextmenu', ({data, e, position}) => {
@@ -884,7 +893,7 @@ const {copyText} = commonFunction();
 const state = reactive({
   FlowName: '',
   FlowType: '',
-  SelectionSelect:false,
+  SelectionSelect: false,
   SourceIPAndPort: '-',
   LocalIPAndPort: '-',
   TargetIPAndPort: '-',
@@ -988,6 +997,72 @@ const initLeftNavList = () => {
                 }
 
               }
+            //  scrollbar.update();
+
+            } else {
+              ElMessage.error(res.message);
+            }
+
+          }).catch(err => {
+
+      }).finally(() => {
+
+      });
+      specialApi().search(
+          {
+            uid: 1,
+            pageNum: 1,
+            pageSize: 1000,
+            name: '',
+          })
+          .then(res => {
+            //console.log(res);
+            if (res.code == '200') {
+
+              let convlist = state.leftNavList[2];
+              console.log(res.data);
+              convlist.children = new Array();
+              for (let k = 0; k < res.data.length; k++) {
+                if (res.data[k].Type == '计算节点') {
+                  convlist.children.push({
+                    icon: calcicon,
+                    name: res.data[k].Name,
+                    type: 'calc',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+
+                }
+                if (res.data[k].Type == '数据统计节点') {
+                       convlist.children.push({
+                    icon: statisticsicon,
+                    name: res.data[k].Name,
+                    type: 'statistics',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+
+                }
+                if (res.data[k].Type == '定时器节点') {
+                convlist.children.push({
+                    icon: timericon,
+                    name: res.data[k].Name,
+                    type: 'timer',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+                }
+                if (res.data[k].Type == '延时器节点') {
+                 convlist.children.push({
+                    icon: delayedicon,
+                    name: res.data[k].Name,
+                    type: 'delayed',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+                }
+              }
+
               scrollbar.update();
 
             } else {
@@ -999,7 +1074,6 @@ const initLeftNavList = () => {
       }).finally(() => {
 
       });
-
 
     }
   }
@@ -1073,13 +1147,13 @@ const setNodeContent = (obj: any) => {
 const onToolClick = (fnName: String) => {
   switch (fnName) {
     case 'selectionSelect':
-      if(state.SelectionSelect){
+      if (state.SelectionSelect) {
         state.SelectionSelect = false;
         lf.value.closeSelectionSelect();
-      }else{
+      } else {
         state.SelectionSelect = true;
 
-      lf.value.openSelectionSelect();
+        lf.value.openSelectionSelect();
       }
 
       break;
@@ -1139,25 +1213,25 @@ const onToolClick = (fnName: String) => {
       break;
     case 'closeWin':
       ElMessageBox.confirm(
-    '你是否确定关闭？（未保存的更改将会丢失）',
-    '提示',
-    {
-      confirmButtonText: '保存后退出',
-     // customButtonText: '保存直接退出', // 自定义按钮文本
-      cancelButtonText: '不保存直接退出',
-      type: 'warning',
-    }
-  )
-    .then(() => {
-      saveFlow();
-      router.go(-1);
+          '你是否确定关闭？（未保存的更改将会丢失）',
+          '提示',
+          {
+            confirmButtonText: '保存后退出',
+            // customButtonText: '保存直接退出', // 自定义按钮文本
+            cancelButtonText: '不保存直接退出',
+            type: 'warning',
+          }
+      )
+          .then(() => {
+            saveFlow();
+            router.go(-1);
 
 
-    })
-    .catch(() => {
-   router.go(-1);
-    })
-break;
+          })
+          .catch(() => {
+            router.go(-1);
+          })
+      break;
   }
 };
 // 顶部工具栏-帮助

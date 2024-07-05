@@ -30,7 +30,9 @@ import ConversionNode
 import InpacNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/InpacNode";
 import DestNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/DestNode";
 import FirstNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/FirstNode";
-
+import DelayedNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/DelayedNode";
+import PacNumNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/PacNumNode";
+import PacSizeNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/PacSizeNode";
 export {
     StartNode,
     EndNode,
@@ -48,8 +50,11 @@ export {
     SwichNode,
     TimemarkNode,
     TimerNode,
+    DelayedNode,
     ConversionNode,
     InpacNode,
     DestNode,
-    FirstNode
+    FirstNode,
+    PacNumNode,
+    PacSizeNode
 }
