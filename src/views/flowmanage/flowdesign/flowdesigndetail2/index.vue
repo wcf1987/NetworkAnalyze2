@@ -143,7 +143,7 @@ import {
   StatisticsNode,
   SwichNode,
   TimemarkNode,
-  TimerNode, DelayedNode,PacNumNode,PacSizeNode
+  TimerNode, DelayedNode,PacNumNode,PacSizeNode,MessQueNode
 } from './logicflowpanel/registerNode/index.js'
 import {builtNodeApi} from "/@/api/flowmanage/builtnode";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
@@ -156,6 +156,7 @@ import statisticsicon from '/@/assets/svgicon/statistics.svg';
 import timericon from '/@/assets/svgicon/timer.svg';
 
 import delayedicon from '/@/assets/svgicon/delayed.svg';
+import messqueicon from '/@/assets/svgicon/messque.svg';
 const router = useRouter();
 
 const activeNames = ref(['1'])
@@ -821,7 +822,7 @@ function registerNode() {
   lf.value.register(FirstNode);
   lf.value.register(PacSizeNode);
   lf.value.register(PacNumNode);
-
+  lf.value.register(MessQueNode);
   render()
 }
 
@@ -1057,6 +1058,15 @@ const initLeftNavList = () => {
                     icon: delayedicon,
                     name: res.data[k].Name,
                     type: 'delayed',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+                }
+                   if (res.data[k].Type == '消息队列节点') {
+                 convlist.children.push({
+                    icon: messqueicon,
+                    name: res.data[k].Name,
+                    type: 'messque',
                     id: res.data[k].ID,
                     descrip: res.data[k].Describes,
                   })

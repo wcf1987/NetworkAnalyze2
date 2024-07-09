@@ -82,3 +82,15 @@ export const ReForwardSocket = [
     {id: 1, label: '原有SOCKET', value: '原有SOCKET'},
     {id: 2, label: '默认地址的SOCKET', value: '默认地址的SOCKET'},
 ];
+export const VarType = [
+    {id: 0, label: '消息标识', value: '消息标识'},
+    {id: 1, label: '数据字段', value: '数据字段'},
+
+];
+export const SpecailNodeType = [
+    {id: 0, label: '定时器节点', value: '定时器节点'},
+    {id: 1, label: '数据统计节点', value: '数据统计节点'},
+ {id: 2, label: '计算节点', value: '计算节点'},
+     {id: 3, label: '延时器节点', value: '延时器节点'},
+    {id: 4, label: '消息队列节点', value: '消息队列节点'},
+];

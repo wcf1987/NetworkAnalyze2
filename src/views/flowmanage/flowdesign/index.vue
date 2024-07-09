@@ -349,9 +349,7 @@ const onHandleCurrentChange = (val: number) => {
   state.tableData.param.pageNum = val;
   getTableData();
 };
-const onRowDownload = (row: RowUserType) => {
-  downloadProcess(row, 'txt', '流程脚本');
-}
+
 const onRowCopy = (row: RowUserType) => {
   const stores = useUserInfo();
 
@@ -378,7 +376,9 @@ const onRowCopy = (row: RowUserType) => {
   });
 
 }
-
+const onRowDownload = (row: RowUserType) => {
+  downloadProcess(row, 'txt', '流程脚本');
+}
 async function downloadProcess(row, type, name = '流程脚本') {
   let data = row.FlowJson
   const {href, filename} = setEncoded('json', name, data)

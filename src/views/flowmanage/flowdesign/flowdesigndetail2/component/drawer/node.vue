@@ -355,8 +355,18 @@
             <el-input v-model="state.properForm.globalVarName" placeholder="请输入临时变量代码名称" clearable>
             </el-input>
           </el-form-item>
-
-          <el-form-item label="源字段" prop="source">
+          <el-form-item label="属性">
+            <el-select v-model="state.properForm.varType"
+                       placeholder="请选择" clearable class="w100">
+              <el-option
+                  v-for="item in VarTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="源字段" prop="source" >
 
             <el-cascader v-model="state.properForm.sourceData" :options="sourceoptions"
                          :separator="'.'"
@@ -366,7 +376,7 @@
                          collapse-tags/>
           </el-form-item>
 
-          <el-form-item label="转换公式" prop="rulestr" clearable>
+          <el-form-item label="计算公式" prop="rulestr" clearable>
             <el-input
                 :autosize="{ minRows: 2, maxRows: 10 }"
                 type="textarea"
@@ -401,7 +411,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="发送地址" prop="IP"  v-if="state.properForm.actionType=='发送数据'">
+          <el-form-item label="发送地址" prop="IP" v-if="state.properForm.actionType=='发送数据'">
             <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable
             ></el-input>
           </el-form-item>
@@ -476,7 +486,7 @@ import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messdetailApi} from "/@/api/sysmanage/messdetail";
 
-import {DataType, MessPackProperty, ReForwardSocket,ActionType} from '/@/utils/common';
+import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType} from '/@/utils/common';
 
 const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
 const translateDialogRef = ref();
@@ -497,6 +507,7 @@ const dataType = ref(DataType);
 const actionType = ref(ActionType);
 const messPackProperty = ref(MessPackProperty);
 const reForwardSocket = ref(ReForwardSocket);
+const VarTypeOptions = ref(VarType);
 const NetworkOptions = ref();
 const NetworkLocalOptions = ref();
 const SerialOptions = ref();
@@ -549,6 +560,9 @@ const changeSourceInput21 = (fo) => {
 
 
   tempstr = tempstr.replaceAll(',', '.');
+  if(state.properForm.globalVarRule==null){
+    state.properForm.globalVarRule=''
+  }
   state.properForm.globalVarRule = state.properForm.globalVarRule + tempstr;
 
 
@@ -667,6 +681,7 @@ const getParentData = (data, lf) => {
   }
   if (data.type == 'spemark') {
     state.proper.typeC = '临时变量';
+
     getNetwork();
     getSerial();
     getPackage();
@@ -693,6 +708,9 @@ const getParentData = (data, lf) => {
   }
   if (data.type == 'delayed') {
     state.proper.typeC = '延时器';
+  }
+    if (data.type == 'messque') {
+    state.proper.typeC = '消息队列';
   }
   if (data.type == 'calc') {
     state.proper.typeC = '计算节点';

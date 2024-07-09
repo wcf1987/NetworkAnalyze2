@@ -45,7 +45,7 @@
               <el-table-column prop="Type" label="格式" show-overflow-tooltip sortable="custom"></el-table-column>
                 <el-table-column prop="Describes" label="用户描述" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="CreateTime" label="创建时间" show-overflow-tooltip v-if="false"></el-table-column>
-                <el-table-column label="操作" width="180">
+                <el-table-column label="操作" width="230">
                     <template #default="scope">
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary"
                                    @click="onOpenEdit('edit', scope.row)" class="buttonfont"
@@ -60,6 +60,9 @@
                         <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" class="buttonfont"
                                    @click="onRowDel(scope.row)">删除
                         </el-button>
+                           <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" class="buttonfont"
+                       @click="onRowDownload(scope.row)">下载
+            </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -87,6 +90,7 @@
     import {useRouter} from "vue-router";
 	import {messbodyApi} from "/@/api/sysmanage/messbody";
 	import {messheaderApi} from "/@/api/sysmanage/messheader";
+    import {messdetailApi} from "/@/api/sysmanage/messdetail";
     // 引入组件
     const UserDialog = defineAsyncComponent(() => import('/@/views/sysmanage/messbody/dialog.vue'));
     const router = useRouter();
@@ -108,6 +112,81 @@
                 ids:[],
         },
     });
+
+
+ const getMessDetailData = async (id) => {
+
+
+ await messdetailApi().searchMessDetail(
+      {
+        uid: 1,
+        pid: id,
+        pageNum: 1,
+        pageSize: 1000,
+        name: '',
+        ttype: 'body',
+        nestid: 0,
+      })
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
+
+          state.tableData.downloadData = res.data;
+
+
+
+        } else {
+
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
+
+
+
+
+};
+const onRowDownload = (row: RowUserType) => {
+  downloadProcess(row, 'txt', '消息体');
+}
+
+async function downloadProcess(row, type, name = '脚本') {
+  await  getMessDetailData(row.ID);
+  let namenew=row.Name+'-'+name
+   let data = JSON.stringify(state.tableData.downloadData);
+  console.log(data);
+  const {href, filename} = setEncoded('json', namenew, data)
+  //      console.log(data)
+  downloadFile(href, filename)
+
+
+}
+
+function downloadFile(href, filename) {
+  if (href && filename) {
+    const a = document.createElement('a')
+    a.download = filename //指定下载的文件名
+    a.href = href //  URL对象
+    a.click() // 模拟点击
+    URL.revokeObjectURL(a.href) // 释放URL 对象
+  }
+}
+
+function setEncoded(type, filename, data) {
+  const encodedData = data;
+  return {
+    filename: `${filename}.${type.toLowerCase()}`,
+    href: `data:application/${
+        type === 'txt' ? 'text/xml' : 'bpmn20-xml'
+    };charset=UTF-8,${encodedData}`,
+    data: data
+  }
+}
+
+
     const  calcIndex=(index)=>{
         index=index+(state.tableData.param.pageNum-1)*state.tableData.param.pageSize+1
         return index
