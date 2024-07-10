@@ -52,7 +52,13 @@ export function functionplugManageApi() {
                 data,
             });
         },
-
+        plugfile: (data: object) => {
+            return request({
+                url: '/functionplug/plugfile',
+                method: 'post',
+                data,
+            });
+        },
 
 
 

@@ -34,6 +34,8 @@ import DelayedNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicf
 import PacNumNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/PacNumNode";
 import PacSizeNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/PacSizeNode";
 import MessQueNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/MessQueNode";
+import FilterNode from "/@/views/flowmanage/flowdesign/flowdesigndetail2/logicflowpanel/registerNode/FilterNode";
+
 export {
     StartNode,
     EndNode,
@@ -58,5 +60,6 @@ export {
     FirstNode,
     PacNumNode,
     PacSizeNode,
-    MessQueNode
+    MessQueNode,
+    FilterNode
 }

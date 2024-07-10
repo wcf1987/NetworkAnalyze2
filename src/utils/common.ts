@@ -69,6 +69,13 @@ export const ActionType = [
 
 
 ];
+export const FilterType = [
+    {id: 0, label: '通过', value: '通过'},
+    {id: 1, label: '丢弃', value: '丢弃'},
+
+
+
+];
 export const MessPackProperty = [
     {id: 0, label: '无', value: '无'},
     {id: 1, label: '网管', value: '网管'},
@@ -93,4 +100,5 @@ export const SpecailNodeType = [
  {id: 2, label: '计算节点', value: '计算节点'},
      {id: 3, label: '延时器节点', value: '延时器节点'},
     {id: 4, label: '消息队列节点', value: '消息队列节点'},
+       {id: 4, label: '过滤器节点', value: '过滤器节点'},
 ];

@@ -41,7 +41,14 @@
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                         <el-form-item label="插件文件" prop="Plugfile">
-                            <el-input v-model="state.ruleForm.Plugfile" placeholder="请输入" clearable></el-input>
+                             <el-select v-model="state.ruleForm.Plugfile" placeholder="请选择" clearable class="w100">
+                                <el-option
+                                        v-for="item in PlugFilesOptions"
+                                        :key="item.FileName"
+                                        :label="item.FileName"
+                                        :value="item.FileName"
+                                />
+                            </el-select>
                         </el-form-item>
                     </el-col>
 
@@ -79,11 +86,13 @@
     import {functionplugManageApi} from "/@/api/plugmanage/functionplugmanage";
     import {useUserInfo} from "/@/stores/userInfo";
     import {FunctionType} from '/@/utils/common';
+    import {packageApi} from "/@/api/sysmanage/package";
     // 定义子组件向父组件传值/事件
     const emit = defineEmits(['refresh']);
     const FunctionTypeOptions = ref(FunctionType);
     // 定义变量内容
     const userDialogFormRef = ref();
+    const PlugFilesOptions=ref();
     const rules = reactive({
 // 普通的校验规则
         name: [
@@ -123,6 +132,7 @@
     const openDialog = (type: string, row: RowUserType) => {
         state.dialog.type = type;
         state.dialog.isShowDialog = true;
+        getPlugFilesOptions();
         if (type === 'edit') {
 
             state.dialog.title = '修改';
@@ -158,6 +168,35 @@
     const onCancel = () => {
         closeDialog();
     };
+        //获取函数文件列表
+    const getPlugFilesOptions = () => {
+
+        functionplugManageApi().plugfile(
+            {
+
+
+
+                pageNum: 1,
+                pageSize: 1000,
+                name: '',
+
+            })
+            .then(res => {
+                //console.log(res);
+                if (res.code == '200') {
+
+                    PlugFilesOptions.value = res.data;
+                    //locOptions.value.push({ID:-1,Name:'最后'});
+                } else {
+                    ElMessage.error(res.message);
+                }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+    }
     // 提交
     const onSubmit = () => {
         userDialogFormRef.value.validate((valid) => {

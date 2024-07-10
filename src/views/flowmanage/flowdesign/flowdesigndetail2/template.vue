@@ -142,7 +142,7 @@ import {
   StatisticsNode,
   SwichNode,
   TimemarkNode,
-  TimerNode, DelayedNode,PacNumNode,PacSizeNode,MessQueNode
+  TimerNode, DelayedNode, PacNumNode, PacSizeNode, MessQueNode, FilterNode
 } from './logicflowpanel/registerNode/index.js'
 import {builtNodeApi} from "/@/api/flowmanage/builtnode";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
@@ -155,6 +155,7 @@ import statisticsicon from "/@/assets/svgicon/statistics.svg";
 import timericon from "/@/assets/svgicon/timer.svg";
 import delayedicon from "/@/assets/svgicon/delayed.svg";
 
+import filtericon from '/@/assets/svgicon/filter.svg';
 import messqueicon from '/@/assets/svgicon/messque.svg';
 
 const router = useRouter();
@@ -813,6 +814,7 @@ function registerNode() {
     lf.value.register(PacSizeNode);
   lf.value.register(PacNumNode);
     lf.value.register(MessQueNode);
+    lf.value.register(FilterNode);
   render()
 }
 
@@ -1053,6 +1055,15 @@ const initLeftNavList = () => {
                     icon: messqueicon,
                     name: res.data[k].Name,
                     type: 'messque',
+                    id: res.data[k].ID,
+                    descrip: res.data[k].Describes,
+                  })
+                }
+                                                  if (res.data[k].Type == '过滤器节点') {
+                 convlist.children.push({
+                    icon: filtericon,
+                    name: res.data[k].Name,
+                    type: 'filter',
                     id: res.data[k].ID,
                     descrip: res.data[k].Describes,
                   })

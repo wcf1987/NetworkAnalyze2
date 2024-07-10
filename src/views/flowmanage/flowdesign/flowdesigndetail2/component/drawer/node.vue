@@ -366,7 +366,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="源字段" prop="source" >
+          <el-form-item label="源字段" prop="source">
 
             <el-cascader v-model="state.properForm.sourceData" :options="sourceoptions"
                          :separator="'.'"
@@ -419,6 +419,45 @@
           >
             <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable
             ></el-input>
+          </el-form-item>
+
+        </div>
+        <div class="customproper" v-if="state.showFlag['filter']">
+
+
+          <el-form-item label="动作类型" prop="actionType">
+            <el-select v-model="state.properForm.filterType" placeholder="请选择" clearable
+
+                       class="w100">
+              <el-option
+                  v-for="item in filterType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="前序节点" prop="id">
+
+            <el-cascader v-model="state.properForm.fieldvar" :options=state.fd :props="props21" clearable
+                         collapse-tags @change="changeSourceInput22"/>
+
+          </el-form-item>
+          <el-form-item label="临时变量" prop="id">
+
+            <el-cascader v-model="state.properForm.globalvar" :options=state.gd :props="props21" clearable
+                         collapse-tags @change="changeSourceInput22"/>
+
+          </el-form-item>
+
+          <el-form-item label="判断公式" prop="name">
+
+            <el-input
+                :autosize="{ minRows: 2, maxRows: 10 }"
+                type="textarea"
+                placeholder="请输入判断公式"
+                v-model="state.properForm.rulestr" autocomplete="off"/>
           </el-form-item>
 
         </div>
@@ -486,7 +525,7 @@ import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messdetailApi} from "/@/api/sysmanage/messdetail";
 
-import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType} from '/@/utils/common';
+import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType,FilterType} from '/@/utils/common';
 
 const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
 const translateDialogRef = ref();
@@ -505,6 +544,7 @@ const extendFormRef = ref();
 const chartsMonitorRef = ref();
 const dataType = ref(DataType);
 const actionType = ref(ActionType);
+const filterType = ref(FilterType);
 const messPackProperty = ref(MessPackProperty);
 const reForwardSocket = ref(ReForwardSocket);
 const VarTypeOptions = ref(VarType);
@@ -560,15 +600,33 @@ const changeSourceInput21 = (fo) => {
 
 
   tempstr = tempstr.replaceAll(',', '.');
-  if(state.properForm.globalVarRule==null){
-    state.properForm.globalVarRule=''
+  if (state.properForm.globalVarRule == null) {
+    state.properForm.globalVarRule = ''
   }
   state.properForm.globalVarRule = state.properForm.globalVarRule + tempstr;
 
 
 }
+const changeSourceInput22 = (fo) => {
+  console.log(fo)
+  let i = 0, tempstr = ''
+
+  if (fo.length > 0) {
+    tempstr = fo[fo.length - 1].join('.') + '\n'
+  }
+
+
+  tempstr = tempstr.replaceAll(',', '.');
+  if (state.properForm.rulestr == null) {
+    state.properForm.rulestr = ''
+  }
+  state.properForm.rulestr = state.properForm.rulestr + tempstr;
+
+
+}
 // 获取父组件数据
 const getParentData = (data, lf) => {
+
   clearFlag();
   state.tabsActive = '1';
   state.node = data;
@@ -709,8 +767,24 @@ const getParentData = (data, lf) => {
   if (data.type == 'delayed') {
     state.proper.typeC = '延时器';
   }
-    if (data.type == 'messque') {
+  if (data.type == 'messque') {
     state.proper.typeC = '消息队列';
+  }
+  if (data.type == 'filter') {
+    state.proper.typeC = '过滤器';
+    getNetwork();
+    getSerial();
+    getPackage();
+    getMessHeader();
+    getMessBody();
+    getMessTraslate();
+
+    setTimeout(() => {
+      getSourceData();
+    }, 500);
+    if (state.properForm.filterType == null || state.properForm.filterType == '') {
+      state.properForm.filterType = '通过'
+    }
   }
   if (data.type == 'calc') {
     state.proper.typeC = '计算节点';
@@ -954,6 +1028,12 @@ const getSourceData = () => {
 
           state.lf.setProperties(nodes[i].id, {fd: fieldsoptions.value, gd: globaloptions.value});
         }
+        if (nodes[i].type == 'filter') {
+          //  console.log('swich');
+
+          state.fd=fieldsoptions.value
+          state.gd=globaloptions.value;
+        }
       }
       // emitter.emit('Fn', {fd:fieldsoptions.value,gd:globaloptions.value});
     }, 500);
@@ -1187,7 +1267,7 @@ const clearFlag = () => {
   state.showFlag.calc = false;
   state.showFlag.delayed = false;
   state.showFlag.inpac = false;
-
+  state.showFlag.filter = false;
 
 }
 
