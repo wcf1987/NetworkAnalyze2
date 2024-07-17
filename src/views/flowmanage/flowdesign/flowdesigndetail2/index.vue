@@ -312,9 +312,13 @@ const saveScript = (grajson) => {
     if (nodet.type == 'end') {
       if (nodet.properties.interfacetype == '网口') {
         if (tt.IPlist != null && tt.IPlist != {}) {
+
           for (let z of tt.IPlist) {
+            if(state.TargetIPAndPort=='-'){
+              state.TargetIPAndPort=''
+            }
             console.log(z);
-            state.TargetIPAndPort = z.IP + ":" + z.Port + '  ' + state.TargetIPAndPort;
+            state.TargetIPAndPort = z.IP + ":" + z.Port + '|' + state.TargetIPAndPort;
           }
         }
 
@@ -570,7 +574,9 @@ const saveFlow = () => {
         ID: state.ID,
         FlowJson: encodedData,
         FlowOutStr: data2,
-        CheckGraph: state.checkGraph
+        CheckGraph: state.checkGraph,
+        SourceIP:state.SourceIPAndPort,
+        TargetIP:state.TargetIPAndPort
       }
   )
       .then(res => {

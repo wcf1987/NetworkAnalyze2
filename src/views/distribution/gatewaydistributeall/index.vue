@@ -437,7 +437,7 @@ const disflow = () => {
         return
   }
   if(state.gateway.ID=='0'){
-        ElMessage.warning('您需要先配置CLIP网关，才能下发流程');
+        ElMessage.warning('您需要先配置网关，才能下发流程');
         return
   }
   state.gateway.DisPercentage = 0

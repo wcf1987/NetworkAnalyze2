@@ -29,7 +29,7 @@ const state = reactive({
 // 设置 tool 标题
 const setToolTitle = computed(() => {
 	let { globalTitle } = themeConfig.value;
-	return `CLIP流程分发图形化编辑`;
+	return `网关流程分发图形化编辑`;
 });
 // 顶部工具栏
 const onToolClick = (fnName: string) => {

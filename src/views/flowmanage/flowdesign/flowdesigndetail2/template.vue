@@ -26,18 +26,18 @@
                      :data-name="v.name" :data-icon="v.icon" :data-id="v.id"
                      @mousedown="dragNode(v)">
 
-         <el-tooltip
-                    class="box-item"
-                    effect="light"
-                    :content="v.name"
-                    placement="top-start"
-                >
-                  <div class="workflow-left-item-icon">
-                    <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
-                             :size=16></SvgIcon>
-                    <div class="font10 pl5 name">{{ v.name }}</div>
-                  </div>
-                </el-tooltip>
+                  <el-tooltip
+                      class="box-item"
+                      effect="light"
+                      :content="v.name"
+                      placement="top-start"
+                  >
+                    <div class="workflow-left-item-icon">
+                      <SvgIcon :name="v.icon" class="workflow-icon-drag" :left=0
+                               :size=16></SvgIcon>
+                      <div class="font10 pl5 name">{{ v.name }}</div>
+                    </div>
+                  </el-tooltip>
 
                 </div>
 
@@ -390,7 +390,10 @@ const saveScript = (grajson) => {
         if (tt.IPlist != null && tt.IPlist != {}) {
           for (let z of tt.IPlist) {
             console.log(z);
-            state.TargetIPAndPort = z.IP + ":" + z.Port + '  ' + state.TargetIPAndPort;
+            if (state.TargetIPAndPort == '-') {
+              state.TargetIPAndPort = ''
+            }
+            state.TargetIPAndPort = z.IP + ":" + z.Port + '|' + state.TargetIPAndPort;
           }
         }
 
@@ -641,7 +644,9 @@ const saveFlow = () => {
       {
         ID: state.ID,
         FlowJson: encodedData,
-        FlowOutStr: data2
+        FlowOutStr: data2,
+        SourceIP: state.SourceIPAndPort,
+        TargetIP: state.TargetIPAndPort
       }
   )
       .then(res => {
@@ -699,7 +704,7 @@ function initLf() {
       Menu,
       MiniMap,
       Snapshot,
-                SelectionSelect
+      SelectionSelect
     ],
     container: container.value,
 
@@ -811,10 +816,10 @@ function registerNode() {
   lf.value.register(InpacNode);
   lf.value.register(DestNode);
   lf.value.register(FirstNode);
-    lf.value.register(PacSizeNode);
+  lf.value.register(PacSizeNode);
   lf.value.register(PacNumNode);
-    lf.value.register(MessQueNode);
-    lf.value.register(FilterNode);
+  lf.value.register(MessQueNode);
+  lf.value.register(FilterNode);
   render()
 }
 
@@ -859,7 +864,7 @@ function LfEvent() {
     // hideAddPanel()
   })
   lf.value.on('connection:not-allowed', (data) => {
-              ElMessage.error(data.msg);
+    ElMessage.error(data.msg);
 
   })
   lf.value.on('node:contextmenu', ({data, e, position}) => {
@@ -885,7 +890,7 @@ const {themeConfig} = storeToRefs(storesThemeConfig);
 const {copyText} = commonFunction();
 const state = reactive({
   FlowName: '',
-    SelectionSelect:false,
+  SelectionSelect: false,
   ID: 0,
   type: '模板编排',
   SourceIPAndPort: '-',
@@ -1023,7 +1028,7 @@ const initLeftNavList = () => {
 
                 }
                 if (res.data[k].Type == '数据统计节点') {
-                       convlist.children.push({
+                  convlist.children.push({
                     icon: statisticsicon,
                     name: res.data[k].Name,
                     type: 'statistics',
@@ -1033,7 +1038,7 @@ const initLeftNavList = () => {
 
                 }
                 if (res.data[k].Type == '定时器节点') {
-                convlist.children.push({
+                  convlist.children.push({
                     icon: timericon,
                     name: res.data[k].Name,
                     type: 'timer',
@@ -1042,7 +1047,7 @@ const initLeftNavList = () => {
                   })
                 }
                 if (res.data[k].Type == '延时器节点') {
-                 convlist.children.push({
+                  convlist.children.push({
                     icon: delayedicon,
                     name: res.data[k].Name,
                     type: 'delayed',
@@ -1050,8 +1055,8 @@ const initLeftNavList = () => {
                     descrip: res.data[k].Describes,
                   })
                 }
-                      if (res.data[k].Type == '消息队列节点') {
-                 convlist.children.push({
+                if (res.data[k].Type == '消息队列节点') {
+                  convlist.children.push({
                     icon: messqueicon,
                     name: res.data[k].Name,
                     type: 'messque',
@@ -1059,8 +1064,8 @@ const initLeftNavList = () => {
                     descrip: res.data[k].Describes,
                   })
                 }
-                                                  if (res.data[k].Type == '过滤器节点') {
-                 convlist.children.push({
+                if (res.data[k].Type == '过滤器节点') {
+                  convlist.children.push({
                     icon: filtericon,
                     name: res.data[k].Name,
                     type: 'filter',
@@ -1153,14 +1158,14 @@ const setNodeContent = (obj: any) => {
 // 顶部工具栏-当前项点击
 const onToolClick = (fnName: String) => {
   switch (fnName) {
-        case 'selectionSelect':
-      if(state.SelectionSelect){
+    case 'selectionSelect':
+      if (state.SelectionSelect) {
         state.SelectionSelect = false;
         lf.value.closeSelectionSelect();
-      }else{
+      } else {
         state.SelectionSelect = true;
 
-      lf.value.openSelectionSelect();
+        lf.value.openSelectionSelect();
       }
 
       break;
@@ -1214,25 +1219,25 @@ const onToolClick = (fnName: String) => {
       break;
     case 'closeWin':
       ElMessageBox.confirm(
-    '你是否确定关闭？（未保存的更改将会丢失）',
-    '提示',
-    {
-      confirmButtonText: '保存后退出',
-     // customButtonText: '保存直接退出', // 自定义按钮文本
-      cancelButtonText: '不保存直接退出',
-      type: 'warning',
-    }
-  )
-    .then(() => {
-      saveFlow();
-      router.go(-1);
+          '你是否确定关闭？（未保存的更改将会丢失）',
+          '提示',
+          {
+            confirmButtonText: '保存后退出',
+            // customButtonText: '保存直接退出', // 自定义按钮文本
+            cancelButtonText: '不保存直接退出',
+            type: 'warning',
+          }
+      )
+          .then(() => {
+            saveFlow();
+            router.go(-1);
 
 
-    })
-    .catch(() => {
-   router.go(-1);
-    })
-break;
+          })
+          .catch(() => {
+            router.go(-1);
+          })
+      break;
   }
 };
 // 顶部工具栏-帮助

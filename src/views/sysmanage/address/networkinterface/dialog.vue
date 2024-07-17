@@ -44,14 +44,14 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="图示" prop="Pic">
-              <el-select v-model="state.ruleForm.Pic" placeholder="请选择" clearable class="w100" @change="changeSelection">
+              <el-select  ref="selectPic" v-model="state.ruleForm.Pic" placeholder="请选择" clearable class="w100" @change="changeSelection">
                 <el-option
                     v-for="item in IPDevicePicOptions"
                     :key="item.id"
 
                     :value="item.text"
                 >
-                  <img :src="item.src" style="width: 16px;height: 16px;vertical-align: text-bottom;">
+                  <img :src="item.src" style="width: 24px;height: 24px;vertical-align: text-bottom;">{{ item.text }}
 
                 </el-option>
               </el-select>
@@ -89,6 +89,7 @@ const emit = defineEmits(['refresh']);
 
 // 定义变量内容
 const userDialogFormRef = ref();
+const selectPic= ref();
 const rules = reactive({
 // 普通的校验规则
   name: [
