@@ -230,7 +230,7 @@ const handleChangeCellStyle = ({row, column, rowIndex, columnIndex}) => {
   if (row['Optional'] == null || row['Optional'] == '') {
     cellStyle.backgroundColor = '#ffffff'
   }
-  if (row['Optional'] == '默认值' && row['Transrule'] != '') {
+  if (row['Optional'] == '直接赋值' && row['Transrule'] != '') {
     cellStyle.backgroundColor = '#75ea12'
   }
   if (row['Optional'] == '直接转换' && row['SourceData'].length > 0) {
@@ -972,7 +972,7 @@ const updateNodeByConn = (sourceId, targetId, type) => {
     } else {
       trow.SourceData = []
     }
-    if (trow['Optional'] == null || trow['Optional'] == '' || trow['Optional'] == '默认值') {
+    if (trow['Optional'] == null || trow['Optional'] == '' || trow['Optional'] == '直接赋值') {
       trow['Optional'] = '直接转换';
     }
     trow.SourceData.push(sname);

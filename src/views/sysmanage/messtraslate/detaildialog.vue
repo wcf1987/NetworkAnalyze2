@@ -63,7 +63,7 @@
                 <el-form-item label="转换模式" prop="Optional">
                   <el-select v-model="state.ruleForm.Optional" placeholder="请选择" clearable
                              class="w100">
-                    <el-option label="默认值" value="默认值"></el-option>
+                    <el-option label="直接赋值" value="直接赋值"></el-option>
                     <el-option label="直接转换" value="直接转换"></el-option>
 
                     <el-option label="自定义转换计算" value="自定义转换计算"></el-option>
@@ -73,7 +73,7 @@
               </el-col>
 
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
-                      v-if="state.ruleForm.Optional=='默认值'">
+                      v-if="state.ruleForm.Optional=='直接赋值'">
                 <el-form-item label="默认值" prop="Transrule">
                   <el-input v-model="state.ruleForm.Transrule" placeholder="" clearable></el-input>
                 </el-form-item>

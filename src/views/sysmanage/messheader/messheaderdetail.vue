@@ -313,7 +313,7 @@ const getTableData = (type) => {
     console.log(state.tableData.param.pageNum);
     state.tableData.param.pageNum = Math.ceil((state.tableData.total + 1) / state.tableData.param.pageSize);
   }
-  messdetailApi().searchMessDetail(
+  messdetailApi().searchMessDetailName(
       {
         uid: 1,
         pid: state.tableData.id,

@@ -52,7 +52,13 @@ export function messdetailApi() {
                 data,
             });
         },
-
+        searchMessDetailName: (data: object) => {
+            return request({
+                url: '/messdetail/searchName',
+                method: 'post',
+                data,
+            });
+        },
 
 
         getMessHeaderDetailSearchListSize: (data: object) => {
