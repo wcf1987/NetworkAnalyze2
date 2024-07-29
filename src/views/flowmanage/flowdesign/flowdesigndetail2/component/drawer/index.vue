@@ -40,13 +40,13 @@ const state = reactive({
 });
 
 // 打开抽屉
-const open = (item, lf) => {
+const open = (item, lf,flowType) => {
   state.isOpen = true;
   state.nodeData = item;
 
 
   if (item.type === 'bezier') lineRef.value.getParentData(item, lf);
-  else nodeRef.value.getParentData(item, lf);
+  else nodeRef.value.getParentData(item, lf,flowType);
 
 
 };

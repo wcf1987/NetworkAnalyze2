@@ -63,11 +63,11 @@
                   </template>
                   <el-card style="font-size:14px">
                     <p class="text item">{{ `流程编排类型：${state.FlowType} ` }}</p>
-                    <p class="text item">{{ `消息头解析格式： ${state.headerParseName} ` }}</p>
-                    <p class="text item">{{ `消息体解析格式： ${state.bodyPaserName} ` }}</p>
-                    <p class="text item">{{ `转换规则： ${state.transName} ` }}</p>
-                    <p class="text item">{{ `消息体封装格式： ${state.bodyEncapName} ` }}</p>
-                    <p class="text item">{{ `消息头封装格式：${state.headerEncapName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `消息头解析格式： ${state.headerParseName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `消息体解析格式： ${state.bodyPaserName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `转换规则： ${state.transName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `消息体封装格式： ${state.bodyEncapName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `消息头封装格式：${state.headerEncapName} ` }}</p>
                     <p class="text item">{{ `源IP/端口： ${state.SourceIPAndPort} ` }}</p>
                     <p class="text item">{{ `本机地址IP/端口： ${state.LocalIPAndPort} ` }}</p>
                     <p class="text item">{{ `目的IP/端口： ${state.TargetIPAndPort} ` }}</p>
@@ -844,7 +844,7 @@ function render() {
 
 function LfEvent() {
   lf.value.on('node:click', ({data}) => {
-    drawerRef.value.open(data, lf.value);
+    drawerRef.value.open(data, lf.value,state.FlowType);
     console.log('node:click', data)
   })
   lf.value.on('edge:click', ({data}) => {
@@ -1140,7 +1140,7 @@ const onCurrentNodeClick = (contextMenuClickId, item: any) => {
     lf.value.deleteNode(item.id);
   }
   if (contextMenuClickId == 0) {
-    drawerRef.value.open(item, lf.value);
+    drawerRef.value.open(item, lf.value,state.FlowType);
   }
 };
 
@@ -1187,7 +1187,7 @@ const onToolClick = (fnName: String) => {
     case 'editProp':
       const GraphConfigData = lf.value.getSelectElements(false);
       //GraphConfigData.nodes[0];
-      drawerRef.value.open(GraphConfigData.nodes[0], lf.value);
+      drawerRef.value.open(GraphConfigData.nodes[0], lf.value,state.FlowType);
       break;
     case 'zoomIn':
       //const { transformModel1 }=lf.value.graphModel;

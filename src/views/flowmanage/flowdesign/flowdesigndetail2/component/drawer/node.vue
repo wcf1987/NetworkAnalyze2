@@ -37,14 +37,14 @@
 
         <div class="customproper" v-if="state.showFlag['start']">
           <el-form-item label="接口类型">
-            <el-select v-model="state.properForm.interfacetype" placeholder="请选择" clearable
+            <el-select v-model="state.properForm.interfacetype" placeholder="请选择" clearable :disabled="state.flowtype=='网络层透明传输'"
                        class="w100">
               <el-option label="网口" value="网口"></el-option>
               <el-option label="串口" value="串口"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="数据类型" prop="dataType">
-            <el-select v-model="state.properForm.dataType" placeholder="请选择" clearable
+            <el-select v-model="state.properForm.dataType" placeholder="请选择" clearable :disabled="state.flowtype=='网络层透明传输'"
 
                        class="w100">
               <el-option
@@ -204,7 +204,7 @@
                 </el-button>
               </el-col>
             </el-form-item>
-            <el-form-item label="消息封装" prop="messPackProperty">
+            <el-form-item label="消息封装" prop="messPackProperty" v-if="state.flowtype!='网络层透明传输'">
               <el-select v-model="v.messPackProperty" placeholder="请选择" clearable
 
                          class="w100">
@@ -216,7 +216,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="转发SOCK" prop="reForwardSocket">
+            <el-form-item label="转发SOCK" prop="reForwardSocket" v-if="state.flowtype!='网络层透明传输'">
               <el-select v-model="v.reForwardSocket" placeholder="请选择" clearable
 
                          class="w100">
@@ -558,6 +558,7 @@ const MessTraslateOptions = ref();
 const state = reactive({
   node: {},
   lf: '',
+  flowtype:'',
   nodeRules: {
     name: [{required: true, message: '请输入名称', trigger: 'blur'}],
   },
@@ -625,11 +626,12 @@ const changeSourceInput22 = (fo) => {
 
 }
 // 获取父组件数据
-const getParentData = (data, lf) => {
+const getParentData = (data, lf,flowtype) => {
 
   clearFlag();
   state.tabsActive = '1';
   state.node = data;
+  state.flowtype=flowtype;
   if (data.text == null) {
     state.proper.name = '';
   } else {
@@ -656,6 +658,9 @@ const getParentData = (data, lf) => {
     // console.log('start');
     if (state.properForm.dataType == null || state.properForm.dataType == '') {
       state.properForm.dataType = '通用数据'
+    }
+    if (state.flowtype=='网络层透明传输') {
+      state.properForm.interfacetype = '网口'
     }
     getNetwork();
     getSerial();
