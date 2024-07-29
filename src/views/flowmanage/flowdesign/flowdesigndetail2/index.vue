@@ -215,14 +215,14 @@ const getFlowFromDB = () => {
 }
 const createFlowFromStr = (flowstr, flowOutStr) => {
   console.log(flowOutStr)
-  state.SourceIPAndPort = flowOutStr.stateShow.SourceIPAndPort;
-  state.LocalIPAndPort = flowOutStr.stateShow.LocalIPAndPort;
-  state.TargetIPAndPort = flowOutStr.stateShow.TargetIPAndPort;
-  state.headerParseName = flowOutStr.stateShow.headerParseName;
-  state.bodyPaserName = flowOutStr.stateShow.bodyPaserName;
-  state.bodyEncapName = flowOutStr.stateShow.bodyEncapName;
-  state.headerEncapName = flowOutStr.stateShow.headerEncapName;
-  state.transName = flowOutStr.stateShow.transName;
+  state.SourceIPAndPort = flowstr.stateShow.SourceIPAndPort;
+  state.LocalIPAndPort = flowstr.stateShow.LocalIPAndPort;
+  state.TargetIPAndPort = flowstr.stateShow.TargetIPAndPort;
+  state.headerParseName = flowstr.stateShow.headerParseName;
+  state.bodyPaserName = flowstr.stateShow.bodyPaserName;
+  state.bodyEncapName = flowstr.stateShow.bodyEncapName;
+  state.headerEncapName = flowstr.stateShow.headerEncapName;
+  state.transName = flowstr.stateShow.transName;
   lf.value.render(flowstr);
   //LfEvent();
   for (let i = 0; i < flowstr.nodes.length; i++) {
@@ -273,6 +273,7 @@ const saveScript = (grajson) => {
     delete nodet.y;
     let tt = nodet.properties;
     if (nodet.type == 'start') {
+      nodet.type="sourcenode";
       if (nodet.properties.interfacetype == '网口') {
         if (tt.sourecenetworkIP != null && tt.sourecenetworkIP != '') {
           state.SourceIPAndPort = tt.sourecenetworkIP;
@@ -289,10 +290,8 @@ const saveScript = (grajson) => {
         }
         nodet.properties = {};
         nodet.properties.interfacetype = '网口'
-        nodet.properties.sourecenetworkID = tt.sourecenetworkID;
         nodet.properties.sourecenetworkIP = tt.sourecenetworkIP;
         nodet.properties.sourecenetworkPort = tt.sourecenetworkPort;
-        nodet.properties.localnetworkID = tt.localnetworkID;
         nodet.properties.IP = tt.sourecenetworkIP;
         nodet.properties.Port = tt.sourecenetworkPort;
 
@@ -310,6 +309,7 @@ const saveScript = (grajson) => {
 
     }
     if (nodet.type == 'end') {
+      nodet.type="destnode";
       if (nodet.properties.interfacetype == '网口') {
         if (tt.IPlist != null && tt.IPlist != {}) {
 
@@ -317,7 +317,7 @@ const saveScript = (grajson) => {
             if(state.TargetIPAndPort=='-'){
               state.TargetIPAndPort=''
             }
-            console.log(z);
+    //            console.log(z);
             state.TargetIPAndPort = z.IP + ":" + z.Port + '|' + state.TargetIPAndPort;
           }
         }
@@ -328,6 +328,7 @@ const saveScript = (grajson) => {
 
 
       }
+
       if (nodet.properties.interfacetype == '串口') {
 
 
@@ -338,6 +339,16 @@ const saveScript = (grajson) => {
         nodet.properties.serialID = tt.serialID;
 
       }
+
+    }
+    if (nodet.type == 'first') {
+      nodet.type = "start";
+      delete nodet.properties;
+
+    }
+    if (nodet.type == 'dest') {
+      nodet.type = "end";
+      delete nodet.properties;
 
     }
     if (nodes[i].type == 'pacparse') {
@@ -523,6 +534,16 @@ const saveScript = (grajson) => {
     headerEncapName: state.headerEncapName,
     transName: state.transName
   }
+  if(state.FlowType=='网络层透明传输'){
+    grajson.flowtype=1;
+  }if(state.FlowType=='应用层透明传输'){
+    grajson.flowtype=2;
+  }if(state.FlowType=='混合编排'){
+    grajson.flowtype=3;
+  }if(state.FlowType=='指定流程'){
+    grajson.flowtype=4;
+  }
+
   console.log(grajson);
   return grajson;
 }
@@ -560,7 +581,8 @@ const saveFlow = () => {
     state.checkGraph = true;
   }
   let scripts = saveScript(s2);
-
+  flowGraphStr.stateShow=scripts.stateShow;
+  delete scripts.stateShow;
   let data = JSON.stringify(flowGraphStr)
   let data2 = JSON.stringify(scripts)
   //const { href, filename } = setEncoded(type.toUpperCase(), name, data)
@@ -1271,7 +1293,11 @@ const onToolHelp = () => {
 const onToolDownload = () => {
   const {globalTitle} = themeConfig.value;
   let flowGraphStr = lf.value.getGraphData();
-  const href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(flowGraphStr, null, '\t'));
+  let s2 = JSON.parse(JSON.stringify(flowGraphStr));
+
+  let scripts = saveScript(s2);
+  delete scripts.stateShow;
+  const href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scripts, null, '\t'));
   const aLink = document.createElement('a');
   aLink.setAttribute('href', href);
   aLink.setAttribute('download', `流程脚本.json`);
