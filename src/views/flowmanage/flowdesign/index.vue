@@ -166,6 +166,7 @@ import flowpng2 from '/@/assets/flow2.png';
 import flowpng3 from '/@/assets/flow3.png';
 import flowpng4 from '/@/assets/flow4.png';
 import {gatewayApi} from "/@/api/distribution/gateway";
+import {transclassfyApi} from "/@/api/transmanage/transclassfy";
 
 const flowimg = ref(flowdesignimg);
 const flowimg1 = ref(flowpng1);
@@ -180,6 +181,9 @@ const router = useRouter();
 const state = reactive({
   tableDataDistribute: {
     data: []
+  },
+  tableDataTransTemplate:{
+    data:[]
   },
   tableData: {
     data: [],
@@ -349,6 +353,7 @@ const onHandleCurrentChange = (val: number) => {
   state.tableData.param.pageNum = val;
   getTableData();
 };
+
 
 const onRowCopy = (row: RowUserType) => {
   const stores = useUserInfo();

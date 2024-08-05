@@ -155,6 +155,7 @@ import flowpng1 from '/@/assets/flow1.png';
 import flowpng2 from '/@/assets/flow2.png';
 import flowpng3 from '/@/assets/flow3.png';
 import flowpng4 from '/@/assets/flow4.png';
+import {flowdistributionApi} from "/@/api/distribution/flowdistribution";
 
 const gateimg = ref(gateassimg);
 const isHide = ref(false);
@@ -440,17 +441,51 @@ const disflow = () => {
         ElMessage.warning('您需要先配置网关，才能下发流程');
         return
   }
+
+  disFlowDMP();
+
   state.gateway.DisPercentage = 0
   setTimeout(() => {
     state.gateway.DisPercentage = 25
   }, 400);
-  setTimeout(() => {
-    state.gateway.DisPercentage = 100
-  }, 550);
 
-  setTimeout(() => {
-    ElMessage.success('下发成功');
-  }, 700);
+
+}
+const disFlowDMP = () => {
+
+  ElMessageBox.confirm('你确定下发流程？', '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+      .then(() => {
+        gatewayApi().dispatch(
+            {
+              gatewayid: state.gateway.ID,
+
+            })
+            .then(res => {
+              //console.log(res);
+              if (res.code == '200') {
+
+                ElMessage.success('下发成功');
+                //getTableData();
+                state.gateway.DisPercentage = 100
+
+              } else {
+                ElMessage.error(res.message);
+              }
+
+            }).catch(err => {
+
+        }).finally(() => {
+
+        });
+
+
+      })
+      .catch(() => {
+      });
 }
 // 初始化目的消息体表格数据
 const getTableDataFlow = async () => {

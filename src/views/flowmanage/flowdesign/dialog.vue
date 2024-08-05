@@ -20,7 +20,15 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-
+                  <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20" v-if="state.dialog.title=='新增'">
+                    <el-form-item label="选择模板" prop="templateID">
+                      <el-cascader v-model="state.ruleForm.templateID" :options="state.tableDataTransTemplate.data"
+                                   :props="props21"
+                                   @change="changeSourceInput21"
+                                   clearable
+                                   style="width: 300px; " collapse-tags />
+                    </el-form-item>
+                  </el-col>
 
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
                         <el-form-item label="用户描述" prop="Describes">
@@ -56,6 +64,13 @@
             {min: 1, max: 10, message: '名称长度为1 - 10位'},
         ],
     });
+    const props21 = {
+      multiple: false,
+      expandTrigger: 'hover',
+      value: 'ID',
+      label: 'Name',
+      emitPath: false,
+    }
     const state = reactive({
         ruleForm: {
             Name: '', // 账户名称
@@ -71,6 +86,9 @@
             Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
             Type: [{required: true, message: '请选择类型', trigger: 'change'}],
         },
+      tableDataTransTemplate:{
+          data:[]
+      },
         dialog: {
             isShowDialog: false,
             type: '',
@@ -93,6 +111,7 @@
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
+            getTransTemplate();
             // 清空表单，此项需加表单验证才能使用
             nextTick(() => {
                 userDialogFormRef.value.resetFields();
@@ -100,6 +119,29 @@
         }
 
         //getMenuData();
+    };
+    const getTransTemplate = () => {
+
+      transclassfyApi()
+          .searchWithChildren({
+            uid: 1,
+            pageNum: 1,
+            pageSize: 1000,
+            name: ''
+          })
+          .then((res) => {
+            //console.log(res);
+            if (res.code == '200') {
+              state.tableDataTransTemplate.data = res.data;
+            } else {
+              ElMessage.error(res.message);
+            }
+          })
+          .catch((err) => {})
+          .finally(() => {});
+      //const data = [];
+
+
     };
     // 关闭弹窗
     const closeDialog = () => {
@@ -110,6 +152,7 @@
         closeDialog();
     };
         import {useUserInfo} from "/@/stores/userInfo";
+    import {transclassfyApi} from "/@/api/transmanage/transclassfy";
     // 提交
     const onSubmit = () => {
                  userDialogFormRef.value.validate((valid) => {

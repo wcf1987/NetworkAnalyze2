@@ -81,6 +81,14 @@ export function gatewayApi() {
                 data,
             });
         },
+        dispatch: (data: object) => {
+            return request({
+                url: '/gateway/dispatch',
+                method: 'post',
+                data,
+            });
+        },
+
 
 
         getPackageDetailSearchListSize: (data: object) => {

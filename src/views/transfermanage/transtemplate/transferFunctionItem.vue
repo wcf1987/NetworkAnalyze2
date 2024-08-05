@@ -44,6 +44,7 @@ const onSearch = () => {
   getTableData();
 };
 //应用模板至流程编排
+//废弃接口
 const onTemplateApply = (v) => {
   const stores = useUserInfo();
   const flowName = '';
@@ -100,6 +101,7 @@ const onTableItemClick = (v) => {
     query: {ID: v.ID, FlowName: v.Name, Type: v.Type},
   });
 };
+//删除模板
 const onRowDel = (row: RowUserType) => {
   ElMessageBox.confirm(`此操作将永久删除：“${row.Name}”，是否继续?`, '提示', {
     confirmButtonText: '确认',
