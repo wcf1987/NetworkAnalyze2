@@ -113,6 +113,12 @@ export const ReForwardSocket = [
     {id: 1, label: '原有SOCKET', value: '原有SOCKET'},
     {id: 2, label: '默认地址的SOCKET', value: '默认地址的SOCKET'},
 ];
+export const IPType=[
+    {id: 0, label: '通用地址', value: '通用地址'},
+    {id: 1, label: '网管', value: '网管'},
+
+    {id: 2, label: '端机', value: '端机'},
+];
 export const VarType = [
     {id: 0, label: '消息标识', value: '消息标识'},
     {id: 1, label: '数据字段', value: '数据字段'},

@@ -9,6 +9,12 @@ import { flowApi } from '/@/api/flowmanage/flow';
 const UserDialog = defineAsyncComponent(() => import('/@/views/transfermanage/transtemplate/dialog.vue'));
 
 const userDialogRef = ref();
+const ApplyDialog = defineAsyncComponent(() => import('/@/views/transfermanage/transtemplate/applydialog.vue'));
+
+const applyDialogRef = ref();
+
+
+
 const emit = defineEmits(['refresh']);
 const refreshUI = () => {
 	emit('refresh');
@@ -64,7 +70,9 @@ const onOpenAdd = (type: string) => {
 const onOpenEdit = (type: string, row: RowUserType) => {
     userDialogRef.value.openDialog(type, row);
 };
-
+const onOpenApply = (type: string, row: RowUserType) => {
+    applyDialogRef.value.openDialog("add", row);
+};
 const onSearch = () => {
 	state.tableData.searchStr = state.tableData.search;
 	getTableData();
@@ -109,8 +117,9 @@ onMounted(() => {
 <template>
 	<div class="transferHomeWrapper">
 		<el-button type="primary" class="add-button" @click.stop="onOpenAdd('add')" :icon="Plus"> 新建模板 </el-button>
-		<TransferFunctionItem :onOpenEdit="onOpenEdit" v-for="item in state.tableData.data" :name="item.Name" :id="item.ID" :children="item.children" @refresh="getTableData()" />
+		<TransferFunctionItem :onOpenApply="onOpenApply" :onOpenEdit="onOpenEdit" v-for="item in state.tableData.data" :name="item.Name" :id="item.ID" :children="item.children" @refresh="getTableData()" />
 		<UserDialog ref="userDialogRef" :transferList="state.tableData.data" @refresh="refreshUI()" />
+    <ApplyDialog ref="applyDialogRef" :transferList="state.tableData.data" @refresh="refreshUI()" />
 	</div>
 </template>
 <style lang="scss" scoped>

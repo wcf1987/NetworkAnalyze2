@@ -543,7 +543,7 @@ const saveScript = (grajson) => {
   }if(state.FlowType=='指定流程'){
     grajson.flowtype=4;
   }
-
+  grajson.flowid=state.ID;
   console.log(grajson);
   return grajson;
 }

@@ -537,6 +537,31 @@ const initNodes = () => {
   console.log("初始化转化目的连接");
 
 };
+const makeNodesUnDrag = () => {
+  console.log("禁止节点拖拽");
+
+
+  for (let k of state.tableDataFlowShow) {
+    let slist = k.SourceIPList;
+    let tlist = k.TargetIPList;
+    let mflow = "MFlow_" + k.ID;
+    let elem = document.getElementById(mflow);
+
+    state.jsPlumb.setSourceEnabled(elem, false)
+
+    state.jsPlumb.setTargetEnabled(elem, false)
+    for (let i = 0; i < slist.length; i++) {
+      elem = document.getElementById(slist[i].ID);
+
+      state.jsPlumb.setSourceEnabled(elem, false)
+    }
+    for (let i = 0; i < tlist.length; i++) {
+      state.jsPlumb.setTargetEnabled(elem, false)
+    }
+  }
+
+
+};
 // 初始化具体节点
 const initLeaf = (row, type) => {
   const ins = state.jsPlumb;
@@ -657,6 +682,7 @@ const updatetableDataFlowShow = () => {
   nextTick(() => {
     initNodes();
     initConn();
+      makeNodesUnDrag();
     //makeNodesUnable();
   });
 

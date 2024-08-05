@@ -72,14 +72,14 @@
           <el-form-item label="源地址" prop="sourecenetworkIP"
                         v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''">
             <el-input v-model="state.properForm.sourecenetworkIP" placeholder="请输入源地址ip地址" clearable
-                      :readonly=" state.properForm.sourecenetworkID!='-1'"
+
             ></el-input>
           </el-form-item>
           <el-form-item label="源端口" prop="sourecenetworkPort"
                         v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''"
           >
             <el-input v-model="state.properForm.sourecenetworkPort" placeholder="请输入源地址端口" clearable
-                      :readonly=" state.properForm.sourecenetworkID!='-1'"></el-input>
+                     ></el-input>
           </el-form-item>
 
           <el-form-item label="串口信息" prop="serialID" v-if="state.properForm.interfacetype=='串口'">
@@ -119,13 +119,13 @@
           <el-form-item label="本地地址" prop="IP"
                         v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
             <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable
-                      :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
+                     ></el-input>
           </el-form-item>
           <el-form-item label="本地端口" prop="Port"
                         v-if="state.properForm.interfacetype=='网口' "
                         :readonly=" state.properForm.localnetworkID!='-1'">
             <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable
-                      :readonly=" state.properForm.localnetworkID!='-1'"></el-input>
+                      ></el-input>
           </el-form-item>
 
         </div>
@@ -222,6 +222,18 @@
                          class="w100">
                 <el-option
                     v-for="item in reForwardSocket"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="IP类型" prop="ipType" v-if="state.flowtype!='网络层透明传输' && state.flowtype!='应用层透明传输'">
+              <el-select v-model="v.ipType" placeholder="请选择" clearable
+
+                         class="w100">
+                <el-option
+                    v-for="item in ipType"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -525,7 +537,7 @@ import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messdetailApi} from "/@/api/sysmanage/messdetail";
 
-import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType,FilterType} from '/@/utils/common';
+import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType,FilterType,IPType} from '/@/utils/common';
 
 const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
 const translateDialogRef = ref();
@@ -547,6 +559,7 @@ const actionType = ref(ActionType);
 const filterType = ref(FilterType);
 const messPackProperty = ref(MessPackProperty);
 const reForwardSocket = ref(ReForwardSocket);
+const ipType = ref(IPType);
 const VarTypeOptions = ref(VarType);
 const NetworkOptions = ref();
 const NetworkLocalOptions = ref();
