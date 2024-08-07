@@ -385,7 +385,7 @@ const onRowDownload = (row: RowUserType) => {
   downloadProcess(row, 'txt', '流程脚本');
 }
 async function downloadProcess(row, type, name = '流程脚本') {
-  let data = row.FlowJson
+  let data = row.FlowOutStr
   const {href, filename} = setEncoded('json', name, data)
   //      console.log(data)
   downloadFile(href, filename)

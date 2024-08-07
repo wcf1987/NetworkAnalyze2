@@ -63,11 +63,16 @@
                   </template>
                   <el-card style="font-size:14px">
                     <p class="text item">{{ `流程编排类型：${state.FlowType} ` }}</p>
-                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `消息头解析格式： ${state.headerParseName} ` }}</p>
-                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `消息体解析格式： ${state.bodyPaserName} ` }}</p>
-                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `转换规则： ${state.transName} ` }}</p>
-                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `消息体封装格式： ${state.bodyEncapName} ` }}</p>
-                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">{{ `消息头封装格式：${state.headerEncapName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">
+                      {{ `消息头解析格式： ${state.headerParseName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">
+                      {{ `消息体解析格式： ${state.bodyPaserName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">
+                      {{ `转换规则： ${state.transName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">
+                      {{ `消息体封装格式： ${state.bodyEncapName} ` }}</p>
+                    <p class="text item" v-if="state.FlowType=='混合编排' || state.FlowType=='混合编排' ">
+                      {{ `消息头封装格式：${state.headerEncapName} ` }}</p>
                     <p class="text item">{{ `源IP/端口： ${state.SourceIPAndPort} ` }}</p>
                     <p class="text item">{{ `本机地址IP/端口： ${state.LocalIPAndPort} ` }}</p>
                     <p class="text item">{{ `目的IP/端口： ${state.TargetIPAndPort} ` }}</p>
@@ -158,6 +163,7 @@ import timericon from '/@/assets/svgicon/timer.svg';
 import delayedicon from '/@/assets/svgicon/delayed.svg';
 import messqueicon from '/@/assets/svgicon/messque.svg';
 import filtericon from '/@/assets/svgicon/filter.svg';
+
 const router = useRouter();
 
 const activeNames = ref(['1'])
@@ -215,14 +221,16 @@ const getFlowFromDB = () => {
 }
 const createFlowFromStr = (flowstr, flowOutStr) => {
   console.log(flowOutStr)
-  state.SourceIPAndPort = flowstr.stateShow.SourceIPAndPort;
-  state.LocalIPAndPort = flowstr.stateShow.LocalIPAndPort;
-  state.TargetIPAndPort = flowstr.stateShow.TargetIPAndPort;
-  state.headerParseName = flowstr.stateShow.headerParseName;
-  state.bodyPaserName = flowstr.stateShow.bodyPaserName;
-  state.bodyEncapName = flowstr.stateShow.bodyEncapName;
-  state.headerEncapName = flowstr.stateShow.headerEncapName;
-  state.transName = flowstr.stateShow.transName;
+  if ('stateShow' in flowstr) {
+    state.SourceIPAndPort = flowstr.stateShow.SourceIPAndPort;
+    state.LocalIPAndPort = flowstr.stateShow.LocalIPAndPort;
+    state.TargetIPAndPort = flowstr.stateShow.TargetIPAndPort;
+    state.headerParseName = flowstr.stateShow.headerParseName;
+    state.bodyPaserName = flowstr.stateShow.bodyPaserName;
+    state.bodyEncapName = flowstr.stateShow.bodyEncapName;
+    state.headerEncapName = flowstr.stateShow.headerEncapName;
+    state.transName = flowstr.stateShow.transName;
+  }
   lf.value.render(flowstr);
   //LfEvent();
   for (let i = 0; i < flowstr.nodes.length; i++) {
@@ -273,7 +281,7 @@ const saveScript = (grajson) => {
     delete nodet.y;
     let tt = nodet.properties;
     if (nodet.type == 'start') {
-      nodet.type="sourcenode";
+      nodet.type = "sourcenode";
       if (nodet.properties.interfacetype == '网口') {
         if (tt.sourecenetworkIP != null && tt.sourecenetworkIP != '') {
           state.SourceIPAndPort = tt.sourecenetworkIP;
@@ -309,15 +317,15 @@ const saveScript = (grajson) => {
 
     }
     if (nodet.type == 'end') {
-      nodet.type="destnode";
+      nodet.type = "destnode";
       if (nodet.properties.interfacetype == '网口') {
         if (tt.IPlist != null && tt.IPlist != {}) {
 
           for (let z of tt.IPlist) {
-            if(state.TargetIPAndPort=='-'){
-              state.TargetIPAndPort=''
+            if (state.TargetIPAndPort == '-') {
+              state.TargetIPAndPort = ''
             }
-    //            console.log(z);
+            //            console.log(z);
             state.TargetIPAndPort = z.IP + ":" + z.Port + '|' + state.TargetIPAndPort;
           }
         }
@@ -534,16 +542,20 @@ const saveScript = (grajson) => {
     headerEncapName: state.headerEncapName,
     transName: state.transName
   }
-  if(state.FlowType=='网络层透明传输'){
-    grajson.flowtype=1;
-  }if(state.FlowType=='应用层透明传输'){
-    grajson.flowtype=2;
-  }if(state.FlowType=='混合编排'){
-    grajson.flowtype=3;
-  }if(state.FlowType=='指定流程'){
-    grajson.flowtype=4;
+  if (state.FlowType == '网络层透明传输') {
+    grajson.flowtype = 1;
   }
-  grajson.flowid=state.ID;
+  if (state.FlowType == '应用层透明传输') {
+    grajson.flowtype = 2;
+  }
+  if (state.FlowType == '混合编排') {
+    grajson.flowtype = 3;
+  }
+  if (state.FlowType == '指定流程') {
+    grajson.flowtype = 4;
+  }
+  grajson.flowid = state.ID;
+  grajson.flowname=state.FlowName;
   console.log(grajson);
   return grajson;
 }
@@ -581,7 +593,7 @@ const saveFlow = () => {
     state.checkGraph = true;
   }
   let scripts = saveScript(s2);
-  flowGraphStr.stateShow=scripts.stateShow;
+  flowGraphStr.stateShow = scripts.stateShow;
   delete scripts.stateShow;
   let data = JSON.stringify(flowGraphStr)
   let data2 = JSON.stringify(scripts)
@@ -597,8 +609,8 @@ const saveFlow = () => {
         FlowJson: encodedData,
         FlowOutStr: data2,
         CheckGraph: state.checkGraph,
-        SourceIP:state.SourceIPAndPort,
-        TargetIP:state.TargetIPAndPort
+        SourceIP: state.SourceIPAndPort,
+        TargetIP: state.TargetIPAndPort
       }
   )
       .then(res => {
@@ -866,7 +878,7 @@ function render() {
 
 function LfEvent() {
   lf.value.on('node:click', ({data}) => {
-    drawerRef.value.open(data, lf.value,state.FlowType);
+    drawerRef.value.open(data, lf.value, state.FlowType);
     console.log('node:click', data)
   })
   lf.value.on('edge:click', ({data}) => {
@@ -973,10 +985,14 @@ const initLeftNavList = () => {
     state.leftNavList = leftNavListSimple;
 
   } else {
-    if (state.Type == '应用层透明传输') {
+    if (state.Type == 'XXX') {
       state.leftNavList = leftNavListSimpleApp;
 
     } else {
+      if (state.Type == '应用层透明传输') {
+        state.leftNavList = leftNavListSimpleApp;
+
+      }
       if (state.Type == '指定流程') {
         state.leftNavList = leftNavListSpecial;
       }
@@ -997,7 +1013,9 @@ const initLeftNavList = () => {
             if (res.code == '200') {
 
               let convlist = state.leftNavList[3];
-
+              if(state.Type == '应用层透明传输'){
+                return;
+              }
               convlist.children = new Array();
               for (let i = 0, k = 0; k < res.data.length; k++) {
                 if (res.data[k].Type == '内置转换节点') {
@@ -1028,7 +1046,7 @@ const initLeftNavList = () => {
                 }
 
               }
-            //  scrollbar.update();
+              //  scrollbar.update();
 
             } else {
               ElMessage.error(res.message);
@@ -1065,7 +1083,7 @@ const initLeftNavList = () => {
 
                 }
                 if (res.data[k].Type == '数据统计节点') {
-                       convlist.children.push({
+                  convlist.children.push({
                     icon: statisticsicon,
                     name: res.data[k].Name,
                     type: 'statistics',
@@ -1075,7 +1093,7 @@ const initLeftNavList = () => {
 
                 }
                 if (res.data[k].Type == '定时器节点') {
-                convlist.children.push({
+                  convlist.children.push({
                     icon: timericon,
                     name: res.data[k].Name,
                     type: 'timer',
@@ -1084,7 +1102,7 @@ const initLeftNavList = () => {
                   })
                 }
                 if (res.data[k].Type == '延时器节点') {
-                 convlist.children.push({
+                  convlist.children.push({
                     icon: delayedicon,
                     name: res.data[k].Name,
                     type: 'delayed',
@@ -1092,8 +1110,8 @@ const initLeftNavList = () => {
                     descrip: res.data[k].Describes,
                   })
                 }
-                   if (res.data[k].Type == '消息队列节点') {
-                 convlist.children.push({
+                if (res.data[k].Type == '消息队列节点') {
+                  convlist.children.push({
                     icon: messqueicon,
                     name: res.data[k].Name,
                     type: 'messque',
@@ -1101,8 +1119,8 @@ const initLeftNavList = () => {
                     descrip: res.data[k].Describes,
                   })
                 }
-                                if (res.data[k].Type == '过滤器节点') {
-                 convlist.children.push({
+                if (res.data[k].Type == '过滤器节点') {
+                  convlist.children.push({
                     icon: filtericon,
                     name: res.data[k].Name,
                     type: 'filter',
@@ -1162,7 +1180,7 @@ const onCurrentNodeClick = (contextMenuClickId, item: any) => {
     lf.value.deleteNode(item.id);
   }
   if (contextMenuClickId == 0) {
-    drawerRef.value.open(item, lf.value,state.FlowType);
+    drawerRef.value.open(item, lf.value, state.FlowType);
   }
 };
 
@@ -1209,7 +1227,7 @@ const onToolClick = (fnName: String) => {
     case 'editProp':
       const GraphConfigData = lf.value.getSelectElements(false);
       //GraphConfigData.nodes[0];
-      drawerRef.value.open(GraphConfigData.nodes[0], lf.value,state.FlowType);
+      drawerRef.value.open(GraphConfigData.nodes[0], lf.value, state.FlowType);
       break;
     case 'zoomIn':
       //const { transformModel1 }=lf.value.graphModel;
