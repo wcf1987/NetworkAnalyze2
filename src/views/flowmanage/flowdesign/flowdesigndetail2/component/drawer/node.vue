@@ -253,7 +253,7 @@
 
         <div class="customproper" v-if="state.showFlag['pacparse']">
           <el-form-item label="头部选择">
-            <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable
+            <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, PackageOptions)"
                        class="w100">
               <el-option
                   v-for="item in PackageOptions"
@@ -591,6 +591,7 @@ const state = reactive({
   },
   properForm: {
     type: "",
+    tempData:""
   },
   tabsActive: '0',
   loading: {
@@ -608,7 +609,10 @@ const props21 = {
   label: 'Name',
   emitPath: true
 }
-
+const saveTempData=(val,options)=>{
+  console.log(val);
+  console.log(options);
+}
 const checkIP = (val) => {
    // ele.value = onlyNumOnePoint(val);
    if (/^(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/.test(val) == false) {
@@ -1511,6 +1515,10 @@ const onExtendSubmit = () => {
         return;
       }
       const nodeModel = state.lf.getNodeModelById(state.node.id);
+      if(state.properForm.tempData!=''){
+        state.properForm.nodeData=state.properForm.tempData;
+        delete state.properForm.tempData;
+      }
       nodeModel.updateText(state.proper.name);
       nodeModel.setProperties(state.properForm);
 
