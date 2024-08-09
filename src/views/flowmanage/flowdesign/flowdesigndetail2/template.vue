@@ -1024,7 +1024,7 @@ const initLeftNavList = () => {
                   convlist.children[i] = {
                     icon: inpac,
                     name: res.data[k].Name,
-                    type: 'conver',
+                    type: 'inpac',
                     id: res.data[k].ID,
                     descrip: res.data[k].Desc,
                   }

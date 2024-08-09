@@ -5,7 +5,7 @@
 
     <el-scrollbar>
       <el-form :model="state.form" ref="extendFormRef" size="default" label-width="80px"
-               class="pt15 pr15 pb15 pl15">
+               class="pt15 pr15 pb15 pl15" >
         <el-form-item label="数据id" prop="id" v-if="false">
           <el-input v-model="state.node.id" placeholder="请输入数据id" clearable disabled></el-input>
         </el-form-item>
@@ -37,14 +37,16 @@
 
         <div class="customproper" v-if="state.showFlag['start']">
           <el-form-item label="接口类型">
-            <el-select v-model="state.properForm.interfacetype" placeholder="请选择" clearable :disabled="state.flowtype=='网络层透明传输'"
+            <el-select v-model="state.properForm.interfacetype" placeholder="请选择" clearable
+                       :disabled="state.flowtype=='网络层透明传输'"
                        class="w100">
               <el-option label="网口" value="网口"></el-option>
               <el-option label="串口" value="串口"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="数据类型" prop="dataType">
-            <el-select v-model="state.properForm.dataType" placeholder="请选择" clearable :disabled="state.flowtype=='网络层透明传输'"
+            <el-select v-model="state.properForm.dataType" placeholder="请选择" clearable
+                       :disabled="state.flowtype=='网络层透明传输'"
 
                        class="w100">
               <el-option
@@ -79,7 +81,7 @@
                         v-if="state.properForm.interfacetype=='网口' &&state.properForm.sourecenetworkID!=-2 &&state.properForm.sourecenetworkID!=''"
           >
             <el-input v-model="state.properForm.sourecenetworkPort" placeholder="请输入源地址端口" clearable
-                     ></el-input>
+            ></el-input>
           </el-form-item>
 
           <el-form-item label="串口信息" prop="serialID" v-if="state.properForm.interfacetype=='串口'">
@@ -119,13 +121,13 @@
           <el-form-item label="本地地址" prop="IP"
                         v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
             <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable
-                     ></el-input>
+            ></el-input>
           </el-form-item>
           <el-form-item label="本地端口" prop="Port"
                         v-if="state.properForm.interfacetype=='网口' "
                         :readonly=" state.properForm.localnetworkID!='-1'">
             <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable
-                      ></el-input>
+            ></el-input>
           </el-form-item>
 
         </div>
@@ -172,17 +174,19 @@
           </el-form-item>
           <el-row v-for="(v, k) in state.properForm.IPlist" :key="k" class="max-width-row">
             <el-form-item label="目的IP" prop="type"
-                          v-if="state.properForm.interfacetype=='网口'" style="margin-top: 10px">
+                          v-if="state.properForm.interfacetype=='网口'" style="margin-top: 10px"
+
+            >
               <el-col :span="11">
 
-                <el-input v-model="v.IP" placeholder="请输入ip地址" clearable style="font-size: 10px"
+                <el-input v-model="v.IP" placeholder="请输入ip地址" clearable style="font-size: 10px" @change="checkIP"
                 ></el-input>
               </el-col>
               <el-col :span="1" class="text-center">
                 <span style="display:block;text-align: center" class="text-gray-500">:</span>
               </el-col>
               <el-col :span="6">
-                <el-input v-model="v.Port" placeholder="请输入端口" clearable style="font-size: 10px"
+                <el-input v-model="v.Port" placeholder="请输入端口" clearable style="font-size: 10px" @change="checkPort"
                 ></el-input>
               </el-col>
               <el-col :span="1"/>
@@ -228,7 +232,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="IP类型" prop="ipType" v-if="state.flowtype!='网络层透明传输' && state.flowtype!='应用层透明传输'">
+            <el-form-item label="IP类型" prop="ipType" v-if="state.flowtype!='网络层透明传输' ">
               <el-select v-model="v.ipType" placeholder="请选择" clearable
 
                          class="w100">
@@ -537,7 +541,7 @@ import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messdetailApi} from "/@/api/sysmanage/messdetail";
 
-import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType,FilterType,IPType} from '/@/utils/common';
+import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType, FilterType, IPType} from '/@/utils/common';
 
 const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
 const translateDialogRef = ref();
@@ -571,9 +575,9 @@ const MessTraslateOptions = ref();
 const state = reactive({
   node: {},
   lf: '',
-  flowtype:'',
+  flowtype: '',
   nodeRules: {
-    name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+    name: [{required: true, message: '请输入名称', trigger: 'blur'}]
   },
   proper: {
     name: '',
@@ -604,6 +608,26 @@ const props21 = {
   label: 'Name',
   emitPath: true
 }
+
+const checkIP = (val) => {
+   // ele.value = onlyNumOnePoint(val);
+   if (/^(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/.test(val) == false) {
+    //callback(new Error("请输入正确的ip地址"));
+    ElMessage.error("请输入正确的ip地址");
+  } else {
+    //callback();
+  }
+}
+const checkPort = (val) => {
+   // ele.value = onlyNumOnePoint(val);
+     if (/^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(val) == false) {
+       //callback(new Error("请输入正确的ip地址"));
+    ElMessage.error("请输入正确的端口号");
+  } else {
+    //callback();
+  }
+}
+
 const changeSourceInput21 = (fo) => {
   console.log(fo)
   let i = 0, tempstr = ''
@@ -639,12 +663,12 @@ const changeSourceInput22 = (fo) => {
 
 }
 // 获取父组件数据
-const getParentData = (data, lf,flowtype) => {
+const getParentData = (data, lf, flowtype) => {
 
   clearFlag();
   state.tabsActive = '1';
   state.node = data;
-  state.flowtype=flowtype;
+  state.flowtype = flowtype;
   if (data.text == null) {
     state.proper.name = '';
   } else {
@@ -672,7 +696,7 @@ const getParentData = (data, lf,flowtype) => {
     if (state.properForm.dataType == null || state.properForm.dataType == '') {
       state.properForm.dataType = '通用数据'
     }
-    if (state.flowtype=='网络层透明传输') {
+    if (state.flowtype == '网络层透明传输') {
       state.properForm.interfacetype = '网口'
     }
     getNetwork();
@@ -1049,8 +1073,8 @@ const getSourceData = () => {
         if (nodes[i].type == 'filter') {
           //  console.log('swich');
 
-          state.fd=fieldsoptions.value
-          state.gd=globaloptions.value;
+          state.fd = fieldsoptions.value
+          state.gd = globaloptions.value;
         }
       }
       // emitter.emit('Fn', {fd:fieldsoptions.value,gd:globaloptions.value});
