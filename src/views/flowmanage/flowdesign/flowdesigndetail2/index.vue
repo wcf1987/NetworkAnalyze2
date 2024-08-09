@@ -902,7 +902,7 @@ function LfEvent() {
 
   })
   lf.value.on('node:mousemove', ({data}) => {
-    console.log('node:mousemove')
+    //console.log('node:mousemove')
 
   })
   lf.value.on('blank:click', () => {

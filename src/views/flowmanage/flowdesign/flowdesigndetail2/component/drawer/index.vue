@@ -40,14 +40,19 @@ const state = reactive({
 });
 
 // 打开抽屉
-const open = (item, lf,flowType) => {
+const open = (item, lf, flowType) => {
   state.isOpen = true;
   state.nodeData = item;
 
 
-  if (item.type === 'bezier') lineRef.value.getParentData(item, lf);
-  else nodeRef.value.getParentData(item, lf,flowType);
-
+  if (item.type === 'bezier') {
+    setTimeout(() => {
+      // 这里放置你想要延时执行的代码
+      lineRef.value.getParentData(item, lf);
+    }, 300); // 延时2秒执行
+  } else {
+    nodeRef.value.getParentData(item, lf, flowType);
+  }
 
 };
 // 关闭

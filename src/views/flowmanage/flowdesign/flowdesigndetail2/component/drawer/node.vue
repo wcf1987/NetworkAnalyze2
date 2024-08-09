@@ -253,7 +253,7 @@
 
         <div class="customproper" v-if="state.showFlag['pacparse']">
           <el-form-item label="头部选择">
-            <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, PackageOptions)"
+            <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, PackageOptions,'package')"
                        class="w100">
               <el-option
                   v-for="item in PackageOptions"
@@ -269,7 +269,7 @@
 
         <div class="customproper" v-if="state.showFlag['pacencap']">
           <el-form-item label="头部选择">
-            <el-select v-model="state.properForm.pacencapID" placeholder="请选择" clearable
+            <el-select v-model="state.properForm.pacencapID" placeholder="请选择" clearable @change="(val) => saveTempData(val, PackageOptions,'package')"
                        class="w100">
               <el-option
                   v-for="item in PackageOptions"
@@ -285,7 +285,7 @@
 
         <div class="customproper" v-if="state.showFlag['messheaderparse']">
           <el-form-item label="消息头">
-            <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable
+            <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, MessHeaderOptions,'messheader')"
             >
               <el-option
                   v-for="item in MessHeaderOptions"
@@ -318,7 +318,7 @@
         </div>
         <div class="customproper" v-if="state.showFlag['messbodyparse']">
           <el-form-item label="消息体">
-            <el-select v-model="state.properForm.messbodyparseID" placeholder="请选择" clearable
+            <el-select v-model="state.properForm.messbodyparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, MessBodyOptions,'messbody')"
                        class="w100">
               <el-option
                   v-for="item in MessBodyOptions"
@@ -334,7 +334,7 @@
         </div>
         <div class="customproper" v-if="state.showFlag['messbodyencap']">
           <el-form-item label="消息体">
-            <el-select v-model="state.properForm.messbodyencapID" placeholder="请选择" clearable
+            <el-select v-model="state.properForm.messbodyencapID" placeholder="请选择" clearable @change="(val) => saveTempData(val, MessBodyOptions,'messbody')"
                        class="w100">
               <el-option
                   v-for="item in MessBodyOptions"
@@ -576,6 +576,7 @@ const state = reactive({
   node: {},
   lf: '',
   flowtype: '',
+
   nodeRules: {
     name: [{required: true, message: '请输入名称', trigger: 'blur'}]
   },
@@ -591,7 +592,8 @@ const state = reactive({
   },
   properForm: {
     type: "",
-    tempData:""
+    tempData:"",
+    tempDataContent:""
   },
   tabsActive: '0',
   loading: {
@@ -609,9 +611,26 @@ const props21 = {
   label: 'Name',
   emitPath: true
 }
-const saveTempData=(val,options)=>{
-  console.log(val);
-  console.log(options);
+const saveTempData=(val,options,type)=>{
+  //console.log(val);
+  //console.log(options);
+  for(let valt of options){
+    if (valt.ID==val){
+      if(type=='package'){
+        state.properForm.tempData = valt;
+        getPackageDetail(valt.ID);
+      }
+      if(type=='messheader'){
+        state.properForm.tempData = valt;
+        getMessHeaderDetail(valt.ID);
+      }
+      if(type=='messbody'){
+        state.properForm.tempData = valt;
+        getMessBodyDetail(valt.ID);
+      }
+    }
+  }
+
 }
 const checkIP = (val) => {
    // ele.value = onlyNumOnePoint(val);
@@ -948,6 +967,82 @@ const getPackage = () => {
 
   });
 
+}
+const getPackageDetail=(pid)=>{
+  packageApi().searchPackageDetail(
+      {
+        uid: 1,
+        pid:pid,
+        pageNum: 1,
+        pageSize: 1000,
+        name: '',
+      })
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
+
+          state.properForm.tempDataContent=res.data;
+        } else {
+          ElMessage.error(res.message);
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
+}
+const getMessHeaderDetail=(pid)=>{
+  messdetailApi().searchMessDetail(
+      {
+        uid: 1,
+        pid: pid,
+        pageNum: 1,
+        pageSize: 10000,
+        name: '',
+        ttype: 'header',
+        nestid: 0,
+      })
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
+
+          state.properForm.tempDataContent=res.data;
+        } else {
+          ElMessage.error(res.message);
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
+}
+const getMessBodyDetail=(pid)=>{
+  messdetailApi().searchMessDetail(
+      {
+        uid: 1,
+        pid: pid,
+        pageNum: 1,
+        pageSize: 10000,
+        name: '',
+        ttype: 'body',
+        nestid: 0,
+      })
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
+
+          state.properForm.tempDataContent=res.data;
+        } else {
+          ElMessage.error(res.message);
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
 }
 const getMessHeader = () => {
   messheaderApi().searchMessHeader(
@@ -1314,6 +1409,8 @@ const clearFlag = () => {
   state.showFlag.delayed = false;
   state.showFlag.inpac = false;
   state.showFlag.filter = false;
+  state.properForm.tempData='';
+  state.properForm.tempDataContent='';
 
 }
 
@@ -1517,6 +1614,8 @@ const onExtendSubmit = () => {
       const nodeModel = state.lf.getNodeModelById(state.node.id);
       if(state.properForm.tempData!=''){
         state.properForm.nodeData=state.properForm.tempData;
+        state.properForm.nodeDataContent=state.properForm.tempDataContent;
+        delete state.properForm.tempDataContent;
         delete state.properForm.tempData;
       }
       nodeModel.updateText(state.proper.name);
