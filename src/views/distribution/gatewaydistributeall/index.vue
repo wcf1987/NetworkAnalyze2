@@ -427,9 +427,16 @@ const getTableDataGatewayDistribute = async () => {
 //下发流程
 const disflow = () => {
   let waringstr=''
+  console.log("下发流程");
   for(let i of state.tableDataFlowShow){
     if(i.CheckGraph=='false'){
         waringstr=waringstr+i.Name+'的流程有错误，请检查后再下发'+'\n';
+    }
+    if(i.SourceIP=='-'){
+      waringstr=waringstr+i.Name+'流程中源IP为空，请检查后再下发'+'\n';
+    }
+    if(i.TargetIP=='-'){
+      waringstr=waringstr+i.Name+'流程中目的IP为空，请检查后再下发'+'\n';
     }
   }
   console.log(waringstr)

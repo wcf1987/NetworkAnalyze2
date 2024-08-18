@@ -76,7 +76,7 @@
                     <p class="text item">{{ `源IP/端口： ${state.SourceIPAndPort} ` }}</p>
                     <p class="text item">{{ `本地IP/端口： ${state.LocalIPAndPort} ` }}</p>
 
-                    <p class="text item">{{ `目的IP/端口： ${state.TargetIPAndPort} ` }}</p>
+                    <p class="text item" v-html="WarpIPAndPort(state.TargetIPAndPort)"></p>
                   </el-card>
                 </el-collapse-item>
               </el-collapse>
@@ -185,7 +185,14 @@ function dragNode(item) {
     text: item.name,
   })
 }
-
+const WarpIPAndPort=(ipAndPort)=>{
+  let arr=ipAndPort.split('|');
+  let s='目的IP/端口：'
+  for(let t of arr){
+    s=s+t+"<br>"+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+  }
+  return s;
+}
 const getMessHeader = () => {
   messheaderApi().searchMessHeader(
       {

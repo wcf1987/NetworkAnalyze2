@@ -715,11 +715,14 @@ const getParentData = (data, lf, flowtype) => {
   }
   if (data.type == 'start') {
     state.proper.typeC = '源消息节点';
-    // console.log('start');
+    console.log('start');
     if (state.properForm.dataType == null || state.properForm.dataType == '') {
       state.properForm.dataType = '通用数据'
     }
     if (state.flowtype == '网络层透明传输') {
+      state.properForm.interfacetype = '网口'
+    }
+    if (state.properForm.interfacetype == null || state.properForm.interfacetype == ''|| state.properForm.interfacetype == '无') {
       state.properForm.interfacetype = '网口'
     }
     getNetwork();
@@ -728,7 +731,9 @@ const getParentData = (data, lf, flowtype) => {
   }
   if (data.type == 'end') {
     state.proper.typeC = '目的消息节点';
-
+    if (state.properForm.interfacetype == null || state.properForm.interfacetype == ''|| state.properForm.interfacetype == '无') {
+      state.properForm.interfacetype = '网口'
+    }
     getNetwork();
     getSerial();
 
@@ -1411,6 +1416,7 @@ const clearFlag = () => {
   state.showFlag.filter = false;
   state.properForm.tempData='';
   state.properForm.tempDataContent='';
+  state.properForm.converName='';
 
 }
 
@@ -1469,7 +1475,7 @@ const onChangeStartSNIP = (value: any) => {
 // 目的节点中-网口类-目的地址菜单菜单联动
 const onChangeEndNetworkChoose = (value: any) => {
   if (state.properForm.localnetworkID == '-1') {
-    state.properForm.IPlist = [{IP: '', Port: '', messPackProperty: '无', reForwardSocket: ''}];
+    state.properForm.IPlist = [{IP: '', Port: '', messPackProperty: '无', reForwardSocket: '新SOCKET',ipType:'通用地址'}];
   } else {
 
     for (let i = 0; i < NetworkLocalOptions.value.length; i++) {
@@ -1478,7 +1484,9 @@ const onChangeEndNetworkChoose = (value: any) => {
         state.properForm.IPlist = [{
           IP: NetworkLocalOptions.value[i].IP,
           Port: NetworkLocalOptions.value[i].Port,
-          messPackProperty: '无'
+          messPackProperty: '无',
+          reForwardSocket: '新SOCKET',
+          ipType:'通用地址'
         }];
       }
     }
@@ -1550,6 +1558,7 @@ const onExtendRefresh = () => {
   state.properForm.transid = '';
   state.properForm.globalVarName = '';
   state.properForm.sourceData = '';
+  state.properForm.converName='';
 
 };
 const onChangeMessTranslateChoose = () => {
@@ -1589,7 +1598,7 @@ const viewNess = () => {
 
 };
 const onAddEndIP = () => {
-  state.properForm.IPlist.push({IP: '', Port: '0', messPackProperty: '无', reForwardSocket: ''});
+  state.properForm.IPlist.push({IP: '', Port: '0', messPackProperty: '无', reForwardSocket: '新SOCKET',ipType:'通用地址'});
 };
 const onDelEndIP = (k: number) => {
   state.properForm.IPlist.splice(k, 1);
@@ -1617,6 +1626,9 @@ const onExtendSubmit = () => {
         state.properForm.nodeDataContent=state.properForm.tempDataContent;
         delete state.properForm.tempDataContent;
         delete state.properForm.tempData;
+      }
+      if(state.node.type == 'conver'){
+        state.properForm.converName=state.proper.name;
       }
       nodeModel.updateText(state.proper.name);
       nodeModel.setProperties(state.properForm);
