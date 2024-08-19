@@ -263,7 +263,17 @@
               />
             </el-select>
           </el-form-item>
-
+          <el-form-item label="解析方法">
+            <el-select v-model="state.properForm.parseMethod" placeholder="请选择" clearable
+                       class="w100">
+              <el-option
+                  v-for="item in parseMethod"
+                  :key="item.ID"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
 
         </div>
 
@@ -279,14 +289,24 @@
               />
             </el-select>
           </el-form-item>
-
+          <el-form-item label="添加方法">
+            <el-select v-model="state.properForm.encapMethod" placeholder="请选择" clearable
+                       class="w100">
+              <el-option
+                  v-for="item in encapMethod"
+                  :key="item.ID"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
 
         </div>
 
         <div class="customproper" v-if="state.showFlag['messheaderparse']">
           <el-form-item label="消息头">
             <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, MessHeaderOptions,'messheader')"
-            >
+                       class="w100">
               <el-option
                   v-for="item in MessHeaderOptions"
                   :key="item.ID"
@@ -297,13 +317,25 @@
 
             </el-select>
           </el-form-item>
+            <el-form-item label="解析方法">
+              <el-select v-model="state.properForm.parseMethod" placeholder="请选择" clearable
+                         class="w100">
+                <el-option
+                    v-for="item in parseMethod"
+                    :key="item.ID"
+                    :label="item.label"
+                    :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+
 
 
         </div>
         <div class="customproper" v-if="state.showFlag['messheaderencap']">
           <el-form-item label="消息头">
             <el-select v-model="state.properForm.messheaderencapID" placeholder="请选择" clearable
-                       v-on:change="onChangeMessheaderEncapChoose">
+                       class="w100" v-on:change="onChangeMessheaderEncapChoose">
               <el-option
                   v-for="item in MessHeaderOptions"
                   :key="item.ID"
@@ -313,7 +345,17 @@
 
             </el-select>
           </el-form-item>
-
+          <el-form-item label="添加方法">
+            <el-select v-model="state.properForm.encapMethod" placeholder="请选择" clearable
+                       class="w100">
+              <el-option
+                  v-for="item in encapMethod"
+                  :key="item.ID"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
 
         </div>
         <div class="customproper" v-if="state.showFlag['messbodyparse']">
@@ -541,7 +583,7 @@ import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messdetailApi} from "/@/api/sysmanage/messdetail";
 
-import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType, FilterType, IPType} from '/@/utils/common';
+import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType, FilterType, IPType,ParseMethod,EncapMethod} from '/@/utils/common';
 
 const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
 const translateDialogRef = ref();
@@ -561,6 +603,9 @@ const chartsMonitorRef = ref();
 const dataType = ref(DataType);
 const actionType = ref(ActionType);
 const filterType = ref(FilterType);
+const parseMethod=ref(ParseMethod);
+
+const encapMethod=ref(EncapMethod);
 const messPackProperty = ref(MessPackProperty);
 const reForwardSocket = ref(ReForwardSocket);
 const ipType = ref(IPType);
@@ -756,6 +801,9 @@ const getParentData = (data, lf, flowtype) => {
   }
   if (data.type == 'pacencap') {
     state.proper.typeC = '封装/应用头添加';
+    if (state.properForm.encapMethod == null || state.properForm.encapMethod == '') {
+      state.properForm.encapMethod = '通用增加方法';
+    }
     getNetwork();
     getSerial();
     getPackage();
@@ -770,18 +818,26 @@ const getParentData = (data, lf, flowtype) => {
   }
   if (data.type == 'pacparse') {
     state.proper.typeC = '封装/应用头解析';
-
+    if (state.properForm.parseMethod == null || state.properForm.parseMethod == '') {
+      state.properForm.parseMethod = '通用解析方法';
+    }
     getPackage();
 
   }
   if (data.type == 'messheaderparse') {
     state.proper.typeC = '消息头解析';
+    if (state.properForm.parseMethod == null || state.properForm.parseMethod == '') {
+      state.properForm.parseMethod = '通用解析方法';
+    }
 
     getMessHeader();
 
   }
   if (data.type == 'messheaderencap') {
     state.proper.typeC = '消息头添加';
+    if (state.properForm.encapMethod == null || state.properForm.encapMethod == '') {
+      state.properForm.encapMethod = '通用增加方法';
+    }
     getNetwork();
     getSerial();
     getPackage();

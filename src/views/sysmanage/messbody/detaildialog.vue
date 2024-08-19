@@ -79,6 +79,18 @@
                         ></el-input>
             </el-form-item>
           </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="是否数组" prop="ArrayOr">
+              <el-select v-model="state.ruleForm.ArrayOr" placeholder="请选择" clearable class="w100">
+                <el-option label="是" value="是"></el-option>
+                <el-option label="否" value="否"></el-option>
+
+
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="false">
             <el-form-item label="标准表名" prop="TableName">
               <el-input v-model="state.ruleForm.TableName" placeholder="请输入标准表名" clearable

@@ -891,7 +891,25 @@ function LfEvent() {
     //hideAddPanel()
   })
   lf.value.on('edge:add', ({data}) => {
+    let sid = data.sourceNodeId;
+    const snode = lf.value.getNodeModelById(sid);
+    let outgoing = lf.value.getNodeOutgoingNode(sid);
+    if (outgoing.length > 1 && snode.type != 'swich') {
+      ElMessage.error("该节点仅允许一条输出连接");
+      lf.value.deleteEdge(data.id);
+      return
+    }
+    let edges=lf.value.getEdgeModels({
+      sourceNodeId: data.sourceNodeId,
+      targetNodeId: data.targetNodeId,
+    });
+    if (edges.length>1){
+      ElMessage.error("该连接已存在");
+      lf.value.deleteEdge(data.id);
+      return
+    }
     console.log('edge:add', data)
+    //console.log('s node:',outgoing)
   })
   lf.value.on('node:add', ({data}) => {
     console.log('node:add', data)

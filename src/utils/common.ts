@@ -100,6 +100,21 @@ export const FilterType = [
 
 
 ];
+export const ParseMethod = [
+    {id: 0, label: '通用解析方法', value: '通用解析方法'},
+    {id: 1, label: '解析MP封装', value: '解析MP封装'},
+    {id: 2, label: '解析S消息头', value: '解析S消息头'},
+    {id: 3, label: '解析K消息头', value: '解析K消息头'},
+
+];
+export const EncapMethod = [
+    {id: 0, label: '通用增加方法', value: '通用增加方法'},
+    {id: 1, label: '增加MP封装', value: '增加MP封装'},
+    {id: 2, label: '增加S消息头', value: '增加S消息头'},
+    {id: 3, label: '增加K消息头', value: '增加K消息头'},
+
+
+];
 export const MessPackProperty = [
     {id: 0, label: '无', value: '无'},
     {id: 1, label: '网管', value: '网管'},
