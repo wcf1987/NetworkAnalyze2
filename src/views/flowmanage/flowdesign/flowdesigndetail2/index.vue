@@ -578,14 +578,21 @@ const findOptionsName = (options, id) => {
 }
 const checkGraph = (grajson) => {
   let nodes = grajson.nodes;
+  let flag=0;
   for (let i = 0; i < nodes.length; i++) {
-    console.log(lf.value.getNodeEdges(nodes[i].id))
+    console.log('node edges:',lf.value.getNodeEdges(nodes[i].id))
     if (lf.value.getNodeEdges(nodes[i].id).length == 0) {
-      //ElMessage.error('请删除或调整无连接节点');
-      return -1
+      ElMessage.error('请删除或调整无连接节点');
+      flag=-1
     }
+    let outgoing = lf.value.getNodeOutgoingNode(nodes[i].id);
+    if(outgoing<1 && nodes[i].type!='dest'){
+      ElMessage.error('请确保除结束节点外所有节点均有输出连接');
+      flag=-1
+    }
+
   }
-  return 0
+  return flag
 
 
 }
