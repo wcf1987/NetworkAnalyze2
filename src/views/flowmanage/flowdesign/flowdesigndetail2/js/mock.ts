@@ -115,13 +115,7 @@ export const leftNavList = [
                 id: '16',
                 descrip: '按设定好规则转化消息体',
             },
-            {
-                icon: forwhileicon,
-                name: '循环',
-                type: 'forwhile',
-                id: '18',
-                descrip: '循环结构，可重复运行',
-            },
+
             {
                 icon: swichicon,
                 name: '条件分支',
