@@ -655,7 +655,7 @@ const state = reactive({
 
   baseRules: {
 
-    Port:[{required: true, message: '请输入本地端口', trigger: 'blur'}]
+
   },
   proper: {
     name: '',
@@ -670,7 +670,8 @@ const state = reactive({
   properForm: {
     type: "",
     tempData: "",
-    tempDataContent: ""
+    tempDataContent: "",
+    Port:"",
   },
   tabsActive: '0',
   loading: {
