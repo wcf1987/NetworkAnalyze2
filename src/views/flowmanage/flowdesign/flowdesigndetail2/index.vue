@@ -283,7 +283,7 @@ const clearPackageNode = (node) => {
     delete nodec.OrderID
     delete nodec.SortID
     delete nodec.packID
-    console.log(nodec.EName)
+    //console.log(nodec.EName)
     if(nodec.EName==null){
       nodec.EName='';
     }
