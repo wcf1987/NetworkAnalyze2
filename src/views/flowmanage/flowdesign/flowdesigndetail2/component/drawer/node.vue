@@ -4,7 +4,7 @@
     <!-- 节点编辑 -->
 
     <el-scrollbar>
-      <el-form :model="state.form" ref="extendFormRef" size="default" label-width="80px"
+      <el-form :model="state.form" ref="extendFormRef" size="default" label-width="80px" :rules="state.baseRules"
                class="pt15 pr15 pb15 pl15">
         <el-form-item label="数据id" prop="id" v-if="false">
           <el-input v-model="state.node.id" placeholder="请输入数据id" clearable disabled></el-input>
@@ -23,16 +23,7 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="state.proper.name" placeholder="请输入名称" clearable></el-input>
         </el-form-item>
-        <el-form-item v-if="false">
-          <el-button class="mb15" @click="onNodeRefresh">
-            <SvgIcon name="ele-RefreshRight"/>
-            重置
-          </el-button>
-          <el-button type="primary" class="mb15" @click="onNodeSubmit">
-            <SvgIcon name="ele-Check"/>
-            下一步
-          </el-button>
-        </el-form-item>
+
         <div class="customproper" v-if="state.showFlag['bezier']">
 
 
@@ -662,8 +653,9 @@ const state = reactive({
   lf: '',
   flowtype: '',
 
-  nodeRules: {
-    name: [{required: true, message: '请输入名称', trigger: 'blur'}]
+  baseRules: {
+
+    Port:[{required: true, message: '请输入本地端口', trigger: 'blur'}]
   },
   proper: {
     name: '',
