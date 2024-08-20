@@ -73,10 +73,10 @@
                         :readonly="isReadOnly||state.flagReadOnly"></el-input>
             </el-form-item>
           </el-col>
-                    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="默认值" prop="DefaultVal">
               <el-input v-model="state.ruleForm.DefaultVal" placeholder="请输入默认值" clearable
-                        ></el-input>
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -160,13 +160,13 @@ const props1 = {
 }
 // 定义变量内容
 const userDialogFormRef = ref();
-const checkEName=(rule, value, callback) => {
+const checkEName = (rule, value, callback) => {
   if (value) {
-      if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)) {
-        callback(new Error('引用名必须以字母开头，不得包含特殊字符'));
-      } else {
-        callback();
-      }
+    if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)) {
+      callback(new Error('引用名必须以字母开头，不得包含特殊字符'));
+    } else {
+      callback();
+    }
 
   } else {
     callback(new Error('引用名不能为空'));
@@ -180,7 +180,7 @@ const state = reactive({
   baseRules: {
     Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-        EName: [{required: true, message: '请输入引用名', trigger: 'blur'},{validator: checkEName, trigger: 'blur'}],
+    EName: [{required: true, message: '请输入引用名', trigger: 'blur'}, {validator: checkEName, trigger: 'blur'}],
 
     Type: [{required: true, message: '请选择类型', trigger: 'change'}],
     TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
@@ -196,7 +196,7 @@ const state = reactive({
     title: '',
     submitTxt: '',
   },
-    flagReadOnly: false,
+  flagReadOnly: false,
   bitOnly: false,
 });
 const nameChange = (value) => {
@@ -255,7 +255,7 @@ const openDialog = (type: string, pid, row: RowUserType, bitype, nestid) => {
     // 清空表单，此项需加表单验证才能使用
     nextTick(() => {
       userDialogFormRef.value.resetFields();
-
+      state.ruleForm.Flag = '数据域（数据）';
     });
 
   }
@@ -372,7 +372,7 @@ const onSubmit = () => {
                     ElMessage.success("添加成功");
 
                     closeDialog();
-                    emit('refresh','add');
+                    emit('refresh', 'add');
                   } else {
                     ElMessage.error(res.message);
                   }

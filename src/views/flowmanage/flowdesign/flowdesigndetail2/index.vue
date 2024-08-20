@@ -283,7 +283,10 @@ const clearPackageNode = (node) => {
     delete nodec.OrderID
     delete nodec.SortID
     delete nodec.packID
-
+    console.log(nodec.EName)
+    if(nodec.EName==null){
+      nodec.EName='';
+    }
   }
 }
 const clearMessNode = (node) => {
@@ -336,7 +339,9 @@ const clearMessNode = (node) => {
     delete n.SortID;
     delete n.TType;
     delete n.OutType;
-
+    if(n.EName==null){
+      n.EName='';
+    }
 
   }
 

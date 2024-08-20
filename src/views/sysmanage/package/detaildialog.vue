@@ -190,6 +190,7 @@ const openDialog = (type: string, pid, row: RowUserType) => {
     // 清空表单，此项需加表单验证才能使用
     nextTick(() => {
       userDialogFormRef.value.resetFields();
+      state.ruleForm.Flag='数据域（数据）';
     });
   }
   getMenuOptions();
