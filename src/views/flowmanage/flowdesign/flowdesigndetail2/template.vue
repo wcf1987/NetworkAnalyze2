@@ -9,7 +9,7 @@
         <!-- 左侧导航区 -->
         <div class="workflow-content">
           <div class="workflow-left">
-            <el-scrollbar height="600px">
+            <el-scrollbar ref="scrollbar" height="1000px">
               <div
                   ref="leftNavRefs"
                   v-for="val in state.leftNavList"
@@ -185,11 +185,12 @@ function dragNode(item) {
     text: item.name,
   })
 }
-const WarpIPAndPort=(ipAndPort)=>{
-  let arr=ipAndPort.split('|');
-  let s='目的IP/端口：'
-  for(let t of arr){
-    s=s+t+"<br>"+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+
+const WarpIPAndPort = (ipAndPort) => {
+  let arr = ipAndPort.split('|');
+  let s = '目的IP/端口：'
+  for (let t of arr) {
+    s = s + t + "<br>" + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
   }
   return s;
 }
@@ -304,7 +305,7 @@ const getFlowFromDB = () => {
 
 }
 const createFlowFromStr = (flowstr, flowOutStr) => {
-  console.log(flowOutStr)
+  //console.log(flowOutStr)
   if ('stateShow' in flowstr) {
     state.SourceIPAndPort = flowstr.stateShow.SourceIPAndPort;
     state.LocalIPAndPort = flowstr.stateShow.LocalIPAndPort;
@@ -344,6 +345,84 @@ const createFlowFromStr = (flowstr, flowOutStr) => {
   // console.log(flowstr.stateShow)
 
 }
+
+const clearPackageNode = (node) => {
+  delete node.nodeData['AuthorID']
+  delete node.nodeData['CreateTime']
+  delete node.nodeData['Describes']
+  let nodeContents = node.nodeDataContent;
+  //console.log(nodeContents)
+  for (let nodec of nodeContents) {
+    delete nodec['AuthorID']
+    delete nodec.CreateTime
+    delete nodec.DefaultValue
+    delete nodec.Describes
+    delete nodec.OrderID
+    delete nodec.SortID
+    delete nodec.packID
+
+  }
+}
+const clearMessNode = (node) => {
+  delete node.nodeData['AuthorID']
+  delete node.nodeData['CreateTime']
+  delete node.nodeData['Describes']
+  let nodeContents = node.nodeDataContent;
+
+
+  let waitlist = [];
+
+  for (let k of nodeContents) {
+    if (k.children != null && k.children.length > 0) {
+
+      waitlist = waitlist.concat(k.children);
+    }
+    waitlist.push(k);
+
+
+  }
+  while (waitlist.length > 0) {
+    let n = waitlist.pop();
+    if (n.children != null && n.children.length > 0) {
+
+
+      waitlist = waitlist.concat(n.children);
+
+
+    }
+    if (n.OutType == 'nest') {
+      delete n.ArrayOr;
+      delete n.Flag;
+      delete n.Length;
+      delete n.Type;
+      delete n.Length;
+
+    }
+    delete n.AuthorID;
+    delete n.CreateTime;
+    delete n.Describes;
+    delete n.DFIID;
+    delete n.DefaultVal;
+    delete n.FieldsID;
+    delete n.MaxGroupNum;
+    delete n.NestID;
+    delete n.OrderID;
+    delete n.OutID;
+    delete n.PID;
+    delete n.ShortName;
+    delete n.SortID;
+    delete n.TType;
+    delete n.OutType;
+
+
+  }
+
+}
+
+function isDictionaryEmpty(dict) {
+  return Object.entries(dict).length === 0;
+}
+
 const saveScript = (grajson) => {
   //console.log(grajson);
   let scripts = {nodes: [], edges: []};
@@ -401,7 +480,7 @@ const saveScript = (grajson) => {
     }
     if (nodet.type == 'end') {
       nodet.type = "destnode";
-      if (nodet.properties.interfacetype == '网口') {
+      if (nodet.properties.interfacetype == '网口' || nodet.properties.interfacetype == '无') {
         if (tt.IPlist != null && tt.IPlist != {}) {
 
           for (let z of tt.IPlist) {
@@ -444,9 +523,15 @@ const saveScript = (grajson) => {
     }
     if (nodes[i].type == 'pacparse') {
       //state.headerParseName = nodes[i].ID;
+      if (nodes[i].properties['pacparseID'] != '') {
+        clearPackageNode(nodes[i].properties);
+      }
     }
     if (nodes[i].type == 'pacencap') {
       //state.headerEncapName = nodes[i].ID;
+      if (nodes[i].properties['pacencapID'] != '') {
+        clearPackageNode(nodes[i].properties);
+      }
     }
     if (nodes[i].type == 'swich') {
       delete nodet.properties;
@@ -455,7 +540,10 @@ const saveScript = (grajson) => {
 
 
       state.headerParseName = findOptionsName(state.MessHeaderOptions, tt.messheaderparseID);
-      console.log(tt);
+      if (!isDictionaryEmpty(nodes[i].properties) && nodes[i].properties['messheaderparseID'] != '') {
+        clearMessNode(nodes[i].properties);
+      }
+
     }
     if (nodes[i].type == 'messheaderencap') {
       state.headerEncapName = findOptionsName(state.MessHeaderOptions, tt.messheaderencapID);
@@ -522,9 +610,15 @@ const saveScript = (grajson) => {
 
     if (nodes[i].type == 'messbodyparse') {
       state.bodyPaserName = findOptionsName(state.MessBodyOptions, tt.messbodyparseID);
+      if (!isDictionaryEmpty(nodes[i].properties) && nodes[i].properties['messbodyparseID'] != '') {
+        clearMessNode(nodes[i].properties);
+      }
     }
     if (nodes[i].type == 'messbodyencap') {
       state.bodyEncapName = findOptionsName(state.MessBodyOptions, tt.messbodyencapID);
+      if (!isDictionaryEmpty(nodes[i].properties) && nodes[i].properties['messbodyencapID'] != '') {
+        clearMessNode(nodes[i].properties);
+      }
     }
     if (nodes[i].type == 'messtraslate') {
       state.transName = findOptionsName(state.MessTraslateOptions, tt.transid);
@@ -641,6 +735,7 @@ const saveScript = (grajson) => {
   console.log(grajson);
   return grajson;
 }
+
 const findOptionsName = (options, id) => {
   for (let k of options) {
     if (k.ID == id) {
@@ -652,17 +747,17 @@ const findOptionsName = (options, id) => {
 }
 const checkGraph = (grajson) => {
   let nodes = grajson.nodes;
-  let flag=0;
+  let flag = 0;
   for (let i = 0; i < nodes.length; i++) {
-    console.log('node edges:',lf.value.getNodeEdges(nodes[i].id))
+    //console.log('node edges:', lf.value.getNodeEdges(nodes[i].id))
     if (lf.value.getNodeEdges(nodes[i].id).length == 0) {
       ElMessage.error('请删除或调整无连接节点');
-      flag=-1
+      flag = -1
     }
     let outgoing = lf.value.getNodeOutgoingNode(nodes[i].id);
-    if(outgoing<1 && nodes[i].type!='dest'){
+    if (outgoing < 1 && nodes[i].type != 'dest') {
       ElMessage.error('请确保除结束节点外所有节点均有输出连接');
-      flag=-1
+      flag = -1
     }
 
   }
@@ -882,13 +977,19 @@ function render() {
 function LfEvent() {
   lf.value.on('node:click', ({data}) => {
     drawerRef.value.open(data, lf.value, state.FlowType);
-    console.log('node:click', data)
+    //console.log('node:click', data)
   })
   lf.value.on('edge:click', ({data}) => {
     const sourenode = lf.value.getNodeModelById(data.sourceNodeId)
     if (sourenode.type == 'swich') {
 
-      drawerRef.value.open(data, lf.value);
+      //let fdgd = drawerRef.value.getData(sourenode, lf)
+
+      //fdgd.then((result) => {
+
+        drawerRef.value.open(data, lf.value, state.FlowType);
+     // })
+
     } else {
       ElMessage.success('只有条件分支后续连接可以编辑');
     }
@@ -906,11 +1007,11 @@ function LfEvent() {
       lf.value.deleteEdge(data.id);
       return
     }
-    let edges=lf.value.getEdgeModels({
+    let edges = lf.value.getEdgeModels({
       sourceNodeId: data.sourceNodeId,
       targetNodeId: data.targetNodeId,
     });
-    if (edges.length>1){
+    if (edges.length > 1) {
       ElMessage.error("该连接已存在");
       lf.value.deleteEdge(data.id);
       return
@@ -1029,365 +1130,374 @@ const initLeftNavList = () => {
           .then(res => {
             //console.log(res);
             if (res.code == '200') {
-              if(state.Type == '应用层透明传输'){
+              if (state.Type == '应用层透明传输') {
                 return;
               }
-              let convlist = state.leftNavList[3];
 
-              convlist.children = new Array();
-              for (let i = 0, k = 0; k < res.data.length; k++) {
-                if (res.data[k].Type == '内置转换节点') {
-                  convlist.children[i] = {
-                    icon: conver,
-                    name: res.data[k].Name,
-                    type: 'conver',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Desc,
+
+                let convlist = state.leftNavList[3];
+                if (convlist.title == '内置封装节点') {
+                  convlist.children = new Array();
+                  for (let i = 0, k = 0; k < res.data.length; k++) {
+                    if (res.data[k].Type == '内置转换节点') {
+                      convlist.children[i] = {
+                        icon: conver,
+                        name: res.data[k].Name,
+                        type: 'conver',
+                        id: res.data[k].ID,
+                        descrip: res.data[k].Desc,
+                      }
+                      i++
+                    }
+
                   }
-                  i++
-                }
+                } else {
 
-              }
-              convlist = state.leftNavList[4];
-              convlist.children = new Array();
 
-              for (let i = 0, k = 0; k < res.data.length; k++) {
-                if (res.data[k].Type == '内置封装节点') {
-                  convlist.children[i] = {
-                    icon: inpac,
-                    name: res.data[k].Name,
-                    type: 'inpac',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Desc,
+                  // convlist = state.leftNavList[4];
+                  convlist.children = new Array();
+
+                  for (let i = 0, k = 0; k < res.data.length; k++) {
+                    if (res.data[k].Type == '内置封装节点') {
+                      convlist.children[i] = {
+                        icon: inpac,
+                        name: res.data[k].Name,
+                        type: 'inpac',
+                        id: res.data[k].ID,
+                        descrip: res.data[k].Desc,
+                      }
+                      i++
+                    }
+
                   }
-                  i++
-                }
-
-              }
-
-
-            } else {
-              ElMessage.error(res.message);
-            }
-
-          }).catch(err => {
-
-      }).finally(() => {
-
-      });
-      specialApi().search(
-          {
-            uid: 1,
-            pageNum: 1,
-            pageSize: 1000,
-            name: '',
-          })
-          .then(res => {
-            //console.log(res);
-            if (res.code == '200') {
-
-              let convlist = state.leftNavList[2];
-              console.log(res.data);
-              convlist.children = new Array();
-              for (let k = 0; k < res.data.length; k++) {
-
-                if (res.data[k].Type == '计算节点') {
-                  convlist.children.push({
-                    icon: calcicon,
-                    name: res.data[k].Name,
-                    type: 'calc',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Describes,
-                  })
-
-                }
-                if (res.data[k].Type == '数据统计节点') {
-                  convlist.children.push({
-                    icon: statisticsicon,
-                    name: res.data[k].Name,
-                    type: 'statistics',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Describes,
-                  })
-
-                }
-                if (res.data[k].Type == '定时器节点') {
-                  convlist.children.push({
-                    icon: timericon,
-                    name: res.data[k].Name,
-                    type: 'timer',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Describes,
-                  })
-                }
-                if (res.data[k].Type == '延时器节点') {
-                  convlist.children.push({
-                    icon: delayedicon,
-                    name: res.data[k].Name,
-                    type: 'delayed',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Describes,
-                  })
-                }
-                if (res.data[k].Type == '消息队列节点') {
-                  convlist.children.push({
-                    icon: messqueicon,
-                    name: res.data[k].Name,
-                    type: 'messque',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Describes,
-                  })
-                }
-                if (res.data[k].Type == '过滤器节点') {
-                  convlist.children.push({
-                    icon: filtericon,
-                    name: res.data[k].Name,
-                    type: 'filter',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Describes,
-                  })
+                  //  scrollbar.update();
                 }
               }
+            else
+              {
+                ElMessage.error(res.message);
+              }
 
-              scrollbar.update();
-
-            } else {
-              ElMessage.error(res.message);
             }
+          ).
+            catch(err => {
 
-          }).catch(err => {
+            }).finally(() => {
 
-      }).finally(() => {
+            });
+            specialApi().search(
+                {
+                  uid: 1,
+                  pageNum: 1,
+                  pageSize: 1000,
+                  name: '',
+                })
+                .then(res => {
+                  //console.log(res);
+                  if (res.code == '200') {
 
-      });
+                    let convlist = state.leftNavList[2];
+                    //console.log(res.data);
+                    convlist.children = new Array();
+                    for (let k = 0; k < res.data.length; k++) {
 
+                      if (res.data[k].Type == '计算节点') {
+                        convlist.children.push({
+                          icon: calcicon,
+                          name: res.data[k].Name,
+                          type: 'calc',
+                          id: res.data[k].ID,
+                          descrip: res.data[k].Describes,
+                        })
+
+                      }
+                      if (res.data[k].Type == '数据统计节点') {
+                        convlist.children.push({
+                          icon: statisticsicon,
+                          name: res.data[k].Name,
+                          type: 'statistics',
+                          id: res.data[k].ID,
+                          descrip: res.data[k].Describes,
+                        })
+
+                      }
+                      if (res.data[k].Type == '定时器节点') {
+                        convlist.children.push({
+                          icon: timericon,
+                          name: res.data[k].Name,
+                          type: 'timer',
+                          id: res.data[k].ID,
+                          descrip: res.data[k].Describes,
+                        })
+                      }
+                      if (res.data[k].Type == '延时器节点') {
+                        convlist.children.push({
+                          icon: delayedicon,
+                          name: res.data[k].Name,
+                          type: 'delayed',
+                          id: res.data[k].ID,
+                          descrip: res.data[k].Describes,
+                        })
+                      }
+                      if (res.data[k].Type == '消息队列节点') {
+                        convlist.children.push({
+                          icon: messqueicon,
+                          name: res.data[k].Name,
+                          type: 'messque',
+                          id: res.data[k].ID,
+                          descrip: res.data[k].Describes,
+                        })
+                      }
+                      if (res.data[k].Type == '过滤器节点') {
+                        convlist.children.push({
+                          icon: filtericon,
+                          name: res.data[k].Name,
+                          type: 'filter',
+                          id: res.data[k].ID,
+                          descrip: res.data[k].Describes,
+                        })
+                      }
+                    }
+
+                    scrollbar.update();
+
+                  } else {
+                    ElMessage.error(res.message);
+                  }
+
+                }).catch(err => {
+
+            }).finally(() => {
+
+            });
+
+          }
     }
   }
-};
+  ;
 
 // 左侧导航-菜单标题点击
-const onTitleClick = (val: any) => {
-  val.isOpen = !val.isOpen;
-};
+  const onTitleClick = (val: any) => {
+    val.isOpen = !val.isOpen;
+  };
 // 右侧内容区-当前项点击
-const onItemCloneClick = (k: number) => {
-  state.jsPlumbNodeIndex = k;
-};
+  const onItemCloneClick = (k: number) => {
+    state.jsPlumbNodeIndex = k;
+  };
 // 右侧内容区-当前项右键菜单点击
-const onContextmenu = (type, data, e, position) => {
-  let loc = container.value.getBoundingClientRect();
-  //console.log(loc);
+  const onContextmenu = (type, data, e, position) => {
+    let loc = container.value.getBoundingClientRect();
+    //console.log(loc);
 
-  if (type == 'node') {
-    let prope = lf.value.getProperties(data.id);
-    console.log(prope);
-    state.dropdownNode.x = loc.x + position.domOverlayPosition.x;
-    state.dropdownNode.y = loc.y + position.domOverlayPosition.y;
-    contextmenuNodeRef.value.openContextmenu('node', data);
-  }
-  if (type == 'edge') {
+    if (type == 'node') {
+      let prope = lf.value.getProperties(data.id);
+      console.log(prope);
+      state.dropdownNode.x = loc.x + position.domOverlayPosition.x;
+      state.dropdownNode.y = loc.y + position.domOverlayPosition.y;
+      contextmenuNodeRef.value.openContextmenu('node', data);
+    }
+    if (type == 'edge') {
 
-    state.dropdownLine.x = loc.x + position.domOverlayPosition.x;
-    state.dropdownLine.y = loc.y + position.domOverlayPosition.y;
-    contextmenuLineRef.value.openContextmenu('edge', data);
+      state.dropdownLine.x = loc.x + position.domOverlayPosition.x;
+      state.dropdownLine.y = loc.y + position.domOverlayPosition.y;
+      contextmenuLineRef.value.openContextmenu('edge', data);
 
-  }
-};
+    }
+  };
 // 右侧内容区-当前项右键菜单点击回调(节点)
-const onCurrentNodeClick = (contextMenuClickId, item: any) => {
-  if (contextMenuClickId == 1) {
-    lf.value.deleteNode(item.id);
-  }
-  if (contextMenuClickId == 0) {
-    drawerRef.value.open(item, lf.value, state.FlowType);
-  }
-};
+  const onCurrentNodeClick = (contextMenuClickId, item: any) => {
+    if (contextMenuClickId == 1) {
+      lf.value.deleteNode(item.id);
+    }
+    if (contextMenuClickId == 0) {
+      drawerRef.value.open(item, lf.value, state.FlowType);
+    }
+  };
 
 // 右侧内容区-当前项右键菜单点击回调(线)
-const onCurrentLineClick = (contextMenuClickId, item: any) => {
-  if (contextMenuClickId == 1) {
-    lf.value.deleteEdge(item.id);
-  }
-  if (contextMenuClickId == 0) {
-    const sourenode = lf.value.getNodeModelById(item.sourceNodeId)
-    if (sourenode.type == 'swich') {
-
-      drawerRef.value.open(item, lf.value);
-    } else {
-      ElMessage.success('只有条件分支后续连接可以编辑');
+  const onCurrentLineClick = (contextMenuClickId, item: any) => {
+    if (contextMenuClickId == 1) {
+      lf.value.deleteEdge(item.id);
     }
-
-
-  }
-};
-// 设置线的 label
-const setLineLabel = (obj: any) => {
-  const {sourceId, targetId, label} = obj;
-
-};
-// 设置节点内容
-const setNodeContent = (obj: any) => {
-
-};
-// 顶部工具栏-当前项点击
-const onToolClick = (fnName: String) => {
-  switch (fnName) {
-    case 'selectionSelect':
-      if (state.SelectionSelect) {
-        state.SelectionSelect = false;
-        lf.value.closeSelectionSelect();
+    if (contextMenuClickId == 0) {
+      const sourenode = lf.value.getNodeModelById(item.sourceNodeId)
+      if (sourenode.type == 'swich') {
+        drawerRef.value.open(data, lf.value, state.FlowType);
       } else {
-        state.SelectionSelect = true;
-
-        lf.value.openSelectionSelect();
+        ElMessage.success('只有条件分支后续连接可以编辑');
       }
 
-      break;
-    case 'editProp':
-      const GraphConfigData = lf.value.getSelectElements(false);
-      //GraphConfigData.nodes[0];
-      drawerRef.value.open(GraphConfigData.nodes[0], lf.value, drawerRef.value.open);
-      break;
-    case 'zoomIn':
-      lf.value.zoom(true);
-      break;
-    case 'zoomOut':
-      lf.value.zoom(false);
-      break;
-    case 'zoomReset':
-      lf.value.resetZoom();
-      break;
-    case 'translateRest':
-      lf.value.resetZoom();
-      lf.value.resetTranslate();
-      break;
-    case 'undo':
-      lf.value.undo();
-      break;
-    case 'redo':
-      lf.value.redo();
-      break;
-    case 'showMiniMap':
-      lf.value.extension.miniMap.show(lf.value.graphModel.width - 350, 20)
-      break;
-    case 'help':
-      onToolHelp();
-      break;
-    case 'download':
-      onToolDownload();
-      break;
-    case 'upload':
-      onToolUpload();
-      break;
-    case 'submit':
-      onToolSubmit();
-      break;
-    case 'copy':
-      onToolCopy();
-      break;
-    case 'clearMap':
-      onToolDel();
-      break;
-    case 'fullscreen':
-      onToolFullscreen();
-      break;
-    case 'closeWin':
-      ElMessageBox.confirm(
-          '你是否确定关闭？（未保存的更改将会丢失）',
-          '提示',
-          {
-            confirmButtonText: '保存后退出',
-            // customButtonText: '保存直接退出', // 自定义按钮文本
-            cancelButtonText: '不保存直接退出',
-            type: 'warning',
-          }
-      )
-          .then(() => {
-            saveFlow();
-            router.go(-1);
+
+    }
+  };
+// 设置线的 label
+  const setLineLabel = (obj: any) => {
+    const {sourceId, targetId, label} = obj;
+
+  };
+// 设置节点内容
+  const setNodeContent = (obj: any) => {
+
+  };
+// 顶部工具栏-当前项点击
+  const onToolClick = (fnName: String) => {
+    switch (fnName) {
+      case 'selectionSelect':
+        if (state.SelectionSelect) {
+          state.SelectionSelect = false;
+          lf.value.closeSelectionSelect();
+        } else {
+          state.SelectionSelect = true;
+
+          lf.value.openSelectionSelect();
+        }
+
+        break;
+      case 'editProp':
+        const GraphConfigData = lf.value.getSelectElements(false);
+        //GraphConfigData.nodes[0];
+        drawerRef.value.open(GraphConfigData.nodes[0], lf.value, drawerRef.value.open);
+        break;
+      case 'zoomIn':
+        lf.value.zoom(true);
+        break;
+      case 'zoomOut':
+        lf.value.zoom(false);
+        break;
+      case 'zoomReset':
+        lf.value.resetZoom();
+        break;
+      case 'translateRest':
+        lf.value.resetZoom();
+        lf.value.resetTranslate();
+        break;
+      case 'undo':
+        lf.value.undo();
+        break;
+      case 'redo':
+        lf.value.redo();
+        break;
+      case 'showMiniMap':
+        lf.value.extension.miniMap.show(lf.value.graphModel.width - 350, 20)
+        break;
+      case 'help':
+        onToolHelp();
+        break;
+      case 'download':
+        onToolDownload();
+        break;
+      case 'upload':
+        onToolUpload();
+        break;
+      case 'submit':
+        onToolSubmit();
+        break;
+      case 'copy':
+        onToolCopy();
+        break;
+      case 'clearMap':
+        onToolDel();
+        break;
+      case 'fullscreen':
+        onToolFullscreen();
+        break;
+      case 'closeWin':
+        ElMessageBox.confirm(
+            '你是否确定关闭？（未保存的更改将会丢失）',
+            '提示',
+            {
+              confirmButtonText: '保存后退出',
+              // customButtonText: '保存直接退出', // 自定义按钮文本
+              cancelButtonText: '不保存直接退出',
+              type: 'warning',
+            }
+        )
+            .then(() => {
+              saveFlow();
+              router.go(-1);
 
 
-          })
-          .catch(() => {
-            router.go(-1);
-          })
-      break;
-  }
-};
+            })
+            .catch(() => {
+              router.go(-1);
+            })
+        break;
+    }
+  };
 // 顶部工具栏-帮助
-const onToolHelp = () => {
-  nextTick(() => {
-    helpRef.value.open();
-  });
-};
+  const onToolHelp = () => {
+    nextTick(() => {
+      helpRef.value.open();
+    });
+  };
 // 顶部工具栏-下载
-const onToolDownload = () => {
-  const {globalTitle} = themeConfig.value;
-  let flowGraphStr = lf.value.getGraphData();
-  const href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(flowGraphStr, null, '\t'));
-  const aLink = document.createElement('a');
-  aLink.setAttribute('href', href);
-  aLink.setAttribute('download', `流程脚本.json`);
-  aLink.click();
-  aLink.remove();
-  ElMessage.success('下载成功');
-};
+  const onToolDownload = () => {
+    const {globalTitle} = themeConfig.value;
+    let flowGraphStr = lf.value.getGraphData();
+    const href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(flowGraphStr, null, '\t'));
+    const aLink = document.createElement('a');
+    aLink.setAttribute('href', href);
+    aLink.setAttribute('download', `流程脚本.json`);
+    aLink.click();
+    aLink.remove();
+    ElMessage.success('下载成功');
+  };
 //上传
-const onToolUpload = () => {
-  uploadbutton.value?.$.vnode.el?.click();
+  const onToolUpload = () => {
+    uploadbutton.value?.$.vnode.el?.click();
 
-};
-const uploadfile = (res, file, fileList) => {
-  const name = file.name.split('.')[1];
-  if (name != 'json' && name != 'json') {
-    ElMessage.error("只能上传后缀为json的文件");
-    return;
-  }
-  let reader = new FileReader();
-  reader.readAsText(file.raw)
-  reader.onload = (e) => {
-    // 读取文件内容
-    const fileString = e.target.result;
-    let xmlStrread = JSON.parse(fileString)
-    createFlowFromStr(xmlStrread);
-    ElMessage.success('上传成功');
-  }
-};
+  };
+  const uploadfile = (res, file, fileList) => {
+    const name = file.name.split('.')[1];
+    if (name != 'json' && name != 'json') {
+      ElMessage.error("只能上传后缀为json的文件");
+      return;
+    }
+    let reader = new FileReader();
+    reader.readAsText(file.raw)
+    reader.onload = (e) => {
+      // 读取文件内容
+      const fileString = e.target.result;
+      let xmlStrread = JSON.parse(fileString)
+      createFlowFromStr(xmlStrread);
+      ElMessage.success('上传成功');
+    }
+  };
 // 顶部工具栏-提交
-const onToolSubmit = () => {
-  // console.log(state.jsplumbData);
-  saveFlow();
+  const onToolSubmit = () => {
+    // console.log(state.jsplumbData);
+    saveFlow();
 
-};
+  };
 // 顶部工具栏-复制
-const onToolCopy = () => {
-  copyText(JSON.stringify(state.jsplumbData));
-};
+  const onToolCopy = () => {
+    copyText(JSON.stringify(state.jsplumbData));
+  };
 // 顶部工具栏-删除
-const onToolDel = () => {
-  ElMessageBox.confirm('此操作将清空模板，是否继续？', '提示', {
-    confirmButtonText: '清空',
-    cancelButtonText: '取消',
-  })
-      .then(() => {
-        lf.value.clearData();
-        nextTick(() => {
+  const onToolDel = () => {
+    ElMessageBox.confirm('此操作将清空模板，是否继续？', '提示', {
+      confirmButtonText: '清空',
+      cancelButtonText: '取消',
+    })
+        .then(() => {
+          lf.value.clearData();
+          nextTick(() => {
 
-          ElMessage.success('清空模板成功');
+            ElMessage.success('清空模板成功');
+          });
+        })
+        .catch(() => {
         });
-      })
-      .catch(() => {
-      });
-};
+  };
 // 顶部工具栏-全屏
-const onToolFullscreen = () => {
-  stores.setCurrenFullscreen(true);
-};
+  const onToolFullscreen = () => {
+    stores.setCurrenFullscreen(true);
+  };
 
 // 页面卸载时
-onUnmounted(() => {
-  window.removeEventListener('resize', setClientWidth);
-});</script>
+  onUnmounted(() => {
+    window.removeEventListener('resize', setClientWidth);
+  });</script>
 
 <style scoped lang="scss">
 :deep(.el-collapse-item__header) {

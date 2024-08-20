@@ -160,7 +160,18 @@ const props1 = {
 }
 // 定义变量内容
 const userDialogFormRef = ref();
+const checkEName=(rule, value, callback) => {
+  if (value) {
+      if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)) {
+        callback(new Error('引用名必须以字母开头，不得包含特殊字符'));
+      } else {
+        callback();
+      }
 
+  } else {
+    callback(new Error('引用名不能为空'));
+  }
+}
 const state = reactive({
   ruleForm: {
     Name: '', // 账户名称
@@ -169,7 +180,7 @@ const state = reactive({
   baseRules: {
     Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-    EName: [{required: true, message: '请输入引用名', trigger: 'blur'}],
+        EName: [{required: true, message: '请输入引用名', trigger: 'blur'},{validator: checkEName, trigger: 'blur'}],
 
     Type: [{required: true, message: '请选择类型', trigger: 'change'}],
     TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],

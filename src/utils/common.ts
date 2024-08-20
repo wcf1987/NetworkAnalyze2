@@ -103,8 +103,8 @@ export const FilterType = [
 export const ParseMethod = [
     {id: 0, label: '通用解析方法', value: '通用解析方法'},
     {id: 1, label: '解析MP封装', value: '解析MP封装'},
-    {id: 2, label: '解析S消息头', value: '解析S消息头'},
-    {id: 3, label: '解析K消息头', value: '解析K消息头'},
+    {id: 2, label: '解析73封装', value: '解析73封装'},
+    {id: 3, label: '解析WZB端机封装', value: '解析WZB端机封装'},
 
 ];
 export const EncapMethod = [

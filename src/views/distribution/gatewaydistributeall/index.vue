@@ -40,7 +40,7 @@
             <div class="floatinginfo">
               <div style="display:inline-block;">
                 <span>{{
-                  `CLIP名称： ${state.gateway.Name}
+                    `CLIP名称： ${state.gateway.Name}
                                 IP地址：${state.gateway.IP} 描述：${state.gateway.Describes}`
                   }}</span>
                 <el-button size="small" type="success" class="eltagr" @click="disflow">
@@ -426,27 +426,32 @@ const getTableDataGatewayDistribute = async () => {
 
 //下发流程
 const disflow = () => {
-  let waringstr=''
+  let waringstr = ''
   console.log("下发流程");
-  for(let i of state.tableDataFlowShow){
-    if(i.CheckGraph=='false'){
-        waringstr=waringstr+i.Name+'的流程有错误，请检查后再下发'+'\n';
+  for (let i of state.tableDataFlowShow) {
+    if (i.CheckGraph == 'false') {
+      waringstr = waringstr + i.Name + '的流程有错误，请检查后再下发' + '\n';
+
     }
-    if(i.SourceIP=='-'){
-      waringstr=waringstr+i.Name+'流程中源IP为空，请检查后再下发'+'\n';
+    if (i.SourceIP == '-') {
+      waringstr = waringstr + i.Name + '流程中源IP为空，请检查后再下发' + '\n';
+
     }
-    if(i.TargetIP=='-'){
-      waringstr=waringstr+i.Name+'流程中目的IP为空，请检查后再下发'+'\n';
+    if (i.TargetIP == '-') {
+      waringstr = waringstr + i.Name + '流程中目的IP为空，请检查后再下发' + '\n';
+
     }
+
   }
-  console.log(waringstr)
-  if(waringstr!=''){
-       ElMessage.warning(waringstr);
-        return
+  //console.log(waringstr)
+  if (waringstr != '') {
+    ElMessage.warning(waringstr);
+    state.gateway.DisPercentage = 0
+    return
   }
-  if(state.gateway.ID=='0'){
-        ElMessage.warning('您需要先配置网关，才能下发流程');
-        return
+  if (state.gateway.ID == '0') {
+    ElMessage.warning('您需要先配置网关，才能下发流程');
+    return
   }
 
   disFlowDMP();
@@ -957,13 +962,13 @@ const onToolDel = () => {
 const onToolFullscreen = () => {
   stores.setCurrenFullscreen(true);
 };
-const updateGatewayList=(id)=>{
-  let re=[];
-  for(let i of state.tableGateway.data) {
+const updateGatewayList = (id) => {
+  let re = [];
+  for (let i of state.tableGateway.data) {
     if (i.ID == id) {
       state.gateway.ID = i.ID;
-      re=i;
-      state.tableGateway.data=[re];
+      re = i;
+      state.tableGateway.data = [re];
     }
   }
 }
@@ -981,7 +986,7 @@ onMounted(async () => {
 
   initJsPlumb();
   setClientWidth();
-  if(querys.id!=null){
+  if (querys.id != null) {
     state.gateway.ID = querys.id;
     state.gateway.Name = querys.name
     state.gateway.IP = querys.ip;

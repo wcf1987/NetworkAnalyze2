@@ -101,7 +101,7 @@
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                             v-if="state.ruleForm.Optional=='自定义转换计算'">
 
-                        <el-form-item label="全局变量" prop="source">
+                        <el-form-item label="临时变量" prop="source">
 
                             <el-cascader v-model="state.ruleForm.GlobalData" :options=state.gd :props="props21"
                                          @change="changeSourceInput23"

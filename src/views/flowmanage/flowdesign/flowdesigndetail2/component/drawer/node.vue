@@ -5,7 +5,7 @@
 
     <el-scrollbar>
       <el-form :model="state.form" ref="extendFormRef" size="default" label-width="80px"
-               class="pt15 pr15 pb15 pl15" >
+               class="pt15 pr15 pb15 pl15">
         <el-form-item label="数据id" prop="id" v-if="false">
           <el-input v-model="state.node.id" placeholder="请输入数据id" clearable disabled></el-input>
         </el-form-item>
@@ -33,7 +33,32 @@
             下一步
           </el-button>
         </el-form-item>
+        <div class="customproper" v-if="state.showFlag['bezier']">
 
+
+          <el-form-item label="前序节点">
+
+            <el-cascader v-model="state.properForm.fieldvar" :options=state.fd :props="props2" clearable
+                         collapse-tags @change="changeSourceInput"  class="w100"/>
+
+          </el-form-item>
+          <el-form-item label="临时变量">
+
+            <el-cascader v-model="state.properForm.globalvar" :options=state.gd :props="props2" clearable
+                         collapse-tags @change="changeSourceInput"  class="w100"/>
+
+          </el-form-item>
+
+          <el-form-item label="计算公式" prop="rulestr">
+
+            <el-input
+                :autosize="{ minRows: 2, maxRows: 10 }"
+                type="textarea"
+                placeholder="请输入转换公式"
+                v-model="state.properForm.rulestr" autocomplete="off"/>
+          </el-form-item>
+
+        </div>
 
         <div class="customproper" v-if="state.showFlag['start']">
           <el-form-item label="接口类型">
@@ -186,7 +211,8 @@
                 <span style="display:block;text-align: center" class="text-gray-500">:</span>
               </el-col>
               <el-col :span="6">
-                <el-input v-model="v.Port" placeholder="请输入端口" clearable style="font-size: 10px" @change="checkPort"
+                <el-input v-model="v.Port" placeholder="请输入端口" clearable style="font-size: 10px"
+                          @change="checkPort"
                 ></el-input>
               </el-col>
               <el-col :span="1"/>
@@ -253,7 +279,8 @@
 
         <div class="customproper" v-if="state.showFlag['pacparse']">
           <el-form-item label="头部选择">
-            <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, PackageOptions,'package')"
+            <el-select v-model="state.properForm.pacparseID" placeholder="请选择" clearable
+                       @change="(val) => saveTempData(val, PackageOptions,'package')"
                        class="w100">
               <el-option
                   v-for="item in PackageOptions"
@@ -279,7 +306,8 @@
 
         <div class="customproper" v-if="state.showFlag['pacencap']">
           <el-form-item label="头部选择">
-            <el-select v-model="state.properForm.pacencapID" placeholder="请选择" clearable @change="(val) => saveTempData(val, PackageOptions,'package')"
+            <el-select v-model="state.properForm.pacencapID" placeholder="请选择" clearable
+                       @change="(val) => saveTempData(val, PackageOptions,'package')"
                        class="w100">
               <el-option
                   v-for="item in PackageOptions"
@@ -305,7 +333,8 @@
 
         <div class="customproper" v-if="state.showFlag['messheaderparse']">
           <el-form-item label="消息头">
-            <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, MessHeaderOptions,'messheader')"
+            <el-select v-model="state.properForm.messheaderparseID" placeholder="请选择" clearable
+                       @change="(val) => saveTempData(val, MessHeaderOptions,'messheader')"
                        class="w100">
               <el-option
                   v-for="item in MessHeaderOptions"
@@ -317,18 +346,17 @@
 
             </el-select>
           </el-form-item>
-            <el-form-item label="解析方法">
-              <el-select v-model="state.properForm.parseMethod" placeholder="请选择" clearable
-                         class="w100">
-                <el-option
-                    v-for="item in parseMethod"
-                    :key="item.ID"
-                    :label="item.label"
-                    :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-
+          <el-form-item label="解析方法" v-if="state.flowtype!='混合编排'">
+            <el-select v-model="state.properForm.parseMethod" placeholder="请选择" clearable
+                       class="w100">
+              <el-option
+                  v-for="item in parseMethod"
+                  :key="item.ID"
+                  :label="item.label"
+                  :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
 
 
         </div>
@@ -360,7 +388,8 @@
         </div>
         <div class="customproper" v-if="state.showFlag['messbodyparse']">
           <el-form-item label="消息体">
-            <el-select v-model="state.properForm.messbodyparseID" placeholder="请选择" clearable @change="(val) => saveTempData(val, MessBodyOptions,'messbody')"
+            <el-select v-model="state.properForm.messbodyparseID" placeholder="请选择" clearable
+                       @change="(val) => saveTempData(val, MessBodyOptions,'messbody')"
                        class="w100">
               <el-option
                   v-for="item in MessBodyOptions"
@@ -376,7 +405,8 @@
         </div>
         <div class="customproper" v-if="state.showFlag['messbodyencap']">
           <el-form-item label="消息体">
-            <el-select v-model="state.properForm.messbodyencapID" placeholder="请选择" clearable @change="(val) => saveTempData(val, MessBodyOptions,'messbody')"
+            <el-select v-model="state.properForm.messbodyencapID" placeholder="请选择" clearable
+                       @change="(val) => saveTempData(val, MessBodyOptions,'messbody')"
                        class="w100">
               <el-option
                   v-for="item in MessBodyOptions"
@@ -426,7 +456,7 @@
           </el-form-item>
           <el-form-item label="源字段" prop="source">
 
-            <el-cascader v-model="state.properForm.sourceData" :options="sourceoptions"
+            <el-cascader v-model="state.properForm.sourceData" :options=state.fd
                          :separator="'.'"
                          :props="props21"
                          @change="changeSourceInput21"
@@ -573,7 +603,7 @@
 </template>
 
 <script setup lang="ts" name="pagesWorkflowDrawerNode">
-import {defineAsyncComponent, nextTick, reactive, ref} from 'vue';
+import {defineAsyncComponent, nextTick, onMounted, reactive, ref} from 'vue';
 import {ElMessage} from 'element-plus';
 import * as echarts from 'echarts';
 import {addressApi} from "/@/api/sysmanage/address";
@@ -583,7 +613,17 @@ import {messbodyApi} from "/@/api/sysmanage/messbody";
 import {messheaderApi} from "/@/api/sysmanage/messheader";
 import {messdetailApi} from "/@/api/sysmanage/messdetail";
 
-import {DataType, MessPackProperty, ReForwardSocket, ActionType, VarType, FilterType, IPType,ParseMethod,EncapMethod} from '/@/utils/common';
+import {
+  DataType,
+  MessPackProperty,
+  ReForwardSocket,
+  ActionType,
+  VarType,
+  FilterType,
+  IPType,
+  ParseMethod,
+  EncapMethod
+} from '/@/utils/common';
 
 const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
 const translateDialogRef = ref();
@@ -603,9 +643,9 @@ const chartsMonitorRef = ref();
 const dataType = ref(DataType);
 const actionType = ref(ActionType);
 const filterType = ref(FilterType);
-const parseMethod=ref(ParseMethod);
+const parseMethod = ref(ParseMethod);
 
-const encapMethod=ref(EncapMethod);
+const encapMethod = ref(EncapMethod);
 const messPackProperty = ref(MessPackProperty);
 const reForwardSocket = ref(ReForwardSocket);
 const ipType = ref(IPType);
@@ -637,8 +677,8 @@ const state = reactive({
   },
   properForm: {
     type: "",
-    tempData:"",
-    tempDataContent:""
+    tempData: "",
+    tempDataContent: ""
   },
   tabsActive: '0',
   loading: {
@@ -648,7 +688,39 @@ const state = reactive({
 const sourceoptions = ref();
 const globaloptions = ref();
 const fieldsoptions = ref();
+const onLineTextChange = () => {
+  const edgeModel = state.lf.getEdgeModelById(state.edge.id);
+  edgeModel.updateText(state.proper.name);
+  edgeModel.setProperties(state.properForm);
+  emit('submit');
+  setTimeout(() => {
+    state.loading.extend = false;
 
+    emit('close');
+  }, 300);
+};
+const changeSourceInput = (fo) => {
+  console.log(fo)
+  let i = 0, tempstr = ''
+  //for (i = 0; i < fo.length; i++) {
+  //if(fo.l)
+  //}
+  if (fo.length > 0) {
+    tempstr = fo[fo.length - 1].join('.') + '\n'
+  }
+
+
+  tempstr = tempstr.replaceAll(',', '.')
+  state.properForm.rulestr = state.properForm.rulestr + tempstr;
+
+
+}
+const props2 = {
+  multiple: true,
+  expandTrigger: 'hover',
+  value: 'EName',
+  label: 'Name'
+};
 const props21 = {
   multiple: true,
   expandTrigger: 'hover',
@@ -656,20 +728,20 @@ const props21 = {
   label: 'Name',
   emitPath: true
 }
-const saveTempData=(val,options,type)=>{
+const saveTempData = (val, options, type) => {
   //console.log(val);
   //console.log(options);
-  for(let valt of options){
-    if (valt.ID==val){
-      if(type=='package'){
+  for (let valt of options) {
+    if (valt.ID == val) {
+      if (type == 'package') {
         state.properForm.tempData = valt;
         getPackageDetail(valt.ID);
       }
-      if(type=='messheader'){
+      if (type == 'messheader') {
         state.properForm.tempData = valt;
         getMessHeaderDetail(valt.ID);
       }
-      if(type=='messbody'){
+      if (type == 'messbody') {
         state.properForm.tempData = valt;
         getMessBodyDetail(valt.ID);
       }
@@ -678,8 +750,8 @@ const saveTempData=(val,options,type)=>{
 
 }
 const checkIP = (val) => {
-   // ele.value = onlyNumOnePoint(val);
-   if (/^(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/.test(val) == false) {
+  // ele.value = onlyNumOnePoint(val);
+  if (/^(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/.test(val) == false) {
     //callback(new Error("请输入正确的ip地址"));
     ElMessage.error("请输入正确的ip地址");
   } else {
@@ -687,9 +759,9 @@ const checkIP = (val) => {
   }
 }
 const checkPort = (val) => {
-   // ele.value = onlyNumOnePoint(val);
-     if (/^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(val) == false) {
-       //callback(new Error("请输入正确的ip地址"));
+  // ele.value = onlyNumOnePoint(val);
+  if (/^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(val) == false) {
+    //callback(new Error("请输入正确的ip地址"));
     ElMessage.error("请输入正确的端口号");
   } else {
     //callback();
@@ -731,9 +803,10 @@ const changeSourceInput22 = (fo) => {
 
 }
 // 获取父组件数据
-const getParentData = (data, lf, flowtype) => {
+const getParentData = async (data, lf, flowtype) => {
 
   clearFlag();
+
   state.tabsActive = '1';
   state.node = data;
   state.flowtype = flowtype;
@@ -747,6 +820,18 @@ const getParentData = (data, lf, flowtype) => {
 
   state.lf = lf;
   state.showFlag[state.node["type"]] = true;
+
+  //console.log(data)
+  if (data.type == 'bezier') {
+    state.proper.typeC = '分支条件';
+        if (state.properForm.rulestr == null || state.properForm.interfacetype == '' ) {
+      state.properForm.rulestr = ''
+    }
+    state.edge = data
+    const sourenode = state.lf.getNodeModelById(data.sourceNodeId)
+    state.node = sourenode;
+    await getSourceData();
+  }
   if (data.type == 'first') {
     state.proper.typeC = '开始节点';
 
@@ -767,61 +852,41 @@ const getParentData = (data, lf, flowtype) => {
     if (state.flowtype == '网络层透明传输') {
       state.properForm.interfacetype = '网口'
     }
-    if (state.properForm.interfacetype == null || state.properForm.interfacetype == ''|| state.properForm.interfacetype == '无') {
+    if (state.properForm.interfacetype == null || state.properForm.interfacetype == '' || state.properForm.interfacetype == '无') {
       state.properForm.interfacetype = '网口'
     }
-    getNetwork();
-    getSerial();
+
 
   }
   if (data.type == 'end') {
     state.proper.typeC = '目的消息节点';
-    if (state.properForm.interfacetype == null || state.properForm.interfacetype == ''|| state.properForm.interfacetype == '无') {
+    if (state.properForm.interfacetype == null || state.properForm.interfacetype == '' || state.properForm.interfacetype == '无') {
       state.properForm.interfacetype = '网口'
     }
-    getNetwork();
-    getSerial();
+
 
   }
 
 
   if (data.type == 'messtraslate') {
     state.proper.typeC = '消息转换';
-    getNetwork();
-    getSerial();
-    getPackage();
-    getMessHeader();
-    getMessBody();
-    getMessTraslate();
-    nextTick(() => {
-      setTimeout(() => {
-        getSourceData();
-      }, 500);
-    });
+
+    await getSourceData();
+
   }
   if (data.type == 'pacencap') {
     state.proper.typeC = '封装/应用头添加';
     if (state.properForm.encapMethod == null || state.properForm.encapMethod == '') {
       state.properForm.encapMethod = '通用增加方法';
     }
-    getNetwork();
-    getSerial();
-    getPackage();
-    getMessHeader();
-    getMessBody();
-    getMessTraslate();
-    nextTick(() => {
-      setTimeout(() => {
-        getSourceData();
-      }, 500);
-    });
+
+
   }
   if (data.type == 'pacparse') {
     state.proper.typeC = '封装/应用头解析';
     if (state.properForm.parseMethod == null || state.properForm.parseMethod == '') {
       state.properForm.parseMethod = '通用解析方法';
     }
-    getPackage();
 
   }
   if (data.type == 'messheaderparse') {
@@ -830,53 +895,30 @@ const getParentData = (data, lf, flowtype) => {
       state.properForm.parseMethod = '通用解析方法';
     }
 
-    getMessHeader();
-
   }
   if (data.type == 'messheaderencap') {
     state.proper.typeC = '消息头添加';
     if (state.properForm.encapMethod == null || state.properForm.encapMethod == '') {
       state.properForm.encapMethod = '通用增加方法';
     }
-    getNetwork();
-    getSerial();
-    getPackage();
-    getMessHeader();
-    getMessBody();
-    getMessTraslate();
-    nextTick(() => {
-      setTimeout(() => {
-        getSourceData();
-      }, 500);
-    });
+
+    await getSourceData();
+
   }
   if (data.type == 'messbodyparse') {
     state.proper.typeC = '消息体解析';
-    getNetwork();
 
-    getMessBody();
 
   }
   if (data.type == 'messbodyencap') {
     state.proper.typeC = '消息体添加';
 
-    getMessBody();
 
   }
   if (data.type == 'spemark') {
     state.proper.typeC = '临时变量';
+    await getSourceData();
 
-    getNetwork();
-    getSerial();
-    getPackage();
-    getMessHeader();
-    getMessBody();
-    getMessTraslate();
-    nextTick(() => {
-      setTimeout(() => {
-        getSourceData();
-      }, 500);
-    });
   }
   if (data.type == 'pacNum') {
     state.proper.typeC = '数据包个数统计';
@@ -898,16 +940,10 @@ const getParentData = (data, lf, flowtype) => {
   }
   if (data.type == 'filter') {
     state.proper.typeC = '过滤器';
-    getNetwork();
-    getSerial();
-    getPackage();
-    getMessHeader();
-    getMessBody();
-    getMessTraslate();
 
-    setTimeout(() => {
-      getSourceData();
-    }, 500);
+
+    await getSourceData();
+
     if (state.properForm.filterType == null || state.properForm.filterType == '') {
       state.properForm.filterType = '通过'
     }
@@ -931,22 +967,20 @@ const getParentData = (data, lf, flowtype) => {
   }
   if (data.type == 'swich') {
     state.proper.typeC = '分支选择';
-    getNetwork();
-    getSerial();
-    getPackage();
-    getMessHeader();
-    getMessBody();
-    getMessTraslate();
-    nextTick(() => {
-      setTimeout(() => {
-        getSourceData();
-      }, 500);
-    });
+
+    await getSourceData();
+
   }
 
 
   // initChartsMonitor();
 };
+const getFdGdData = async (node, lf) => {
+  state.lf = lf
+  state.node = node
+  await getSourceData();
+  return {fd: state.fd, gd: state.gd}
+}
 const getNetwork = () => {
   addressApi().searchNetworkInter(
       {
@@ -1029,11 +1063,11 @@ const getPackage = () => {
   });
 
 }
-const getPackageDetail=(pid)=>{
+const getPackageDetail = (pid) => {
   packageApi().searchPackageDetail(
       {
         uid: 1,
-        pid:pid,
+        pid: pid,
         pageNum: 1,
         pageSize: 1000,
         name: '',
@@ -1042,7 +1076,7 @@ const getPackageDetail=(pid)=>{
         //console.log(res);
         if (res.code == '200') {
 
-          state.properForm.tempDataContent=res.data;
+          state.properForm.tempDataContent = res.data;
         } else {
           ElMessage.error(res.message);
         }
@@ -1053,7 +1087,7 @@ const getPackageDetail=(pid)=>{
 
   });
 }
-const getMessHeaderDetail=(pid)=>{
+const getMessHeaderDetail = (pid) => {
   messdetailApi().searchMessDetail(
       {
         uid: 1,
@@ -1068,7 +1102,7 @@ const getMessHeaderDetail=(pid)=>{
         //console.log(res);
         if (res.code == '200') {
 
-          state.properForm.tempDataContent=res.data;
+          state.properForm.tempDataContent = res.data;
         } else {
           ElMessage.error(res.message);
         }
@@ -1079,7 +1113,7 @@ const getMessHeaderDetail=(pid)=>{
 
   });
 }
-const getMessBodyDetail=(pid)=>{
+const getMessBodyDetail = (pid) => {
   messdetailApi().searchMessDetail(
       {
         uid: 1,
@@ -1094,7 +1128,7 @@ const getMessBodyDetail=(pid)=>{
         //console.log(res);
         if (res.code == '200') {
 
-          state.properForm.tempDataContent=res.data;
+          state.properForm.tempDataContent = res.data;
         } else {
           ElMessage.error(res.message);
         }
@@ -1215,35 +1249,148 @@ const getMessTraslateDetail = (pid, transid, ttype) => {
   //const data = [];
 
 }
-const getSourceData = () => {
-  //sourceoptions.value = [];
-  getNodeSourceData();
-  nextTick(() => {
-    setTimeout(() => {
-      sourceoptions.value = fieldsoptions.value.concat(globaloptions.value);
-      let graph = state.lf.getGraphData();
 
-      let nodes = graph.nodes;
-      for (let i = 0; i < nodes.length; i++) {
-        if (nodes[i].type == 'swich') {
-          console.log('swich');
+function isDictionaryEmpty(dict) {
+  return Object.entries(dict).length === 0;
+}
 
-          state.lf.setProperties(nodes[i].id, {fd: fieldsoptions.value, gd: globaloptions.value});
-        }
-        if (nodes[i].type == 'filter') {
-          //  console.log('swich');
+function addlist(list, item) {
+  let flag = 0
+  for (let i of list) {
+    if (i.type == item.type && i.name == item.name) {
+      flag = 1
+    }
+  }
+  if (flag == 0) {
+    list.push(item)
+  }
+}
 
-          state.fd = fieldsoptions.value
-          state.gd = globaloptions.value;
+const getSubListFromIncoming = (node, lf, list) => {
+  let waitinglist = [];
+  let checkedNodes = [];
+  let dataidlist = [];
+  waitinglist.push(node)
+  //console.log(list);
+  while (waitinglist.length > 0) {
+    let nodetemp = waitinglist.pop()
+    checkedNodes.push(nodetemp.id)
+    //console.log(nodetemp);
+    if (nodetemp.type == 'pacparse' || nodetemp.type == 'pacencap') {
+      if (!isDictionaryEmpty(nodetemp.properties) && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
+        addlist(dataidlist, {'type': 'package', 'name': nodetemp.properties.nodeData.Name})
+      }
+    }
+    if (nodetemp.type == 'messheaderparse') {
+      if (!isDictionaryEmpty(nodetemp.properties) && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
+        addlist(dataidlist, {'type': 'messheader', 'name': nodetemp.properties.nodeData.Name})
+      }
+    }
+    if (nodetemp.type == 'messheaderencap') {
+      if (!isDictionaryEmpty(nodetemp.properties) && nodetemp.properties.messheaderName != '') {
+        addlist(dataidlist, {'type': 'messheader', 'name': nodetemp.properties.messheaderName})
+      }
+    }
+    if (nodetemp.type == 'messbodyparse' || nodetemp.type == 'messbodyencap') {
+      if (!isDictionaryEmpty(nodetemp.properties) && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
+        addlist(dataidlist, {'type': 'messbody', 'name': nodetemp.properties.nodeData.Name})
+      }
+    }
+
+
+    let nodearrays = Array.from(lf.getNodeIncomingNode(nodetemp.id));
+    if (nodearrays.length > 0) {
+      //console.log(nodearrays)
+      for (let k of nodearrays) {
+        if (checkedNodes.indexOf(k.id) != -1) {
+          continue
+        } else {
+          waitinglist.push(k)
         }
       }
-      // emitter.emit('Fn', {fd:fieldsoptions.value,gd:globaloptions.value});
-    }, 500);
-  });
+    }
+  }
+  let newlist = []
+  for (let i of list) {
+    for (let k of dataidlist) {
+      if (i.Name == k.name && i.type == k.type) {
+        newlist.push(i)
+      }
+    }
+  }
+  return newlist
+}
+const getGlobalListFromIncoming = (node, lf, list) => {
+  let waitinglist = [];
+  let checkedNodes = [];
+  let dataidlist = [];
+  waitinglist.push(node)
+  //console.log(list);
+  while (waitinglist.length > 0) {
+    let nodetemp = waitinglist.pop()
+    checkedNodes.push(nodetemp.id)
+    //console.log(nodetemp);
 
+    if (nodetemp.type == 'spemark') {
+      if (!isDictionaryEmpty(nodetemp.properties) && !isDictionaryEmpty(nodetemp.properties.globalVarName)) {
+        addlist(dataidlist, {'type': 'spemark', 'name': nodetemp.properties.globalVarName})
+      }
+    }
+
+
+    let nodearrays = Array.from(lf.getNodeIncomingNode(nodetemp.id));
+    if (nodearrays.length > 0) {
+      //console.log(nodearrays)
+      for (let k of nodearrays) {
+        if (checkedNodes.indexOf(k.id) != -1) {
+          continue
+        } else {
+          waitinglist.push(k)
+        }
+      }
+    }
+  }
+  let newlist = []
+  for (let i of list) {
+    for (let k of dataidlist) {
+      if (i.Name == k.name) {
+        newlist.push(i)
+      }
+    }
+  }
+  return newlist
+}
+const getSourceData = async () => {
+  //sourceoptions.value = [];
+  await getNodeSourceData();
+
+
+  //sourceoptions.value = fieldsoptions.value.concat(globaloptions.value);
+  let graph = state.lf.getGraphData();
+
+  let nodes = graph.nodes;
+  for (let i = 0; i < nodes.length; i++) {
+    if (nodes[i].type == 'swich') {
+
+      let fdlist = getSubListFromIncoming(nodes[i], state.lf, fieldsoptions.value);
+      let gdlist = getGlobalListFromIncoming(nodes[i], state.lf, globaloptions.value);
+      state.lf.setProperties(nodes[i].id, {fd: fdlist, gd: gdlist});
+    }
+
+  }
+
+  let fdlist = getSubListFromIncoming(state.node, state.lf, fieldsoptions.value);
+  let gdlist = getGlobalListFromIncoming(state.node, state.lf, globaloptions.value);
+  state.fd = fdlist
+  state.gd = gdlist;
+
+
+  // emitter.emit('Fn', {fd:fieldsoptions.value,gd:globaloptions.value});
 
 }
-const getNodeSourceData = () => {
+
+
+const getNodeSourceData = async () => {
   fieldsoptions.value = [];
   let graph = state.lf.getGraphData();
   let packagelist = [];
@@ -1309,7 +1456,7 @@ const getNodeSourceData = () => {
   for (let i = 0; i < lista.length; i++) {
     for (let k = 0; k < listb.length; k++) {
       if (lista[i] == listb[k].ID) {
-        let childs = getPackageDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
+        await getPackageDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
 
       }
     }
@@ -1320,7 +1467,7 @@ const getNodeSourceData = () => {
   for (let i = 0; i < lista.length; i++) {
     for (let k = 0; k < listb.length; k++) {
       if (lista[i] == listb[k].ID) {
-        let childs = getMessHeaderDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
+        await getMessHeaderDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
 
       }
     }
@@ -1331,18 +1478,18 @@ const getNodeSourceData = () => {
   for (let i = 0; i < lista.length; i++) {
     for (let k = 0; k < listb.length; k++) {
       if (lista[i] == listb[k].ID) {
-        let childs = getMessBodyDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
+        await getMessBodyDetailOptions(listb[k].Name, listb[k].Name, lista[i]);
 
       }
     }
   }
   globaloptions.value = []
-  globaloptions.value.push(getGlobalVarOptions(globalvarlist));
+  globaloptions.value = globalvarlist;
 
 }
-const getPackageDetailOptions = (ename, name, pid) => {
-  console.log(ename, pid);
-  packageApi().searchPackageDetail(
+const getPackageDetailOptions = async (ename, name, pid) => {
+  //console.log(ename, pid);
+  await packageApi().searchPackageDetail(
       {
         uid: 1,
         pid: pid,
@@ -1352,12 +1499,13 @@ const getPackageDetailOptions = (ename, name, pid) => {
 
       })
       .then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code == '200') {
           fieldsoptions.value.push(
               {
                 EName: ename,
                 Name: name,
+                type: 'package',
                 children: res.data,
               }
           )
@@ -1367,14 +1515,14 @@ const getPackageDetailOptions = (ename, name, pid) => {
 
       }).catch(err => {
 
-  }).finally(() => {
+      }).finally(() => {
 
-  });
+      });
   //const data = [];
 }
-const getMessHeaderDetailOptions = (ename, name, pid) => {
-  console.log(ename, pid);
-  messdetailApi().searchMessDetail(
+const getMessHeaderDetailOptions = async (ename, name, pid) => {
+  //console.log(ename, pid);
+  await messdetailApi().searchMessDetail(
       {
         uid: 1,
         pid: pid,
@@ -1385,12 +1533,13 @@ const getMessHeaderDetailOptions = (ename, name, pid) => {
         nestid: 0,
       })
       .then(res => {
-        console.log(res);
+        //
         if (res.code == '200') {
           fieldsoptions.value.push(
               {
                 EName: ename,
                 Name: name,
+                type: 'messheader',
                 children: res.data,
               }
           )
@@ -1400,14 +1549,14 @@ const getMessHeaderDetailOptions = (ename, name, pid) => {
 
       }).catch(err => {
 
-  }).finally(() => {
+      }).finally(() => {
 
-  });
+      });
   //const data = [];
 }
-const getMessBodyDetailOptions = (ename, name, pid) => {
-  console.log(ename, pid);
-  messdetailApi().searchMessDetail(
+const getMessBodyDetailOptions = async (ename, name, pid) => {
+  // console.log(ename, pid);
+  await messdetailApi().searchMessDetail(
       {
         uid: 1,
         pid: pid,
@@ -1418,12 +1567,13 @@ const getMessBodyDetailOptions = (ename, name, pid) => {
         nestid: 0,
       })
       .then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.code == '200') {
           fieldsoptions.value.push(
               {
                 EName: ename,
                 Name: name,
+                type: 'messbody',
                 children: res.data,
               }
           )
@@ -1433,9 +1583,9 @@ const getMessBodyDetailOptions = (ename, name, pid) => {
 
       }).catch(err => {
 
-  }).finally(() => {
+      }).finally(() => {
 
-  });
+      });
   //const data = [];
 }
 const getGlobalVarOptions = (list) => {
@@ -1444,6 +1594,7 @@ const getGlobalVarOptions = (list) => {
   return {
     EName: 'globalVar',
     Name: '临时变量',
+    type: 'spemark',
     children: list
   }
 
@@ -1452,6 +1603,7 @@ const getGlobalVarOptions = (list) => {
 
 
 const clearFlag = () => {
+  state.showFlag.bezier = false;
   state.showFlag.start = false;
   state.showFlag.end = false;
   state.showFlag.pacparse = false;
@@ -1470,9 +1622,10 @@ const clearFlag = () => {
   state.showFlag.delayed = false;
   state.showFlag.inpac = false;
   state.showFlag.filter = false;
-  state.properForm.tempData='';
-  state.properForm.tempDataContent='';
-  state.properForm.converName='';
+  state.properForm.tempData = '';
+  state.properForm.tempDataContent = '';
+  state.properForm.converName = '';
+  state.edge='';
 
 }
 
@@ -1531,7 +1684,13 @@ const onChangeStartSNIP = (value: any) => {
 // 目的节点中-网口类-目的地址菜单菜单联动
 const onChangeEndNetworkChoose = (value: any) => {
   if (state.properForm.localnetworkID == '-1') {
-    state.properForm.IPlist = [{IP: '', Port: '', messPackProperty: '无', reForwardSocket: '新SOCKET',ipType:'通用地址'}];
+    state.properForm.IPlist = [{
+      IP: '',
+      Port: '',
+      messPackProperty: '无',
+      reForwardSocket: '新SOCKET',
+      ipType: '通用地址'
+    }];
   } else {
 
     for (let i = 0; i < NetworkLocalOptions.value.length; i++) {
@@ -1542,7 +1701,7 @@ const onChangeEndNetworkChoose = (value: any) => {
           Port: NetworkLocalOptions.value[i].Port,
           messPackProperty: '无',
           reForwardSocket: '新SOCKET',
-          ipType:'通用地址'
+          ipType: '通用地址'
         }];
       }
     }
@@ -1614,7 +1773,7 @@ const onExtendRefresh = () => {
   state.properForm.transid = '';
   state.properForm.globalVarName = '';
   state.properForm.sourceData = '';
-  state.properForm.converName='';
+  state.properForm.converName = '';
 
 };
 const onChangeMessTranslateChoose = () => {
@@ -1628,16 +1787,21 @@ const onChangeMessTranslateChoose = () => {
   getMessTraslateDetail(targetid, state.properForm.transid, 'body');
 }
 const onExtendEditMessTranslate = () => {
-  translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata, fieldsoptions.value, globaloptions.value);
+  translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata, state.fd, state.gd);
 
 };
 const onChangeMessheaderEncapChoose = () => {
+  for (let i of MessHeaderOptions.value) {
+    if (i.ID == state.properForm.messheaderencapID) {
+      state.properForm.messheaderName = i.Name;
+    }
+  }
   getMessTraslateDetail(state.properForm.messheaderencapID, -1, 'header');
 }
 const onExtendEditMessheader = () => {
   //messDialogRef.value.openDialog('header', state.properForm.messheaderencapID);
   console.log(fieldsoptions.value);
-  translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata, fieldsoptions.value, globaloptions.value);
+  translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata, state.fd, state.gd);
   // translateDialogRef.value.openDialog(state.node.id, state.properForm.messtranslatedata);
 
 };
@@ -1654,7 +1818,13 @@ const viewNess = () => {
 
 };
 const onAddEndIP = () => {
-  state.properForm.IPlist.push({IP: '', Port: '0', messPackProperty: '无', reForwardSocket: '新SOCKET',ipType:'通用地址'});
+  state.properForm.IPlist.push({
+    IP: '',
+    Port: '0',
+    messPackProperty: '无',
+    reForwardSocket: '新SOCKET',
+    ipType: '通用地址'
+  });
 };
 const onDelEndIP = (k: number) => {
   state.properForm.IPlist.splice(k, 1);
@@ -1676,15 +1846,19 @@ const onExtendSubmit = () => {
         state.loading.extend = false;
         return;
       }
+      if(state.edge!=''){
+        onLineTextChange();
+        return;
+      }
       const nodeModel = state.lf.getNodeModelById(state.node.id);
-      if(state.properForm.tempData!=''){
-        state.properForm.nodeData=state.properForm.tempData;
-        state.properForm.nodeDataContent=state.properForm.tempDataContent;
+      if (state.properForm.tempData != '') {
+        state.properForm.nodeData = state.properForm.tempData;
+        state.properForm.nodeDataContent = state.properForm.tempDataContent;
         delete state.properForm.tempDataContent;
         delete state.properForm.tempData;
       }
-      if(state.node.type == 'conver'){
-        state.properForm.converName=state.proper.name;
+      if (state.node.type == 'conver') {
+        state.properForm.converName = state.proper.name;
       }
       nodeModel.updateText(state.proper.name);
       nodeModel.setProperties(state.properForm);
@@ -1751,7 +1925,17 @@ const initChartsMonitor = () => {
 
 // 暴露变量
 defineExpose({
-  getParentData,
+  getParentData, getFdGdData
+});
+onMounted(async () => {
+
+  getNetwork();
+  getSerial();
+  getPackage();
+  getMessHeader();
+  getMessBody();
+  getMessTraslate();
+
 });
 </script>
 

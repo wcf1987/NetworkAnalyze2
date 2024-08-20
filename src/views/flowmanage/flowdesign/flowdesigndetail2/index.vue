@@ -228,7 +228,7 @@ const getFlowFromDB = () => {
 
 }
 const createFlowFromStr = (flowstr, flowOutStr) => {
-  console.log(flowOutStr)
+  //console.log(flowOutStr)
   if ('stateShow' in flowstr) {
     state.SourceIPAndPort = flowstr.stateShow.SourceIPAndPort;
     state.LocalIPAndPort = flowstr.stateShow.LocalIPAndPort;
@@ -269,6 +269,83 @@ const createFlowFromStr = (flowstr, flowOutStr) => {
   // console.log(flowstr.stateShow)
 
 }
+const clearPackageNode = (node) => {
+  delete node.nodeData['AuthorID']
+  delete node.nodeData['CreateTime']
+  delete node.nodeData['Describes']
+  let nodeContents = node.nodeDataContent;
+  //console.log(nodeContents)
+  for (let nodec of nodeContents) {
+    delete nodec['AuthorID']
+    delete nodec.CreateTime
+    delete nodec.DefaultValue
+    delete nodec.Describes
+    delete nodec.OrderID
+    delete nodec.SortID
+    delete nodec.packID
+
+  }
+}
+const clearMessNode = (node) => {
+  delete node.nodeData['AuthorID']
+  delete node.nodeData['CreateTime']
+  delete node.nodeData['Describes']
+  let nodeContents = node.nodeDataContent;
+
+
+  let waitlist = [];
+
+  for (let k of nodeContents) {
+    if (k.children != null && k.children.length > 0) {
+
+      waitlist = waitlist.concat(k.children);
+    }
+    waitlist.push(k);
+
+
+  }
+  while (waitlist.length > 0) {
+    let n = waitlist.pop();
+    if (n.children != null && n.children.length > 0) {
+
+
+      waitlist = waitlist.concat(n.children);
+
+
+    }
+    if (n.OutType == 'nest') {
+      delete n.ArrayOr;
+      delete n.Flag;
+      delete n.Length;
+      delete n.Type;
+      delete n.Length;
+
+    }
+    delete n.AuthorID;
+    delete n.CreateTime;
+    delete n.Describes;
+    delete n.DFIID;
+    delete n.DefaultVal;
+    delete n.FieldsID;
+    delete n.MaxGroupNum;
+    delete n.NestID;
+    delete n.OrderID;
+    delete n.OutID;
+    delete n.PID;
+    delete n.ShortName;
+    delete n.SortID;
+    delete n.TType;
+    delete n.OutType;
+
+
+  }
+
+}
+
+function isDictionaryEmpty(dict) {
+  return Object.entries(dict).length === 0;
+}
+
 const saveScript = (grajson) => {
   //console.log(grajson);
   let scripts = {nodes: [], edges: []};
@@ -369,9 +446,15 @@ const saveScript = (grajson) => {
     }
     if (nodes[i].type == 'pacparse') {
       //state.headerParseName = nodes[i].ID;
+      if (nodes[i].properties['pacparseID'] != '') {
+        clearPackageNode(nodes[i].properties);
+      }
     }
     if (nodes[i].type == 'pacencap') {
       //state.headerEncapName = nodes[i].ID;
+      if (nodes[i].properties['pacencapID'] != '') {
+        clearPackageNode(nodes[i].properties);
+      }
     }
     if (nodes[i].type == 'swich') {
       delete nodet.properties;
@@ -380,7 +463,10 @@ const saveScript = (grajson) => {
 
 
       state.headerParseName = findOptionsName(state.MessHeaderOptions, tt.messheaderparseID);
-      console.log(tt);
+      if (!isDictionaryEmpty(nodes[i].properties) && nodes[i].properties['messheaderparseID'] != '') {
+        clearMessNode(nodes[i].properties);
+      }
+
     }
     if (nodes[i].type == 'messheaderencap') {
       state.headerEncapName = findOptionsName(state.MessHeaderOptions, tt.messheaderencapID);
@@ -447,9 +533,15 @@ const saveScript = (grajson) => {
 
     if (nodes[i].type == 'messbodyparse') {
       state.bodyPaserName = findOptionsName(state.MessBodyOptions, tt.messbodyparseID);
+      if (!isDictionaryEmpty(nodes[i].properties) && nodes[i].properties['messbodyparseID'] != '') {
+        clearMessNode(nodes[i].properties);
+      }
     }
     if (nodes[i].type == 'messbodyencap') {
       state.bodyEncapName = findOptionsName(state.MessBodyOptions, tt.messbodyencapID);
+      if (!isDictionaryEmpty(nodes[i].properties) && nodes[i].properties['messbodyencapID'] != '') {
+        clearMessNode(nodes[i].properties);
+      }
     }
     if (nodes[i].type == 'messtraslate') {
       state.transName = findOptionsName(state.MessTraslateOptions, tt.transid);
@@ -578,17 +670,17 @@ const findOptionsName = (options, id) => {
 }
 const checkGraph = (grajson) => {
   let nodes = grajson.nodes;
-  let flag=0;
+  let flag = 0;
   for (let i = 0; i < nodes.length; i++) {
-    console.log('node edges:',lf.value.getNodeEdges(nodes[i].id))
+   // console.log('node edges:', lf.value.getNodeEdges(nodes[i].id))
     if (lf.value.getNodeEdges(nodes[i].id).length == 0) {
       ElMessage.error('请删除或调整无连接节点');
-      flag=-1
+      flag = -1
     }
     let outgoing = lf.value.getNodeOutgoingNode(nodes[i].id);
-    if(outgoing<1 && nodes[i].type!='dest'){
+    if (outgoing < 1 && nodes[i].type != 'dest') {
       ElMessage.error('请确保除结束节点外所有节点均有输出连接');
-      flag=-1
+      flag = -1
     }
 
   }
@@ -600,7 +692,7 @@ const saveFlow = () => {
   let flowGraphStr = lf.value.getGraphData();
   let s2 = JSON.parse(JSON.stringify(flowGraphStr));
   state.checkGraph = false;
-  console.log(flowGraphStr);
+ // console.log(flowGraphStr);
   if (checkGraph(s2) == -1) {
     //ElMessage.warning('流程图中存在无连接节点');
     state.checkGraph = false;
@@ -894,13 +986,13 @@ function render() {
 function LfEvent() {
   lf.value.on('node:click', ({data}) => {
     drawerRef.value.open(data, lf.value, state.FlowType);
-    console.log('node:click', data)
+   // console.log('node:click', data)
   })
   lf.value.on('edge:click', ({data}) => {
     const sourenode = lf.value.getNodeModelById(data.sourceNodeId)
-    if (sourenode.type == 'swich') {
 
-      drawerRef.value.open(data, lf.value);
+    if (sourenode.type == 'swich') {
+      drawerRef.value.open(data, lf.value, state.FlowType);
     } else {
       ElMessage.success('只有条件分支后续连接可以编辑');
     }
@@ -918,16 +1010,16 @@ function LfEvent() {
       lf.value.deleteEdge(data.id);
       return
     }
-    let edges=lf.value.getEdgeModels({
+    let edges = lf.value.getEdgeModels({
       sourceNodeId: data.sourceNodeId,
       targetNodeId: data.targetNodeId,
     });
-    if (edges.length>1){
+    if (edges.length > 1) {
       ElMessage.error("该连接已存在");
       lf.value.deleteEdge(data.id);
       return
     }
-      console.log('edge:add', data)
+    console.log('edge:add', data)
     //console.log('s node:',outgoing)
   })
   lf.value.on('node:add', ({data}) => {
@@ -1044,43 +1136,48 @@ const initLeftNavList = () => {
           .then(res => {
             //console.log(res);
             if (res.code == '200') {
-
-              let convlist = state.leftNavList[3];
               if (state.Type == '应用层透明传输') {
                 return;
               }
-              convlist.children = new Array();
-              for (let i = 0, k = 0; k < res.data.length; k++) {
-                if (res.data[k].Type == '内置转换节点') {
-                  convlist.children[i] = {
-                    icon: conver,
-                    name: res.data[k].Name,
-                    type: 'conver',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Desc,
+
+
+              let convlist = state.leftNavList[3];
+              if (convlist.title == '内置封装节点') {
+                convlist.children = new Array();
+                for (let i = 0, k = 0; k < res.data.length; k++) {
+                  if (res.data[k].Type == '内置转换节点') {
+                    convlist.children[i] = {
+                      icon: conver,
+                      name: res.data[k].Name,
+                      type: 'conver',
+                      id: res.data[k].ID,
+                      descrip: res.data[k].Desc,
+                    }
+                    i++
                   }
-                  i++
+
                 }
+              } else {
 
-              }
-              convlist = state.leftNavList[4];
-              convlist.children = new Array();
 
-              for (let i = 0, k = 0; k < res.data.length; k++) {
-                if (res.data[k].Type == '内置封装节点') {
-                  convlist.children[i] = {
-                    icon: inpac,
-                    name: res.data[k].Name,
-                    type: 'inpac',
-                    id: res.data[k].ID,
-                    descrip: res.data[k].Desc,
+                // convlist = state.leftNavList[4];
+                convlist.children = new Array();
+
+                for (let i = 0, k = 0; k < res.data.length; k++) {
+                  if (res.data[k].Type == '内置封装节点') {
+                    convlist.children[i] = {
+                      icon: inpac,
+                      name: res.data[k].Name,
+                      type: 'inpac',
+                      id: res.data[k].ID,
+                      descrip: res.data[k].Desc,
+                    }
+                    i++
                   }
-                  i++
+
                 }
-
+                //  scrollbar.update();
               }
-              //  scrollbar.update();
-
             } else {
               ElMessage.error(res.message);
             }
@@ -1102,7 +1199,7 @@ const initLeftNavList = () => {
             if (res.code == '200') {
 
               let convlist = state.leftNavList[2];
-              console.log(res.data);
+              //console.log(res.data);
               convlist.children = new Array();
               for (let k = 0; k < res.data.length; k++) {
                 if (res.data[k].Type == '计算节点') {
@@ -1225,8 +1322,7 @@ const onCurrentLineClick = (contextMenuClickId, item: any) => {
   if (contextMenuClickId == 0) {
     const sourenode = lf.value.getNodeModelById(item.sourceNodeId)
     if (sourenode.type == 'swich') {
-
-      drawerRef.value.open(item, lf.value);
+      drawerRef.value.open(data, lf.value, state.FlowType);
     } else {
       ElMessage.success('只有条件分支后续连接可以编辑');
     }

@@ -81,6 +81,18 @@ const rules = reactive({
     {min: 1, max: 10, message: '名称长度为1 - 10位'},
   ],
 });
+const checkEName=(rule, value, callback) => {
+  if (value) {
+      if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)) {
+        callback(new Error('引用名必须以字母开头，不得包含特殊字符'));
+      } else {
+        callback();
+      }
+
+  } else {
+    callback(new Error('引用名不能为空'));
+  }
+}
 const state = reactive({
   ruleForm: {
     Name: '', // 账户名称
@@ -91,6 +103,7 @@ const state = reactive({
   baseRules: {
     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
     Type: [{required: true, message: '请选择类型', trigger: 'change'}],
+        EName: [{required: true, message: '请输入引用名', trigger: 'blur'},{validator: checkEName, trigger: 'blur'}],
   },
   dialog: {
     isShowDialog: false,

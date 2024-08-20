@@ -9,9 +9,8 @@
             <ele-EditPen/>
           </el-icon>
         </template>
-        <Lines v-if="state.nodeData.type === 'bezier'" @submit="onSubmit" @close="close" ref="lineRef"
-        />
-        <Nodes v-else @submit="onSubmit" @close="close" ref="nodeRef"/>
+
+        <Nodes  @submit="onSubmit" @close="close" ref="nodeRef"/>
       </el-collapse-item>
     </el-collapse>
   </div>
@@ -26,6 +25,7 @@ const emit = defineEmits(['label', 'node', 'save']);
 
 // 引入组件
 const Lines = defineAsyncComponent(() => import('./line.vue'));
+
 const Nodes = defineAsyncComponent(() => import('./node.vue'));
 //import Nodes from './node.vue';
 // 定义变量内容
@@ -40,19 +40,35 @@ const state = reactive({
 });
 
 // 打开抽屉
-const open = (item, lf, flowType) => {
+const open = (item, lf, flowType, fdgd) => {
   state.isOpen = true;
   state.nodeData = item;
 
 
   if (item.type === 'bezier') {
-    setTimeout(() => {
-      // 这里放置你想要延时执行的代码
-      lineRef.value.getParentData(item, lf);
-    }, 300); // 延时2秒执行
-  } else {
+   // nextTick(() => {
+    //  setTimeout(() => {
+    //    lineRef.value.getParentData(item, lf, fdgd);
+   //   }, 400);
+
+  //  });
+
+    // 这里放置你想要延时执行的代码
     nodeRef.value.getParentData(item, lf, flowType);
+    // 延时2秒执行
+  } else {
+
+
+    nodeRef.value.getParentData(item, lf, flowType);
+
   }
+
+};
+const getData = async (node, lf) => {
+
+    return await nodeRef.value.getFdGdData(node, lf);
+
+
 
 };
 // 关闭
@@ -70,7 +86,7 @@ const onSubmit = () => {
 
 // 暴露变量
 defineExpose({
-  open,
+  open, getData
 });
 </script>
 <style scoped lang="scss">

@@ -63,7 +63,7 @@
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="数据标识" prop="Flag">
               <el-select v-model="state.ruleForm.Flag" value-key="id" placeholder="请选择" clearable
-                         class="w100" :disabled ="isReadOnly">
+                         class="w100" :disabled="isReadOnly">
                 <el-option
                     v-for="item in dataFlagOptions"
                     :key="item.id"
@@ -238,8 +238,8 @@ const userDialogFormRef = ref();
 const DUIOptions = ref();
 const DFIOptions = ref();
 
-const onSearch=()=>{
-    fieldsdetailApi().searchFieldsDetail(
+const onSearch = () => {
+  fieldsdetailApi().searchFieldsDetail(
       {
         uid: 1,
         pageNum: 1,
@@ -270,8 +270,8 @@ const chooseDUI = (fo) => {
   for (i = 0; i < DUIOptions.value.length; i++) {
     if (DUIOptions.value[i].ID == fo) {
       state.ruleForm = DUIOptions.value[i];
-      state.ruleFormOri.sourceDFI=DUIOptions.value[i].DFIID;
-      state.ruleFormOri.EName=DUIOptions.value[i].EName;
+      state.ruleFormOri.sourceDFI = DUIOptions.value[i].DFIID;
+      state.ruleFormOri.EName = DUIOptions.value[i].EName;
     }
   }
 
@@ -299,9 +299,9 @@ const changeDFI = async (fo) => {
 
       }).catch(err => {
 
-  }).finally(() => {
+      }).finally(() => {
 
-  });
+      });
 };
 const changeDUI = (fo) => {
   console.log(fo);
@@ -309,12 +309,23 @@ const changeDUI = (fo) => {
   for (i = 0; i < DUIOptions.value.length; i++) {
     if (DUIOptions.value[i].ID == fo) {
       state.ruleForm = DUIOptions.value[i];
-      state.ruleFormOri.EName=DUIOptions.value[i].EName;
+      state.ruleFormOri.EName = DUIOptions.value[i].EName;
     }
   }
 
 };
+const checkEName = (rule, value, callback) => {
+  if (value) {
+    if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(value)) {
+      callback(new Error('引用名必须以字母开头，不得包含特殊字符'));
+    } else {
+      callback();
+    }
 
+  } else {
+    callback(new Error('引用名不能为空'));
+  }
+}
 const rules = reactive({
 // 普通的校验规则
   name: [
@@ -347,7 +358,7 @@ const state = reactive({
     sourceDUI: [{required: true, message: '请选择DUI', trigger: 'blur'}],
     sourceDFI: [{required: true, message: '请选择DFI', trigger: 'blur'}],
 
-    EName: [{required: true, message: '请输入引用名', trigger: 'blur'}],
+    EName: [{required: true, message: '请输入名称', trigger: 'blur'}, {validator: checkEName, trigger: 'blur'}],
   },
   dialog: {
     isShowDialog: false,
@@ -356,6 +367,7 @@ const state = reactive({
     submitTxt: '',
   },
 });
+
 const isReadOnly = ref(false);
 // 打开弹窗
 const openDialog = async (type: string, pid, row: RowUserType, nestid) => {
@@ -521,7 +533,7 @@ const onSubmit = () => {
         state.ruleForm['OutType'] = 'fields';
         state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
         state.ruleForm['SortID'] = state.ruleFormOri.SortID;
-              state.ruleForm['EName'] = state.ruleFormOri.EName;
+        state.ruleForm['EName'] = state.ruleFormOri.EName;
         messdetailApi().addMessDetail(
             state.ruleForm
         )
