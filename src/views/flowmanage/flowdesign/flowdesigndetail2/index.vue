@@ -687,7 +687,11 @@ const checkGraph = (grajson) => {
       ElMessage.error('请确保除结束节点外所有节点均有输出连接');
       flag = -1
     }
-
+    //console.log(nodes[i])
+    if (nodes[i].type == 'start' && nodes[i].properties.port=='') {
+      ElMessage.error('请确保源节点本地端口不为空');
+      flag = -1
+    }
   }
   return flag
 

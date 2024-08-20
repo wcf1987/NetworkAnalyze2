@@ -141,8 +141,8 @@
           </el-form-item>
           <el-form-item label="本地端口" prop="Port"
                         v-if="state.properForm.interfacetype=='网口' "
-                        :readonly=" state.properForm.localnetworkID!='-1'">
-            <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable
+                        :readonly=" state.properForm.localnetworkID!='-1'" >
+            <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable @change="checkPort"
             ></el-input>
           </el-form-item>
 
