@@ -415,7 +415,7 @@ const clearMessNode = (node) => {
     delete n.SortID;
     delete n.TType;
     delete n.OutType;
-    console.log(n.EName)
+    //console.log(n.EName)
     if(n.EName==null){
       n.EName='';
     }
@@ -753,6 +753,7 @@ const findOptionsName = (options, id) => {
 const checkGraph = (grajson) => {
   let nodes = grajson.nodes;
   let flag = 0;
+
   for (let i = 0; i < nodes.length; i++) {
     //console.log('node edges:', lf.value.getNodeEdges(nodes[i].id))
     if (lf.value.getNodeEdges(nodes[i].id).length == 0) {
@@ -764,8 +765,13 @@ const checkGraph = (grajson) => {
       ElMessage.error('请确保除结束节点外所有节点均有输出连接');
       flag = -1
     }
-    if (nodes[i].type == 'start' && nodes[i].properties.port=='') {
+    //console.log(nodes[i])
+    if (nodes[i].type == 'start' && (nodes[i].properties.Port==''||nodes[i].properties.Port===undefined)) {
       ElMessage.error('请确保源节点本地端口不为空');
+      flag = -1
+    }
+        if (nodes[i].type == 'start' && (nodes[i].properties.IP==''||nodes[i].properties.IP===undefined)) {
+      ElMessage.error('请确保源节点本地IP地址不为空');
       flag = -1
     }
   }
@@ -1144,7 +1150,7 @@ const initLeftNavList = () => {
 
 
                 let convlist = state.leftNavList[3];
-                if (convlist.title == '内置封装节点') {
+                if (convlist.title == '内置转换节点') {
                   convlist.children = new Array();
                   for (let i = 0, k = 0; k < res.data.length; k++) {
                     if (res.data[k].Type == '内置转换节点') {

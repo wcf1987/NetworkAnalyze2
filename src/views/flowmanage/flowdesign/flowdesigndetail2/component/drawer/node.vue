@@ -136,7 +136,7 @@
           </el-form-item>
           <el-form-item label="本地地址" prop="IP"
                         v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
-            <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable
+            <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable  @change="checkIP"
             ></el-input>
           </el-form-item>
           <el-form-item label="本地端口" prop="Port"

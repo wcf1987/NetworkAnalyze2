@@ -688,8 +688,12 @@ const checkGraph = (grajson) => {
       flag = -1
     }
     //console.log(nodes[i])
-    if (nodes[i].type == 'start' && nodes[i].properties.port=='') {
+    if (nodes[i].type == 'start' && (nodes[i].properties.Port==''||nodes[i].properties.Port===undefined)) {
       ElMessage.error('请确保源节点本地端口不为空');
+      flag = -1
+    }
+        if (nodes[i].type == 'start' && (nodes[i].properties.IP==''||nodes[i].properties.IP===undefined)) {
+      ElMessage.error('请确保源节点本地IP地址不为空');
       flag = -1
     }
   }
@@ -1151,7 +1155,7 @@ const initLeftNavList = () => {
 
 
               let convlist = state.leftNavList[3];
-              if (convlist.title == '内置封装节点') {
+              if (convlist.title == '内置转换节点') {
                 convlist.children = new Array();
                 for (let i = 0, k = 0; k < res.data.length; k++) {
                   if (res.data[k].Type == '内置转换节点') {
