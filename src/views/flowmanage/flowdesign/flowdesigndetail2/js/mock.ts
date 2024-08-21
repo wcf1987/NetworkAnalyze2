@@ -26,6 +26,7 @@ import firsticon from "/@/assets/svgicon/first.svg";
 import pacsizeicon from "/@/assets/svgicon/pacsize.svg";
 
 import pacnumicon from "/@/assets/svgicon/pacnum.svg";
+
 export const leftNavList = [
     {
         title: '基础节点',
@@ -33,7 +34,7 @@ export const leftNavList = [
         isOpen: true,
         id: '1',
         children: [
-          {
+            {
                 icon: firsticon,
                 name: '开始节点',
                 id: '11_1',
@@ -49,7 +50,7 @@ export const leftNavList = [
                 descrip: '流程的结束节点',
 
             },
-               {
+            {
                 icon: starticon,
                 name: '源消息节点',
                 id: '11',
@@ -168,45 +169,45 @@ export const leftNavList = [
                 name: '定时器',
                 type: 'timer',
                 id: '31',
-				descrip: '定时器，用来计时',
+                descrip: '定时器，用来计时',
             },
             {
                 icon: delayedicon,
                 name: '延时器',
                 type: 'delayed',
                 id: '34',
-				descrip: '延时器，用来延时运行',
+                descrip: '延时器，用来延时运行',
             },
             {
                 icon: statisticsicon,
                 name: '数据统计',
                 type: 'statistics',
                 id: '32',
-				descrip: '数据统计模块',
+                descrip: '数据统计模块',
             },
             {
                 icon: calcicon,
                 name: '计算节点',
                 type: 'calc',
                 id: '33',
-               descrip: '特定计算节点',
+                descrip: '特定计算节点',
             },
         ],
     },
 
     {
-        title: '内置封装节点',
+        title: '内置转换节点',
         isOpen: true,
 
         icon: 'iconfont icon-shuju',
-        id: '5',
+        id: '4',
         children: [
             {
-                icon: inpacicon,
-                name: '封装1',
-                type: 'inpac',
-                id: '51',
-                descrip: '封装1',
+                icon: convericon,
+                name: '方式1',
+                type: 'conver',
+                id: '41',
+                descrip: '转换方式1',
             },
 
         ],

@@ -132,18 +132,18 @@ export const leftNavListSpecial = [
         ],
     },
     {
-        title: '内置转换节点',
+        title: '内置封装节点',
         isOpen: true,
 
         icon: 'iconfont icon-shuju',
-        id: '4',
+        id: '5',
         children: [
             {
-                icon: convericon,
-                name: '方式1',
-                type: 'conver',
-                id: '41',
-                descrip: '转换方式1',
+                icon: inpacicon,
+                name: '封装1',
+                type: 'inpac',
+                id: '51',
+                descrip: '封装1',
             },
 
         ],
