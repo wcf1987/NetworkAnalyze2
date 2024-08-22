@@ -285,10 +285,10 @@
             <el-select v-model="state.properForm.parseMethod" placeholder="请选择" clearable
                        class="w100">
               <el-option
-                  v-for="item in parseMethod"
+                  v-for="item in ParseOptions"
                   :key="item.ID"
-                  :label="item.label"
-                  :value="item.value"
+                  :label="item.Label"
+                  :value="item.Value"
               />
             </el-select>
           </el-form-item>
@@ -615,6 +615,7 @@ import {
   ParseMethod,
   EncapMethod
 } from '/@/utils/common';
+import {optionListApi} from "/@/api/plugmanage/optionlist";
 
 const Translatedialog = defineAsyncComponent(() => import('/@/views/flowmanage/flowdesign/flowdesigndetail2/component/drawer/traslatedialog.vue'));
 const translateDialogRef = ref();
@@ -642,6 +643,7 @@ const reForwardSocket = ref(ReForwardSocket);
 const ipType = ref(IPType);
 const VarTypeOptions = ref(VarType);
 const NetworkOptions = ref();
+const ParseOptions=ref();
 const NetworkLocalOptions = ref();
 const SerialOptions = ref();
 const PackageOptions = ref();
@@ -973,6 +975,29 @@ const getFdGdData = async (node, lf) => {
   state.node = node
   await getSourceData();
   return {fd: state.fd, gd: state.gd}
+}
+const getOptionList=()=>{
+  optionListApi().search(
+      {
+        uid: 1,
+        pageNum: 1,
+        pageSize:1000,
+        name: "",
+      })
+      .then(res => {
+        //console.log(res);
+        if (res.code == '200') {
+
+          ParseOptions.value = res.data;
+        } else {
+          ElMessage.error(res.message);
+        }
+
+      }).catch(err => {
+
+  }).finally(() => {
+
+  });
 }
 const getNetwork = () => {
   addressApi().searchNetworkInter(
@@ -1928,7 +1953,7 @@ onMounted(async () => {
   getMessHeader();
   getMessBody();
   getMessTraslate();
-
+  getOptionList();
 });
 </script>
 

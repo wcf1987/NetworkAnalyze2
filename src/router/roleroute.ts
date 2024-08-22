@@ -578,6 +578,20 @@ export const rolemenu=[
                             roles: ['admin', 'common'],
                             icon: 'iconfont icon-zujian',
                         },
+                    },{
+                        path: '/flowmanage/optionlist',
+                        name: 'optionlist',
+                        component: 'flowmanage/optionlist/index',
+                        meta: {
+                            title: 'message.router.optionlist',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-List',
+                        },
                     }
                 ]
 

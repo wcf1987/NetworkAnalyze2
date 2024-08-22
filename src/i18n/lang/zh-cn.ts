@@ -36,6 +36,7 @@ export default {
         builtnode:'内置节点管理',
         globalvar: '全局变量管理',
         specialnode: '流程特殊节点',
+        optionlist:'解析方法管理',
         pluginmanage: '插件管理',
         sysplug: '系统插件',
         funcplug: '函数插件',
