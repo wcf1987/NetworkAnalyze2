@@ -1802,6 +1802,15 @@ const onChangeMessTranslateChoose = () => {
 
     }
   }
+
+  for (let i of MessBodyOptions.value) {
+    if (i.ID == targetid) {
+      state.properForm.messbodyID = i.ID;
+      state.properForm.messbodyName = i.Name;
+      state.properForm.messbodyEName = i.EName;
+      state.properForm.messbodyType = i.Type;
+    }
+  }
   getMessTraslateDetail(targetid, state.properForm.transid, 'body');
 }
 const onExtendEditMessTranslate = () => {
@@ -1812,6 +1821,8 @@ const onChangeMessheaderEncapChoose = () => {
   for (let i of MessHeaderOptions.value) {
     if (i.ID == state.properForm.messheaderencapID) {
       state.properForm.messheaderName = i.Name;
+      state.properForm.messheaderEName = i.EName;
+      state.properForm.messheaderType = i.Type;
     }
   }
   getMessTraslateDetail(state.properForm.messheaderencapID, -1, 'header');
@@ -1877,6 +1888,9 @@ const onExtendSubmit = () => {
       }
       if (state.node.type == 'conver') {
         state.properForm.converName = state.proper.name;
+      }
+      if (state.node.type == 'inpac') {
+        state.properForm.inpacName = state.proper.name;
       }
       nodeModel.updateText(state.proper.name);
       nodeModel.setProperties(state.properForm);
