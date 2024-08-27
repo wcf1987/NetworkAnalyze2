@@ -30,13 +30,13 @@
           <el-form-item label="前序节点">
 
             <el-cascader v-model="state.properForm.fieldvar" :options=state.fd :props="props2" clearable
-                         collapse-tags @change="changeSourceInput"  class="w100"/>
+                         collapse-tags @change="changeSourceInput" class="w100"/>
 
           </el-form-item>
           <el-form-item label="临时变量">
 
             <el-cascader v-model="state.properForm.globalvar" :options=state.gd :props="props2" clearable
-                         collapse-tags @change="changeSourceInput"  class="w100"/>
+                         collapse-tags @change="changeSourceInput" class="w100"/>
 
           </el-form-item>
 
@@ -136,12 +136,12 @@
           </el-form-item>
           <el-form-item label="本地地址" prop="IP"
                         v-if="state.properForm.interfacetype=='网口' &&state.properForm.localnetworkID!=null">
-            <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable  @change="checkIP"
+            <el-input v-model="state.properForm.IP" placeholder="请输入ip地址" clearable @change="checkIP"
             ></el-input>
           </el-form-item>
           <el-form-item label="本地端口" prop="Port"
                         v-if="state.properForm.interfacetype=='网口' "
-                        :readonly=" state.properForm.localnetworkID!='-1'" >
+                        :readonly=" state.properForm.localnetworkID!='-1'">
             <el-input v-model="state.properForm.Port" placeholder="请输入端口" clearable @change="checkPort"
             ></el-input>
           </el-form-item>
@@ -643,7 +643,7 @@ const reForwardSocket = ref(ReForwardSocket);
 const ipType = ref(IPType);
 const VarTypeOptions = ref(VarType);
 const NetworkOptions = ref();
-const ParseOptions=ref();
+const ParseOptions = ref();
 const NetworkLocalOptions = ref();
 const SerialOptions = ref();
 const PackageOptions = ref();
@@ -655,10 +655,7 @@ const state = reactive({
   lf: '',
   flowtype: '',
 
-  baseRules: {
-
-
-  },
+  baseRules: {},
   proper: {
     name: '',
     typeC: '',
@@ -673,7 +670,7 @@ const state = reactive({
     type: "",
     tempData: "",
     tempDataContent: "",
-    Port:"",
+    Port: "",
   },
   tabsActive: '0',
   loading: {
@@ -819,7 +816,7 @@ const getParentData = async (data, lf, flowtype) => {
   //console.log(data)
   if (data.type == 'bezier') {
     state.proper.typeC = '分支条件';
-        if (state.properForm.rulestr == null || state.properForm.interfacetype == '' ) {
+    if (state.properForm.rulestr == null || state.properForm.rulestr == '') {
       state.properForm.rulestr = ''
     }
     state.edge = data
@@ -976,12 +973,12 @@ const getFdGdData = async (node, lf) => {
   await getSourceData();
   return {fd: state.fd, gd: state.gd}
 }
-const getOptionList=()=>{
+const getOptionList = () => {
   optionListApi().search(
       {
         uid: 1,
         pageNum: 1,
-        pageSize:1000,
+        pageSize: 1000,
         name: "",
       })
       .then(res => {
@@ -1310,7 +1307,7 @@ const getSubListFromIncoming = (node, lf, list) => {
       }
     }
     if (nodetemp.type == 'messbodyparse' || nodetemp.type == 'messbodyencap') {
-      if (!isDictionaryEmpty(nodetemp.properties)  && typeof nodetemp.properties.nodeData != 'undefined'&& !isDictionaryEmpty(nodetemp.properties.nodeData)) {
+      if (!isDictionaryEmpty(nodetemp.properties) && typeof nodetemp.properties.nodeData != 'undefined' && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
         addlist(dataidlist, {'type': 'messbody', 'name': nodetemp.properties.nodeData.Name})
       }
     }
@@ -1643,7 +1640,7 @@ const clearFlag = () => {
   state.properForm.tempData = '';
   state.properForm.tempDataContent = '';
   state.properForm.converName = '';
-  state.edge='';
+  state.edge = '';
 
 }
 
@@ -1875,7 +1872,7 @@ const onExtendSubmit = () => {
         state.loading.extend = false;
         return;
       }
-      if(state.edge!=''){
+      if (state.edge != '') {
         onLineTextChange();
         return;
       }

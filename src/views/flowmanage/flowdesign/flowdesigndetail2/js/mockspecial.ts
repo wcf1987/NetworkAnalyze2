@@ -26,6 +26,7 @@ export const leftNavListSpecial = [
         title: '基础节点',
         icon: 'iconfont icon-shouye',
         isOpen: true,
+        height: 'auto',
         id: '1',
         children: [
         {
@@ -73,7 +74,7 @@ export const leftNavListSpecial = [
     {
         title: '全局变量',
         isOpen: true,
-
+        height: 'auto',
         icon: 'iconfont icon-caijian',
         id: '2',
         children: [
@@ -104,7 +105,7 @@ export const leftNavListSpecial = [
     {
         title: '特殊节点',
         isOpen: true,
-
+        height: 'auto',
         icon: 'iconfont icon-shuju',
         id: '3',
         children: [
@@ -135,7 +136,7 @@ export const leftNavListSpecial = [
     {
         title: '内置转换节点',
         isOpen: true,
-
+        height: '500px',
         icon: 'iconfont icon-shuju',
         id: '4',
         children: [

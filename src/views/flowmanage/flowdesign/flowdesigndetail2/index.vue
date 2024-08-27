@@ -14,7 +14,7 @@
                   ref="leftNavRefs"
                   v-for="val in state.leftNavList"
                   :key="val.id"
-                  :style="{ height: val.isOpen ? 'auto' : '50px', overflow: 'hidden' }"
+                  :style="{ height: val.isOpen ? val.height : '50px', overflow: 'hidden' }"
                   class="workflow-left-id"
               >
                 <div class="workflow-left-title" @click="onTitleClick(val)">
