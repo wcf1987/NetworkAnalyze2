@@ -1295,12 +1295,12 @@ const getSubListFromIncoming = (node, lf, list) => {
     checkedNodes.push(nodetemp.id)
     //console.log(nodetemp);
     if (nodetemp.type == 'pacparse' || nodetemp.type == 'pacencap') {
-      if (!isDictionaryEmpty(nodetemp.properties) && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
+      if (!isDictionaryEmpty(nodetemp.properties) && typeof nodetemp.properties.nodeData != 'undefined' && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
         addlist(dataidlist, {'type': 'package', 'name': nodetemp.properties.nodeData.Name})
       }
     }
     if (nodetemp.type == 'messheaderparse') {
-      if (!isDictionaryEmpty(nodetemp.properties) && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
+      if (!isDictionaryEmpty(nodetemp.properties) && typeof nodetemp.properties.nodeData != 'undefined' && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
         addlist(dataidlist, {'type': 'messheader', 'name': nodetemp.properties.nodeData.Name})
       }
     }
@@ -1310,7 +1310,7 @@ const getSubListFromIncoming = (node, lf, list) => {
       }
     }
     if (nodetemp.type == 'messbodyparse' || nodetemp.type == 'messbodyencap') {
-      if (!isDictionaryEmpty(nodetemp.properties) && !isDictionaryEmpty(nodetemp.properties.nodeData)) {
+      if (!isDictionaryEmpty(nodetemp.properties)  && typeof nodetemp.properties.nodeData != 'undefined'&& !isDictionaryEmpty(nodetemp.properties.nodeData)) {
         addlist(dataidlist, {'type': 'messbody', 'name': nodetemp.properties.nodeData.Name})
       }
     }
