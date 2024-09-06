@@ -40,6 +40,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 		build: {
 			outDir: 'dist',
 			chunkSizeWarningLimit: 1500,
+
 			rollupOptions: {
 				output: {
 					chunkFileNames: 'assets/js/[name]-[hash].js',

@@ -52,8 +52,8 @@
                       <div :class="`flex-warp-item-box Target ${sl.ID}`" :id="sl.ID"
                       >
                         <div class="item-img">
-                          <img :src="sl.src"/>
 
+                          <img :src="getAssetsFile(sl.src)"/>
                         </div>
                         <div class="item-txt-title">
                           <span> {{ sl.IP }}</span>
@@ -65,7 +65,7 @@
 
                 </div>
                 <div class="div-box">
-                  <div :class="`flex-warp-item-box Target ${v.ID}`">
+                  <div :class="`flex-warp-item-box Target ${v.ID}`" @click="flowdesign(v)">
                     <div class="item-img" :id="`MFlow_${v.ID}`">
                       <img :src="flowimg1" v-if="v.Type=='应用层透明传输'"/>
                       <img :src="flowimg2" v-if="v.Type=='混合编排'"/>
@@ -88,7 +88,7 @@
                       <div :class="`flex-warp-item-box Target ${sl.ID}`" :id="sl.ID"
                       >
                         <div class="item-img">
-                          <img :src="sl.src"/>
+                          <img :src="getAssetsFile(sl.src)"/>
 
                         </div>
                         <div class="item-txt-title">
@@ -177,6 +177,16 @@ const flowimg4 = ref(flowpng4);
 const calcIndex = (index) => {
   index = index + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1
   return index
+}
+const getAssetsFile = (url: string) => {
+  return new URL(url, import.meta.url).href;
+};
+//跳转到指定流程设计页面
+const flowdesign = (v) => {
+  router.push({
+    path: '/flowmanage/flowdesign/flowdesigndetail2',
+    query: {ID: v.ID, FlowName: v.Name, Type: v.Type},
+  });
 }
 // 打开修改转换规则界面弹窗
 const onOpenEdit = (row: RowUserType) => {
@@ -365,7 +375,7 @@ const getPicSrc = (ip) => {
       }
     }
   }
-  return '/src/assets/ipdevices/weizhi.png';
+  return '/ipdevices/weizhi.png';
 }
 // 初始化目的消息体表格数据
 const getTableDataFlow = async () => {

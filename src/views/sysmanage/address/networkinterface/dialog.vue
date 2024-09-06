@@ -51,7 +51,7 @@
 
                     :value="item.text"
                 >
-                  <img :src="item.src" style="width: 24px;height: 24px;vertical-align: text-bottom;">{{ item.text }}
+                  <img :src="getAssetsFile(item.src)" style="width: 24px;height: 24px;vertical-align: text-bottom;">{{ item.text }}
 
                 </el-option>
               </el-select>
@@ -98,6 +98,11 @@ const rules = reactive({
   ],
 });
 import {telValidator, checkInterNum, checkIdNum, checkPort, checkIP} from '/@/utils/rules'
+// 获取assets静态资源
+const getAssetsFile = (url: string) => {
+  return new URL(url, import.meta.url).href;
+};
+
 
 const state = reactive({
   ruleForm: {

@@ -20,30 +20,30 @@ export const NetworkProtocol = [
 
 ];
 export const IPDevicePic = [
-    {id: 1, src: '/src/assets/ipdevices/camera.png', text: '摄像头'},
-    {id: 2, src: '/src/assets/ipdevices/dmjs.png', text: '卫星接收'},
+    {id: 1, src: '/ipdevices/camera.png', text: '摄像头'},
+    {id: 2, src: '/ipdevices/dmjs.png', text: '卫星接收'},
 
-    {id: 3, src: '/src/assets/ipdevices/dp.png', text: '火箭炮'},
+    {id: 3, src: '/ipdevices/dp.png', text: '火箭炮'},
 
-    {id: 4, src: '/src/assets/ipdevices/firewall.png', text: '防火墙'},
+    {id: 4, src: '/ipdevices/firewall.png', text: '防火墙'},
 
-    {id: 5, src: '/src/assets/ipdevices/fly1.png', text: '战斗机'},
+    {id: 5, src: '/ipdevices/fly1.png', text: '战斗机'},
 
-    {id: 6, src: '/src/assets/ipdevices/fly2.png', text: '运输机'},
+    {id: 6, src: '/ipdevices/fly2.png', text: '运输机'},
 
-    {id: 7, src: '/src/assets/ipdevices/fwq.png', text: '服务器'},
-    {id: 8, src: '/src/assets/ipdevices/home.png', text: '家庭接入'},
+    {id: 7, src: '/ipdevices/fwq.png', text: '服务器'},
+    {id: 8, src: '/ipdevices/home.png', text: '家庭接入'},
 
-    {id: 9, src: '/src/assets/ipdevices/network.png', text: '网络中接'},
+    {id: 9, src: '/ipdevices/network.png', text: '网络中接'},
 
-    {id: 10, src: '/src/assets/ipdevices/pc.png', text: '电脑'},
+    {id: 10, src: '/ipdevices/pc.png', text: '电脑'},
 
-    {id: 11, src: '/src/assets/ipdevices/qst.png', text: '潜水艇'},
+    {id: 11, src: '/ipdevices/qst.png', text: '潜水艇'},
 
-    {id: 12, src: '/src/assets/ipdevices/tank.png', text: '坦克'},
+    {id: 12, src: '/ipdevices/tank.png', text: '坦克'},
 
-    {id: 13, src: '/src/assets/ipdevices/wrj.png', text: '无人机'},
-    {id: 22, src: '/src/assets/ipdevices/weizhi.png', text: '未知设备'},
+    {id: 13, src: '/ipdevices/wrj.png', text: '无人机'},
+    {id: 22, src: '/ipdevices/weizhi.png', text: '未知设备'},
 ];
 
 export const FunctionType = [

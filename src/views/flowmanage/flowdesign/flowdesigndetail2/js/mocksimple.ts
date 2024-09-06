@@ -19,6 +19,7 @@ import desticon from "/@/assets/svgicon/dest.svg";
 import firsticon from "/@/assets/svgicon/first.svg";
 import pacsizeicon from "/@/assets/svgicon/pacsize.svg";
 import pacnumicon from "/@/assets/svgicon/pacnum.svg";
+import filtericon from '/@/assets/svgicon/filter.svg';
 export const leftNavListSimple = [
     {
         title: '基础节点',
@@ -59,6 +60,8 @@ export const leftNavListSimple = [
                 descrip: '流程的最终节点，可以有多个',
 
             },
+
+
         ],
     },
     {

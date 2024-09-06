@@ -19,6 +19,7 @@ import desticon from "/@/assets/svgicon/dest.svg";
 import firsticon from "/@/assets/svgicon/first.svg";
 import pacsizeicon from "/@/assets/svgicon/pacsize.svg";
 import pacnumicon from "/@/assets/svgicon/pacnum.svg";
+import filtericon from "/@/assets/svgicon/filter.svg";
 export const leftNavListSimpleApp = [
     {
         title: '基础节点',
@@ -58,7 +59,14 @@ export const leftNavListSimpleApp = [
                 type: 'end',
                 descrip: '流程的最终节点，可以有多个',
 
-            }
+            },      {
+                icon: filtericon,
+                name: '过滤器节点',
+                id: '13',
+                type: 'filter',
+                descrip: '流量过滤筛选',
+
+            },
         ],
     },
     {
