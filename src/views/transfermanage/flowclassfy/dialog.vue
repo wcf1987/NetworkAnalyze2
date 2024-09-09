@@ -103,7 +103,7 @@
         } else {
             state.dialog.title = '新增';
             state.dialog.submitTxt = '新 增';
-            state.ruleForm.Type='Template';
+            state.ruleForm.Type='Flow';
             // 清空表单，此项需加表单验证才能使用
             nextTick(() => {
                 userDialogFormRef.value.resetFields();

@@ -45,6 +45,7 @@ const getTableData = () => {
 			pageNum: state.tableData.param.pageNum,
 			pageSize: state.tableData.param.pageSize,
 			name: state.tableData.searchStr,
+      type:'Template'
 		})
 		.then((res) => {
 			//console.log(res);

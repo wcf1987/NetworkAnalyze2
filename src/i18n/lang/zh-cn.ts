@@ -2,8 +2,9 @@
 export default {
     router: {
         transfermanage:'消息转换管理',
-        transclassfy:'流程分类管理',
+        transclassfy:'模板分类管理',
         transtemplate:'消息转换流程模板',
+        flowclassfy:'流程分类管理',
         home: '首页1',
         homepage: '资源统计',
         sysmanage: '系统对象管理',

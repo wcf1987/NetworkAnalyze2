@@ -48,7 +48,21 @@ export const rolemenu=[
                             icon: 'ele-ScaleToOriginal',
                         },
                     },
-
+ {
+                        path: '/transfermanage/flowclassfy',
+                        name: 'flowclassfy',
+                        component: 'transfermanage/flowclassfy/index',
+                        meta: {
+                            title: 'message.router.flowclassfy',
+                            isLink: '',
+                            isHide: false,
+                            isKeepAlive: true,
+                            isAffix: false,
+                            isIframe: false,
+                            roles: ['admin', 'common'],
+                            icon: 'ele-SetUp',
+                        },
+                    },
                     {
                         path: '/flowmanage/flowdesign',
                         name: 'flowdesign',

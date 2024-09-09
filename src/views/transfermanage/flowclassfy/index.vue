@@ -75,7 +75,7 @@ import {userManageApi} from "/@/api/sysadmin/usermanage";
 import {transclassfyApi} from "/@/api/transmanage/transclassfy";
 
 // 引入组件
-const UserDialog = defineAsyncComponent(() => import('/@/views/transfermanage/transclassfy/dialog.vue'));
+const UserDialog = defineAsyncComponent(() => import('/@/views/transfermanage/flowclassfy/dialog.vue'));
 const router = useRouter();
 // 定义变量内容
 const userDialogRef = ref();
@@ -111,7 +111,7 @@ const getTableData = () => {
         pageNum: state.tableData.param.pageNum,
         pageSize: state.tableData.param.pageSize,
         name: state.tableData.searchStr,
-        type: 'Template'
+        type: 'Flow'
       })
       .then(res => {
         //console.log(res);
@@ -133,7 +133,7 @@ const getTableData = () => {
       {
         uid: 1,
         name: state.tableData.searchStr,
-        type: 'Template'
+        type: 'Flow'
       })
       .then(res => {
         //console.log(res);
@@ -230,7 +230,7 @@ const getTransClassfyWithChildren = () => {
         pageNum: 1,
         pageSize: 1000,
         name: '',
-        type: 'Template'
+        type: 'Flow'
       })
       .then((res) => {
         //console.log(res);
