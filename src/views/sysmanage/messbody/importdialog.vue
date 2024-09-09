@@ -138,6 +138,13 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="别名" prop="Alias">
+              <el-input v-model="state.ruleFormOri.Alias" placeholder="请输入别名" clearable
+              ></el-input>
+            </el-form-item>
+          </el-col>
+
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="简称" prop="ShortName">
               <el-input v-model="state.ruleForm.ShortName" placeholder="请输入简称" clearable
                         :readonly="isReadOnly"></el-input>
@@ -359,6 +366,7 @@ const state = reactive({
     sourceDFI: [{required: true, message: '请选择DFI', trigger: 'blur'}],
 
     EName: [{required: true, message: '请输入名称', trigger: 'blur'}, {validator: checkEName, trigger: 'blur'}],
+    Alias: [{required: true, message: '请输入名称', trigger: 'blur'}, {validator: checkEName, trigger: 'blur'}],
   },
   dialog: {
     isShowDialog: false,
@@ -391,7 +399,7 @@ const openDialog = async (type: string, pid, row: RowUserType, nestid) => {
       state.ruleFormOri.SortID = row.SortID;
       state.ruleFormOri.NestID = row.NestID;
       state.ruleFormOri.EName = row.EName;
-
+      state.ruleFormOri.Alias = row.Alias;
 
     });
 
@@ -504,6 +512,7 @@ const onSubmit = () => {
         state.ruleForm['NestID'] = state.ruleFormOri.NestID;
         state.ruleForm['ID'] = state.ruleFormOri.ID;
         state.ruleForm['EName'] = state.ruleFormOri.EName;
+        state.ruleForm['Alias'] = state.ruleFormOri.Alias;
         messdetailApi().updateMessDetail(
             state.ruleForm
         )
@@ -534,6 +543,8 @@ const onSubmit = () => {
         state.ruleForm['OutID'] = state.ruleFormOri['sourceDUI'];
         state.ruleForm['SortID'] = state.ruleFormOri.SortID;
         state.ruleForm['EName'] = state.ruleFormOri.EName;
+
+        state.ruleForm['Alias'] = state.ruleFormOri.Alias;
         messdetailApi().addMessDetail(
             state.ruleForm
         )

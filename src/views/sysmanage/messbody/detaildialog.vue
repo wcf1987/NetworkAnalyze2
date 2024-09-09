@@ -42,6 +42,12 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="别名" prop="Alias">
+              <el-input v-model="state.ruleForm.Alias" placeholder="请输入别名" clearable
+                        :readonly="isReadOnly"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="简称" prop="ShortName">
               <el-input v-model="state.ruleForm.ShortName" placeholder="请输入简称" clearable
                         :readonly="isReadOnly"></el-input>
@@ -181,7 +187,7 @@ const state = reactive({
     Flag: [{required: true, message: '请选择数据标识', trigger: 'blur'}],
     Name: [{required: true, message: '请输入名称', trigger: 'blur'}],
     EName: [{required: true, message: '请输入引用名', trigger: 'blur'}, {validator: checkEName, trigger: 'blur'}],
-
+    Alias: [{required: true, message: '请输入引用名', trigger: 'blur'}, {validator: checkEName, trigger: 'blur'}],
     Type: [{required: true, message: '请选择类型', trigger: 'change'}],
     TypeCode: [{required: true, message: '请输入名称', trigger: 'blur'}],
     Length: [{required: true, message: '位数必须为正整数', trigger: 'blur', validator: checkInterNum}],
