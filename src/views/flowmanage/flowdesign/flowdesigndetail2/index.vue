@@ -404,7 +404,7 @@ const saveScript = (grajson) => {
         nodet.properties.serialID = tt.serialID;
 
       }
-
+      nodet.properties.dataType=tt.dataType;
     }
     if (nodet.type == 'end') {
       nodet.type = "destnode";
@@ -485,9 +485,11 @@ const saveScript = (grajson) => {
 
           waitlist = waitlist.concat(tt.messtranslatedata[k].children);
           let ns = tt.messtranslatedata[k].Name;
+          let ens = tt.messtranslatedata[k].EName;
           let chi = tt.messtranslatedata[k].children;
           nodet.properties.messtranslatedata[k] = {};
           nodet.properties.messtranslatedata[k].Name = ns;
+          nodet.properties.messtranslatedata[k].EName = ens;
           nodet.properties.messtranslatedata[k].children = chi;
         } else {
           waitlist.push(tt.messtranslatedata[k]);
@@ -549,6 +551,7 @@ const saveScript = (grajson) => {
       }
     }
     if (nodes[i].type == 'messtraslate') {
+      //console.log(nodes[i]);
       state.transName = findOptionsName(state.MessTraslateOptions, tt.transid);
       if (tt == null || tt.messtranslatedata == null || tt.length == 0) {
         continue;
@@ -560,9 +563,11 @@ const saveScript = (grajson) => {
 
           waitlist = waitlist.concat(tt.messtranslatedata[k].children);
           let ns = tt.messtranslatedata[k].Name;
+          let ens = tt.messtranslatedata[k].EName;
           let chi = tt.messtranslatedata[k].children;
           nodet.properties.messtranslatedata[k] = {};
           nodet.properties.messtranslatedata[k].Name = ns;
+          nodet.properties.messtranslatedata[k].EName = ens;
           nodet.properties.messtranslatedata[k].children = chi;
         } else {
           waitlist.push(tt.messtranslatedata[k]);

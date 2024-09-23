@@ -613,7 +613,7 @@ import {
   FilterType,
   IPType,
   ParseMethod,
-  EncapMethod
+  EncapMethod, SystemAssign
 } from '/@/utils/common';
 import {optionListApi} from "/@/api/plugmanage/optionlist";
 
@@ -640,6 +640,7 @@ const parseMethod = ref(ParseMethod);
 const encapMethod = ref(EncapMethod);
 const messPackProperty = ref(MessPackProperty);
 const reForwardSocket = ref(ReForwardSocket);
+const systemAssign=ref(SystemAssign);
 const ipType = ref(IPType);
 const VarTypeOptions = ref(VarType);
 const NetworkOptions = ref();
@@ -971,6 +972,7 @@ const getFdGdData = async (node, lf) => {
   state.lf = lf
   state.node = node
   await getSourceData();
+
   return {fd: state.fd, gd: state.gd}
 }
 const getOptionList = () => {
@@ -1397,8 +1399,9 @@ const getSourceData = async () => {
   let fdlist = getSubListFromIncoming(state.node, state.lf, fieldsoptions.value);
   let gdlist = getGlobalListFromIncoming(state.node, state.lf, globaloptions.value);
   state.fd = fdlist
+  gdlist=gdlist.concat(SystemAssign);
   state.gd = gdlist;
-
+  console.log(gdlist);
 
   // emitter.emit('Fn', {fd:fieldsoptions.value,gd:globaloptions.value});
 

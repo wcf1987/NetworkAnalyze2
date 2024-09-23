@@ -139,6 +139,18 @@ export const VarType = [
     {id: 1, label: '数据字段', value: '数据字段'},
 
 ];
+export const SystemAssign = [
+    {id: 0, Name: 's消息字的类型', EName: 'SWordFormat'},
+    {id: 1, Name: '数据字段', EName: 'TargetType'},
+
+    {id: 2, Name: 'K消息域', EName: 'kmsgdomain '},
+
+    {id: 3, Name: 'K消息索引号', EName: 'kmsgindex'},
+
+    {id: 4, Name: '源单元编号', EName: 'sourceunit'},
+
+    {id: 5, Name: '目标单元编号', EName: 'dstunit'},
+];
 export const SpecailNodeType = [
     {id: 0, label: '定时器节点', value: '定时器节点'},
     {id: 1, label: '数据统计节点', value: '数据统计节点'},

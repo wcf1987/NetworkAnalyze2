@@ -75,8 +75,10 @@
         <el-table-column prop="OutType" label="类型" v-if="false"></el-table-column>
         <el-table-column prop="DFIID" label="DFIID" v-if="false"></el-table-column>
         <el-table-column prop="Name" label="名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="EName" label="引用名" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="ShortName" label="简称" show-overflow-tooltip></el-table-column>
+
+        <el-table-column prop="Alias" label="别名" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="EName" label="引用名" show-overflow-tooltip v-if="false"></el-table-column>
+        <el-table-column prop="ShortName" label="简称" show-overflow-tooltip v-if="false"></el-table-column>
         <el-table-column prop="Flag" label="数据标识" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Describes" label="说明" show-overflow-tooltip v-if="isHide"></el-table-column>
         <el-table-column prop="OutType" label="特别类型" show-overflow-tooltip v-if="isHide"></el-table-column>
@@ -149,7 +151,7 @@ const tableRef = ref();
 const state = reactive({
 
   expandArr: [],
-  expand:false,
+  expand:true,
   tableData: {
     id: '',
     data: [],
@@ -194,20 +196,33 @@ const onRowExpand = () => {
   // 输出当前展开的行ID数组用于调试
  // console.log(state.expandArr);
 
+  console.log(state.expand);
   // 检查展开数组是否为空
-  //state.expand=false;
   if (state.expandArr.length == 0) {
     // 如果展开数组为空，意味着所有行都是折叠的，因此需要将当前行展开
     //expandArr中之前有这个数据 --去除它
     expandID(state.tableData.data);
-
+    state.expand=true
   } else {
     // 如果展开数组不为空，意味着至少有一行是展开的，此时应该将所有行折叠
     //原来没有这个数据 --增加它
     state.expandArr = [];
+    state.expand=false;
   }
 }
+const onRowExpandByFresh = () => {
+  // 输出当前展开的行ID数组用于调试
+  // console.log(state.expandArr);
+  console.log(state.expand);
+  // 检查展开数组是否为空
+  if(state.expand==false){
+    state.expandArr = [];
+  }else{
+    state.expandArr = [];
+    expandID(state.tableData.data);
+  }
 
+}
 /**
  * 将列表中具有子项的项的ID添加到展开数组中。
  * 该函数递归处理列表中的每个项，如果项有子项，则将其ID转换为字符串并添加到展开数组中。
@@ -305,7 +320,7 @@ function getPathById(tree, id, path) {
               i.parentindex = id + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1;
               id = id + 1;
             }
-                onRowExpand();
+                onRowExpandByFresh();
           } else {
             ElMessage.error(res.message);
           }

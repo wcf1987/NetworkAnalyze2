@@ -176,7 +176,7 @@
     const props21 = {
         multiple: true,
         expandTrigger: 'hover',
-        value: 'Name',
+        value: 'EName',
         label: 'Name'
     }
     const props22 = {

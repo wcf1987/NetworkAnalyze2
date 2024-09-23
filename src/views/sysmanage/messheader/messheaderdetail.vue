@@ -145,6 +145,7 @@ const isHide = ref(false);
 
 const state = reactive({
   expandArr: [],
+  expand:true,
   tableData: {
     id: '',
     data: [],
@@ -187,20 +188,34 @@ const back = () => {
  */
 const onRowExpand = () => {
   // 输出当前展开的行ID数组用于调试
-  //console.log(state.expandArr);
+  // console.log(state.expandArr);
 
+  console.log(state.expand);
   // 检查展开数组是否为空
-  //state.expand=false;
   if (state.expandArr.length == 0) {
     // 如果展开数组为空，意味着所有行都是折叠的，因此需要将当前行展开
     //expandArr中之前有这个数据 --去除它
     expandID(state.tableData.data);
-
+    state.expand=true
   } else {
     // 如果展开数组不为空，意味着至少有一行是展开的，此时应该将所有行折叠
     //原来没有这个数据 --增加它
     state.expandArr = [];
+    state.expand=false;
   }
+}
+const onRowExpandByFresh = () => {
+  // 输出当前展开的行ID数组用于调试
+  // console.log(state.expandArr);
+  console.log(state.expand);
+  // 检查展开数组是否为空
+  if(state.expand==false){
+    state.expandArr = [];
+  }else{
+    state.expandArr = [];
+    expandID(state.tableData.data);
+  }
+
 }
 
 /**
@@ -334,7 +349,7 @@ const getTableData = (type) => {
             i.parentindex = id + (state.tableData.param.pageNum - 1) * state.tableData.param.pageSize + 1;
             id = id + 1;
           }
-          onRowExpand();
+          onRowExpandByFresh();
         } else {
           ElMessage.error(res.message);
         }
