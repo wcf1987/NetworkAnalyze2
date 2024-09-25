@@ -467,8 +467,8 @@ const saveScript = (grajson) => {
         nodet.properties.interfacetype = '网口'
         nodet.properties.sourecenetworkIP = tt.sourecenetworkIP;
         nodet.properties.sourecenetworkPort = tt.sourecenetworkPort;
-        nodet.properties.IP = tt.sourecenetworkIP;
-        nodet.properties.Port = tt.sourecenetworkPort;
+        nodet.properties.IP = tt.IP;
+        nodet.properties.Port = tt.Port;
 
       }
       if (nodet.properties.interfacetype == '串口') {
