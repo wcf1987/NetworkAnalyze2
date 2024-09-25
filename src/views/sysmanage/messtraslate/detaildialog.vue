@@ -63,7 +63,9 @@
                 <el-form-item label="转换模式" prop="Optional">
                   <el-select v-model="state.ruleForm.Optional" placeholder="请选择" clearable
                              class="w100">
+
                     <el-option label="直接赋值" value="直接赋值"></el-option>
+                    <el-option label="内置变量赋值" value="内置变量赋值"></el-option>
                     <el-option label="直接转换" value="直接转换"></el-option>
 
                     <el-option label="自定义转换计算" value="自定义转换计算"></el-option>
@@ -79,6 +81,12 @@
                 </el-form-item>
               </el-col>
 
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+                      v-if="state.ruleForm.Optional=='内置变量赋值'">
+                <el-form-item label="默认值" prop="Transrule">
+                  <el-input v-model="state.ruleForm.Transrule" placeholder="" clearable></el-input>
+                </el-form-item>
+              </el-col>
 
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                       v-if="state.ruleForm.Optional=='直接转换'">
@@ -92,7 +100,7 @@
                                style="width: 300px; " collapse-tags :disabled="state.editEabled"/>
                 </el-form-item>
               </el-col>
-           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"
                       v-if="state.ruleForm.Optional=='直接转换'">
 
                 <el-form-item label="引用字段" prop="ENames">
@@ -381,7 +389,7 @@ const state = reactive({
 
   ruleForm: {
     Name: '', // 账户名称
-    ENames:'',
+    ENames: '',
     TargetName: '',
     Type: '', // 用户昵称
     Optional: '',
@@ -423,40 +431,40 @@ const changeSourceInput12 = (fo) => {
 }
 const changeSourceInput21 = (fo) => {
   console.log(fo)
-  let i = 0, tempstr = '',tempstr2=''
+  let i = 0, tempstr = '', tempstr2 = ''
   for (i = 0; i < fo.length; i++) {
     tempstr = tempstr + getFullPath(fo[i]) + '\n'
-    tempstr2=tempstr2+getFullPath(fo[i])+','
+    tempstr2 = tempstr2 + getFullPath(fo[i]) + ','
 
   }
   //state.ruleForm.Transrule = state.ruleForm.Funcrule + tempstr;
-  state.ruleForm.ENames =  tempstr2;
- if (fo && fo.length) {
-   let ks= getFullPath([fo[fo.length - 1]])
+  state.ruleForm.ENames = tempstr2;
+  if (fo && fo.length) {
+    let ks = getFullPath([fo[fo.length - 1]])
 
-        state.ruleForm.Transrule = state.ruleForm.Transrule+ks+'\n';
-      } else {
+    state.ruleForm.Transrule = state.ruleForm.Transrule + ks + '\n';
+  } else {
 
-      }
+  }
 }
-const reloadENames=()=>{
-   let i = 0, tempstr = '',tempstr2=''
+const reloadENames = () => {
+  let i = 0, tempstr = '', tempstr2 = ''
   console.log(state.ruleForm.SourceData)
-  for(let i of state.ruleForm.SourceData){
+  for (let i of state.ruleForm.SourceData) {
 
-    tempstr2=tempstr2+getFullPath(i)+','
+    tempstr2 = tempstr2 + getFullPath(i) + ','
 
   }
 
-  state.ruleForm.ENames =  tempstr2;
-
+  state.ruleForm.ENames = tempstr2;
 
 
 }
-const getFullPath=(name)=>{
-let k=findTreeItemByName(sourceoptions.value,name)
+const getFullPath = (name) => {
+  let k = findTreeItemByName(sourceoptions.value, name)
   return k;
 }
+
 //树形结构查询指定Name
 function findTreeItemByName(list, name) {
   // 每次进来使用find遍历一次
@@ -469,13 +477,14 @@ function findTreeItemByName(list, name) {
       if (list[i].children instanceof Array && list[i].children.length > 0) {
         res = findTreeItemByName(list[i].children, name);
 
-        if (res) return list[i].EName+'.'+res;
+        if (res) return list[i].EName + '.' + res;
       }
     }
 
     return null;
   }
 }
+
 const changeSourceInput22 = (fo) => {
   console.log(fo)
 
