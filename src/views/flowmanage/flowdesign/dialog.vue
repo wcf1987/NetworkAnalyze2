@@ -168,7 +168,12 @@ const getTransTemplate = () => {
       .then((res) => {
         //console.log(res);
         if (res.code == '200') {
-          state.tableDataTransTemplate.data = res.data;
+          state.tableDataTransTemplate.data = [];
+          for (let i = 0; i < res.data.length; i++) {
+            if(res.data[i].children.length>0){
+              state.tableDataTransTemplate.data.push(res.data[i])
+            }
+          }
         } else {
           ElMessage.error(res.message);
         }
