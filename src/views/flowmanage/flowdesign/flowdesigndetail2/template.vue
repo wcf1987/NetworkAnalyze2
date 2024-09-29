@@ -774,12 +774,12 @@ const checkGraph = (grajson) => {
     }
     //console.log(nodes[i])
     if (nodes[i].type == 'start' && (nodes[i].properties.Port==''||nodes[i].properties.Port===undefined)) {
-      ElMessage.error('请确保源节点本地端口不为空');
-      flag = -1
+      //ElMessage.error('请确保源节点本地端口不为空');
+      //flag = -1
     }
         if (nodes[i].type == 'start' && (nodes[i].properties.IP==''||nodes[i].properties.IP===undefined)) {
-      ElMessage.error('请确保源节点本地IP地址不为空');
-      flag = -1
+     // ElMessage.error('请确保源节点本地IP地址不为空');
+      //flag = -1
     }
   }
   return flag
