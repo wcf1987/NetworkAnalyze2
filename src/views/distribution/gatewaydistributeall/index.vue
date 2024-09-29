@@ -52,7 +52,7 @@
 
               </div>
             </div>
-            <div style="width: 100%">
+            <div class="gatewaycenter" style="width: 100%">
               <!--:id="`source_${state.getway.ID}`"-->
               <div class="flex-warp-item">
                 <div class="flex-warp-item-box" ref="source_node" id="source_node"
@@ -318,14 +318,13 @@ const updateNodeByConn = (sourceId, targetId, type) => {
 
     delPoint(tid);
     delConn(state.gateway.ID, tid);
+    setTimeout(() => {
+      state.jsPlumb.repaintEverything();
+    }, 100);
 
   }
 
-  nextTick(() => {
 
-    state.jsPlumb.repaintEverything();
-
-  });
 }
 const delPoint = (flowid) => {
   for (let v = 0; v < state.tableDataFlowShow.length; v++) {
@@ -1284,8 +1283,8 @@ onUnmounted(() => {
         flex: 1;
         display: flex;
 
-        justify-content: flex-end;
-        align-items: center;
+        justify-content: flex-start;
+        align-items: flex-start;
         position: relative;
         overflow: auto;
         height: 100%;
@@ -1293,6 +1292,12 @@ onUnmounted(() => {
         linear-gradient(rgb(156 214 255 / 15%) 10%, rgba(0, 0, 0, 0) 10%);
         background-size: 10px 10px;
 
+        :deep(.gatewaycenter) {
+          display: flex;
+
+          align-items: center; /* 垂直居中 */
+
+        }
 
         :deep(.flex-warp-item) {
 
@@ -1300,7 +1305,7 @@ onUnmounted(() => {
           overflow: auto;
 
           margin-left: 5%;
-          margin-top: 10%;
+          margin-top: 35%;
 
 
           border-color: black;
@@ -1406,9 +1411,8 @@ onUnmounted(() => {
         :deep(.rightcolumn) {
           display: flex;
           flex-direction: column;
-          justify-content: space-around;
-          flex-wrap: warp;
-
+            justify-content: center;
+          align-items: center;
           .flex-warp-item2 {
             align-self: center;
             overflow: auto;
