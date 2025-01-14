@@ -96,5 +96,12 @@ export function messtranslateApi() {
                 data,
             });
         },
+        dfsTranslateData: (data: object) => {
+            return request({
+                url: '/messtranslatedetail/dfs',
+                method: 'post',
+                data,
+            });
+        },
     };
 }

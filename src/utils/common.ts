@@ -128,7 +128,7 @@ export const ReForwardSocket = [
     {id: 1, label: '原有SOCKET', value: '原有SOCKET'},
     {id: 2, label: '默认地址的SOCKET', value: '默认地址的SOCKET'},
 ];
-export const IPType=[
+export const IPType = [
     {id: 0, label: '通用地址', value: '通用地址'},
     {id: 1, label: '网管', value: '网管'},
 
@@ -158,4 +158,12 @@ export const SpecailNodeType = [
     {id: 3, label: '延时器节点', value: '延时器节点'},
     {id: 4, label: '消息队列节点', value: '消息队列节点'},
     {id: 4, label: '过滤器节点', value: '过滤器节点'},
+];
+
+export const BuildPacNode = [
+    {id: 0, label: 'sword', value: 'sword'},
+    {id: 1, label: 'subtype', value: 'subtype'},
+
+    {id: 2, label: 'ktype', value: 'ktype'},
+    {id: 3, label: 'ksubtype', value: 'ksubtype'},
 ];

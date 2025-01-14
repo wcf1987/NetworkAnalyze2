@@ -39,6 +39,18 @@
                          collapse-tags @change="changeSourceInput" class="w100"/>
 
           </el-form-item>
+          <el-form-item label="内置变量">
+       <el-select v-model="state.properForm.buildPacNode" placeholder="请选择" clearable multiple @change="changeBuildPacNodeInput"
+
+                       class="w100">
+            <el-option
+                v-for="item in buildPacNode"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+            />
+       </el-select>
+          </el-form-item>
 
           <el-form-item label="计算公式" prop="rulestr">
 
@@ -612,6 +624,7 @@ import {
   VarType,
   FilterType,
   IPType,
+    BuildPacNode,
   ParseMethod,
   EncapMethod, SystemAssign
 } from '/@/utils/common';
@@ -640,8 +653,9 @@ const parseMethod = ref(ParseMethod);
 const encapMethod = ref(EncapMethod);
 const messPackProperty = ref(MessPackProperty);
 const reForwardSocket = ref(ReForwardSocket);
-const systemAssign=ref(SystemAssign);
+const systemAssign = ref(SystemAssign);
 const ipType = ref(IPType);
+const buildPacNode = ref(BuildPacNode);
 const VarTypeOptions = ref(VarType);
 const NetworkOptions = ref();
 const ParseOptions = ref();
@@ -704,6 +718,21 @@ const changeSourceInput = (fo) => {
 
 
   tempstr = tempstr.replaceAll(',', '.')
+  state.properForm.rulestr = state.properForm.rulestr + tempstr;
+
+
+}
+//条件分支 中增加内置变量
+const changeBuildPacNodeInput = (fo) => {
+  console.log(fo)
+  let i = 0, tempstr = ''
+  //for (i = 0; i < fo.length; i++) {
+  //if(fo.l)
+  //}
+  if (fo.length > 0) {
+    tempstr = fo[fo.length - 1]
+  }
+
   state.properForm.rulestr = state.properForm.rulestr + tempstr;
 
 
@@ -1399,7 +1428,7 @@ const getSourceData = async () => {
   let fdlist = getSubListFromIncoming(state.node, state.lf, fieldsoptions.value);
   let gdlist = getGlobalListFromIncoming(state.node, state.lf, globaloptions.value);
   state.fd = fdlist
-  gdlist=gdlist.concat(SystemAssign);
+  gdlist = gdlist.concat(SystemAssign);
   state.gd = gdlist;
   console.log(gdlist);
 

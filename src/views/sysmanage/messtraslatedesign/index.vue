@@ -66,6 +66,10 @@
 
 
             </el-table>
+                  <el-button style="margin-left: 100px;margin-top: 50px" size="small" type="primary" class="" @click="dfsTranslateData">
+
+            自动匹配转换规则
+          </el-button>
             <div
                 v-for="(v, k) in state.jsplumbData.nodeList"
                 :key="v.nodeId"
@@ -584,6 +588,28 @@ const getTableDataTranslate = async () => {
     state.tableDataTranslate.loading = false;
   }, 200);
 };
+
+
+// 自动话匹配关联消息体
+const dfsTranslateData = () => {
+
+  messtranslateApi().dfsTranslateData(
+      {
+        sourceID: state.sourceid,
+        targetID: state.targetid
+      }).then(res => {
+    console.log(res);
+
+  }).catch(err => {
+
+  }).finally(() => {
+
+  });
+
+
+};
+
+
 //获取当前页面的缩放值
 
 
@@ -768,7 +794,7 @@ const initJsPlumb = () => {
       if (state.walkStatus) {
 
       } else {
-        if (newtargetId!='' && newtargetId != targetId) {
+        if (newtargetId != '' && newtargetId != targetId) {
           console.log('出现偏移，需要纠正');
           updateNodeByConn(sourceId, newtargetId, 'add');
         } else {
@@ -812,7 +838,7 @@ const initJsPlumb = () => {
 
         if (existingConnections.length > 0) {
           ElMessage.warning('该源字段已存在，不可重复添加');
-          return ;
+          return;
         }
 
         console.log('出现偏移，需要纠正');
