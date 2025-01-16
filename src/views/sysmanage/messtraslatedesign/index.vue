@@ -596,10 +596,23 @@ const dfsTranslateData = () => {
   messtranslateApi().dfsTranslateData(
       {
         sourceID: state.sourceid,
-        targetID: state.targetid
+        targetID: state.targetid,
+         transid: state.id
       }).then(res => {
-    console.log(res);
 
+  if (res.code == '200') {
+          walkTreeJSONParse(res.data);
+
+          state.tableDataTranslate.data = res.data;
+          let id = 0;
+          for (let i of state.tableDataTranslate.data) {
+            i.parentindex = id + 1;
+            id = id + 1;
+          }
+          initConn();
+        } else {
+          ElMessage.error(res.message);
+        }
   }).catch(err => {
 
   }).finally(() => {
