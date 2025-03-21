@@ -605,8 +605,8 @@ const dfsTranslateData = () => {
 
           console.log(res.data);
 
-          if(res.data.length==0){
-            ElMessage.success("没有找到自动匹配字段路径")
+          if(res.data==null){
+            ElMessage.success(res.message)
             return
           }
           let id = 0;
