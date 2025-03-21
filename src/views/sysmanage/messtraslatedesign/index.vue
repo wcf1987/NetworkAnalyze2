@@ -601,10 +601,17 @@ const dfsTranslateData = () => {
       }).then(res => {
 
   if (res.code == '200') {
-          walkTreeJSONParse(res.data);
 
-          state.tableDataTranslate.data = res.data;
+
+          console.log(res.data);
+
+          if(res.data.length==0){
+            ElMessage.success("没有找到自动匹配字段路径")
+            return
+          }
           let id = 0;
+          walkTreeJSONParse(res.data);
+          state.tableDataTranslate.data = res.data;
           for (let i of state.tableDataTranslate.data) {
             i.parentindex = id + 1;
             id = id + 1;
